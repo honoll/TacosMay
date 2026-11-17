@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TacosMay — Guisos de taquería al vacío, listos para calentar</title>
+  <meta name="description" content="Los guisos de las taquerías de nuestra familia, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.">
+  <meta name="theme-color" content="#9c2218">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="TacosMay">
+  <meta property="og:title" content="TacosMay — Guisos de taquería al vacío, listos para calentar">
+  <meta property="og:description" content="Los guisos de las taquerías de nuestra familia, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.">
+  <!-- PENDIENTE-CLIENTE: dominio final (para canonical y og:url) e imagen real del producto para og:image -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%239c2218'/%3E%3Cpath d='M7 8h18v5h-6.5v12h-5V13H7z' fill='%23fff8ea'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera caja">
+    <!-- PENDIENTE-CLIENTE: logotipo y nombre comercial definitivos (la marca visual es provisional) -->
+    <a class="marca rotulo" href="/">TacosMay</a>
+    <nav aria-label="Principal">
+      <a href="#modo">Cómo se come</a>
+      <a href="#guisos">Guisos</a>
+      <a href="#envio">Envío</a>
+      <a class="boton chico" href="/tienda/">Tienda</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+
+    <!-- Escena 1 · llega sin saber qué es → sale sabiendo: el guiso de la taquería, en bolsa, para su casa -->
+    <section class="heroe">
+      <div class="caja heroe-rejilla">
+        <div class="heroe-texto">
+          <h1 class="rotulo">El guiso de la taquería, en tu congelador.</h1>
+          <p class="entrada">Los guisos de las taquerías de nuestra familia, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.</p>
+          <div class="acciones">
+            <a class="boton" href="/tienda/">Pedir guisos</a>
+            <a class="enlace" href="#modo">Ver cómo se come</a>
+          </div>
+          <!-- PENDIENTE-CLIENTE: línea de confianza (una sola): desde qué año existen las taquerías y en qué ciudad -->
+        </div>
+
+        <svg class="bolsa" viewBox="0 0 300 400" role="img" aria-labelledby="bolsa-titulo">
+          <title id="bolsa-titulo">Ilustración de una bolsa al vacío con guiso adentro y una etiqueta que dice «Guiso de taquería, al vacío, por porciones»</title>
+          <rect class="plastico" x="16" y="12" width="268" height="376" rx="10"/>
+          <path class="costura" d="M30 28h240M30 36h240M30 44h240M30 356h240M30 364h240M30 372h240"/>
+          <path class="corte" d="M30 66h236"/>
+          <path class="muesca" d="M286 58l-16 8 16 8"/>
+          <path class="guiso" d="M52 150c-12-30 28-50 68-42 40-16 100-8 124 22s18 170-4 192c-40 26-144 24-178 0-26-22-18-132-10-172z"/>
+          <g class="trozos">
+            <circle cx="96" cy="150" r="14"/><circle cx="196" cy="140" r="17"/><circle cx="224" cy="196" r="11"/>
+            <circle cx="78" cy="300" r="13"/><circle cx="150" cy="316" r="16"/><circle cx="212" cy="296" r="10"/>
+          </g>
+          <path class="arruga" d="M30 92l28 36M270 98l-24 28M30 342l30-22M270 342l-26-22"/>
+          <g transform="rotate(-4 150 236)">
+            <rect class="etiqueta" x="58" y="188" width="184" height="96"/>
+            <text class="rotulo etiqueta-nombre" x="150" y="222">Guiso de</text>
+            <text class="rotulo etiqueta-nombre" x="150" y="254">taquería</text>
+            <text class="etiqueta-dato" x="150" y="274">AL VACÍO · POR PORCIONES</text>
+          </g>
+          <g class="sello" aria-hidden="true">
+            <circle cx="232" cy="318" r="36"/>
+            <text class="rotulo" x="232" y="314">Al</text>
+            <text class="rotulo" x="232" y="332">vacío</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <p class="cinta rotulo" aria-hidden="true">Rompe · Calienta · Taquea · Rompe · Calienta · Taquea · Rompe · Calienta · Taquea · Rompe · Calienta · Taquea · Rompe · Calienta · Taquea</p>
+
+    <!-- Escena 2 (firma) · llega preguntándose «¿y cómo se come?» → sale sabiendo que son tres gestos -->
+    <section class="modo" id="modo" aria-labelledby="modo-titulo">
+      <div class="modo-fija">
+        <div class="caja modo-rejilla">
+          <div>
+            <h2 class="sobre" id="modo-titulo">Modo de uso</h2>
+            <ol class="pasos">
+              <li>
+                <h3 class="rotulo">Rompe la bolsa</h3>
+                <p>Cada bolsa trae un guiso ya cocido, por porciones. Lo único que queda es abrirla.</p>
+              </li>
+              <li>
+                <h3 class="rotulo">Calienta</h3>
+                <p>A la sartén o a la olla, como recalientas cualquier guiso.</p>
+                <!-- PENDIENTE-CLIENTE: instrucciones exactas de calentado por guiso (método, tiempo) y qué hacer si llega descongelado -->
+              </li>
+              <li>
+                <h3 class="rotulo">Taquea</h3>
+                <p>Tortillas calientes, tu salsa, cebolla y cilantro. La taquería ya está en tu mesa.</p>
+              </li>
+            </ol>
+          </div>
+
+          <svg class="pictograma" viewBox="0 0 400 420" role="img" aria-labelledby="picto-titulo">
+            <title id="picto-titulo">Ilustración: la bolsa se abre por una esquina, el guiso pasa a la sartén y termina en un taco</title>
+            <g class="vapor"><path d="M150 292q-14-18 0-36t0-36M200 292q-14-18 0-36t0-36M250 292q-14-18 0-36t0-36"/></g>
+            <rect class="tinta" x="300" y="316" width="96" height="14" rx="7"/>
+            <path class="tinta" d="M70 320h260l-18 52a14 14 0 0 1-13 9H101a14 14 0 0 1-13-9z"/>
+            <ellipse class="borde-sarten" cx="200" cy="320" rx="130" ry="16"/>
+            <ellipse class="guiso en-sarten" cx="200" cy="320" rx="112" ry="10"/>
+            <g class="bolsita">
+              <path class="plastico" d="M138 40h98l38 38v144a8 8 0 0 1-8 8H138a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8z"/>
+              <path class="costura" d="M142 54h88M142 62h96"/>
+              <ellipse class="guiso relleno" cx="200" cy="150" rx="50" ry="60"/>
+            </g>
+            <path class="plastico esquina" d="M236 40h38v38z"/>
+            <g class="taco">
+              <ellipse class="tortilla" cx="110" cy="380" rx="78" ry="24"/>
+              <ellipse class="guiso" cx="110" cy="375" rx="50" ry="11"/>
+              <path class="cilantro" d="M84 372h7M104 368h7M126 376h7M140 370h7"/>
+              <path class="cebolla" d="M94 378h7M116 371h7M70 376h7"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis). -->
+    <section id="guisos" aria-labelledby="guisos-titulo">
+      <div class="rojo" id="populares-bloque" hidden>
+        <div class="caja">
+          <h2 class="rotulo" id="populares-titulo">Lo que más sale</h2>
+          <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
+          <ol class="ranking imprime" id="populares" aria-labelledby="populares-titulo"></ol>
+        </div>
+      </div>
+
+      <div class="caja carta">
+        <h2 class="rotulo" id="guisos-titulo">Todo el menú</h2>
+        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página.</p>
+        <ul class="menu imprime" id="menu"></ul>
+        <p class="estado" id="menu-estado" role="status">Leyendo el menú…</p>
+        <noscript><p class="estado">El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda.</p></noscript>
+        <div class="acciones">
+          <a class="boton" href="/tienda/">Pedir en la tienda</a>
+          <button class="enlace" id="menu-reintentar" type="button" hidden>Volver a intentar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Escena 4 · llega dudando «¿y sí llega bien?» → sale entendiendo por qué va congelado y qué falta confirmar -->
+    <section class="oscuro" id="envio" aria-labelledby="envio-titulo">
+      <div class="caja envio-rejilla">
+        <h2 class="rotulo" id="envio-titulo">Viaja congelado. Así tiene que ser.</h2>
+        <div>
+          <!-- PENDIENTE-CLIENTE: confirmar que el formato de venta es congelado (es la recomendación de docs/investigacion/viabilidad.md) -->
+          <p class="entrada">El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso se empaca, se congela y así se queda hasta que tú rompes la bolsa.</p>
+          <p>Todavía no publicamos a dónde llegamos, cuánto cuesta el envío ni en cuántos días. Preferimos no prometerlo antes de tenerlo confirmado; cuando lo esté, va a aparecer aquí.</p>
+          <!-- PENDIENTE-CLIENTE: cobertura, costo, tiempos y días de despacho del envío; ciudad desde donde se despacha; vida útil declarada -->
+          <p class="fuente">Sobre vacío y congelación: guías de inocuidad de
+            <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe" rel="noopener">USDA-FSIS</a> y de la
+            <a href="https://assets.publishing.service.gov.uk/media/69aea81a671a8a924c83ee87/the-safety-and-shelf-life-of-vacuum-and-modified-atmosphere-packed-chilled-foods-with-respect-to-non-proteolytic-clostridium-botulinum_1.pdf" rel="noopener">FSA del Reino Unido</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Escena 5 · llega viendo «un producto» → sale viendo a la taquería que está detrás -->
+    <section class="familia" aria-labelledby="familia-titulo">
+      <div class="caja familia-rejilla">
+        <div>
+          <h2 class="rotulo" id="familia-titulo">Son los guisos de la taquería.</h2>
+          <p class="entrada">No inventamos recetas para la bolsa: son los guisos que se sirven en las taquerías de nuestra familia.</p>
+          <!-- PENDIENTE-CLIENTE: historia de las taquerías (nombres, ciudad, años, quién cocina). No se escribe nada hasta tenerla -->
+        </div>
+        <!-- PENDIENTE-CLIENTE: fotos reales (nada de stock). 1) el comal o las ollas, plano detalle, luz cálida. 2) quien atiende, plano medio, a la altura de los ojos -->
+        <figure class="hueco hueco-alto"><figcaption>Aquí va una foto real: los guisos en la taquería</figcaption></figure>
+        <figure class="hueco"><figcaption>Aquí va una foto real: la familia detrás del mostrador</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Escena 6 · llega convencido → sale hacia la tienda -->
+    <section class="cierre" aria-labelledby="cierre-titulo">
+      <div class="caja">
+        <h2 class="rotulo" id="cierre-titulo">Rompe la bolsa.</h2>
+        <p class="entrada">Elige tus guisos y arma tu pedido en la tienda.</p>
+        <a class="boton invertido" href="/tienda/">Ir a la tienda</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="caja">
+      <p class="marca rotulo">TacosMay</p>
+      <p>El menú y los precios que ves son de ejemplo mientras se confirma la carta real.</p>
+      <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
+    </div>
+  </footer>
+
+  <script type="module" src="js/landing.js"></script>
+</body>
+</html>

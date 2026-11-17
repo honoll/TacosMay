@@ -1,0 +1,334 @@
+/* Landing de TacosMay. Marca provisional: la identidad sale del producto
+   (bolsa al vacío, etiqueta de empaque, rótulo de taquería), no de una plantilla.
+   Contrastes verificados con números: ver F6 en docs/plan/tickets.md. */
+
+:root {
+  --papel: #f3e9d8;    /* papel de estraza: el fondo que manda */
+  --crema: #fff8ea;
+  --tinta: #231813;
+  --apagado: #6b5a4c;
+  --guajillo: #9c2218; /* dominante */
+  --maiz: #f2b632;     /* acento: solo en lo que se puede accionar */
+  --guiso: #7c2a14;
+  --foco: #1d4ed8;
+  /* Rótulo con fuentes del sistema: cero descargas y funciona sin internet el día de la demo. */
+  --rotulo: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", sans-serif-condensed, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font: 1.0625rem/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, p, ol, ul, figure { margin: 0; }
+ol, ul { list-style: none; padding: 0; }
+a { color: inherit; }
+section[id] { scroll-margin-top: 16px; }
+
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
+
+.caja { width: min(100% - 32px, 1120px); margin-inline: auto; }
+
+.rotulo {
+  font-family: var(--rotulo);
+  font-weight: 700;
+  font-synthesis-weight: none; /* Impact solo trae un peso: que no lo engorde el navegador */
+  text-transform: uppercase;
+  line-height: .95;
+  letter-spacing: .01em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.entrada { font-size: clamp(1.1rem, 1.6vw, 1.3rem); max-width: 34em; }
+
+.saltar { position: absolute; left: 16px; top: -100px; padding: 12px 16px; background: var(--tinta); color: var(--crema); z-index: 2; }
+.saltar:focus { top: 8px; }
+
+/* ---------- Botones y enlaces ---------- */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 3px solid var(--tinta);
+  border-radius: 6px;
+  background: var(--maiz);
+  color: var(--tinta);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--tinta);
+}
+.boton:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--tinta); }
+.boton:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--tinta); }
+.boton.chico { min-height: 44px; padding: 0 16px; font-size: .95rem; box-shadow: none; }
+.boton.chico:hover, .boton.chico:active { transform: none; box-shadow: none; background: var(--crema); }
+.boton.invertido { background: var(--tinta); color: var(--crema); box-shadow: none; }
+.boton.invertido:hover { transform: none; box-shadow: none; background: var(--guajillo); }
+
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  cursor: pointer;
+}
+.enlace:hover { text-decoration-thickness: 4px; }
+
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 28px; }
+
+/* ---------- Cabecera ---------- */
+
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; padding-block: 10px; }
+.marca { font-size: 2rem; color: var(--guajillo); text-decoration: none; }
+a.marca { display: inline-flex; align-items: center; min-height: 44px; }
+.cabecera nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.cabecera nav a:not(.boton) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 10px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cabecera nav a:not(.boton):hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+/* ---------- Escena 1: héroe (no depende de JavaScript) ---------- */
+
+.heroe { overflow: clip; padding-block: clamp(24px, 5vw, 64px) clamp(40px, 7vw, 96px); }
+.heroe-rejilla { display: grid; gap: 40px; align-items: center; }
+h1 { font-size: clamp(2.9rem, 13vw, 7rem); margin-bottom: 24px; }
+
+.bolsa {
+  display: block;
+  width: min(74%, 330px);
+  height: auto;
+  margin-inline: auto;
+  transform: rotate(-6deg);
+  filter: drop-shadow(10px 12px 0 rgb(35 24 19 / .16));
+}
+.plastico { fill: var(--crema); stroke: var(--tinta); stroke-width: 5; stroke-linejoin: round; }
+.costura { fill: none; stroke: var(--tinta); stroke-width: 2; opacity: .45; }
+.corte { fill: none; stroke: var(--guajillo); stroke-width: 2; stroke-dasharray: 7 6; }
+.muesca { fill: var(--papel); stroke: var(--tinta); stroke-width: 5; stroke-linejoin: round; }
+.guiso { fill: var(--guiso); }
+.trozos circle { fill: #5a1c0c; }
+.trozos circle:nth-child(even) { fill: #b4502c; }
+.arruga { fill: none; stroke: var(--tinta); stroke-width: 3; stroke-linecap: round; opacity: .3; }
+.etiqueta { fill: #fff; stroke: var(--tinta); stroke-width: 3; }
+.bolsa text { text-anchor: middle; fill: var(--tinta); }
+.etiqueta-nombre { font-size: 30px; }
+.etiqueta-dato { font-size: 9.5px; font-weight: 700; letter-spacing: 1px; }
+.sello { transform-box: fill-box; transform-origin: center; transform: rotate(12deg); }
+.sello circle { fill: var(--crema); stroke: var(--guajillo); stroke-width: 4; }
+.sello text { fill: var(--guajillo); font-size: 17px; }
+
+@media (min-width: 860px) {
+  .heroe-rejilla { grid-template-columns: 1.25fr .75fr; }
+  .bolsa { width: 100%; max-width: 400px; }
+}
+
+/* Cinta de sellado entre escenas: textura tipográfica, quieta a propósito. */
+.cinta {
+  overflow: hidden;
+  padding: 12px 0 9px;
+  background: var(--guajillo);
+  color: var(--crema);
+  font-size: clamp(1.3rem, 3.4vw, 2.1rem);
+  letter-spacing: .08em;
+  white-space: nowrap;
+  text-align: center;
+  text-wrap: nowrap;
+}
+
+/* ---------- Escena 2 (firma): modo de uso ---------- */
+/* --p es el avance de la escena. Vale 1 (estado final, todo a la vista) salvo que haya
+   JavaScript y el usuario acepte movimiento; entonces lo mueve el scroll. */
+
+.modo {
+  --p: 1;
+  --q: calc(var(--p) * 3.3);
+  --a: clamp(0, var(--q), 1);        /* 1: se rompe la esquina */
+  --b: clamp(0, var(--q) - 1.05, 1); /* 2: el guiso pasa a la sartén */
+  --c: clamp(0, var(--q) - 2.1, 1);  /* 3: llega el taco */
+  padding-block: clamp(56px, 9vw, 120px);
+}
+.modo-rejilla { display: grid; gap: 28px; align-items: center; }
+
+.sobre { font-size: .95rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--guajillo); margin-bottom: 20px; }
+
+.pasos { counter-reset: paso; display: grid; gap: 22px; }
+.pasos li { counter-increment: paso; padding-left: 20px; border-left: 6px solid var(--guajillo); }
+.pasos h3 { font-size: clamp(2.3rem, 7.5vw, 4.6rem); }
+.pasos h3::before { content: counter(paso) ". "; color: var(--guajillo); }
+.pasos p { margin-top: 8px; max-width: 30em; }
+
+.pictograma { display: block; width: min(100%, 440px); height: auto; margin-inline: auto; order: -1; }
+.pictograma .tinta { fill: var(--tinta); }
+.borde-sarten { fill: #4a372d; stroke: var(--tinta); stroke-width: 4; }
+.vapor path { fill: none; stroke: var(--apagado); stroke-width: 6; stroke-linecap: round; }
+.tortilla { fill: var(--maiz); stroke: var(--tinta); stroke-width: 5; }
+.cilantro { fill: none; stroke: #2f6b2a; stroke-width: 5; stroke-linecap: round; }
+.cebolla { fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; }
+
+.bolsita, .relleno, .esquina, .vapor, .taco { transform-box: fill-box; transform-origin: center; }
+.esquina {
+  transform: translate(calc(var(--a) * 44px), calc(var(--a) * -26px)) rotate(calc(var(--a) * 50deg));
+  opacity: calc(1 - var(--b));
+}
+.bolsita {
+  transform: translateY(calc(var(--b) * 46px)) rotate(calc(var(--b) * 105deg));
+  opacity: calc(1 - var(--c));
+}
+.relleno { transform: scale(calc(1 - var(--b) * .75)); }
+.en-sarten { opacity: var(--b); }
+.vapor { opacity: var(--b); transform: translateY(calc((1 - var(--b)) * 14px)); }
+.taco { opacity: var(--c); transform: translateX(calc((1 - var(--c)) * -90px)); }
+
+@media (min-width: 860px) {
+  .modo-rejilla { grid-template-columns: 1fr 1fr; gap: 56px; }
+  .pictograma { order: 0; }
+}
+
+/* ---------- Escena 3: guisos en vivo ---------- */
+
+.rojo { --foco: var(--crema); background: var(--guajillo); color: var(--crema); padding-block: clamp(56px, 8vw, 104px); }
+h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
+
+.ranking { display: grid; gap: 20px 48px; margin-top: 40px; }
+.ranking li { display: flex; align-items: center; gap: 18px; }
+.ranking .num { flex: none; width: 1.1em; font-size: clamp(3.4rem, 10vw, 5rem); line-height: .8; text-align: center; }
+.ranking h3 { font-size: clamp(1.5rem, 4.2vw, 2.1rem); }
+.ranking p { margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+@media (min-width: 860px) {
+  /* Rejilla asimétrica: el número uno pesa más que sus hermanos. */
+  .ranking { grid-template-columns: 1.2fr 1fr; }
+  .ranking li:first-child { grid-row: span 4; align-items: flex-start; flex-direction: column; gap: 8px; }
+  .ranking li:first-child .num { width: auto; font-size: 13rem; }
+  .ranking li:first-child h3 { font-size: 3.6rem; }
+  .ranking li:first-child p { font-size: 1.2rem; }
+}
+
+.carta { padding-block: clamp(56px, 8vw, 104px); }
+.menu { margin-top: 36px; }
+.menu li { padding: 18px 0; border-bottom: 2px dashed var(--apagado); break-inside: avoid; }
+.fila { display: flex; align-items: baseline; gap: 12px; }
+.fila h3 { min-width: 0; font-size: clamp(1.5rem, 4.4vw, 2rem); }
+.fila .puntos { flex: 1; min-width: 16px; border-bottom: 3px dotted var(--apagado); }
+.fila strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.menu p { margin-top: 6px; max-width: 34em; }
+.dato { color: var(--apagado); font-size: .95rem; font-weight: 600; }
+
+.estado { margin-top: 28px; padding: 14px 18px; border-left: 6px solid var(--guajillo); background: var(--crema); font-weight: 600; }
+
+@media (min-width: 860px) {
+  .menu { columns: 2; column-gap: 64px; }
+}
+
+/* ---------- Escena 4: envío ---------- */
+
+.oscuro { --foco: var(--crema); background: var(--tinta); color: var(--crema); padding-block: clamp(72px, 11vw, 150px); }
+.envio-rejilla { display: grid; gap: 28px; }
+.envio-rejilla p + p { margin-top: 18px; }
+.oscuro p { max-width: 36em; }
+.fuente { font-size: .95rem; }
+.fuente a { display: inline-block; padding-block: 10px; color: var(--maiz); font-weight: 700; }
+
+@media (min-width: 860px) {
+  .envio-rejilla { grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+}
+
+/* ---------- Escena 5: la taquería (huecos marcados para fotos reales) ---------- */
+
+.familia { padding-block: clamp(56px, 9vw, 120px); }
+.familia-rejilla { display: grid; gap: 24px; }
+.hueco {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  padding: 20px;
+  border: 3px dashed var(--apagado);
+  background: repeating-linear-gradient(-45deg, transparent 0 14px, rgb(35 24 19 / .05) 14px 28px);
+  color: var(--apagado);
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (min-width: 860px) {
+  .familia-rejilla { grid-template-columns: 5fr 4fr 3fr; gap: 32px; align-items: start; }
+  .hueco-alto { aspect-ratio: 3 / 4; }
+  .hueco:not(.hueco-alto) { aspect-ratio: 1; margin-top: 120px; }
+}
+
+/* ---------- Escena 6: cierre ---------- */
+
+.cierre { --foco: var(--tinta); background: var(--maiz); padding-block: clamp(64px, 10vw, 140px); }
+.cierre h2.rotulo { font-size: clamp(4rem, 17vw, 12rem); margin-bottom: 20px; }
+.cierre .boton { margin-top: 28px; }
+
+.pie { --foco: var(--crema); background: var(--tinta); color: var(--crema); padding-block: 40px; }
+.pie .marca { color: var(--crema); margin-bottom: 8px; }
+
+/* ---------- Movimiento: solo si el usuario lo acepta ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .boton { transition: transform .15s, box-shadow .15s; }
+
+  /* Héroe: la bolsa «se sella» (sale el aire) y cae el sello. Solo CSS; el texto no se anima. */
+  .bolsa { animation: sellar .9s cubic-bezier(.2, .9, .2, 1) both; }
+  .sello { animation: sellazo .35s .8s cubic-bezier(.2, 1.5, .4, 1) both; }
+  @keyframes sellar { from { transform: rotate(-2deg) scale(1.08, .96); } }
+  @keyframes sellazo { from { transform: rotate(-18deg) scale(2.4); opacity: 0; } }
+
+}
+
+/* Firma: la escena se queda fija mientras el scroll recorre los tres pasos.
+   En pantallas muy bajas (celular acostado) no se ancla: no cabría entera. */
+@media (prefers-reduced-motion: no-preference) and (min-height: 560px) {
+  .js .modo { --p: var(--scroll, 0); height: 300vh; padding-block: 0; }
+  .js .modo-fija { position: sticky; top: 0; display: grid; align-items: center; height: 100vh; height: 100svh; padding-block: 16px; }
+  .js .pictograma { max-height: 40svh; }
+  .js .pasos { gap: 14px; }
+  .js .pasos li { border-left-color: transparent; transition: border-color .2s; }
+  .js .pasos h3 { color: var(--apagado); transition: color .2s; }
+  .js .pasos p { display: none; }
+  .js .modo[data-step="1"] .pasos li:nth-child(1),
+  .js .modo[data-step="2"] .pasos li:nth-child(2),
+  .js .modo[data-step="3"] .pasos li:nth-child(3) { border-left-color: var(--guajillo); }
+  .js .modo[data-step="1"] .pasos li:nth-child(1) h3,
+  .js .modo[data-step="2"] .pasos li:nth-child(2) h3,
+  .js .modo[data-step="3"] .pasos li:nth-child(3) h3 { color: var(--tinta); }
+  .js .modo[data-step="1"] .pasos li:nth-child(1) p,
+  .js .modo[data-step="2"] .pasos li:nth-child(2) p,
+  .js .modo[data-step="3"] .pasos li:nth-child(3) p { display: block; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Menú: cada renglón «se imprime» de izquierda a derecha, como etiqueta saliendo de la impresora. */
+  .js .imprime:not(.visto) > li { clip-path: inset(0 100% 0 0); }
+  .js .imprime.visto > li { clip-path: inset(0 0 0 0); animation: imprimir .5s calc(var(--i) * 70ms) cubic-bezier(.3, .7, .2, 1) backwards; }
+  @keyframes imprimir { from { clip-path: inset(0 100% 0 0); } }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-height: 560px) and (min-width: 860px) {
+  .js .pictograma { max-height: 70svh; }
+}

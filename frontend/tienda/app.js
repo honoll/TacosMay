@@ -1,4 +1,4 @@
-import { api, session, money, esc, notice } from './api.js';
+import { api, session, money, esc, notice } from '../js/api.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
