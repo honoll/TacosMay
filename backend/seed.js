@@ -1,26 +1,35 @@
-//npm run seed: deja la base con el admin y guisos DE EJEMPLO. Se puede correr las veces que sea.
+//npm run seed: deja la base con el admin y los guisos del menú (precios de ejemplo). Se puede correr las veces que sea.
 require('dotenv').config({ quiet: true })
 const { client, connectRedis } = require('./config/redis')
 const keys = require('./config/keys')
 const User = require('./models/usersModel')
 const Guiso = require('./models/guisosModel')
 
-//DATOS DE EJEMPLO: el menú, precios y porciones reales de TacosMay están PENDIENTE-CLIENTE
-const GUISOS_EJEMPLO = [
-    ['Chicharrón en salsa verde', 18000, 4, 20],
-    ['Tinga de pollo', 16000, 4, 20],
-    ['Bistec en salsa pasilla', 20000, 4, 15],
-    ['Rajas con crema', 14000, 4, 25],
-    ['Papa con chorizo', 13000, 4, 25],
-    ['Mole con pollo', 19000, 4, 3]
-].map(([nombre, precio_centavos, porciones, stock]) => ({
-    nombre: `${nombre} (EJEMPLO)`,
-    descripcion: 'Dato de ejemplo para la demo: no es el menú ni el precio real.',
-    precio_centavos,
-    porciones,
+//Nombres reales del menú de Los Tacos May (docs/negocio/datos.md).
+//Precio, porciones y stock son DE EJEMPLO: el producto empacado está PENDIENTE-CLIENTE
+const PRECIO_EJEMPLO = { base: 18000, especial: 20000, lengua: 26000 }
+const GUISOS = [
+    ['Corazón de vaca enamorada', 'base', 20],
+    ['Chorizo con huevo', 'base', 20],
+    ['Salpicón', 'base', 20],
+    ['Nopalitos', 'base', 25],
+    ['Mole con pollo', 'base', 3], //stock bajo a propósito: demo de «no vender de más»
+    ['Bistek con papa', 'base', 20],
+    ['Chicharrón en salsa', 'base', 20],
+    ['Rajas con queso y crema', 'base', 25],
+    ['Carne en salsa roja', 'especial', 15],
+    ['Tinga de res', 'especial', 15],
+    ['Barbacoa', 'especial', 15],
+    ['Cabeza', 'especial', 10],
+    ['Lengua', 'lengua', 8],
+    ['Barbacoa de borrego', 'especial', 10]
+].map(([nombre, precio, stock]) => ({
+    nombre,
+    descripcion: 'Guiso del menú de Los Tacos May. Precio y porciones de ejemplo.',
+    precio_centavos: PRECIO_EJEMPLO[precio],
+    porciones: 4,
     stock
 }))
-
 const seed = async () => {
     const { ADMIN_NOMBRE, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env
     if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
@@ -37,9 +46,9 @@ const seed = async () => {
     }
 
     await User.create({ nombre: ADMIN_NOMBRE || 'Admin', email: ADMIN_EMAIL, password: ADMIN_PASSWORD, rol: 'admin' })
-    for (const guiso of GUISOS_EJEMPLO) await Guiso.create(guiso)
+    for (const guiso of GUISOS) await Guiso.create(guiso)
 
-    console.log(`Seed listo: ${borradas} claves borradas, 1 admin (${ADMIN_EMAIL}) y ${GUISOS_EJEMPLO.length} guisos de ejemplo`)
+    console.log(`Seed listo: ${borradas} claves borradas, 1 admin (${ADMIN_EMAIL}) y ${GUISOS.length} guisos del menú (precios de ejemplo)`)
     await client.close()
 }
 

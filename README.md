@@ -4,7 +4,7 @@ Tienda de guisos de taquería empacados al vacío. Proyecto final de Bases de Da
 (Anáhuac): API en Node + Express sobre **Redis** (modelo Clave-Valor) en la nube, con el
 frontend estático servido por el mismo servidor.
 
-> El menú, los precios y las porciones que carga el seed son **datos de ejemplo**
+> Los nombres de los guisos que carga el seed son los del menú real; los precios, las porciones y el stock son **datos de ejemplo**
 > (`PENDIENTE-CLIENTE`), no los reales del negocio.
 
 ## Requerimientos
@@ -33,7 +33,7 @@ Copia `.env.example` como `.env` y llena los valores. El `.env` no se sube al re
 npm run seed
 ```
 
-Borra **solo** las claves `tm:*` y carga el administrador y 6 guisos de ejemplo. Se puede
+Borra **solo** las claves `tm:*` y carga el administrador y los 14 guisos del menú de Los Tacos May (precio, porciones y stock de ejemplo). Se puede
 correr las veces que sea; siempre deja la base igual.
 
 ## Correr la app
