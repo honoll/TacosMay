@@ -1,8 +1,8 @@
 # Sistema de identidad — Los Tacos May · ruta 3 «La barra»
 
 El manual de la marca. Sirve para que alguien que no estuvo en el proceso produzca una pieza
-correcta. Alejandro eligió esta ruta el 17-nov-2026 con una condición: **«May» rojo con
-contorno y el cactus se redibujan del letrero real y aparecen siempre.**
+correcta. Alejandro eligió esta ruta el 17-nov-2026, y después el logotipo: **4B como
+principal y 4C como sello** (la exploración está en [logos.md](logos.md)).
 
 - **Verlo hecho:** `http://localhost:5000/marca/sistema.html` (código en `frontend/marca/`).
   Los valores viven en `frontend/marca/sistema.js`; este documento los explica.
@@ -23,72 +23,57 @@ de despacho: claro, rápido y sin adornos. Bien hecho, no pretencioso.
 
 ## 1. Logotipo
 
+**El cactus lleva el nombre.** El cuerpo del cactus es una placa con «May» adentro; le salen
+los dos brazos a distinta altura y lleva el sombrero ladeado. Es dibujo propio en vector:
+ni las letras ni «Los Tacos» dependen de una fuente. Ya no se calca el letrero pintado: de él
+quedan el cactus, el sombrero y el rojo de «May».
+
 ### Construcción
-Tres piezas, siempre en esta relación:
-
-| Pieza | Qué es | Regla |
-|---|---|---|
-| **«May»** | El nombre del papá de Alejandro, tal como está pintado en el letrero | Rojo May con contorno negro y más grosor hacia abajo. Mide el doble de alto que «Los Tacos». **Es un dibujo, no una fuente** |
-| **«Los Tacos»** | El giro | Barlow Condensed SemiBold, mayúsculas, espaciado 0.3 em, negro. Va arriba (versión principal) o a la izquierda (horizontal) |
-| **El cactus, de sello** | El personaje del letrero, a una tinta | A la derecha en la principal, a la izquierda en la horizontal. Alto igual al del bloque de texto |
-
-### Rasgos del letrero que se conservan al redibujar
-Según la auditoría de [marca-descubrimiento.md](../investigacion/marca-descubrimiento.md) y
-la foto `docs/negocio/fotos/rotulo-logo.png`:
-
-**«May»**
-- Mayúsculas gruesas con **remates cuadrados**, dibujadas a mano: alturas y anchos desiguales.
-- **Rojo**, con **contorno negro** y un grosor extra hacia abajo que hace de sombra.
-- En el letrero el nombre va en **tres renglones escalonados que suben hacia la derecha**
-  («Los» chico, «Tacos» mediano, «May» grande). En esta ruta el escalonado se conserva en la
-  **relación de tamaños** (May al doble) y en una versión de letrero completo para usos
-  grandes, una vez redibujado; no se fuerza en tamaños chicos.
-- No se endereza ni se iguala: si queda simétrico y limpio, está mal redibujado.
-
-**El cactus**
-- **Tronco** vertical alargado, redondeado arriba, con **rayas verticales** más claras.
-- **Dos brazos** ovalados y rayados, **asimétricos**: el izquierdo sale casi horizontal, el
-  derecho sube (el «brazo chueco»).
-- **Flores** rosa-rojas con puntos blancos en la punta de cada brazo.
-- **Sombrero** amarillo de copa en pico y ala ancha, **ladeado**.
-- **Ojos** blancos ovalados y juntos con pupila negra mirando hacia arriba; **chapas** rosas;
-  boca abierta sonriente.
-- Contorno negro de grosor desigual. **Sin piernas, pies, ropa ni accesorios.**
-- De sello, a una tinta: el tronco y las flores van llenos; las rayas, el sombrero, los ojos
-  y la boca se abren en el color del fondo. Las chapas se omiten.
-
-### Versiones
-| Versión | Uso |
+| Pieza | Regla |
 |---|---|
-| **Principal** | «Los Tacos» sobre «May», sello a la derecha. La de casi siempre |
-| **Horizontal** | Sello, «Los Tacos» y «May» en una línea. Cabeceras, espacios bajos |
-| **Sello solo** | El cactus dentro de un aro. Ícono de la página, cierre de caja, esquina de etiqueta |
-| **Una tinta** | Todo en negro (o en el color del sello). Cartón, sellos de goma, impresión barata |
-| **Sobre claro** | Sobre crema o acero: «May» rojo con contorno negro; lo demás, negro |
-| **Sobre oscuro** | Sobre negro: «May» conserva su rojo; contorno, «Los Tacos» y sello pasan a crema |
+| **El cuerpo** | Un marco negro de esquinas redondas, con el interior crema. Es la «placa» donde va el nombre |
+| **«May»** | Mayúsculas pesadas y geométricas, dibujadas a mano en vector, en **rojo May** |
+| **Los brazos** | Dos, en negro, de punta redonda: el **izquierdo corto y bajo**, el **derecho largo y alto**. Cada uno termina en una flor roja |
+| **El sombrero** | Negro, de copa en pico y ala ancha, **ladeado** hacia la izquierda, asentado sobre el cuerpo |
+| **«Los Tacos»** | Barlow Condensed SemiBold en mayúsculas muy espaciadas, centrado debajo. Va como trazo, dentro del archivo |
 
-- **Área de respeto:** alrededor del logotipo, libre, el alto de la «M» de «May».
-- **Tamaños mínimos:** principal, 120 px o 30 mm de ancho; sello, 24 px u 8 mm. Si no cabe
-  la principal, se usa el sello solo.
-- **Fondos permitidos:** crema, acero, negro y cartón (a una tinta). Sobre foto, solo dentro
-  de una placa de crema.
+Lo que lo hace «el de May» y no un cactus cualquiera: **los brazos desiguales y el sombrero
+ladeado.** No se enderezan ni se igualan.
+
+### Versiones y cuándo va cada una
+Archivos en `frontend/marca/logo/`. Cada versión existe a color, a una tinta en negro
+(`-negro`) y a una tinta en blanco (`-blanco`).
+
+| Versión | Archivo | Qué es | Cuándo |
+|---|---|---|---|
+| **Principal** (4B) | `principal.svg` | El cactus con «May» y «Los Tacos» debajo | Cuando hay sitio: **200 px de ancho o más** (50 mm). Portadas, pie, imagen para compartir |
+| **Compacta** (4B sin texto) | `compacta.svg` | Lo mismo, sin «Los Tacos» | Cabeceras y espacios bajos: **de 96 a 200 px de ancho** (25 a 50 mm) |
+| **Sello** (4C) | `sello.svg` | El cactus de pie, con M, A, Y apiladas y caladas | Todo lo chico o cuadrado: **menos de 96 px de ancho**, ícono de pestaña, esquina de etiqueta, cierre de caja. Mínimo **24 px de alto** (8 mm) |
+| **Ícono** | `icono.svg` | El sello sobre una placa crema redondeada | Pestaña del navegador y accesos directos |
+
+- **Por qué hay tres:** en chico, el marco de la principal se adelgaza y «Los Tacos» deja de
+  leerse. Por eso primero se suelta el texto (compacta) y después se cambia de pieza (sello).
+  El trazo del marco se engrosó de 10 a 12 para aguantar hasta 96 px.
+- **Sobre claro** (crema, acero): versión a color. Sobre acero también vale `-negro`.
+- **Sobre oscuro y sobre el rojo:** siempre `-blanco`. La versión a color no se usa ahí.
+- **Una tinta** (`-negro`): cartón, sellos de goma, impresión barata.
+- **Área de respeto:** alrededor, libre, el alto de la copa del sombrero.
+- **El principal y el sello no van pegados.** Uno u otro, según el tamaño.
+
+### Contraste
+«May» en rojo sobre el interior crema: 5.3:1. Marco, brazos y sombrero en negro sobre crema:
+17.0:1; sobre acero: 13.6:1. Versión en blanco sobre negro: 17.0:1; sobre el rojo: 5.3:1.
+Todos pasan AA.
 
 ### Usos incorrectos
-Cambiar el rojo de «May» · quitarle el contorno · estirarlo, inclinarlo o girarlo · sombras
-suaves, brillo o degradado · ponerlo directo sobre una foto o sobre un color de guiso ·
-escribir «May» con una fuente cuando exista el dibujo · vestir o cambiar al cactus.
+Cambiarle los colores · estirarlo, inclinarlo o girarlo · sombras suaves, brillo o
+degradado · ponerlo sobre una foto o sobre un color de guiso · usar la versión a color sobre
+negro o rojo · escribir «May» con una fuente en lugar del dibujo · añadirle cara, ropa o
+accesorios al cactus · igualar los brazos o enderezar el sombrero.
 
-### Cómo se obtiene el arte final
-| Qué | Estado hoy | Qué hace falta |
-|---|---|---|
-| Estructura del logotipo: piezas, proporciones, versiones, área de respeto | **Definido** aquí y dibujado en `sistema.html` | Nada |
-| El cactus | **Vectorizado por mí con fidelidad a los rasgos** (lista de arriba), no a su trazo exacto: la única foto mide 457 × 279 px, está en ángulo y recortada | Foto de frente para calcar el trazo real y sus irregularidades |
-| «May» y «Los Tacos» pintados | **No vectorizado.** Lo sustituye Alfa Slab One, que tiene remates cuadrados pero es de imprenta | **Foto de frente del letrero**, de día, sin ángulo y en buena resolución (`PENDIENTE-CLIENTE`). Sobre ella se calca letra por letra |
-| Tonos exactos de rojo, amarillo y verde | Aproximados de la foto | La misma foto de frente |
-
-Método y validación: en [direccion-de-arte.md](direccion-de-arte.md), sección 4. Si el
-rotulista se puede localizar (`PENDIENTE-CLIENTE`: quién pintó el letrero), es el mejor
-redibujante.
+### Pendiente
+- Un repaso de dibujo viéndolo en pantalla con Alejandro (curvas de las letras, sombrero).
+- Búsqueda formal de marcas registradas antes de registrarlo (`PENDIENTE-CLIENTE`).
 
 ---
 
@@ -101,7 +86,7 @@ redibujante.
 | Acero oscuro | `#6F777B` | Borde de charola, líneas | blanco 4.6:1 |
 | Negro | `#141210` | Texto, botones, una tinta | blanco 18.7:1 |
 | Crema | `#F7F4EE` | Papel: fondo de página, etiquetas, tickets | negro 17.0:1 |
-| Rojo May | `#C8161F` | Solo la palabra «May» | blanco 5.8:1 |
+| Rojo May | `#C8161F` | «May» y las flores del cactus, en el logotipo | blanco 5.8:1 |
 | Gris texto | `#4F5659` | Texto secundario | blanco 7.5:1 |
 
 Pares verificados (fórmula WCAG): gris texto sobre crema 6.8 y sobre acero 5.4; rojo May
@@ -109,7 +94,7 @@ sobre crema 5.3; negro sobre cartón 7.9; borde de charola sobre crema 4.2 y sob
 (es borde, mínimo 3).
 
 **Proporción:** crema y acero mandan; negro para texto y botones. El rojo aparece solo en
-«May». El color fuerte de cada pieza lo pone el guiso.
+el logotipo. El color fuerte de cada pieza lo pone el guiso.
 
 ### Un color por guiso
 Los 14 del pizarrón, en su orden; el número es el de su charola. **[HIPÓTESIS]: cada color
@@ -160,8 +145,7 @@ Todas con licencia SIL Open Font License, guardadas en `frontend/fuentes/` con s
 
 Reglas: dos familias de trabajo (Barlow Condensed y Barlow); Kalam es la excepción
 registrada para el menú. Las mayúsculas angostas son para títulos y datos, nunca para un
-párrafo. «May» **no es una fuente**; mientras se redibuja lo sustituye Alfa Slab One, y solo
-dentro del logotipo. Rammetto One (de la landing anterior) quedó fuera del sistema y se retiró.
+párrafo. «May» y «Los Tacos» del logotipo **no son texto**: son dibujo, dentro de sus archivos. Rammetto One (de la landing anterior) quedó fuera del sistema y se retiró.
 
 ---
 
@@ -323,9 +307,9 @@ Todas están hechas en `sistema.html`.
 
 ## 12. Lo que nunca se hace
 
-1. Usar el rojo de «May» en algo que no sea «May».
+1. Usar el rojo de «May» en algo que no sea el logotipo.
 2. Mostrar un color de guiso sin su número y su nombre.
-3. Ponerle al cactus sarape, huaraches, bigote o cualquier cosa que el letrero no tenga.
+3. Redibujar o «adornar» al cactus: cara, sarape, huaraches, bigote.
 4. Degradados, brillos, sombras suaves, 3D.
 5. Fotos en ángulo con plato decorado, o de banco de imágenes.
 6. Palabras de lujo: gourmet, premium, artesanal, experiencia.
@@ -338,8 +322,6 @@ Todas están hechas en `sistema.html`.
 ## Lo que necesita aprobación o material
 
 - **Aprobación de Alejandro y su familia:** la plataforma, la frase de marca y este sistema.
-- **Foto de frente del letrero** (`PENDIENTE-CLIENTE`): sin ella, «May» y el cactus siguen
-  siendo provisionales.
 - **Los guisos reales delante** para fijar los 14 colores.
 - **Datos de la etiqueta:** porciones, contenido neto, formato (`PENDIENTE-CLIENTE`).
 

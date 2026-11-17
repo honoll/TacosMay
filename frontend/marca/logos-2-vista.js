@@ -39,6 +39,7 @@ const juego = (j, i) => `
 
 document.body.insertAdjacentHTML('beforeend', `
   <header class="cab"><p class="migas"><a href="./">← Las tres rutas</a> · <a href="logos.html">Los siete conceptos</a> · <a href="sistema.html">El sistema</a></p>
+    <p class="elegida"><strong>Elegido por Alejandro: 4B como logotipo y 4C como sello.</strong> Esta página queda como historial. <a class="ver" href="sistema.html">Ver el logotipo en el sistema →</a></p>
     <p class="num">Los Tacos May · logotipos, segundo pase</p><h1>El 3 y el 4, afinados</h1>
     <p class="idea">Siete variantes para decidir, una manera de que convivan y el juego completo de cada candidato. Ninguno está aplicado todavía.</p>
     <p class="nota">Letras, cactus y sombrero redibujados: pesos parejos, hueco de la «A» más abierto, espacios ajustados letra por letra, el brazo izquierdo corto y bajo y el derecho largo y alto. «Los Tacos» es el trazo real de Barlow Condensed SemiBold. Cada variante se ve en color y a una tinta, en negro y en blanco. La recomendación está en <code>docs/diseno/logos.md</code>.</p></header>

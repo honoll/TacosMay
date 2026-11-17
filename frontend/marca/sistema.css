@@ -10,33 +10,29 @@
 .lienzo.oscuro { background: #141210; color: #f7f4ee; }
 
 /* ---------- Logotipo ---------- */
-/* «May» y el cactus son provisionales (Alfa Slab One y dibujo vectorial) hasta redibujarlos del letrero. */
+/* Archivos de logo/: principal (4B), compacta (4B sin texto) y sello (4C). */
 
-.s-logo { --papel: #d9dcdd; display: inline-flex; align-items: center; gap: .6em; font-size: clamp(1.2rem, 5vw, 1.9rem); line-height: 1; color: #141210; }
-.crema .s-logo, .etq .s-logo, .heroe-s .s-logo, .compartir .s-logo { --papel: #f7f4ee; }
-.s-logo .sello { flex: none; width: 2.2em; }
-.s-logo .sello svg { display: block; width: 100%; height: auto; }
-.s-logo .palabras.fila { display: flex; align-items: baseline; gap: .4em; }
-.s-logo .sello.aro { display: grid; place-items: center; width: 4.4em; height: 4.4em; padding: .5em; border: .16em solid currentColor; border-radius: 50%; }
-.s-logo .sello.aro svg { width: auto; height: 100%; }
-.s-logo.tinta .may { color: #141210; -webkit-text-stroke: 0; text-shadow: none; }
-.s-logo.inv { --papel: #141210; color: #f7f4ee; }
-.s-logo.inv .may { -webkit-text-stroke-color: #f7f4ee; text-shadow: 0 .08em 0 #f7f4ee; }
-.s-logo.mini { font-size: 1rem; }
-.s-logo.t120 { font-size: 17px; }
-.s-logo.t24 { font-size: 5.5px; }
-.respeto { padding: 2.4rem; outline: 2px dashed #1f4fa3; outline-offset: -2px; }
-.minimos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px; }
+.s-logo { display: block; width: min(100%, 300px); height: auto; }
+.s-logo.alto { width: auto; height: 200px; }
+.s-logo.alto.chico { height: 110px; }
+.s-logo.mini { width: 120px; }
+.s-logo.t200 { width: 200px; }
+.s-logo.t96 { width: 96px; }
+.s-logo.t24 { width: auto; height: 24px; }
+.lienzo:has(.chico) { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; }
+.lienzo.rojo { background: #c8161f; }
+.respeto { padding: 2.6rem; outline: 2px dashed #1f4fa3; outline-offset: -2px; }
+.minimos { display: flex; flex-wrap: wrap; align-items: end; justify-content: center; gap: 28px; }
 
 .no { margin: 0; display: grid; gap: 6px; }
-.no .lienzo { position: relative; overflow: hidden; background: #f7f4ee; --papel: #f7f4ee; }
+.no .lienzo { position: relative; overflow: hidden; background: #f7f4ee; }
 .no .lienzo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - 2px), #c8161f calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px)); }
 .no figcaption { font-size: .9rem; }
-.no .s-logo { font-size: 1.2rem; }
-.mal-color .may { color: #1f4fa3; }
-.mal-contorno .may { -webkit-text-stroke: 0; text-shadow: none; }
-.mal-estira { transform: scaleX(1.45) skewX(-12deg); }
-.mal-sombra .may { text-shadow: 0 6px 12px rgb(0 0 0 / .55); }
+.no .s-logo { width: min(100%, 190px); }
+.mal-color { filter: hue-rotate(210deg) saturate(1.4); }
+.mal-estira { transform: scaleX(1.4) skewX(-12deg); }
+.mal-sombra { filter: drop-shadow(0 8px 10px rgb(0 0 0 / .6)); }
+.mal-fondo { padding: 18px; background: #f2b33d; }
 
 /* ---------- Color, tipografía, plumones, pictogramas ---------- */
 
@@ -100,7 +96,6 @@
 .etq .pie { padding-top: 8px; border-top: 2px dashed #141210; }
 
 .caja { --papel: #c9a26b; position: relative; display: grid; place-items: center; align-content: center; gap: 8px; width: min(100%, 260px); aspect-ratio: 4 / 3; border: 2px solid #141210; background: #c9a26b; color: #141210; }
-.caja .s-logo { --papel: #c9a26b; font-size: 1.1rem; }
 .caja p { font: 800 1.3rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
 .cinta { position: absolute; inset: 0 0 auto; height: 14px; background: linear-gradient(90deg, #a8321c 25%, #f2b33d 0 50%, #35603a 0 75%, #e08a3c 0); }
 
@@ -111,7 +106,7 @@
 
 .compartir { container-type: inline-size; display: grid; grid-template-columns: 1fr 1.25fr; align-items: center; gap: 4%; overflow: hidden; aspect-ratio: 1200 / 630; padding: 5%; border: 1px solid rgb(0 0 0 / .2); background: #f7f4ee; color: #141210; }
 .compartir p { margin-top: 3cqw; font: 800 8cqw/.88 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
-.compartir .s-logo { font-size: 3cqw; }
+.compartir .s-logo { width: 30cqw; }
 .compartir .barra { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5cqw; }
 .compartir .charola { border-width: .8cqw; border-radius: 1.6cqw; }
 .compartir .charola .num { font-size: 4cqw; left: 1cqw; top: .5cqw; }

@@ -25,6 +25,7 @@ const concepto = (l) => `
 
 document.body.insertAdjacentHTML('beforeend', `
   <header class="cab"><p class="migas"><a href="./">← Las tres rutas</a> · <a href="sistema.html">El sistema</a> · <a href="logos-2.html">Segundo pase del 3 y el 4 →</a></p>
+    <p class="elegida"><strong>Elegido por Alejandro: 4B como logotipo y 4C como sello.</strong> Esta página queda como historial. <a class="ver" href="sistema.html">Ver el logotipo en el sistema →</a></p>
     <p class="num">Los Tacos May · exploración de logotipos</p><h1>Siete maneras de unir «May» y el cactus</h1>
     <p class="idea">Para elegir un rumbo. Ninguno está aplicado todavía al sistema, a la landing ni a la tienda.</p>
     <p class="nota">Las letras de «May» y el cactus son dibujo propio, hecho en vector. «Los Tacos» va en la tipografía del sistema. La recomendación y sus motivos están en <code>docs/diseno/logos.md</code>.</p></header>

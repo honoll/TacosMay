@@ -1,6 +1,6 @@
 // Piezas compartidas de la marca, ruta 3 «La barra» (docs/diseno/sistema.md): fuente única para
 // la landing, la tienda y los tableros de frontend/marca/. Aquí viven los colores de guiso, el
-// contraste, los pictogramas, el cactus y la charola.
+// contraste, los pictogramas y la charola. El logotipo son archivos: frontend/marca/logo/.
 import { esc, slug } from './api.js';
 
 export const NEGRO = '#141210';
@@ -51,34 +51,6 @@ export const PICTOS = {
   Listo: '<path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 export const picto = (nombre) => `<svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${PICTOS[nombre]}</svg>`;
-
-// El cactus del letrero (docs/negocio/fotos/rotulo-logo.png), redibujado en vector: tronco rayado,
-// brazo izquierdo horizontal y derecho que sube, flores en las puntas, sombrero ladeado, chapas.
-// modo: 'color' (pintado), 'linea' (plumón), 'sello' (una tinta). Provisional: el definitivo se
-// redibuja del original con la foto de frente.
-export function cactus(modo = 'color') {
-  const p = {
-    color: { cuerpo: '#2f9e44', raya: '#8ed66b', sombrero: '#ffcf1f', flor: '#f0566f', ojo: '#fff', boca: '#e3202c', chapa: '#f59aa8', trazo: '#141210', w: 5 },
-    linea: { cuerpo: 'var(--papel)', raya: 'currentColor', sombrero: 'var(--papel)', flor: 'var(--papel)', ojo: 'var(--papel)', boca: 'none', chapa: 'none', trazo: 'currentColor', w: 4 },
-    sello: { cuerpo: 'currentColor', raya: 'var(--papel)', sombrero: 'var(--papel)', flor: 'currentColor', ojo: 'var(--papel)', boca: 'var(--papel)', chapa: 'none', trazo: 'currentColor', w: 5 },
-  }[modo];
-  const brazos = 'M100 160L36 134M146 160l52-44';
-  return `<svg viewBox="0 0 240 300" role="img" aria-label="El cactus de Los Tacos May"><g stroke="${p.trazo}" stroke-linecap="round" stroke-linejoin="round">
-    <g fill="${p.flor}" stroke-width="${p.w - 1}">
-      <ellipse cx="20" cy="98" rx="9" ry="14" transform="rotate(-24 20 98)"/><ellipse cx="8" cy="124" rx="9" ry="14" transform="rotate(-78 8 124)"/>
-      <ellipse cx="204" cy="78" rx="9" ry="14" transform="rotate(8 204 78)"/><ellipse cx="224" cy="96" rx="9" ry="14" transform="rotate(58 224 96)"/>
-    </g>
-    <path d="${brazos}" fill="none" stroke-width="${38 + 2 * p.w}"/><path d="${brazos}" fill="none" stroke="${p.cuerpo}" stroke-width="38"/>
-    <path d="M90 292V86a31 31 0 0 1 62 0v206z" fill="${p.cuerpo}" stroke-width="${p.w}"/>
-    <path d="M106 150v132M121 150v134M136 150v132M92 153L42 132M152 150l40-34" fill="none" stroke="${p.raya}" stroke-width="${modo === 'linea' ? 2 : 5}"/>
-    <path d="M96 62Q108 6 128 18q14 10 16 40z" fill="${p.sombrero}" stroke-width="${p.w}"/>
-    <ellipse cx="120" cy="62" rx="52" ry="13" transform="rotate(-10 120 62)" fill="${p.sombrero}" stroke-width="${p.w}"/>
-    <g fill="${p.ojo}" stroke-width="3.5"><ellipse cx="108" cy="108" rx="10" ry="14"/><ellipse cx="134" cy="108" rx="10" ry="14"/></g>
-    <g stroke="none" fill="${modo === 'sello' ? 'currentColor' : p.trazo}"><circle cx="110" cy="103" r="4.5"/><circle cx="132" cy="103" r="4.5"/></g>
-    <g stroke="none" fill="${p.chapa}"><circle cx="98" cy="128" r="6"/><circle cx="144" cy="128" r="6"/></g>
-    <path d="M106 132q15 22 32 0-16 7-32 0z" fill="${p.boca}" stroke-width="3.5"/>
-  </g></svg>`;
-}
 
 // ---------- La charola: el módulo de todo lo que muestra un guiso ----------
 

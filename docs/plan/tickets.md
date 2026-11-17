@@ -349,6 +349,33 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **NO verificado:** la página en el navegador; búsqueda formal de marcas.
   - **Bloqueo de Alejandro:** elegir (sistema 3A + 4C, o uno solo) y las tres decisiones de detalle.
 
+- **Duodécima vuelta (17-nov-2026): logotipo elegido y aplicado.** Alejandro eligió **4B como
+  principal y 4C como sello**.
+  - **Arte:** archivos SVG autónomos en `frontend/marca/logo/`: `principal` (4B con «Los Tacos»),
+    `compacta` (4B sin texto) y `sello` (4C), cada uno a color, `-negro` y `-blanco`, más
+    `icono.svg`. Último repaso: el marco pasó de trazo 10 a 12; los brazos nacen bajo el marco (a
+    una tinta asomaba su punta dentro de la placa); las letras del sello son huecos de verdad.
+  - **Regla de tamaños:** principal desde 200 px de ancho; compacta de 96 a 200 px; por debajo, el
+    sello (mínimo 24 px de alto). Sobre oscuro y sobre rojo, siempre la versión en blanco.
+  - **Aplicado en la landing:** cabecera (compacta), escena «May y la taquería» (principal), pie
+    (principal en blanco), etiqueta sobre la foto de la bolsa (sello), ícono de pestaña e imagen
+    para compartir (`frontend/media/compartir.jpg`, 1200 × 630, con `og:image`).
+  - **Aplicado en la tienda (solo visual):** cabecera, ícono de pestaña y la etiqueta de la bolsa
+    en la animación de empacado (sello). Sin cambios en `app.js`.
+  - **Manual:** sección 1 de `docs/diseno/sistema.md` reescrita y `frontend/marca/sistema.html`
+    actualizado; se quitó la nota de «provisional a la espera de la foto del letrero». `logos.html`
+    y `logos-2.html` quedan como historial, con la nota de cuál se eligió.
+  - **Retirado del sitio:** el cactus anterior (ahora solo vive en los tableros de rutas) y Alfa
+    Slab One de `barra.css`.
+  - **Verificado:** las diez versiones del logotipo y la imagen para compartir convertidas a imagen
+    y revisadas a la vista; `node --check` de todos los módulos; `api.test: OK`; HTML de landing y
+    tienda bien anidado, 10 imágenes con `alt` y medidas, ninguna clase sin regla; manual y tableros
+    armados con DOM simulado, sin referencias a archivos que falten. Contraste: «May» rojo sobre
+    crema 5.3; negro sobre crema 17.0 y sobre acero 13.6; blanco sobre negro 17.0 y sobre rojo 5.3.
+  - **NO verificado:** nada en el navegador: el tamaño real del logotipo en la cabecera a 375 px,
+    el sello dentro de la etiqueta de la bolsa (es muy chico) y en la animación, y el ícono de
+    pestaña. La tienda no se volvió a correr contra Redis. Falta la búsqueda formal de marcas.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

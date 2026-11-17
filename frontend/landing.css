@@ -23,7 +23,7 @@ main > section { padding-block: clamp(48px, 8vw, 104px); }
 /* ---------- Cabecera ---------- */
 
 .cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; padding-block: 10px; }
-.cabecera .logo { min-height: 56px; font-size: 1.15rem; }
+.cabecera .logo { height: 60px; }
 .cabecera nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .cabecera nav a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: inherit; font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
 .cabecera nav a:not(.btn):hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
@@ -54,7 +54,7 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
 
-.como { background: var(--acero); --papel: var(--acero); }
+.como { background: var(--acero); }
 .pasos { display: grid; gap: 16px; margin-top: 24px; }
 .paso .datos { gap: 8px; padding: 14px 16px 18px; }
 .paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
@@ -63,10 +63,11 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 /* La etiqueta del sistema sobre la etiqueta en blanco de la foto de la bolsa. La posición sale de medir
    el original (2048 px): la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3. */
 .paso .guiso { container-type: inline-size; }
-.etq-bolsa { position: absolute; left: 37.9%; top: 39%; width: 25.2%; height: 23.3%; display: grid; grid-template-columns: 22% 1fr; overflow: hidden; border-radius: .6cqw; background: var(--crema); color: var(--negro); }
+.etq-bolsa { position: absolute; left: 37.9%; top: 39%; width: 25.2%; height: 23.3%; display: grid; grid-template-columns: 22% 1fr 15%; overflow: hidden; border-radius: .6cqw; background: var(--crema); color: var(--negro); }
 .etq-bolsa b { display: grid; place-items: center; background: #a8321c; color: #fff; font: 800 3.2cqw/1 var(--angosta); }
 .etq-bolsa > span { display: grid; align-content: center; gap: .6cqw; padding: .8cqw 1cqw; }
 .etq-bolsa strong { font: 800 3cqw/.9 var(--angosta); text-transform: uppercase; }
+.etq-bolsa img { align-self: center; width: 78%; height: auto; }
 .etq-bolsa small { font: 600 1.5cqw/1.1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
 
 @media (min-width: 860px) {
@@ -109,7 +110,7 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 /* ---------- Escena 5: May y la taquería ---------- */
 
 .taqueria-rejilla { display: grid; gap: 40px; }
-.taqueria .logo { font-size: clamp(1.6rem, 6vw, 2.6rem); margin-bottom: 24px; }
+.logo-grande { display: block; width: min(100%, 440px); height: auto; margin-bottom: 24px; }
 .hechos { display: grid; gap: 14px; margin-bottom: 24px; }
 .hechos li { padding-left: 16px; border-left: 6px solid var(--negro); }
 .hechos strong { display: block; font: 800 clamp(1.6rem, 5vw, 2.2rem)/.95 var(--angosta); text-transform: uppercase; }
@@ -127,11 +128,11 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 
 /* ---------- Escena 6: cierre ---------- */
 
-main > .cierre { --papel: var(--negro); --foco: var(--crema); background: var(--negro); color: var(--crema); }
+main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
 .cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
 .cierre .entrada { margin-top: 14px; }
-.pie { --papel: var(--negro); --foco: var(--crema); padding-block: 32px 48px; border-top: 1px solid var(--acero-osc); background: var(--negro); color: var(--crema); }
-.pie .logo { font-size: 1.2rem; margin-bottom: 14px; }
+.pie { --foco: var(--crema); padding-block: 32px 48px; border-top: 1px solid var(--acero-osc); background: var(--negro); color: var(--crema); }
+.logo-pie { display: block; width: 200px; height: auto; margin-bottom: 16px; }
 .pie p + p { margin-top: 6px; }
 
 /* ---------- Movimiento de esta página ---------- */

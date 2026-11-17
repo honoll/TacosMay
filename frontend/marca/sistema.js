@@ -1,7 +1,7 @@
 // Sistema de identidad de Los Tacos May, ruta 3 «La barra». Manual escrito: docs/diseno/sistema.md.
 // Los valores compartidos (colores de guiso, pictogramas, cactus) viven en ../js/barra.js; aquí
 // están los que solo usa el manual, y la página que los pinta.
-import { NEGRO, GUISOS, ratio, tinta, PICTOS, picto, cactus } from '../js/barra.js';
+import { NEGRO, GUISOS, ratio, tinta, PICTOS, picto } from '../js/barra.js';
 
 export const BASE = [
   ['Acero', '#D9DCDD', 'Fondo de barra, marco claro'],
@@ -21,14 +21,9 @@ export const PLUMONES = [
 
 // ---------- Piezas ----------
 
-const may = '<span class="may">May</span>';
-const sello = `<span class="sello">${cactus('sello')}</span>`;
-const LOGOS = {
-  principal: `<span class="palabras"><span class="los">Los Tacos</span>${may}</span>${sello}`,
-  horizontal: `${sello}<span class="palabras fila"><span class="los">Los Tacos</span>${may}</span>`,
-  sello: `<span class="sello aro">${cactus('sello')}</span>`,
-};
-const logo = (v, cls = '') => `<div class="s-logo ${v} ${cls}" role="img" aria-label="Los Tacos May">${LOGOS[v]}</div>`;
+// El logotipo son archivos: logo/principal.svg (4B con «Los Tacos»), logo/compacta.svg (4B sin texto)
+// y logo/sello.svg (4C), cada uno también a una tinta en negro (-negro) y en blanco (-blanco).
+const logo = (archivo, cls = '') => `<img class="s-logo ${cls}" src="logo/${archivo}.svg" alt="Los Tacos May">`;
 
 const muestra = ([nombre, hex, uso], extra = '') => {
   const t = tinta(hex);
@@ -56,7 +51,7 @@ const etiqueta = (g) => `
       <ul class="ticket">${fila('Porciones')}${fila('Contenido neto')}${fila('Lote')}${fila('Caducidad')}</ul>
       <p class="dato pasos">${picto('Rompe')} Rompe ${picto('Calienta')} Calienta ${picto('Taco')} Taquea</p>
       <p class="dato">${picto('Congelado')} Conserve en congelación</p>
-      <div class="pie">${logo('horizontal', 'mini')}</div>
+      <div class="pie">${logo('compacta', 'mini')}</div>
     </div>
   </div>`;
 
@@ -74,30 +69,30 @@ const no = (html, pie) => `<figure class="no"><div class="lienzo">${html}</div><
 const pagina = () => `
   <header class="cab"><p class="migas"><a href="./">← Las tres rutas</a></p>
     <p class="num">Los Tacos May · sistema de identidad · ruta 3</p><h1>La barra</h1>
-    <p class="idea"><strong>Ya está hecho.</strong> Charolas calientes en fila, cada guiso con su color, «May» siempre presente.</p>
-    <p class="nota">Manual a la vista; el texto completo está en <code>docs/diseno/sistema.md</code>. El dibujo de «May» y del cactus es provisional hasta redibujarlos sobre una foto de frente del letrero.</p>
+    <p class="idea"><strong>Ya está hecho.</strong> Charolas calientes en fila, cada guiso con su color, y el cactus de May firmando.</p>
+    <p class="nota">Manual a la vista; el texto completo está en <code>docs/diseno/sistema.md</code>. El logotipo es el que eligió Alejandro: 4B como principal y 4C como sello.</p>
     <nav class="indice" aria-label="Secciones">${[['logotipo', 'Logotipo'], ['color', 'Color'], ['tipografia', 'Tipografía'], ['plumones', 'Plumones'], ['pictogramas', 'Pictogramas'], ['reticula', 'Retícula'], ['materiales', 'Materiales'], ['fotografia', 'Fotografía'], ['voz', 'Voz'], ['movimiento', 'Movimiento'], ['aplicaciones', 'Aplicaciones'], ['nunca', 'Nunca']].map(([i, t]) => `<a href="#${i}">${t}</a>`).join('')}</nav>
   </header>
   <main class="r3 sistema">
   ${seccion('logotipo', 'Logotipo', `
     <div class="rejilla">
-      <article class="tarjeta"><h3>Principal</h3><div class="lienzo crema">${logo('principal')}</div><p>«Los Tacos» arriba, «May» al doble, el cactus de sello a la derecha.</p></article>
-      <article class="tarjeta"><h3>Horizontal</h3><div class="lienzo crema">${logo('horizontal')}</div><p>Para cabeceras y espacios bajos.</p></article>
-      <article class="tarjeta"><h3>Sello solo</h3><div class="lienzo crema">${logo('sello')}</div><p>Ícono, cierre de caja, esquina de etiqueta.</p></article>
-      <article class="tarjeta"><h3>Una tinta</h3><div class="lienzo crema">${logo('principal', 'tinta')}</div><p>Todo en negro: sellos, cartón, impresión barata.</p></article>
-      <article class="tarjeta"><h3>Sobre acero</h3><div class="lienzo">${logo('principal')}</div><p>El fondo claro de la barra.</p></article>
-      <article class="tarjeta"><h3>Sobre oscuro</h3><div class="lienzo oscuro">${logo('principal', 'inv')}</div><p>«May» conserva su rojo; el contorno y lo demás pasan a crema.</p></article>
+      <article class="tarjeta"><h3>Principal</h3><div class="lienzo crema">${logo('principal')}</div><p>El cactus lleva el nombre: «May» en rojo dentro del cuerpo, los dos brazos a distinta altura, el sombrero ladeado y «Los Tacos» debajo. Desde 200 px de ancho.</p></article>
+      <article class="tarjeta"><h3>Compacta</h3><div class="lienzo crema">${logo('compacta')}</div><p>Lo mismo sin «Los Tacos», para cabeceras y espacios bajos. De 96 a 200 px de ancho.</p></article>
+      <article class="tarjeta"><h3>Sello</h3><div class="lienzo crema">${logo('sello', 'alto')}</div><p>El cactus de pie con las tres letras apiladas. Ícono de pestaña, esquina de etiqueta, cierre de caja, y todo lo que mida menos de 96 px de ancho.</p></article>
+      <article class="tarjeta"><h3>Una tinta, negro</h3><div class="lienzo">${logo('principal-negro')}${logo('sello-negro', 'alto chico')}</div><p>Cartón, sellos de goma, impresión barata. También sobre acero.</p></article>
+      <article class="tarjeta"><h3>Sobre oscuro</h3><div class="lienzo oscuro">${logo('principal-blanco')}${logo('sello-blanco', 'alto chico')}</div><p>Una tinta en blanco. Sobre negro no se usa la versión a color.</p></article>
+      <article class="tarjeta"><h3>Sobre el rojo</h3><div class="lienzo rojo">${logo('principal-blanco')}${logo('sello-blanco', 'alto chico')}</div><p>La misma versión en blanco.</p></article>
     </div>
     <div class="rejilla">
-      <article class="tarjeta"><h3>Área de respeto</h3><div class="lienzo crema"><div class="respeto">${logo('principal')}</div></div><p>Alrededor, libre, el alto de la «M» de «May».</p></article>
-      <article class="tarjeta"><h3>Tamaños mínimos</h3><div class="lienzo crema minimos">${logo('principal', 't120')}${logo('sello', 't24')}</div><p>Principal: 120 px o 30 mm de ancho. Sello: 24 px u 8 mm. Más chico, solo el sello.</p></article>
+      <article class="tarjeta"><h3>Área de respeto</h3><div class="lienzo crema"><div class="respeto">${logo('principal')}</div></div><p>Alrededor, libre, el alto de la copa del sombrero.</p></article>
+      <article class="tarjeta"><h3>Tamaños mínimos</h3><div class="lienzo crema minimos">${logo('principal', 't200')}${logo('compacta', 't96')}${logo('sello', 't24')}</div><p>Principal: 200 px o 50 mm de ancho. Compacta: 96 px o 25 mm. Sello: 24 px u 8 mm de alto. Si no cabe uno, se usa el siguiente.</p></article>
     </div>
     <h3 class="sub">Usos incorrectos</h3>
     <div class="rejilla nos">
-      ${no(logo('principal', 'mal-color'), 'Cambiar el rojo de «May»')}
-      ${no(logo('principal', 'mal-contorno'), 'Quitarle el contorno')}
-      ${no(logo('principal', 'mal-estira'), 'Estirarlo o inclinarlo')}
-      ${no(logo('principal', 'mal-sombra'), 'Ponerle sombras suaves o brillo')}
+      ${no(logo('compacta', 'mal-color'), 'Cambiarle los colores')}
+      ${no(logo('compacta', 'mal-estira'), 'Estirarlo o inclinarlo')}
+      ${no(logo('compacta', 'mal-sombra'), 'Ponerle sombras suaves o brillo')}
+      ${no(`<div class="mal-fondo">${logo('compacta')}</div>`, 'Ponerlo sobre una foto o un color de guiso')}
     </div>`)}
 
   ${seccion('color', 'Color', `
@@ -111,7 +106,7 @@ const pagina = () => `
     <div class="tipo"><p class="t-dato">Charola 09 · 4 porciones · listo</p><p><strong>Barlow Condensed SemiBold</strong>, mayúsculas, espaciado 0.1 em · datos, etiquetas, botones <small>(cifras de ejemplo)</small></p></div>
     <div class="tipo"><p class="t-precio">$ 000</p><p><strong>Barlow Condensed ExtraBold</strong>, cifras alineadas · precios <small>(el valor sale de la API)</small></p></div>
     <div class="tipo"><p class="t-texto">Entras y sales en menos de diez minutos. Los guisos ya están hechos y calientes.</p><p><strong>Barlow Regular</strong> 17 px, interlínea 1.5 · texto. <strong>SemiBold</strong> para resaltar.</p></div>
-    <p class="nota">«May» no es una fuente: es un dibujo. Mientras se redibuja del letrero, lo sustituye Alfa Slab One. Todas son SIL Open Font License, en <code>frontend/fuentes/</code>.</p>`)}
+    <p class="nota">«May» y «Los Tacos» del logotipo no son texto: son dibujo, dentro de sus archivos. Todas las fuentes son SIL Open Font License, en <code>frontend/fuentes/</code>.</p>`)}
 
   ${seccion('plumones', 'El código de tres plumones (solo en el menú)', `
     <div class="rejilla">
@@ -154,15 +149,15 @@ const pagina = () => `
       <article class="tarjeta"><h3>Etiqueta de la bolsa</h3>${etiqueta(G['09'])}<p>La franja y el número cambian con el guiso. «—» marca datos pendientes del negocio.</p></article>
       <article class="tarjeta"><h3>Tarjeta de guiso en la tienda</h3><div class="barra una">${charola(G['08'], `<p class="dato">Porciones · existencias</p><p class="precio">$ —</p>${boton('Agregar')}`)}</div><p>Precio, porciones y existencias salen de la API.</p></article>
       <article class="tarjeta"><h3>Botones</h3><div class="lienzo crema botones">${boton('Pedir guisos')}${boton('Ver el menú', 'sec')}<a class="enl" href="#aplicaciones">Cómo llegar</a></div><p>Principal: negro con la franja. Secundario: contorno. Enlace: subrayado grueso.</p></article>
-      <article class="tarjeta"><h3>Caja de envío</h3><div class="lienzo crema"><div class="caja">${logo('principal', 'tinta')}<p>Ya está hecho.</p><span class="cinta"></span></div></div><p>Cartón natural a una tinta; la cinta lleva la franja de colores.</p></article>
-      <article class="tarjeta ancha"><h3>Héroe de la landing</h3><div class="heroe-s">${logo('horizontal', 'mini')}<h3>Ya está hecho.</h3><p>Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes.</p>${boton('Pedir guisos')}<div class="barra">${ESTRELLA.map((g) => charola(g)).join('')}</div></div></article>
+      <article class="tarjeta"><h3>Caja de envío</h3><div class="lienzo crema"><div class="caja">${logo('compacta-negro', 'mini')}<p>Ya está hecho.</p><span class="cinta"></span></div></div><p>Cartón natural a una tinta; la cinta lleva la franja de colores.</p></article>
+      <article class="tarjeta ancha"><h3>Héroe de la landing</h3><div class="heroe-s">${logo('compacta', 'mini')}<h3>Ya está hecho.</h3><p>Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes.</p>${boton('Pedir guisos')}<div class="barra">${ESTRELLA.map((g) => charola(g)).join('')}</div></div></article>
       <article class="tarjeta ancha"><h3>Imagen para compartir (1200 × 630)</h3><div class="compartir"><div>${logo('principal')}<p>Ya está hecho.</p></div><div class="barra">${ESTRELLA.map((g) => charola(g)).join('')}</div></div></article>
     </div>`)}
 
   ${seccion('nunca', 'Lo que nunca se hace', `<ul class="nunca">
-      <li>Usar el rojo de «May» en otra cosa que no sea «May».</li>
+      <li>Usar el rojo de «May» en otra cosa que no sea el logotipo.</li>
       <li>Mostrar un color de guiso sin su número y su nombre.</li>
-      <li>Ponerle al cactus sarape, huaraches, bigote o cualquier cosa que el letrero no tenga.</li>
+      <li>Redibujar o «adornar» al cactus: sarape, huaraches, bigote, cara.</li>
       <li>Degradados, brillos, sombras suaves, 3D.</li>
       <li>Fotos en ángulo con plato decorado, o de banco de imágenes.</li>
       <li>Palabras de lujo: gourmet, premium, artesanal, experiencia.</li>

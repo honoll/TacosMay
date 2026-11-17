@@ -61,6 +61,10 @@ Van en todos los pedidos, con el mismo texto (el **bloque fijo** de la sección 
 
 ## 4. El logotipo y el cactus: redibujo vectorial, no generación
 
+> **Resuelto el 17-nov-2026:** el logotipo ya está dibujado en vector y elegido (4B y 4C,
+> [sistema.md](sistema.md), sección 1). Ya no se calca el letrero ni hace falta su foto de
+> frente. Lo que sigue en esta sección queda como registro de por qué no se generó.
+
 **Recomendación: redibujo vectorial sobre la foto de frente del letrero.**
 
 Por qué no generarlos: los generadores deforman letras, enderezan lo irregular y añaden lo

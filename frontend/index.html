@@ -11,8 +11,12 @@
   <meta property="og:site_name" content="Los Tacos May">
   <meta property="og:title" content="Los Tacos May — Guisos de taquería ya hechos, al vacío">
   <meta property="og:description" content="Los guisos de Los Tacos May, la taquería de Cabo San Lucas, ya hechos y empacados al vacío. Rompes la bolsa, calientas y comes.">
-  <!-- PENDIENTE-CLIENTE: dominio final (para canonical y og:url). La imagen para compartir se arma con el sistema (docs/diseno/sistema.md) -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f7f4ee'/%3E%3Cpath d='M12 30V11a4 4 0 0 1 8 0v19zM5 17l7 3M20 20l7-6' fill='none' stroke='%23141210' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M8 7h16l-5-1-3-5-3 5z' fill='%23141210'/%3E%3C/svg%3E">
+  <!-- Imagen para compartir, armada con el sistema (logotipo + charolas). Lleva fotos de guiso generadas con IA.
+       PENDIENTE-CLIENTE: dominio final, para canonical, og:url y la URL absoluta de og:image -->
+  <meta property="og:image" content="/media/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="icon" type="image/svg+xml" href="marca/logo/icono.svg">
   <link rel="preload" href="fuentes/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="barra.css">
   <link rel="stylesheet" href="landing.css">
@@ -20,15 +24,8 @@
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-  <!-- El cactus del letrero, de sello a una tinta. Provisional: redibujado por rasgos a partir de
-       docs/negocio/fotos/rotulo-logo.png. PENDIENTE-CLIENTE: foto de frente del letrero para calcarlo, igual que «May» -->
-  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><symbol id="cactus" viewBox="0 0 240 300"><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><g fill="currentColor" stroke-width="4"><ellipse cx="20" cy="98" rx="9" ry="14" transform="rotate(-24 20 98)"/><ellipse cx="8" cy="124" rx="9" ry="14" transform="rotate(-78 8 124)"/><ellipse cx="204" cy="78" rx="9" ry="14" transform="rotate(8 204 78)"/><ellipse cx="224" cy="96" rx="9" ry="14" transform="rotate(58 224 96)"/></g><path d="M100 160L36 134M146 160l52-44" fill="none" stroke-width="48"/><path d="M100 160L36 134M146 160l52-44" fill="none" stroke="currentColor" stroke-width="38"/><path d="M90 292V86a31 31 0 0 1 62 0v206z" fill="currentColor" stroke-width="5"/><path d="M106 150v132M121 150v134M136 150v132M92 153L42 132M152 150l40-34" fill="none" stroke="var(--papel)" stroke-width="5"/><path d="M96 62Q108 6 128 18q14 10 16 40z" fill="var(--papel)" stroke-width="5"/><ellipse cx="120" cy="62" rx="52" ry="13" transform="rotate(-10 120 62)" fill="var(--papel)" stroke-width="5"/><g fill="var(--papel)" stroke-width="3.5"><ellipse cx="108" cy="108" rx="10" ry="14"/><ellipse cx="134" cy="108" rx="10" ry="14"/></g><g stroke="none" fill="currentColor"><circle cx="110" cy="103" r="4.5"/><circle cx="132" cy="103" r="4.5"/></g><g stroke="none" fill="none"><circle cx="98" cy="128" r="6"/><circle cx="144" cy="128" r="6"/></g><path d="M106 132q15 22 32 0-16 7-32 0z" fill="var(--papel)" stroke-width="3.5"/></g></symbol></svg>
-
   <header class="cabecera caja">
-    <a class="logo fila" href="/" aria-label="Los Tacos May, inicio">
-      <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
-      <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
-    </a>
+    <a class="logo" href="/" aria-label="Los Tacos May, inicio"><img src="marca/logo/compacta.svg" alt="" width="480" height="186"></a>
     <nav aria-label="Principal">
       <a href="#como">Cómo funciona</a>
       <a href="#guisos">Guisos</a>
@@ -89,7 +86,7 @@
                  PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
             <li class="charola paso" style="--c:#D9DCDD;--t:#141210">
               <div class="guiso"><img src="media/guisos/bolsa.webp" srcset="media/guisos/bolsa.webp 720w, media/guisos/bolsa-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">2</span>
-                <span class="etq-bolsa" aria-hidden="true"><b>09</b><span><strong>Carne en salsa roja</strong><small>Los Tacos May · al vacío</small></span></span></div>
+                <span class="etq-bolsa" aria-hidden="true"><b>09</b><span><strong>Carne en salsa roja</strong><small>Los Tacos May · al vacío</small></span><img src="marca/logo/sello-negro.svg" alt="" width="220" height="360" loading="lazy"></span></div>
               <div class="datos">
                 <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h8l7 7v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M16.5 1l6.5 6.5-2.1 1.3-5.7-5.7z"/></svg>Rompe la bolsa</h3>
                 <p>Va empacado al vacío, por porciones. Lo único que queda es abrirla.</p>
@@ -162,10 +159,7 @@
       <div class="caja taqueria-rejilla">
         <div>
           <h2 class="sr" id="taqueria-titulo">May y la taquería</h2>
-          <div class="logo" role="img" aria-label="Los Tacos May">
-            <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
-            <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
-          </div>
+          <img class="logo-grande" src="marca/logo/principal.svg" alt="Los Tacos May" width="480" height="214" loading="lazy">
           <ul class="hechos">
             <li><strong>May es una persona</strong>Así le dicen al dueño desde siempre.</li>
             <li><strong>Unos 22 años en Cabo San Lucas</strong>La taquería empezó ahí y ahí sigue.</li>
@@ -209,10 +203,7 @@
 
   <footer class="pie">
     <div class="caja">
-      <div class="logo fila inv" role="img" aria-label="Los Tacos May">
-        <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
-        <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
-      </div>
+      <img class="logo-pie" src="marca/logo/principal-blanco.svg" alt="Los Tacos May" width="480" height="214" loading="lazy">
       <p>José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</p>
       <p>Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
       <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->

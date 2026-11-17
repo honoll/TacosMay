@@ -6,7 +6,6 @@
 @font-face { font-family: "Barlow Condensed"; src: url("fuentes/barlow-condensed-800-latin.woff2") format("woff2"); font-weight: 800; font-display: swap; }
 @font-face { font-family: "Barlow"; src: url("fuentes/barlow-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Barlow"; src: url("fuentes/barlow-600-latin.woff2") format("woff2"); font-weight: 600; font-display: swap; }
-@font-face { font-family: "Alfa Slab One"; src: url("fuentes/alfa-slab-one-latin.woff2") format("woff2"); font-display: swap; }
 
 :root {
   --acero: #d9dcdd;
@@ -14,10 +13,9 @@
   --acero-osc: #6f777b;  /* su línea fina */
   --negro: #141210;
   --crema: #f7f4ee;      /* papel: el fondo que manda */
-  --rojo-may: #c8161f;   /* solo la palabra «May» */
+  --rojo-may: #c8161f;   /* «May» y las flores del cactus, nada más */
   --gris: #4f5659;       /* texto secundario */
   --foco: #1f4fa3;
-  --papel: var(--crema); /* color de fondo que «abre» el cactus de sello */
   /* El lienzo es toda la pantalla: margen que crece con ella y un tope muy ancho.
      El texto corrido no se estira: lleva su propio ancho máximo de lectura. */
   --margen: clamp(16px, 4vw, 64px);
@@ -41,17 +39,11 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .picto { width: 1.3em; height: 1.3em; vertical-align: -.28em; }
 
 /* ---------- Logotipo ---------- */
-/* «May» va en Alfa Slab One y el cactus es un redibujo por rasgos: provisionales hasta calcarlos
-   de una foto de frente del letrero (PENDIENTE-CLIENTE). */
+/* El logotipo es una imagen: frontend/marca/logo/ (docs/diseno/sistema.md, sección 1).
+   compacta.svg en cabeceras, principal.svg cuando hay sitio, sello.svg para lo chico. */
 
-.logo { display: inline-flex; align-items: center; gap: .6em; line-height: 1; color: var(--negro); text-decoration: none; }
-.logo svg { flex: none; width: 2.2em; height: auto; }
-.logo .palabras { display: grid; }
-.logo.fila .palabras { display: flex; align-items: baseline; gap: .4em; }
-.logo .los { font: 600 .6em/1 var(--angosta); letter-spacing: .3em; text-transform: uppercase; white-space: nowrap; }
-.logo .may { font: 1.9em/1.05 "Alfa Slab One", Georgia, serif; text-transform: uppercase; color: var(--rojo-may); -webkit-text-stroke: .08em var(--negro); paint-order: stroke fill; text-shadow: 0 .08em 0 var(--negro); }
-.logo.inv { --papel: var(--negro); color: var(--crema); }
-.logo.inv .may { -webkit-text-stroke-color: var(--crema); text-shadow: 0 .08em 0 var(--crema); }
+.logo { display: inline-flex; align-items: center; text-decoration: none; }
+.logo img { display: block; width: auto; height: 100%; }
 
 /* ---------- Botones ---------- */
 /* El principal lleva la franja de colores de cuatro guisos (09, 02, 08 y 07); .primario es el de la tienda. */
