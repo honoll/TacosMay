@@ -52,9 +52,9 @@ Evidencia F1–F5 (17-nov-2026), `frontend/`: `index.html`, `styles.css`, `js/ap
   admin, y la revisión visual a 375 px (el CSS está hecho para eso, pero nadie lo vio). C1.
 
 ## Investigación
-- 🔲 I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación
-- 🔲 I2 Competencia y precios de referencia en México
-- 🔲 I3 Insumos para el PDF: dominio del problema y justificación Clave-Valor vs SQL
+- ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
+- ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
+- ✅ I3 Insumos para el PDF: dominio del problema y justificación Clave-Valor vs SQL → `docs/investigacion/insumos-pdf.md` (17-nov). Ojo: el plan gratis de Redis Cloud no tiene persistencia en disco (sección c)
 
 ## Coordinación
 - 🔲 C1 Integrar y correr el flujo completo de la demo contra la nube
