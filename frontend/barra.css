@@ -18,6 +18,10 @@
   --gris: #4f5659;       /* texto secundario */
   --foco: #1f4fa3;
   --papel: var(--crema); /* color de fondo que «abre» el cactus de sello */
+  /* El lienzo es toda la pantalla: margen que crece con ella y un tope muy ancho.
+     El texto corrido no se estira: lleva su propio ancho máximo de lectura. */
+  --margen: clamp(16px, 4vw, 64px);
+  --ancho: 1680px;
   --angosta: "Barlow Condensed", "Arial Narrow", sans-serif;
   --texto: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -93,6 +97,12 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 
 @media (min-width: 700px) {
   .barra { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+}
+@media (min-width: 1280px) {
+  .barra { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+@media (min-width: 1600px) {
+  .barra { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
 }
 
 .cargando { display: inline-flex; gap: 5px; }

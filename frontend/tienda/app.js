@@ -1,5 +1,6 @@
 import { api, session, money, esc, notice } from '../js/api.js';
 import { charola } from '../js/barra.js';
+import { empacar } from './empaque.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -205,7 +206,8 @@ const ACTIONS = {
       return go('cuenta');
     }
     const actual = cart.items.find((i) => String(i.guiso.id) === el.dataset.id)?.cantidad || 0;
-    await setQty(el.dataset.id, actual + 1);
+    const pack = empacar(el); // respuesta visual: no espera a la llamada ni la retrasa
+    try { await setQty(el.dataset.id, actual + 1); } catch (err) { pack.cancel(); throw err; }
     notice(`Agregado al carrito: ${el.dataset.nombre}.`);
   },
 
@@ -326,6 +328,7 @@ async function render() {
     if (id !== renderId) return; // ya hay un render más nuevo
     const focusId = document.activeElement?.id;
     view.innerHTML = html;
+    view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
     tick();
     // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.
     ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.();

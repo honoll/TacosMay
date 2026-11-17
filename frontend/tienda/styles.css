@@ -9,7 +9,9 @@
   --tarjeta: #fff;
 }
 
-header, main { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+/* Todo el ancho de la pantalla (--margen y --ancho vienen de barra.css). */
+header, main { width: min(100% - 2 * var(--margen), var(--ancho)); margin: 0 auto; }
+main p { max-width: 60em; }
 
 header {
   display: flex;
@@ -65,7 +67,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background: #fff; color: var(--texto); }
 
 /* El catálogo es una barra de charolas. */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
 .charola button { margin-top: 6px; }
 
 .card, .form, .lista li {
@@ -101,3 +103,69 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
 [data-countdown] { font-variant-numeric: tabular-nums; font-weight: 700; }
 [data-countdown].urgente { color: var(--alerta); }
 nav a[aria-current] .urgente { color: #f2b33d; }
+
+/* ---------- Pantalla ancha: carrito y admin en dos columnas ---------- */
+/* main lleva data-vista con la vista pintada. La lista a la izquierda; a la derecha, lo que se decide. */
+
+@media (min-width: 1100px) {
+  [data-vista="carrito"]:has(.lista) { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); column-gap: 48px; align-items: start; }
+  [data-vista="carrito"] h1 { grid-column: 1 / -1; }
+  [data-vista="carrito"] .lista { grid-column: 1; grid-row: 2 / span 3; }
+  [data-vista="carrito"] :is(.expira, .total, .acciones) { grid-column: 2; }
+  [data-vista="carrito"] .total { text-align: left; font-size: 1.6rem; }
+
+  [data-vista="admin"] { display: grid; grid-template-columns: minmax(320px, 480px) minmax(0, 1fr); column-gap: 48px; align-items: start; }
+  [data-vista="admin"] h1 { grid-column: 1 / -1; }
+  [data-vista="admin"] .form { grid-column: 1; grid-row: 2 / span 2; }
+  [data-vista="admin"] h2, [data-vista="admin"] .lista { grid-column: 2; }
+  [data-vista="admin"] .lista { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+  [data-vista="admin"] > h2 { margin-top: 0; }
+}
+
+/* ---------- Empacado: la respuesta de «agregar al carrito» ---------- */
+/* El guiso cae a la bolsa, se le saca el aire, se sella, recibe su etiqueta y la bolsa viaja al carrito.
+   Unos dos segundos en total, sin detener nada (tienda/empaque.js). Con movimiento reducido no se muestra.
+
+   paso        empieza   dura
+   aparece     0.00 s    0.16 s   la bolsa, sobre la charola
+   cae         0.10 s    0.26 s   el guiso entra a la bolsa
+   vacío       0.36 s    0.28 s   la bolsa se encoge y el plástico se pega al guiso
+   sella       0.66 s    0.24 s   pasa la barra de calor y queda la banda
+   etiqueta    0.90 s    0.20 s   cae la etiqueta con el número y el nombre
+   viaja       1.15 s    0.60 s   la bolsa vuela al carrito y se desvanece
+   llega       1.75 s    0.25 s   el contador del carrito responde */
+
+.empaque { position: fixed; z-index: 3; display: none; place-items: center; pointer-events: none; }
+.emp-bolsa { position: relative; height: 94%; aspect-ratio: 4 / 5; overflow: hidden; border: 2px solid rgb(20 18 16 / .6); border-radius: 8px; background: rgb(255 255 255 / .78); box-shadow: 0 5px 0 rgb(20 18 16 / .2); }
+.emp-guiso { position: absolute; inset: 17% 12% 9%; border-radius: 42%; background: var(--c) var(--foto, none) center / cover; }
+.emp-brillo { position: absolute; inset: 0; opacity: 0; background: repeating-linear-gradient(115deg, rgb(255 255 255 / .6) 0 2px, transparent 2px 15px); }
+.emp-banda, .emp-barra { position: absolute; top: 3%; left: 0; width: 100%; height: 9%; }
+.emp-banda { opacity: 0; background: repeating-linear-gradient(0deg, rgb(20 18 16 / .55) 0 1.5px, transparent 1.5px 4px); }
+.emp-barra { background: var(--negro); transform: translateX(-105%); }
+.emp-etq { position: absolute; left: 12%; right: 12%; top: 42%; display: grid; grid-template-columns: auto 1fr; overflow: hidden; border: 1.5px solid var(--negro); border-radius: 3px; background: var(--crema); color: var(--negro); font: 800 .72rem/1 var(--angosta); text-transform: uppercase; transform: rotate(-3deg); opacity: 0; }
+.emp-etq b { padding: 3px 4px; background: var(--c); color: var(--t); }
+.emp-etq span { padding: 3px 4px; overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .empaque { display: grid; animation: emp-viaja .6s 1.15s cubic-bezier(.5, 0, .9, .5) forwards; }
+  .empaque.falla { animation: emp-regresa .25s forwards; }
+  .emp-bolsa { animation: emp-aparece .16s both, emp-vacio .28s .36s cubic-bezier(.3, 0, .2, 1) forwards; }
+  .emp-guiso { animation: emp-cae .26s .1s cubic-bezier(.3, 1.3, .5, 1) backwards, emp-pega .28s .36s forwards; }
+  .emp-brillo { animation: emp-ver .28s .36s forwards; }
+  .emp-barra { animation: emp-sella .24s .66s linear forwards; }
+  .emp-banda { animation: emp-ver .01s .78s forwards; }
+  .emp-etq { animation: emp-etiqueta .2s .9s cubic-bezier(.2, 1.5, .4, 1) forwards; }
+  #nav.llega a[href="#carrito"] { animation: emp-llega .25s; }
+
+  @keyframes emp-aparece { from { transform: translateY(10px) scale(.9); opacity: 0; } }
+  @keyframes emp-cae { from { transform: translateY(-140%); } }
+  @keyframes emp-vacio { to { transform: scale(.92, .95); } }
+  @keyframes emp-pega { to { border-radius: 22%; transform: scale(1.12, 1.07); } }
+  @keyframes emp-ver { to { opacity: 1; } }
+  @keyframes emp-sella { to { transform: translateX(105%); } }
+  @keyframes emp-etiqueta { from { transform: rotate(-12deg) scale(1.7); opacity: 0; } to { transform: rotate(-3deg); opacity: 1; } }
+  @keyframes emp-viaja { 80% { opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(.16); opacity: 0; } }
+  /* La API dijo que no: la bolsa niega con la cabeza y se va. */
+  @keyframes emp-regresa { 30% { transform: translateX(-7px); } 60% { transform: translateX(7px); } to { opacity: 0; } }
+  @keyframes emp-llega { 40% { transform: scale(1.2); } }
+}

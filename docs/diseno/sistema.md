@@ -204,11 +204,25 @@ rompe, calienta, taco, congelado, caja, lugar y listo.**
 - **Anatomía:** marco de acero (1/16 del ancho, con una línea fina de acero oscuro), arriba
   el guiso (proporción 4:3: su color o su foto) con el **número arriba a la izquierda** y el
   vapor arriba a la derecha; abajo, sobre crema, nombre, datos y acción.
-- **En fila:** cuatro por renglón en escritorio, dos en celular; separación de 1/8 del
-  ancho de una charola.
+- **En fila:** dos por renglón en celular, cuatro desde 700 px, cinco desde 1280 px y seis
+  desde 1600 px; separación de 1/8 del ancho de una charola.
 - **Ritmo:** una fila de charolas y después texto o aire. Nunca dos retículas seguidas.
 - **Jerarquía:** un solo título grande por pantalla; lo importante arriba y a la izquierda.
-- **Márgenes:** 16 px en celular; el contenido no pasa de 1120 px de ancho.
+
+### El lienzo es toda la pantalla (regla del 17-nov-2026)
+Antes el contenido se quedaba en 1120 px y los lados quedaban vacíos. Ahora:
+
+- **Margen que crece con la pantalla:** de 16 px en celular a 64 px en escritorio
+  (`--margen: clamp(16px, 4vw, 64px)`), con un tope de 1680 px de contenido (`--ancho`). Los
+  fondos (acero, negro, crema) van siempre de lado a lado.
+- **El ancho se gana con columnas, no estirando:** más charolas por fila, y composiciones en
+  dos columnas desde 1100 px (título a la izquierda y barra a la derecha en el héroe; datos y
+  explicación en el ticket del envío; lista y resumen en el carrito; formulario y lista en admin).
+- **El texto corrido no se estira:** un párrafo no pasa de unos 34 em de ancho en la landing
+  ni de 60 em en la tienda, aunque el lienzo sea total.
+- **Imágenes:** cada foto de guiso tiene dos tamaños (720 y 1024 px de ancho) y el navegador
+  elige según el tamaño de la charola.
+- En celular no cambia nada: una o dos columnas y 16 px de margen.
 
 ---
 
@@ -282,8 +296,10 @@ movimiento reducido todo queda quieto y completo.
 | **Un botón responde** | La franja de colores se abre al pasar el cursor o el foco; al presionar, se hunde 2 px | Se puede accionar; se accionó |
 | **Cargando** | Tres charolas chicas se llenan en secuencia | Ya viene |
 | **Listo** | La palomita se traza una vez | Quedó |
+| **Empacado** (al agregar al carrito, en la tienda) | El guiso cae a una bolsa, se le saca el aire, se sella, recibe su etiqueta y la bolsa vuela al carrito; unos 2 s en total, sin detener nada | Qué es el producto: guiso ya hecho, empacado al vacío |
 
-Límites: duraciones de 120 a 250 ms para respuesta, 1.2 s como máximo para un gesto; nada en
+Límites: duraciones de 120 a 250 ms para respuesta, 1.2 s como máximo para un gesto (la
+única secuencia más larga es el empacado, de 2 s, y no bloquea); nada en
 bucle salvo «cargando»; sin desplazamiento secuestrado ni rebotes. Todo dentro de
 `prefers-reduced-motion: no-preference`. La técnica es CSS; si una escena pide más, se sube
 de peldaño con justificación (regla del estudio).

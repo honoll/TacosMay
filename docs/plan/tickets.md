@@ -304,6 +304,35 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **Bloqueo de Alejandro:** elegir concepto. Después: segundo pase de dibujo, versiones del
     sistema y aplicarlo a landing y tienda.
 
+- **Décima vuelta (17-nov-2026): empacado al agregar al carrito y lienzo a todo el ancho.** El
+  logotipo sigue sin elegirse; no se aplicó ninguno.
+  - **Empacado** (`frontend/tienda/empaque.js` + `tienda/styles.css`), al agregar un guiso en el
+    catálogo de la tienda (la landing no tiene «agregar»). Coreografía, 2.0 s en total:
+    0.00 s aparece la bolsa sobre la charola (0.16 s) · 0.10 s el guiso cae dentro (0.26 s) ·
+    0.36 s vacío: la bolsa se encoge y el plástico se pega (0.28 s) · 0.66 s pasa la barra de calor
+    y queda la banda sellada (0.24 s) · 0.90 s cae la etiqueta con número y nombre (0.20 s) ·
+    1.15 s la bolsa vuela al enlace del carrito (0.60 s) · 1.75 s el contador responde (0.25 s).
+    La bolsa es dibujo en CSS con el color del guiso (y su foto, si la tiene): igual para los 14.
+  - **Técnica:** CSS (keyframes con retrasos y dos variables para el destino del vuelo); JS solo
+    coloca la bolsa y le dice a dónde ir. Sin librería: no hizo falta.
+  - **No cambia la lógica:** la llamada sale en el mismo momento y no espera a la animación. Si la
+    API falla, la bolsa se sacude y se va, y sale el aviso de siempre. Una bolsa por charola
+    (agregar seguido no las encima). No tapa el botón ni toma el foco; va oculta para el lector
+    de pantalla. Con movimiento reducido no se muestra: quedan el aviso y el contador.
+    Cambios en `tienda/app.js`: el `import`, dos líneas en `add` y una en `render` (`data-vista`).
+  - **Todo el ancho:** margen de 16 a 64 px según pantalla y tope de 1680 px (antes 1120 en la
+    landing y 1000 en la tienda). Charolas: 4, 5 y 6 por fila (700, 1280 y 1600 px). Desde 1100 px:
+    héroe en dos columnas, ticket del envío en dos columnas, carrito con lista y resumen lado a
+    lado, admin con formulario y lista lado a lado. El texto corrido conserva su ancho de lectura.
+    Regla escrita en `docs/diseno/sistema.md`, sección 6.
+  - **Imágenes:** segundo tamaño de 1024 × 768 para las cinco (80 a 149 KB), servido con `srcset`.
+  - **Verificado sin navegador:** `node --check` de `tienda/empaque.js`, `tienda/app.js`,
+    `js/barra.js` y `js/landing.js`; `api.test: OK`; HTML bien anidado, 6 imágenes con `alt` y
+    medidas, ninguna clase sin regla en landing ni tienda; el diff de `app.js` son 4 líneas.
+  - **NO verificado:** la animación no se ha visto correr ni una vez (ni su ritmo, ni el vuelo al
+    carrito, ni la reversa con error); la retícula a 1280, 1440 y 1920 px, y a 375 px; la tienda
+    contra Redis con estos cambios (lo corre coordinación).
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

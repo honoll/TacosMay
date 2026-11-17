@@ -82,10 +82,11 @@ export function cactus(modo = 'color') {
 
 // ---------- La charola: el módulo de todo lo que muestra un guiso ----------
 
-// Fotos que ya están en media/guisos/<slug>.webp (720 x 540, recorte 4:3 centrado del original).
+// Fotos que ya están en media/guisos/<slug>.webp (720 x 540) y <slug>-1024.webp (1024 x 768), recorte 4:3 del original.
 // PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender.
 export const FOTOS = new Set(['carne-en-salsa-roja', 'chorizo-con-huevo', 'rajas-con-queso-y-crema']);
 
+const SIZES = '(min-width: 1600px) 17vw, (min-width: 1280px) 20vw, (min-width: 700px) 25vw, 50vw';
 const POR_SLUG = new Map(GUISOS.map((g) => [slug(g.nombre), g]));
 
 // Lo que el sistema sabe de un guiso, buscado por su nombre (la API no manda color ni foto).
@@ -99,7 +100,8 @@ export function guisoDe(nombre) {
 export function charola(nombre, cuerpo = '', { tag = 'article', cls = '' } = {}) {
   const g = guisoDe(nombre);
   // alt vacío: el nombre del guiso está escrito justo debajo.
-  const img = g.foto ? `<img src="/media/guisos/${g.slug}.webp" alt="" width="720" height="540" loading="lazy">` : '';
+  // Dos tamaños: 720 px para la retícula y 1024 px para las charolas grandes de pantalla ancha.
+  const img = g.foto ? `<img src="/media/guisos/${g.slug}.webp" srcset="/media/guisos/${g.slug}.webp 720w, /media/guisos/${g.slug}-1024.webp 1024w" sizes="${SIZES}" alt="" width="720" height="540" loading="lazy">` : '';
   return `<${tag} class="charola ${cls}" style="--c:${g.color};--t:${tinta(g.color)}">
     <div class="guiso">${img}${g.n ? `<span class="num">${g.n}</span>` : ''}<span class="vapor" aria-hidden="true">${picto('Vapor')}</span></div>
     <div class="datos"><h3>${esc(nombre)}</h3>${cuerpo}</div>

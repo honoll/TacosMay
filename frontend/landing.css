@@ -11,7 +11,7 @@ ol, ul { padding: 0; list-style: none; }
 address { font-style: normal; }
 section[id] { scroll-margin-top: 16px; }
 
-.caja { width: min(100% - 32px, 1120px); margin-inline: auto; }
+.caja { width: min(100% - 2 * var(--margen), var(--ancho)); margin-inline: auto; }
 .saltar { position: absolute; left: 16px; top: -100px; z-index: 2; padding: 12px 16px; background: var(--negro); color: var(--crema); }
 .saltar:focus { top: 8px; }
 
@@ -41,6 +41,15 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
   .heroe .charola .datos { padding: 8px; }
   .heroe .charola .num { font-size: 1.2rem; }
   .heroe .charola .vapor { display: none; }
+}
+
+/* En pantalla ancha el héroe va en dos columnas: el título a la izquierda y la barra a la derecha. */
+@media (min-width: 1100px) {
+  .heroe .caja { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 4vw, 80px); align-items: center; }
+  .heroe .caja > * { grid-column: 1; }
+  .heroe .barra { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; }
+  h1.rot { align-self: end; font-size: clamp(5rem, 8.5vw, 10.5rem); }
+  .heroe .acciones { align-self: start; }
 }
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
@@ -89,6 +98,14 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 .fuente { font-size: .95rem; }
 .fuente a { display: inline-block; padding-block: 10px; font-weight: 600; }
 
+/* En ancho, el ticket se abre en dos columnas: los datos a la izquierda, la explicación a la derecha. */
+@media (min-width: 1100px) {
+  .papel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; align-items: start; max-width: 1180px; }
+  .papel > h2 { grid-column: 1 / -1; }
+  .papel > .ticket { grid-column: 1; grid-row: 2 / span 3; margin-top: 0; }
+  .papel > p { grid-column: 2; max-width: 34em; }
+}
+
 /* ---------- Escena 5: May y la taquería ---------- */
 
 .taqueria-rejilla { display: grid; gap: 40px; }
@@ -111,7 +128,7 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 /* ---------- Escena 6: cierre ---------- */
 
 main > .cierre { --papel: var(--negro); --foco: var(--crema); background: var(--negro); color: var(--crema); }
-.cierre h2.rot { font-size: clamp(4rem, 20vw, 10rem); line-height: .84; }
+.cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
 .cierre .entrada { margin-top: 14px; }
 .pie { --papel: var(--negro); --foco: var(--crema); padding-block: 32px 48px; border-top: 1px solid var(--acero-osc); background: var(--negro); color: var(--crema); }
 .pie .logo { font-size: 1.2rem; margin-bottom: 14px; }
