@@ -46,3 +46,28 @@ esta dirección. `PENDIENTE-CLIENTE`: las demás sucursales.
 Teléfono, WhatsApp, correo, redes · historia y año de inicio · fotos propias de los guisos y
 del local · razón social y aviso de privacidad · todo lo del producto empacado (formato,
 precio, cobertura y costo de envío).
+
+## Respuestas de Alejandro (17-nov-2026)
+
+Contestadas por Alejandro, hijo del dueño, a las seis preguntas clave del cuestionario de
+`docs/investigacion/marca-descubrimiento.md`. Son datos reales; lo demás del cuestionario
+sigue `PENDIENTE-CLIENTE`.
+
+1. **Quién es May.** Es su papá. «May» es un apodo: así le dicen todos los que lo conocen y
+   se le quedó con los años.
+2. **El personaje.** No tiene nombre. Se eligió un cactus porque en Cabo San Lucas es de lo
+   que más abunda. La familia no lo llama nopal ni cardón: es «el cactus».
+3. **Origen.** La familia no es de Los Cabos, pero la taquería empezó ahí hace unos 22 años
+   («poco más, poco menos»). `PENDIENTE-CLIENTE`: de dónde es la familia y el año exacto.
+4. **El letrero.** Se puede conseguir gente que pinte más rótulos; no es un problema.
+   `PENDIENTE-CLIENTE`: quién pintó el actual.
+5. **Clientes y ritmo.** La taquería siempre se ha basado en la velocidad y en atender a la
+   clase trabajadora. Los guisos ya están preparados y se mantienen calientes a baño maría,
+   así que se sirven rápido: una persona puede entrar y salir en menos de 10 minutos. La
+   taquería del centro vende hasta las 4 a. m.; es algo reciente, pero sí deja ventas.
+6. **Guisos estrella.** Chorizo con huevo, rajas (con queso y crema) y carne en salsa roja,
+   entre otros. `PENDIENTE-CLIENTE`: cuáles se empacarían primero.
+
+Lo que esto corrige de documentos anteriores: el personaje es un cactus, no un nopal; la
+madrugada es reciente, no el origen del negocio; y el rasgo de fondo de la taquería es
+servir rápido a gente que trabaja.
