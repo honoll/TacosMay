@@ -190,6 +190,8 @@ rompe, calienta, taco, congelado, caja, lugar y listo.**
   vapor arriba a la derecha; abajo, sobre crema, nombre, datos y acción.
 - **En fila:** dos por renglón en celular, cuatro desde 700 px, cinco desde 1280 px y seis
   desde 1600 px; separación de 1/8 del ancho de una charola.
+- **Charola sin foto:** más baja (proporción 5:2), con el cepillado del acero sobre su color y
+  el número grande. Se ve como una charola tapada, no como un hueco.
 - **Ritmo:** una fila de charolas y después texto o aire. Nunca dos retículas seguidas.
 - **Jerarquía:** un solo título grande por pantalla; lo importante arriba y a la izquierda.
 
@@ -200,7 +202,8 @@ Antes el contenido se quedaba en 1120 px y los lados quedaban vacíos. Ahora:
   (`--margen: clamp(16px, 4vw, 64px)`), con un tope de 1680 px de contenido (`--ancho`). Los
   fondos (acero, negro, crema) van siempre de lado a lado.
 - **El ancho se gana con columnas, no estirando:** más charolas por fila, y composiciones en
-  dos columnas desde 1100 px (título a la izquierda y barra a la derecha en el héroe; datos y
+  dos columnas desde 1100 px (en el héroe, titular y texto lado a lado y la barra debajo, a todo
+  lo ancho; datos y
   explicación en el ticket del envío; lista y resumen en el carrito; formulario y lista en admin).
 - **El texto corrido no se estira:** un párrafo no pasa de unos 34 em de ancho en la landing
   ni de 60 em en la tienda, aunque el lienzo sea total.

@@ -376,6 +376,38 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     el sello dentro de la etiqueta de la bolsa (es muy chico) y en la animación, y el ícono de
     pestaña. La tienda no se volvió a correr contra Redis. Falta la búsqueda formal de marcas.
 
+- **Decimotercera vuelta (17-nov-2026): correcciones tras ver el sitio desplegado** (lista de
+  coordinación, con capturas a 375 y 1440 px).
+  - **SVG inválidos (causa):** el guion que exporta los logotipos pasaba cada clase a atributos sin
+    quitar el `fill="none"` que la pieza ya traía, y el atributo quedaba dos veces. Ahora cada
+    etiqueta conserva una sola aparición de cada atributo y la exportación se detiene si el
+    archivo no pasa un parseo XML estricto. En el repo queda la prueba
+    `node frontend/marca/logo/svg.test.mjs` (atributos sin repetir, etiquetas bien cerradas), que
+    falla con los archivos rotos y pasa con los corregidos. **Aviso:** al aplicar el arreglo, un
+    primer intento mío volvió a escribir los archivos rotos por unos minutos en disco; la prueba
+    lo atrapó antes de commitear. El guion vive fuera del repo.
+  - **1 · Etiqueta de la bolsa:** sobre la etiqueta blanca va solo el nombre del guiso, centrado,
+    con una raya del color del guiso; se quitaron el sello, el número y la letra chica.
+  - **2 · Fuente de la tienda:** la causa no eran las rutas de `@font-face`. `barra.css` llamaba
+    `--texto` a su variable de tipografía y la hoja de la tienda define `--texto` como color: la
+    pisaba y el texto caía a la fuente con remates del sistema. La variable ahora es `--fuente`.
+  - **3 y 4 · Charolas sin foto:** más bajas (5:2), con cepillado de acero sobre su color y el
+    número grande, en landing y tienda. La tienda pasa a dos columnas en celular; el botón ocupa el
+    ancho de su charola y puede partirse en dos renglones.
+  - **5 · Cabecera en celular:** logotipo y «Tienda» en la primera línea, los tres enlaces en la
+    segunda («Tienda» salió del `<nav>`).
+  - **6 · Escritorio:** en el héroe, titular y texto lado a lado y las tres charolas debajo a todo
+    lo ancho. En «Cómo funciona» el gris **sí** era la progresión por scroll, pero se leía como
+    error: los pasos inactivos ya no pierden color, solo se achican, y el activo lleva filo negro.
+    Con movimiento reducido salen los tres iguales desde el inicio (las reglas viven dentro de
+    `prefers-reduced-motion: no-preference`).
+  - **7 · Empacado a 375 px:** la bolsa tiene tamaño propio (40 % del ancho, máximo 150 px), se
+    apoya en la orilla de abajo de la zona del guiso y crece hacia arriba, así que no tapa el
+    nombre ni el botón; se mantiene a 8 px de las orillas de la pantalla.
+  - **Verificado sin navegador:** `svg.test: OK (10 archivos)` y parseo estricto con Python;
+    `api.test: OK`; `node --check` de los módulos; HTML bien anidado; ninguna clase sin regla.
+  - **NO verificado:** nada de esto en pantalla. La animación de empacado sigue sin verse correr.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

@@ -121,8 +121,8 @@ movimiento reducido no hay transición.
 No hay librerías ni video.
 
 ## Diferencias entre este guion y lo construido
-- Escena 2: las tres charolas se quedan en fila y el scroll resalta la activa (las otras bajan
-  de tamaño y pierden color); no se deslizan al centro.
+- Escena 2: las tres charolas se quedan en fila y el scroll resalta la activa (tamaño completo y
+  filo negro); las otras se achican pero siguen a color. Sobre la bolsa va solo el nombre del guiso.
 - Escena 5: el dato de la madrugada (se vende hasta las 4 a. m.) no se puso: falta el horario completo.
 - Escena 6: el cierre no lleva el sello suelto; el cactus va en el logotipo del pie.
 

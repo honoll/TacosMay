@@ -12,7 +12,13 @@ export function empacar(boton) {
   if (!zona) return { cancel() {} };
   activos.get(charola)?.quitar();
 
+  // La bolsa tiene tamaño propio y se apoya en la orilla de abajo de la zona del guiso: crece hacia arriba,
+  // así nunca tapa el nombre ni el botón, y se mantiene dentro de la pantalla (también a 375 px).
   const r = zona.getBoundingClientRect();
+  const w = Math.min(150, innerWidth * 0.4);
+  const h = w * 1.25;
+  const left = Math.min(Math.max(r.left + r.width / 2 - w / 2, 8), innerWidth - w - 8);
+  const top = Math.max(r.bottom - h, 8);
   const d = document.querySelector('#nav a[href="#carrito"]')?.getBoundingClientRect();
   const el = document.createElement('div');
   el.className = 'empaque';
@@ -23,14 +29,14 @@ export function empacar(boton) {
   el.querySelector('.emp-etq span').textContent = boton.dataset.nombre ?? '';
 
   const s = el.style;
-  s.left = `${r.left}px`; s.top = `${r.top}px`; s.width = `${r.width}px`; s.height = `${r.height}px`;
+  s.left = `${left}px`; s.top = `${top}px`; s.width = `${w}px`; s.height = `${h}px`;
   s.setProperty('--c', charola.style.getPropertyValue('--c'));
   s.setProperty('--t', charola.style.getPropertyValue('--t'));
   const foto = zona.querySelector('img')?.currentSrc;
   if (foto) s.setProperty('--foto', `url("${foto}")`);
   // A dónde vuela: al centro del enlace del carrito; si no está a la vista, hacia arriba.
-  s.setProperty('--dx', `${d ? d.left + d.width / 2 - (r.left + r.width / 2) : 0}px`);
-  s.setProperty('--dy', `${d ? d.top + d.height / 2 - (r.top + r.height / 2) : -(r.top + r.height)}px`);
+  s.setProperty('--dx', `${d ? d.left + d.width / 2 - (left + w / 2) : 0}px`);
+  s.setProperty('--dy', `${d ? d.top + d.height / 2 - (top + h / 2) : -(top + h)}px`);
 
   const quitar = () => {
     clearTimeout(seguro);

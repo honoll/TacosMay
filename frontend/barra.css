@@ -21,13 +21,13 @@
   --margen: clamp(16px, 4vw, 64px);
   --ancho: 1680px;
   --angosta: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --texto: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fuente: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 
-body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.0625rem/1.5 var(--texto); }
+body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.0625rem/1.5 var(--fuente); }
 :focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
@@ -86,6 +86,12 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola :is(h2, h3) { margin: 0; font: 800 1.25rem/.95 var(--angosta); text-transform: uppercase; overflow-wrap: anywhere; }
 .charola p { margin: 0; }
 .charola.agotada .guiso { filter: grayscale(1); }
+
+/* Sin foto: una charola tapada. Más baja, con el cepillado del acero sobre su color y el número grande.
+   Así no es un bloque liso enorme mientras llegan más fotos. */
+.charola .guiso:not(:has(img)) { aspect-ratio: 5 / 2; background: var(--c) repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / .09) 3px 4px); }
+.charola .guiso:not(:has(img)) .num { top: 50%; padding: 0 12px; background: none; font-size: clamp(2.2rem, 9vw, 3rem); transform: translateY(-50%); }
+.charola .guiso:not(:has(img)) .vapor { top: 50%; right: 12px; transform: translateY(-50%); }
 
 @media (min-width: 700px) {
   .barra { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }

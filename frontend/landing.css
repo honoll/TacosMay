@@ -22,11 +22,19 @@ main > section { padding-block: clamp(48px, 8vw, 104px); }
 
 /* ---------- Cabecera ---------- */
 
-.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; padding-block: 10px; }
-.cabecera .logo { height: 60px; }
-.cabecera nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
-.cabecera nav a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: inherit; font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
-.cabecera nav a:not(.btn):hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.cabecera { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo tienda" "nav nav"; align-items: center; gap: 0 16px; padding-block: 8px 4px; }
+.cabecera .logo { grid-area: logo; justify-self: start; height: 52px; }
+.cabecera > .btn { grid-area: tienda; }
+.cabecera nav { grid-area: nav; display: flex; justify-content: space-between; gap: 4px; }
+.cabecera nav a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
+.cabecera nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+@media (min-width: 700px) {
+  .cabecera { grid-template-columns: auto 1fr auto; grid-template-areas: "logo nav tienda"; padding-block: 10px; }
+  .cabecera .logo { height: 60px; }
+  .cabecera nav { justify-content: flex-end; gap: 4px 24px; }
+  .cabecera nav a { font-size: 1.05rem; letter-spacing: .08em; }
+}
 
 /* ---------- Escena 1: la barra (no depende de JavaScript) ---------- */
 
@@ -43,13 +51,16 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
   .heroe .charola .vapor { display: none; }
 }
 
-/* En pantalla ancha el héroe va en dos columnas: el título a la izquierda y la barra a la derecha. */
+/* En pantalla ancha: el titular y, a su lado, el texto con el botón; debajo, las tres charolas a todo
+   lo ancho. Así las charolas pesan tanto como el titular y no queda fondo vacío. */
 @media (min-width: 1100px) {
-  .heroe .caja { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 4vw, 80px); align-items: center; }
-  .heroe .caja > * { grid-column: 1; }
-  .heroe .barra { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; }
-  h1.rot { align-self: end; font-size: clamp(5rem, 8.5vw, 10.5rem); }
-  .heroe .acciones { align-self: start; }
+  .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 27rem); column-gap: clamp(32px, 4vw, 80px); align-items: end; }
+  h1.rot { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; font-size: clamp(5rem, 9vw, 12rem); }
+  .heroe .entrada { grid-column: 2; grid-row: 1; }
+  .heroe .acciones { grid-column: 2; grid-row: 2; margin-top: 20px; }
+  .heroe .barra { grid-column: 1 / -1; grid-row: 3; gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 3vw, 48px); }
+  .heroe .charola h2 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
+  .heroe .charola .num { font-size: 2.4rem; }
 }
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
@@ -60,15 +71,12 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 .paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
 .paso .picto { width: 1.1em; height: 1.1em; flex: none; }
 
-/* La etiqueta del sistema sobre la etiqueta en blanco de la foto de la bolsa. La posición sale de medir
-   el original (2048 px): la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3. */
+/* Sobre la etiqueta en blanco de la foto de la bolsa va solo el nombre del guiso: a ese tamaño (unos
+   85 px de ancho en celular) es lo único que se lee. La posición sale de medir el original (2048 px):
+   la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3, con un margen adentro. */
 .paso .guiso { container-type: inline-size; }
-.etq-bolsa { position: absolute; left: 37.9%; top: 39%; width: 25.2%; height: 23.3%; display: grid; grid-template-columns: 22% 1fr 15%; overflow: hidden; border-radius: .6cqw; background: var(--crema); color: var(--negro); }
-.etq-bolsa b { display: grid; place-items: center; background: #a8321c; color: #fff; font: 800 3.2cqw/1 var(--angosta); }
-.etq-bolsa > span { display: grid; align-content: center; gap: .6cqw; padding: .8cqw 1cqw; }
-.etq-bolsa strong { font: 800 3cqw/.9 var(--angosta); text-transform: uppercase; }
-.etq-bolsa img { align-self: center; width: 78%; height: auto; }
-.etq-bolsa small { font: 600 1.5cqw/1.1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
+.etq-bolsa { position: absolute; left: 38.6%; top: 40%; width: 23.8%; height: 21.3%; display: grid; place-items: center; border-top: 1cqw solid #a8321c; color: var(--negro); text-align: center; }
+.etq-bolsa strong { font: 800 3.5cqw/.95 var(--angosta); text-transform: uppercase; }
 
 @media (min-width: 860px) {
   .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
@@ -119,7 +127,7 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 .pizarron { width: min(100%, 520px); margin-inline: auto; padding: 24px; border: 5px solid #b89a63; border-radius: 28px; background: #fffdf7; font-family: "Kalam", "Comic Sans MS", cursive; }
 .pizarron h3 { margin-bottom: 10px; text-align: center; color: #1b1b1b; font-size: 1.3rem; }
 .pizarron ul { padding-block: 10px; border-top: 3px solid #1f4fa3; color: #c4202a; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
-.pizarron .nota { padding-top: 12px; border-top: 3px solid #1f4fa3; color: #1b1b1b; font: 400 .95rem/1.5 var(--texto); }
+.pizarron .nota { padding-top: 12px; border-top: 3px solid #1f4fa3; color: #1b1b1b; font: 400 .95rem/1.5 var(--fuente); }
 .pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 600; }
 
 @media (min-width: 860px) {
@@ -146,14 +154,10 @@ main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--cr
 @media (prefers-reduced-motion: no-preference) and (min-width: 860px) and (min-height: 620px) {
   .js main > .como { height: 240vh; padding-block: 0; }
   .js .como-fija { position: sticky; top: 0; display: grid; align-content: center; height: 100vh; height: 100svh; }
-  .js .paso { transition: transform .25s cubic-bezier(.2, .7, .2, 1); }
-  .js .paso .guiso { transition: filter .25s; }
+  /* El paso activo va a tamaño completo y con filo negro; los otros se achican, pero siguen a color. */
+  .js .paso { transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s; }
   .js .como[data-step] .paso { transform: scale(.9); }
-  .js .como[data-step] .paso .guiso { filter: grayscale(1); }
   .js .como[data-step="1"] .paso:nth-child(1),
   .js .como[data-step="2"] .paso:nth-child(2),
-  .js .como[data-step="3"] .paso:nth-child(3) { transform: none; }
-  .js .como[data-step="1"] .paso:nth-child(1) .guiso,
-  .js .como[data-step="2"] .paso:nth-child(2) .guiso,
-  .js .como[data-step="3"] .paso:nth-child(3) .guiso { filter: none; }
+  .js .como[data-step="3"] .paso:nth-child(3) { transform: none; box-shadow: 0 0 0 4px var(--negro); }
 }
