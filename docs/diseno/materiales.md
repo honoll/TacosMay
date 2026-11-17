@@ -1,7 +1,7 @@
 # Pedido de materiales — landing de Los Tacos May
 
-Para Alejandro. Todo lo que hay que producir, en orden de prioridad. Con las **seis piezas
-indispensables** (M1 a M6) ya se puede construir la primera versión premium; lo demás es
+Para Alejandro. Todo lo que hay que producir, en orden de prioridad. Con las **cinco piezas
+indispensables** (M1, M2, M4, M5 y M6b) ya se puede construir la primera versión premium; lo demás es
 mejora y puede llegar después.
 
 - **Dónde dejar todo:** `frontend/media/originales/`, con el nombre exacto que se indica.
@@ -9,12 +9,13 @@ mejora y puede llegar después.
   hace el chat de frontend.
 - A qué escena va cada pieza: [guion-landing.md](guion-landing.md). Estilo: [marca.md](marca.md).
 
-## Antes de empezar: una pregunta que cambia el pedido
+## Decidido el 17-nov-2026: todavía no existe la bolsa empacada
 
-**¿Ya existe una bolsa de guiso empacada al vacío, de verdad?**
-- **Sí:** M3 y M6 son foto y video reales (lo mejor).
-- **Todavía no:** M3 se queda como ilustración rotulada y M6 se cambia por M6b (ilustrado).
-  La página lo dirá con franqueza; no se muestra una bolsa inventada como si fuera el producto.
+Alejandro confirmó que aún no hay una bolsa de guiso al vacío de verdad. Por eso:
+- **M3 no se produce.** La bolsa del héroe será ilustración rotulada, en el estilo del nopal.
+- **M6 se sustituye por M6b** (tres clips ilustrados con Gemini).
+- La página dirá con franqueza que el empaque está en desarrollo; no se muestra una bolsa
+  inventada como si fuera el producto. Cuando exista la bolsa real, se hacen M3 y M6 y se cambian.
 
 ## La regla de honestidad
 
@@ -214,10 +215,9 @@ la foto de la bolsa cuando lleguen.
 |---|---|---|---|
 | M1 | Rótulo de frente (4 fotos) | Foto real | 10 min en la taquería |
 | M2 | Tres guisos (6 fotos) | Foto real | 20 min |
-| M3 | La bolsa empacada (3 fotos), si existe | Foto real | 10 min |
 | M4 | El nopal: de frente y poses | Gemini | 30 min |
 | M5 | El taco que se abre | Gemini, video | 20 min |
-| M6 | Romper, calentar, taquear (o M6b) | Video real | 30 min |
+| M6b | Romper, calentar, taquear: tres clips ilustrados | Gemini, video | 40 min |
 
 Los tiempos son una estimación mía, no una medición.
 
