@@ -10,6 +10,9 @@
     "seed": "node backend/seed.js",
     "test": "node --test \"backend/**/*.test.js\""
   },
+  "engines": {
+    "node": ">=22"
+  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -45,6 +45,28 @@ npm start
 La tienda queda en <http://localhost:5000> y la API en `/api`. Para desarrollo,
 `npm run dev` reinicia el servidor al guardar. Pruebas: `npm test`.
 
+## Desplegar en Render
+
+La app corre tal cual en [Render](https://render.com) como servicio web: un solo servidor
+Express que sirve la API, la tienda y la landing, conectado a la misma base de Redis Cloud.
+
+1. En Render: **New → Blueprint**, conecta el repositorio `honoll/TacosMay`. Render lee
+   `render.yaml` y propone el servicio `tacosmay` (plan gratuito).
+2. Cuando pida `REDIS_URL`, pega la misma URL de tu `.env`. `JWT_SECRET` lo genera Render.
+3. **Apply.** Al terminar el build, la app queda en `https://<nombre>.onrender.com`.
+
+Si prefieres crearlo a mano (**New → Web Service**): runtime Node, build `npm ci --omit=dev`,
+start `npm start`, y las variables `REDIS_URL`, `JWT_SECRET` y `NODE_ENV=production`.
+
+A saber:
+- El seed no se corre en Render: la base es la misma, así que `npm run seed` desde tu
+  máquina ya deja los datos que ve el despliegue. El administrador es el de tu `.env`.
+- El `JWT_SECRET` de Render es distinto al local: una sesión iniciada en `localhost` no
+  sirve en el despliegue y viceversa; se vuelve a iniciar sesión.
+- En el plan gratuito el servicio se duerme tras un rato sin visitas y la primera carga
+  tarda en despertar. Ábrelo unos minutos antes de mostrarlo.
+- `CARRITO_TTL_SEGUNDOS` (opcional) también se puede definir en el panel.
+
 ## Estructura
 
 ```

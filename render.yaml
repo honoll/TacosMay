@@ -1,0 +1,18 @@
+# Despliegue en Render (Blueprint). Pasos en el README, sección «Desplegar en Render».
+services:
+  - type: web
+    name: tacosmay
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/guisos
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # La URL de Redis Cloud se captura a mano en el panel: nunca va en el repo
+      - key: REDIS_URL
+        sync: false
+      # Render genera un secreto propio para firmar los JWT
+      - key: JWT_SECRET
+        generateValue: true
