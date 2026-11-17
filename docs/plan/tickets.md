@@ -260,6 +260,31 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **Provisional:** «May» en Alfa Slab One y cactus redibujado por rasgos (falta la foto de frente
     del letrero); los 14 colores de guiso son hipótesis.
 
+- **Octava vuelta (17-nov-2026): llegaron I1-08, I2 e I3; ya no hay huecos rotulados.**
+  - Optimizadas a WebP 720 × 540 en `frontend/media/guisos/`: `rajas-con-queso-y-crema` (69 KB),
+    `bolsa` (45 KB) y `taco` (57 KB); originales de 2048 px en `frontend/media/originales/`. Las
+    cinco imágenes de la página son **generadas con IA** y llevan su `PENDIENTE-CLIENTE`.
+  - **Rajas:** recorte más cerrado (1520 × 1140 del original, centrado un poco abajo) para dejar
+    fuera la orilla de la sartén; revisado mirando el recorte: no se ve orilla, lo oscuro que queda
+    es chile tatemado. Aparece en el héroe y, en vivo, en su charola de landing y tienda.
+  - **Bolsa:** en el paso 2 de «Cómo funciona», con la etiqueta del sistema encima de la etiqueta en
+    blanco. La posición se midió en el original (la etiqueta blanca ocupa x 780–1288, y 860–1208 de
+    2048) y se pasó a porcentajes del recorte 4:3. El recorte 4:3 corta las orillas de arriba y de
+    abajo de la bolsa, que es casi cuadrada.
+  - **Taco:** en el paso 3.
+  - Se quitó el mecanismo de huecos (`PENDIENTES` y `.pieza`): los diez guisos sin imagen muestran
+    el color de su charola.
+  - **Tamaño:** se quedó en 720 px. Las charolas se muestran a 350 px o menos casi siempre, así que
+    720 ya cubre pantallas densas; un segundo tamaño duplicaría el peso sin que se note. La única que
+    se ve mayor (la primera de «Lo que más sale», hasta unos 560 px) queda a 1.3×.
+  - **Verificado sin navegador:** `node --check` de los módulos; `api.test: OK`; HTML bien anidado,
+    6 imágenes con `alt` y medidas, 35 referencias resueltas, ninguna clase sin regla, sin
+    marcadores ni restos de huecos.
+  - **NO verificado:** si la etiqueta cae exactamente sobre la blanca al verla en pantalla (está
+    calculada, no vista), si su texto se lee a ese tamaño, y todo lo que ya estaba sin ver: landing
+    y tienda completas, a 375 px y en escritorio. La tienda sigue sin correrse contra Redis desde
+    que cambió su tarjeta.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

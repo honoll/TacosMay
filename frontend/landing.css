@@ -51,6 +51,15 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 .paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
 .paso .picto { width: 1.1em; height: 1.1em; flex: none; }
 
+/* La etiqueta del sistema sobre la etiqueta en blanco de la foto de la bolsa. La posición sale de medir
+   el original (2048 px): la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3. */
+.paso .guiso { container-type: inline-size; }
+.etq-bolsa { position: absolute; left: 37.9%; top: 39%; width: 25.2%; height: 23.3%; display: grid; grid-template-columns: 22% 1fr; overflow: hidden; border-radius: .6cqw; background: var(--crema); color: var(--negro); }
+.etq-bolsa b { display: grid; place-items: center; background: #a8321c; color: #fff; font: 800 3.2cqw/1 var(--angosta); }
+.etq-bolsa > span { display: grid; align-content: center; gap: .6cqw; padding: .8cqw 1cqw; }
+.etq-bolsa strong { font: 800 3cqw/.9 var(--angosta); text-transform: uppercase; }
+.etq-bolsa small { font: 600 1.5cqw/1.1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
+
 @media (min-width: 860px) {
   .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 }

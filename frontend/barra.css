@@ -86,8 +86,6 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola .vapor { position: absolute; right: 8px; top: 6px; opacity: .85; }
 .charola .vapor .picto { width: 26px; height: 26px; }
 .charola .guiso:has(img) .vapor { color: #fff; filter: drop-shadow(0 1px 2px rgb(0 0 0 / .7)); }
-/* Hueco de una pieza pedida que aún no llega: su código, a la vista. */
-.charola .pieza { position: absolute; left: 8px; bottom: 8px; padding: 2px 8px; border-radius: 4px; background: var(--negro); color: var(--crema); font: 700 .72rem/1.5 ui-monospace, Consolas, monospace; }
 .charola .datos { display: grid; align-content: start; justify-items: start; gap: 6px; padding: 10px 12px 12px; }
 .charola :is(h2, h3) { margin: 0; font: 800 1.25rem/.95 var(--angosta); text-transform: uppercase; overflow-wrap: anywhere; }
 .charola p { margin: 0; }

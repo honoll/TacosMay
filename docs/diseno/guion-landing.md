@@ -5,7 +5,8 @@ anterior (rótulo, madera y botones con taco), que queda en el historial de git.
 
 **Estado (17-nov-2026): la página ya está rehecha con este guion** (`frontend/index.html`,
 `landing.css`, `js/landing.js`, y lo compartido con la tienda en `barra.css` y `js/barra.js`).
-Faltan tres imágenes (I1-08, I2 e I3), con su hueco rotulado. Nadie la ha visto en pantalla.
+Ya tiene sus cinco imágenes (I1 de los guisos 02, 08 y 09, I2 la bolsa e I3 el taco); no quedan
+huecos rotulados. Nadie la ha visto en pantalla.
 
 ## Estrategia
 
@@ -129,7 +130,9 @@ No hay librerías ni video.
 1. Dejar el original en `frontend/media/originales/`.
 2. Recortarla a 4:3 centrado y guardarla como WebP de 720 × 540 en
    `frontend/media/guisos/<nombre-con-guiones>.webp`.
-3. Añadir ese nombre a `FOTOS` en `frontend/js/barra.js` (y quitarlo de `PENDIENTES`): con eso
+3. Añadir ese nombre a `FOTOS` en `frontend/js/barra.js`: con eso
    aparece en la landing y en la tienda.
 4. Si es una de las charolas escritas a mano en `index.html` (héroe y escena 2), poner ahí su
-   `<img>` como en las que ya están y quitar el rótulo del hueco.
+   `<img>` como en las que ya están.
+
+Los diez guisos que aún no tienen imagen muestran el color de su charola, sin rótulo.

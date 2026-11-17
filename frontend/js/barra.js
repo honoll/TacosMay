@@ -84,10 +84,7 @@ export function cactus(modo = 'color') {
 
 // Fotos que ya están en media/guisos/<slug>.webp (720 x 540, recorte 4:3 centrado del original).
 // PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender.
-export const FOTOS = new Set(['carne-en-salsa-roja', 'chorizo-con-huevo']);
-
-// Piezas pedidas que aún no llegan: su hueco lleva el código a la vista (docs/diseno/direccion-de-arte.md).
-export const PENDIENTES = { 'rajas-con-queso-y-crema': 'I1-08' };
+export const FOTOS = new Set(['carne-en-salsa-roja', 'chorizo-con-huevo', 'rajas-con-queso-y-crema']);
 
 const POR_SLUG = new Map(GUISOS.map((g) => [slug(g.nombre), g]));
 
@@ -96,16 +93,15 @@ const POR_SLUG = new Map(GUISOS.map((g) => [slug(g.nombre), g]));
 export function guisoDe(nombre) {
   const s = slug(nombre);
   const g = POR_SLUG.get(s);
-  return { slug: s, n: g?.n ?? '', color: g?.color ?? '#D9DCDD', foto: FOTOS.has(s), pieza: PENDIENTES[s] };
+  return { slug: s, n: g?.n ?? '', color: g?.color ?? '#D9DCDD', foto: FOTOS.has(s) };
 }
 
 export function charola(nombre, cuerpo = '', { tag = 'article', cls = '' } = {}) {
   const g = guisoDe(nombre);
   // alt vacío: el nombre del guiso está escrito justo debajo.
   const img = g.foto ? `<img src="/media/guisos/${g.slug}.webp" alt="" width="720" height="540" loading="lazy">` : '';
-  const hueco = g.pieza ? `<span class="pieza">${g.pieza} · 4:3</span>` : '';
   return `<${tag} class="charola ${cls}" style="--c:${g.color};--t:${tinta(g.color)}">
-    <div class="guiso">${img}${g.n ? `<span class="num">${g.n}</span>` : ''}${hueco}<span class="vapor" aria-hidden="true">${picto('Vapor')}</span></div>
+    <div class="guiso">${img}${g.n ? `<span class="num">${g.n}</span>` : ''}<span class="vapor" aria-hidden="true">${picto('Vapor')}</span></div>
     <div class="datos"><h3>${esc(nombre)}</h3>${cuerpo}</div>
   </${tag}>`;
 }
