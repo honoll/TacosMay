@@ -1,5 +1,9 @@
 # Sistema de marca — Los Tacos May (propuesta)
 
+> **EN SUSPENSO (17-nov-2026).** Este documento se rehace cuando Alejandro elija una ruta visual
+> ([plataforma.md](plataforma.md), [rutas.md](rutas.md)). Se conserva como registro; no es la
+> dirección vigente. Ya se corrigió el término: el personaje es un **cactus**, no un nopal.
+
 **Estado: propuesta para aprobar.** Es la marca de la familia de Alejandro: nada de esto es
 definitivo hasta que ellos digan que sí. Parte de lo único real que hay
 (`docs/negocio/datos.md` y sus tres fotos): el rótulo pintado a mano, el pizarrón del menú y
@@ -26,7 +30,7 @@ solo que ahora viaja en bolsa.
 
 | Es | No es |
 |---|---|
-| **Anfitrión:** te recibe con una sonrisa, como el nopal del rótulo | Formal ni distante |
+| **Anfitrión:** te recibe con una sonrisa, como el cactus del rótulo | Formal ni distante |
 | **Franco:** dice lo que hay y lo que no hay | Vendedor exagerado |
 | **Antojadizo:** habla de comida con gusto | Gourmet ni rebuscado |
 | **De barrio:** del centro de Cabo San Lucas, no de una cadena | Folclor de souvenir |
@@ -52,9 +56,9 @@ español de México, sin anglicismos.
 envío, tiempos o precios que no estén confirmados; usar «soluciones», «experiencia»,
 «calidad y servicio».
 
-## 4. El nopal (personaje)
+## 4. El cactus (personaje)
 
-El nopal del rótulo es el anfitrión de la marca. Descripción fiel a la foto: nopal verde con
+El cactus del rótulo es el anfitrión de la marca. Descripción fiel a la foto: cactus verde con
 rayas verticales más claras, dos brazos (uno a cada lado), flores rojas en la punta de los
 brazos, sombrero amarillo ladeado, ojos grandes blancos de pupila negra, sonrisa roja,
 contorno negro.
@@ -91,8 +95,8 @@ Sale del rótulo. Los valores son los que ya usa la página, con el contraste ca
 | Negro contorno | `#141210` | El contorno de las letras | Texto, contornos, bloques oscuros | — |
 | Amarillo sombrero | `#FFCF1F` | «Los Tacos», el sombrero | Lo que se puede accionar, letra de rótulo | Negro encima: 12.6 |
 | Rojo May | `#C8161F` | «May», las flores | Títulos de rótulo, acentos, bloque de cierre | Blanco encima: 5.8 |
-| Verde nopal | `#2F9E44` | El nopal | Solo ilustración | No lleva texto encima |
-| Verde hondo | `#1D6B30` | El nopal, oscurecido | Bloques con texto | Blanco encima: 6.5 |
+| Verde cactus | `#2F9E44` | El cactus | Solo ilustración | No lleva texto encima |
+| Verde hondo | `#1D6B30` | El cactus, oscurecido | Bloques con texto | Blanco encima: 6.5 |
 | Blanco pizarrón | `#FFFDF7` | El pizarrón | Tarjetas, escena del modo de uso | Negro encima: 18.4 |
 | Azul plumón | `#1F4FA3` | Las rayas y precios del pizarrón | Líneas, foco de teclado | Sobre blanco: 7.6 |
 | Café apagado | `#524636` | Sombra de la madera | Texto secundario | Sobre madera: 6.5 |
@@ -162,7 +166,7 @@ animan con pocos cuadros, como dibujo animado hecho a mano.
 ## 10. Lo que la marca NO es
 
 - No es «mexicano de aeropuerto»: sin sarapes, calaveras, bigotes, papel picado ni cactus de
-  caricatura genérica. El nopal es **el suyo**, no un cliché.
+  caricatura genérica. El cactus es **el suyo**, no un cliché.
 - No es gourmet minimalista: sin beige vacío, tipografía delgada ni platos de autor.
 - No es tecnológica: sin degradados, brillos de neón, vidrio esmerilado ni 3D.
 - No es de fotos de stock. Y cuando se publique o se venda, tampoco de comida generada por
@@ -174,7 +178,7 @@ animan con pocos cuadros, como dibujo animado hecho a mano.
 ## 11. Lo que Alejandro y su familia tienen que decidir
 
 1. ¿Aprueban la idea central «hecho a mano, hasta el letrero»? ¿Cuál frase de marca?
-2. ¿El nopal tiene nombre?
+2. ¿El cactus tiene nombre?
 3. ¿Hablamos como «nuestra familia» (primera persona) o como «la taquería»?
 4. ¿Se redibuja el letrero como logotipo, o se queda la fuente provisional?
 5. ¿Se aprueba una letra de plumón para el pizarrón?

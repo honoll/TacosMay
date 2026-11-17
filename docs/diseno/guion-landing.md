@@ -1,5 +1,9 @@
 # Guion de la landing — Los Tacos May
 
+> **EN SUSPENSO (17-nov-2026).** Este documento se rehace cuando Alejandro elija una ruta visual
+> ([plataforma.md](plataforma.md), [rutas.md](rutas.md)). Se conserva como registro; no es la
+> dirección vigente. Ya se corrigió el término: el personaje es un **cactus**, no un nopal.
+
 La página escena por escena: qué siente y entiende quien la visita, qué material lleva, qué
 se mueve y con qué técnica, y cómo se ve en celular. Los materiales (**M1, M2…**) están
 descritos en [materiales.md](materiales.md); la marca, en [marca.md](marca.md).
@@ -41,18 +45,18 @@ escena 3; las demás tienen un gesto cada una, o ninguno.
 ## Escena 1 — El letrero
 
 - **Siente:** que la reciben. **Entiende:** qué es y de quién.
-- **Se ve:** pared de tablones de madera. El letrero «Los Tacos May» pintado, el nopal al
+- **Se ve:** pared de tablones de madera. El letrero «Los Tacos May» pintado, el cactus al
   lado, y sobre una mesa la bolsa al vacío. Título, una línea de apoyo, el botón del taco y
   la línea de confianza («De nuestra taquería en el centro de Cabo San Lucas»).
-- **Material:** letrero limpio (M1a; mientras, la fuente), nopal (M4, luego M7), la bolsa
+- **Material:** letrero limpio (M1a; mientras, la fuente), cactus (M4, luego M7), la bolsa
   fotorrealista con etiqueta en blanco y el nombre sobrepuesto por la página (M3; mientras, la
   bolsa dibujada), madera (M1b; mientras, juntas de tablón en CSS).
-- **Se mueve:** al cargar, el letrero se pinta de izquierda a derecha como brochazo; el nopal
+- **Se mueve:** al cargar, el letrero se pinta de izquierda a derecha como brochazo; el cactus
   se asoma; la bolsa cae a la mesa con un rebote corto y recibe su sello. Después, quieto.
-  El nopal vuelve a saludar si se pasa el cursor o el foco por la marca.
-- **Técnica:** CSS (máscara que avanza, sprite del nopal con `steps()`). El héroe **no espera
+  El cactus vuelve a saludar si se pasa el cursor o el foco por la marca.
+- **Técnica:** CSS (máscara que avanza, sprite del cactus con `steps()`). El héroe **no espera
   a JavaScript** y el título no se anima, para no retrasar la carga.
-- **Celular:** letrero y nopal arriba, título, botón a todo lo ancho; la bolsa asoma abajo.
+- **Celular:** letrero y cactus arriba, título, botón a todo lo ancho; la bolsa asoma abajo.
   Todo cabe en la primera pantalla.
 - **Sin movimiento o sin JavaScript:** la misma imagen, ya completa.
 
@@ -96,7 +100,7 @@ explicación y anuncia la escena que sigue.
   rotulado.
 - **Se mueve:** los renglones se escriben de izquierda a derecha la primera vez que entran a
   pantalla; la foto se descubre con borde de brochazo.
-- **Estados:** cargando = la tortilla que se voltea y «Leyendo el menú…»; error = el nopal
+- **Estados:** cargando = la tortilla que se voltea y «Leyendo el menú…»; error = el cactus
   apenado (M9), el mensaje y «Volver a intentar»; vacío = «Todavía no hay guisos en el menú».
 - **Técnica:** CSS + `IntersectionObserver` (ya está hecho).
 - **Celular:** una columna; el número uno ocupa el ancho; los renglones tienen 48 px de alto
@@ -106,7 +110,7 @@ explicación y anuncia la escena que sigue.
 
 - **Siente:** tranquilidad. **Entiende:** por qué va congelado, y que no se le promete nada
   que no esté confirmado.
-- **Se ve:** bloque negro, título grande, el nopal con frío (M8), dos párrafos y las fuentes.
+- **Se ve:** bloque negro, título grande, el cactus con frío (M8), dos párrafos y las fuentes.
 - **Texto:** el actual (el vacío no conserva solo; lo que cuida al guiso es el frío), más la
   frase franca sobre lo que aún no se publica: cobertura, costo y tiempos.
 - **Se mueve:** la escarcha se forma en la orilla del bloque una sola vez al entrar.
@@ -118,7 +122,7 @@ explicación y anuncia la escena que sigue.
 
 - **Siente:** cercanía. **Entiende:** que hay un lugar y una familia.
 - **Se ve:** el pizarrón con los guisos que se sirven ahí (sin precios) y la dirección
-  enlazada al mapa, con el nopal señalándola.
+  enlazada al mapa, con el cactus señalándola.
 - **Material:** ninguno nuevo. No se genera fachada ni interior: pasarían por el local real.
   Cuando haya fotos reales del local, entran aquí.
 - **Se mueve:** nada.
@@ -127,7 +131,7 @@ explicación y anuncia la escena que sigue.
 
 ## Escena 7 — Cierre
 
-Bloque rojo. «Rompe la bolsa.» en letra de rótulo, el botón del taco en grande y el nopal
+Bloque rojo. «Rompe la bolsa.» en letra de rótulo, el botón del taco en grande y el cactus
 despidiéndose con el sombrero. Debajo, el pie: dirección y, cuando existan, los contactos
 como enlaces (`PENDIENTE-CLIENTE`).
 
@@ -144,7 +148,7 @@ nunca sustituye al texto.
 | **Pedir guisos / Ir a la tienda** (principal) | Taco cerrado | El taco se abre y deja ver el guiso; al salir, se cierra | El botón se hunde |
 | **Ver cómo se come** | Bolsa al vacío | Se le rasga la esquina | — |
 | **Tienda** (cabecera) | Taco chico | Se abre | — |
-| **Dirección / mapa** | Nopal señalando | Mueve el brazo | — |
+| **Dirección / mapa** | Cactus señalando | Mueve el brazo | — |
 | **Volver a intentar** | Tortilla | Da una vuelta | Da una vuelta |
 | **Cargando** (no es botón) | Tortilla en el comal | Se voltea mientras carga | — |
 | **Enlaces de texto** | Subrayado de brocha | Se pinta de izquierda a derecha | — |

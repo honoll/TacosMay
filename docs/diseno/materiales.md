@@ -1,5 +1,9 @@
 # Pedido de materiales — landing de Los Tacos May
 
+> **EN SUSPENSO (17-nov-2026).** Este documento se rehace cuando Alejandro elija una ruta visual
+> ([plataforma.md](plataforma.md), [rutas.md](rutas.md)). Se conserva como registro; no es la
+> dirección vigente. Ya se corrigió el término: el personaje es un **cactus**, no un nopal.
+
 Para Alejandro. **Todo se produce con Gemini, desde casa**: no hacen falta fotos ni videos
 reales por ahora. Con las **cinco piezas indispensables** (M4, M2, M3, M5 y M6) la página se
 ve completa; lo demás es mejora y puede llegar después.
@@ -26,7 +30,7 @@ vender: [landing-premium.md](../investigacion/landing-premium.md), sección 6.
 
 | Estilo | Para qué | Cómo se mantiene parejo |
 |---|---|---|
-| **Rótulo pintado** (ilustración plana, contorno negro) | El nopal, los botones, la escena del modo de uso, el letrero | Se adjunta siempre `M4a` y se pega el **bloque de rótulo** |
+| **Rótulo pintado** (ilustración plana, contorno negro) | El cactus, los botones, la escena del modo de uso, el letrero | Se adjunta siempre `M4a` y se pega el **bloque de rótulo** |
 | **Foto de taquería** (fotorrealista) | Los guisos y la bolsa | Se pega siempre el mismo **bloque de fotografía**; solo cambia la línea del platillo |
 
 **Bloque de rótulo** (va al final de todos los prompts ilustrados):
@@ -66,14 +70,14 @@ napkins, no garnish that is not listed, no text, no logos, no watermark. Landsca
 
 # Indispensables
 
-## M4 — El nopal: de frente y poses (imagen, estilo rótulo)
+## M4 — El cactus: de frente y poses (imagen, estilo rótulo)
 - **Para:** todas las escenas. **Es la primera pieza:** una vez aprobada, `M4a` se adjunta en
   todos los prompts ilustrados para que todo salga de la misma mano.
 - **Paso 1, de frente.** Adjunta `docs/negocio/fotos/rotulo-logo.png` y pega:
 
 ```
 Use the attached photo of a hand-painted Mexican taqueria sign as the exact character reference.
-Redraw the cactus mascot from the sign as a clean character illustration: a green nopal cactus
+Redraw the cactus mascot from the sign as a clean character illustration: a green cactus
 with lighter green vertical stripes, two arms (one on each side), small red flowers at the tips
 of the arms, a tilted yellow sombrero, big round white eyes with black pupils and a red smiling
 mouth. Full body, front view, standing, friendly neutral pose, centered with generous margin.
@@ -97,10 +101,10 @@ closed, happily smelling steam, (5) shivering, wearing a red scarf, frost on the
 Background: perfectly flat solid magenta (#FF00FF). Landscape 3:2, 4K if available.
 ```
 
-- **Se acepta si:** se reconoce como el nopal del rótulo; contorno negro grueso; fondo magenta
+- **Se acepta si:** se reconoce como el cactus del rótulo; contorno negro grueso; fondo magenta
   liso; sin letras; las seis poses son el mismo personaje.
-- **Archivos:** `M4a-nopal-frente.png`, `M4b-nopal-poses.png`.
-- **Por qué magenta:** el nopal es verde; un fondo verde no se podría quitar.
+- **Archivos:** `M4a-cactus-frente.png`, `M4b-cactus-poses.png`.
+- **Por qué magenta:** el cactus es verde; un fondo verde no se podría quitar.
 
 ## M2 — Los guisos (seis fotos, estilo foto de taquería)
 - **Para:** el menú en vivo (escena 4). Los seis primeros bastan; si haces más, mejor: la
@@ -123,7 +127,7 @@ partly visible at the left edge of the frame.
 | 5 | Bistek con papa | `chopped beef steak with small diced potatoes in a light tomato sauce` | `M2-bistek-con-papa.png` |
 | 6 | Barbacoa | `moist shredded beef barbacoa in its own dark juices` | `M2-barbacoa.png` |
 | 7 | Chorizo con huevo | `scrambled eggs mixed with crumbled red chorizo` | `M2-chorizo-con-huevo.png` |
-| 8 | Nopalitos | `diced cooked nopal cactus paddles with tomato, onion and cilantro` | `M2-nopalitos.png` |
+| 8 | Nopalitos | `diced cooked cactus cactus paddles with tomato, onion and cilantro` | `M2-nopalitos.png` |
 | 9 | Carne en salsa roja | `chunks of beef simmered in a smooth red chile sauce` | `M2-carne-en-salsa-roja.png` |
 | 10 | Salpicón | `shredded beef salpicon with chopped tomato, onion and cilantro` | `M2-salpicon.png` |
 
@@ -196,7 +200,7 @@ duration available.
 - **Por qué ilustrado y no fotorrealista:** en esta escena quien visita recorre el video
   cuadro por cuadro con el dedo. En video fotorrealista las manos, el plástico que se rasga y
   el guiso que cae son justo donde los generadores fallan, y aquí cada falla se ve detenida.
-  El dibujo plano aguanta mejor, sale más parejo entre clips y es del mismo mundo que el nopal.
+  El dibujo plano aguanta mejor, sale más parejo entre clips y es del mismo mundo que el cactus.
 - **Prompt común** (adjunta `M4a`; cambia solo `[ACCIÓN]`; termina con el bloque de rótulo):
 
 ```
@@ -227,16 +231,16 @@ Todos son estilo rótulo: adjunta `M4a` y termina con el bloque de rótulo, salv
 |---|---|---|---|---|---|
 | M1a | El letrero limpio, de frente | Logotipo en cabecera y héroe | Adjunta `docs/negocio/fotos/rotulo-logo.png`. `Recreate only the lettering "Los Tacos May" from the attached sign photo as a clean, flat, front-facing graphic. Keep the exact letter shapes, proportions, yellow and red fill colors and thick black outline of the original hand-painted letters; correct only the perspective. Do not redesign the letters. Background: flat solid magenta (#FF00FF).` **Revisa que diga «Los Tacos May» bien escrito;** si cambia las letras, no sirve y se queda la fuente | Horizontal 3:2, 4K, PNG | `M1a-letrero.png` |
 | M1b | Madera que se repite | Fondo de la página | **Sin bloque de rótulo.** `Seamless tileable texture of light natural pine wood planks, vertical boards, visible grain and a few small knots, flat even lighting, top-down, no shadows, no objects, no text.` | 1:1, 2K, PNG | `M1b-madera.png` |
-| M7 | Nopal saludando | Héroe y cierre | Video. `Short 2D animation of the attached cactus character, full body, front view, centered. It lifts its yellow sombrero with one arm, waves once and puts the sombrero back, ending in the exact starting pose. Camera locked. Background: flat solid magenta (#FF00FF).` | 16:9, lo más corto | `M7-nopal-saluda.mp4` |
-| M8 | Nopal con frío | Escena 5 | Solo si la pose 5 de `M4b` no sirve. `The attached cactus character, full body, shivering, wearing a red scarf, frost and small icicles on its sombrero. Background: flat solid magenta (#FF00FF).` | 1:1, 2K, PNG | `M8-nopal-frio.png` |
-| M9 | Nopal apenado | Error del menú | Solo si la pose 6 de `M4b` no sirve. Igual que M8 con `embarrassed, holding its sombrero in one hand, small shy smile.` | 1:1, 2K, PNG | `M9-nopal-apenado.png` |
+| M7 | Cactus saludando | Héroe y cierre | Video. `Short 2D animation of the attached cactus character, full body, front view, centered. It lifts its yellow sombrero with one arm, waves once and puts the sombrero back, ending in the exact starting pose. Camera locked. Background: flat solid magenta (#FF00FF).` | 16:9, lo más corto | `M7-cactus-saluda.mp4` |
+| M8 | Cactus con frío | Escena 5 | Solo si la pose 5 de `M4b` no sirve. `The attached cactus character, full body, shivering, wearing a red scarf, frost and small icicles on its sombrero. Background: flat solid magenta (#FF00FF).` | 1:1, 2K, PNG | `M8-cactus-frio.png` |
+| M9 | Cactus apenado | Error del menú | Solo si la pose 6 de `M4b` no sirve. Igual que M8 con `embarrassed, holding its sombrero in one hand, small shy smile.` | 1:1, 2K, PNG | `M9-cactus-apenado.png` |
 | M10a | Bolsa que se rasga | Botón «Ver cómo se come» | Video. `Short 2D animation of a clear vacuum-sealed pouch filled with red stew, front view, centered. Its top corner tears open and peels away, then holds still. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, lo más corto | `M10a-bolsa-rasga.mp4` |
 | M10b | Tortilla que se voltea | «Cargando» y «Volver a intentar» | Video. `Short 2D animation, top-down view of a single corn tortilla on a dark round comal. The tortilla flips over once in place and lands flat, ending like the first frame. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, lo más corto | `M10b-tortilla-voltea.mp4` |
 
 **No se pide (decidido):**
 - **La taquería (antes M11).** La escena 6 se resuelve con el pizarrón, la dirección y el
-  nopal señalando. Una fachada o un interior generados pasarían por el local real, y no lo son.
-- **Imagen para compartir en redes:** se arma con el letrero, el nopal y la bolsa cuando lleguen.
+  cactus señalando. Una fachada o un interior generados pasarían por el local real, y no lo son.
+- **Imagen para compartir en redes:** se arma con el letrero, el cactus y la bolsa cuando lleguen.
 
 ---
 
@@ -244,14 +248,14 @@ Todos son estilo rótulo: adjunta `M4a` y termina con el bloque de rótulo, salv
 
 | Orden | Pieza | Qué es | Archivos |
 |---|---|---|---|
-| 1 | **M4** | El nopal, de frente y en seis poses | 2 imágenes |
+| 1 | **M4** | El cactus, de frente y en seis poses | 2 imágenes |
 | 2 | **M2** | Seis guisos en cazuela, misma mesa y misma luz | 6 imágenes |
 | 3 | **M3** | La bolsa al vacío con etiqueta en blanco | 1 imagen |
 | 4 | **M5** | El taco que se abre | 2 imágenes + 1 video |
 | 5 | **M6** | Romper, calentar, taquear | 3 videos |
 
 ## Lo que sigue pendiente y no es material
-Del negocio (`PENDIENTE-CLIENTE`): si el nopal tiene nombre; año de inicio e historia;
+Del negocio (`PENDIENTE-CLIENTE`): si el cactus tiene nombre; año de inicio e historia;
 horario completo; demás taquerías; teléfono, WhatsApp, correo y redes; instrucciones de
 calentado; todo lo del envío; razón social y aviso de privacidad. Y, antes de publicar o
 vender: sustituir por fotos reales todo lo generado de comida y de la bolsa.

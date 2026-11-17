@@ -167,6 +167,31 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     ejecutado nunca: no hay cuadros con qué probarlo. Los prompts no se han probado en Gemini. La
     tienda no se volvió a correr contra Redis (solo se añadió una función a `js/api.js`).
 
+- **Quinta vuelta (17-nov-2026): marca con proceso. Imágenes y cambios a la landing, en pausa
+  hasta que Alejandro elija ruta.**
+  - `docs/diseno/plataforma.md`: plataforma revisada con las respuestas de Alejandro. Idea central
+    **«Ya está hecho»**; promesa: guiso de olla sin la espera; para gente que trabaja; razones para
+    creer solo con hechos (unos 22 años en Cabo, May es una persona, baño maría, menos de 10
+    minutos, 14 guisos, dirección). Explica por qué cambia frente a Investigación (la rapidez sí
+    es la verdad del negocio) y frente a `marca.md`, y qué significa «premium» aquí (oficio, no lujo).
+  - `docs/diseno/rutas.md` + tableros en `frontend/marca/` (`index.html` y `ruta-1/2/3.html`,
+    visibles en `/marca/`): **1 El letrero** (madera, brocha, cactus a color), **2 El pizarrón**
+    (tres plumones), **3 La barra** (charolas, un color por guiso, «May» como sello).
+    **Recomendación: ruta 3**, con la condición de conservar «May» y el cactus redibujados del
+    letrero; segunda opción, ruta 1 con el orden de la 3. Incluye el paso siguiente (sistema y
+    dirección de arte para generar imágenes), listo y sin ejecutar.
+  - Fuentes nuevas en `frontend/fuentes/` (todas SIL OFL, con su licencia): Alfa Slab One,
+    Atkinson Hyperlegible, Kalam, Barlow Condensed y Barlow.
+  - `marca.md`, `guion-landing.md` y `materiales.md` quedan **en suspenso** (nota al inicio); en
+    `docs/diseno/` se corrigió «nopal» por «cactus». **La landing todavía dice «nopal»** en
+    comentarios, clases y un texto alternativo: se corrige cuando se retome.
+  - **Verificado sin navegador:** `node --check` de `marca/marca.js`; las cuatro páginas armadas
+    con un DOM simulado (etiquetas cuadradas, sin valores vacíos); contraste de los pares de texto
+    de las tres rutas, mínimo 5.76; nueve WOFF2 válidos. No se tocó la landing ni la tienda.
+  - **NO verificado:** nadie ha visto los tableros en pantalla (ni a 375 px ni en escritorio).
+  - **Bloqueo de Alejandro:** aprobar o corregir la plataforma y elegir ruta. Para el sistema hará
+    falta la foto de frente del letrero (`PENDIENTE-CLIENTE`).
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

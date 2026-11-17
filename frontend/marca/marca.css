@@ -1,0 +1,201 @@
+/* Tableros de exploración de marca (docs/diseno/rutas.md). El marco es neutro a propósito:
+   lo que se evalúa es lo que hay dentro de cada ruta (.r1, .r2, .r3). */
+
+/* Todas SIL Open Font License 1.1; licencias en ../fuentes/OFL*.txt */
+@font-face { font-family: "Alfa Slab One"; src: url("../fuentes/alfa-slab-one-latin.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Atkinson"; src: url("../fuentes/atkinson-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson"; src: url("../fuentes/atkinson-700-latin.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Kalam"; src: url("../fuentes/kalam-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Kalam"; src: url("../fuentes/kalam-700-latin.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("../fuentes/barlow-condensed-600-latin.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("../fuentes/barlow-condensed-800-latin.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "Barlow"; src: url("../fuentes/barlow-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Barlow"; src: url("../fuentes/barlow-600-latin.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+
+.f-slab { font-family: "Alfa Slab One", Georgia, serif; }
+.f-atk { font-family: "Atkinson", system-ui, sans-serif; }
+.f-kalam { font-family: "Kalam", "Comic Sans MS", cursive; }
+.f-kalam.b { font-weight: 700; }
+.f-barc { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 600; }
+.f-barc.x { font-weight: 800; }
+.f-bar { font-family: "Barlow", system-ui, sans-serif; }
+
+/* ---------- Marco del tablero ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; max-width: 1240px; padding: 0 16px 64px; background: #f3f1ed; color: #1a1a1a; font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid #1f4fa3; outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+code { font-size: .9em; }
+
+.cab { padding: 28px 0 20px; }
+.cab h1 { font-size: clamp(1.9rem, 6vw, 3.2rem); line-height: 1.1; }
+.num { font-size: .85rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #5b5b5b; }
+.idea { margin-top: 8px; font-size: 1.15rem; max-width: 46em; }
+.nota { margin-top: 10px; font-size: .9rem; color: #4a4a4a; max-width: 60em; }
+.migas a, .otras a, .ver { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.otras { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 32px; }
+
+main > section { margin-top: 36px; }
+h2 { font-size: 1.35rem; margin-bottom: 12px; }
+h3 { font-size: 1rem; }
+h3 small { font-weight: 400; color: #5b5b5b; }
+
+.trio { display: grid; gap: 16px; }
+.trio > div { padding: 16px; border-radius: 10px; background: #fff; }
+.trio ul { margin-top: 8px; padding-left: 18px; list-style: disc; }
+.trio li + li { margin-top: 4px; }
+
+.paleta { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.paleta li { display: grid; align-content: end; gap: 2px; min-height: 120px; padding: 12px; border-radius: 10px; border: 1px solid rgb(0 0 0 / .15); font-size: .85rem; }
+.paleta.chica { display: flex; gap: 0; margin: 12px 0; border-radius: 6px; overflow: hidden; border: 1px solid rgb(0 0 0 / .2); }
+.paleta.chica li { flex: 1; min-height: 28px; padding: 0; border: 0; border-radius: 0; }
+
+.tipo { padding: 16px; border-radius: 10px; background: #fff; }
+.tipo + .tipo { margin-top: 8px; }
+.spec { font-size: clamp(1.4rem, 5vw, 2.6rem); line-height: 1.1; margin-bottom: 6px; overflow-wrap: break-word; }
+
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.tarjeta { display: grid; align-content: start; gap: 10px; padding: 16px; border-radius: 10px; background: #fff; }
+.tarjeta > p { font-size: .92rem; }
+.lienzo { display: grid; place-items: center; gap: 8px; min-height: 130px; padding: 20px; border-radius: 8px; background: var(--papel); color: var(--tinta); }
+.lienzo .logo { width: min(100%, 340px); font-size: clamp(1.1rem, 5vw, 1.7rem); }
+.pers svg { display: block; width: min(60vw, 170px); height: auto; }
+.ilus svg { display: block; width: min(60vw, 190px); height: auto; }
+.riesgo { padding: 16px; border-left: 6px solid #c8161f; background: #fff; border-radius: 0 10px 10px 0; }
+
+.comparar { display: grid; gap: 16px; }
+.col { padding: 16px; border-radius: 12px; background: #fff; display: grid; gap: 12px; align-content: start; }
+.col h2 { margin: 0; font-size: 1.6rem; }
+.col .idea { font-size: 1rem; margin: 0; }
+
+@media (min-width: 900px) {
+  .trio { grid-template-columns: repeat(3, 1fr); }
+  .tarjeta.ancha { grid-column: span 2; }
+}
+@media (min-width: 1000px) {
+  .comparar { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- Piezas comunes de las maquetas ---------- */
+/* Las maquetas escalan con su propio ancho (unidades cqw): se ven igual en la columna de comparación. */
+
+.mock { container-type: inline-size; position: relative; overflow: hidden; width: 100%; }
+.heroe-m { aspect-ratio: 4 / 3; padding: 5%; border-radius: 8px; color: var(--tinta); }
+.heroe-m h3 { margin: 3cqw 0 2cqw; line-height: 1; }
+.heroe-m p { font-size: 3.4cqw; line-height: 1.35; max-width: 58%; }
+.heroe-m .cx { position: absolute; }
+.heroe-m .cx svg, .logo svg { display: block; width: 100%; height: auto; }
+.logo { display: flex; align-items: center; gap: 4%; line-height: 1; }
+.logo.chico { font-size: 4cqw; }
+.palabras { display: grid; }
+
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; font-size: 1.05rem; cursor: pointer; }
+.mock .btn { min-height: 0; margin-top: 3.5cqw; padding: 2cqw 4.5cqw; font-size: 3.4cqw; cursor: default; }
+
+.bolsa-m { aspect-ratio: 3 / 4; max-width: 300px; margin-inline: auto; border: 3px solid #141210; border-radius: 14px; background: rgb(255 255 255 / .75); }
+.guiso-m { position: absolute; inset: 9% 8%; border-radius: 45% 55% 50% 50% / 40% 45% 55% 60%; background: #a8321c; }
+.etiqueta { position: absolute; left: 11%; right: 11%; top: 30%; display: grid; gap: 2cqw; padding: 5cqw; transform: rotate(-3deg); color: var(--tinta); }
+.etiqueta strong { font-size: 9cqw; line-height: 1; }
+.etiqueta small { font-size: 4cqw; }
+
+.esq { position: relative; overflow: hidden; width: 100%; aspect-ratio: 4 / 3; border-radius: 6px; }
+.esq i, .esq b { position: absolute; display: block; font-style: normal; }
+.tx { display: inline-grid; align-content: end; width: 47%; aspect-ratio: 3 / 2; border-radius: 6px; overflow: hidden; border: 1px solid rgb(0 0 0 / .2); }
+.tx figcaption { justify-self: start; margin: 6px; padding: 1px 6px; border-radius: 4px; background: #141210; color: #fff; font-size: .72rem; }
+.lienzo:has(.tx) { display: flex; flex-wrap: wrap; justify-content: space-between; }
+
+.rotulado { -webkit-text-stroke: .1em #141210; paint-order: stroke fill; text-shadow: 0 .09em 0 #141210; }
+
+/* ---------- Ruta 1 · El letrero ---------- */
+
+.r1 { --papel: #ead7b0; --tinta: #141210; }
+.r1 .lienzo, .r1 .heroe-m, .tx-madera, .esq-1 { background: #ead7b0 repeating-linear-gradient(90deg, transparent 0 58px, rgb(20 18 16 / .12) 58px 60px); }
+.r1 .logo svg { width: 28%; flex: none; }
+.r1 .palabras { font-family: "Alfa Slab One", Georgia, serif; text-transform: uppercase; }
+.r1 .palabras span { -webkit-text-stroke: .1em #141210; paint-order: stroke fill; text-shadow: 0 .09em 0 #141210; }
+.r1 .los { font-size: .6em; margin-left: 52%; color: #ffcf1f; }
+.r1 .tacos { font-size: .85em; margin-left: 24%; color: #ffcf1f; }
+.r1 .may { font-size: 1.9em; color: #c8161f; }
+.r1 .heroe-m h3 { font: 8cqw/1 "Alfa Slab One", Georgia, serif; text-transform: uppercase; max-width: 62%; }
+.r1 .heroe-m p, .r1 .btn, .r1 .etiqueta small { font-family: "Atkinson", system-ui, sans-serif; }
+.r1 .heroe-m .cx { right: 2%; bottom: -3%; width: 33%; }
+.r1 .btn { border: 3px solid #141210; border-radius: 8px; background: #ffcf1f; color: #141210; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; box-shadow: 4px 4px 0 #141210; }
+.r1 button.btn:is(:hover, :focus-visible) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #141210; }
+.r1 .etiqueta { border: 3px solid #141210; background: #ead7b0; }
+.r1 .etiqueta .logo { font-size: 5cqw; }
+.r1 .etiqueta strong { font: 8cqw/1 "Alfa Slab One", Georgia, serif; text-transform: uppercase; }
+.esq-1 i { left: 27%; top: 15%; width: 46%; aspect-ratio: 1; border-radius: 50%; background: #a8321c; border: 7px solid #4a2a1c; }
+.esq-1 b { left: -9%; top: 34%; width: 26%; aspect-ratio: 1; border-radius: 50%; background: #f2d27a; border: 3px solid #141210; }
+.tx-brocha { background: #c8161f; border-radius: 12px 40px 18px 34px / 30px 14px 36px 16px; }
+
+/* ---------- Ruta 2 · El pizarrón ---------- */
+
+.r2 { --papel: #fffdf7; --tinta: #1b1b1b; }
+.r2 .palabras, .r2 .heroe-m, .r2 .btn, .r2 .etiqueta { font-family: "Kalam", "Comic Sans MS", cursive; }
+.r2 .palabras { display: block; font-weight: 700; }
+.r2 .may { position: relative; display: inline-block; font-size: 1.5em; color: #c4202a; }
+.r2 .subraya { position: absolute; left: 0; bottom: -.12em; width: 100%; height: .28em; color: #1f4fa3; }
+.r2 .logo svg:not(.subraya) { width: 20%; flex: none; }
+.r2 .logo .cx { width: 20%; flex: none; }
+.r2 .logo .cx svg { width: 100%; }
+.r2 .heroe-m { border: 1.6cqw solid #b89a63; border-radius: 5cqw; background: #fffdf7; }
+.r2 .heroe-m h3 { font-size: 11cqw; font-weight: 700; }
+.r2 .heroe-m ul { max-width: 72%; padding-top: 2cqw; border-top: .6cqw solid #1f4fa3; color: #c4202a; font-size: 4.4cqw; line-height: 1.45; }
+.r2 .heroe-m li { display: flex; gap: 2cqw; }
+.r2 .heroe-m em { margin-left: auto; color: #1f4fa3; font-style: normal; }
+.r2 .heroe-m em::before { content: "✓ "; }
+.r2 .heroe-m .cx { right: 4%; bottom: 4%; width: 21%; }
+.r2 .btn { border: 2.5px solid #1b1b1b; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; background: #ffe45c; color: #1b1b1b; font-weight: 700; }
+.r2 button.btn::after { content: "✓"; width: 0; overflow: hidden; color: #1f4fa3; font-size: 1.3em; }
+.r2 button.btn:is(:hover, :focus-visible)::after { width: auto; margin-left: 10px; }
+.r2 .etiqueta { border: 2.5px solid #1b1b1b; border-radius: 3cqw 5cqw 3cqw 6cqw; background: #fffdf7; }
+.r2 .etiqueta strong { color: #c4202a; font-weight: 700; }
+.r2 .etiqueta .subraya { position: static; width: 80%; height: 3cqw; }
+.r2 .etiqueta b { color: #c4202a; }
+.r2 .paloma { font-size: 4.4cqw; color: #1f4fa3; }
+.r2 .paloma::before { content: "✓"; display: inline-block; width: 1.3em; margin-right: .4em; border: .5cqw solid #1f4fa3; text-align: center; line-height: 1.2; }
+.esq-2 { background: #fffdf7; border: 1px solid rgb(0 0 0 / .15); }
+.esq-2 i { left: 10%; top: 22%; width: 42%; aspect-ratio: 1; border-radius: 50%; background: #a8321c; }
+.esq-2 b { right: 5%; top: 40%; width: 38%; font: 700 1rem/1.1 "Kalam", cursive; color: #c4202a; border-bottom: 3px solid #1f4fa3; }
+.esq-2 b::before { content: "← "; color: #1b1b1b; }
+.tx-pizarron { background: #fffdf7 radial-gradient(ellipse at 30% 40%, rgb(27 27 27 / .07), transparent 55%), #fffdf7; background-image: radial-gradient(ellipse at 30% 40%, rgb(196 32 42 / .08), transparent 50%), radial-gradient(ellipse at 75% 65%, rgb(31 79 163 / .08), transparent 45%); }
+.tx-carton { background: #b89a63 repeating-linear-gradient(90deg, transparent 0 5px, rgb(0 0 0 / .1) 5px 6px); }
+
+/* ---------- Ruta 3 · La barra ---------- */
+
+.r3 { --papel: #d9dcdd; --tinta: #141210; }
+.r3 .lienzo, .tx-acero { background: #d9dcdd repeating-linear-gradient(0deg, transparent 0 2px, rgb(255 255 255 / .5) 2px 3px); }
+.r3 .lienzo .logo { justify-content: space-between; padding: 14px 16px; border: 2px solid #8a9296; border-radius: 6px; background: #eceeee; }
+.r3 .los { font: 600 .6em/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .3em; text-transform: uppercase; }
+.r3 .may { font: 1.9em/1.05 "Alfa Slab One", Georgia, serif; text-transform: uppercase; color: #c8161f; -webkit-text-stroke: .08em #141210; paint-order: stroke fill; text-shadow: 0 .08em 0 #141210; }
+.r3 .logo svg, .r3 .logo .cx { width: 15%; flex: none; color: #141210; }
+.r3 .logo .cx svg { width: 100%; }
+.r3 .sellos { display: flex; align-items: end; gap: 18px; color: #141210; }
+.r3 .sellos svg:nth-child(1) { width: 84px; }
+.r3 .sellos svg:nth-child(2) { width: 48px; }
+.r3 .sellos svg:nth-child(3) { width: 24px; }
+.r3 .heroe-m { background: #f7f4ee; }
+.r3 .heroe-m h3 { font: 800 15cqw/.86 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
+.r3 .charolas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6cqw; margin-top: 3cqw; }
+.r3 .charolas i { display: flex; align-items: end; aspect-ratio: 3 / 4; padding: 1.6cqw; border: 1cqw solid #b4babd; border-radius: 2cqw; background: var(--c); color: var(--t, #fff); font: 600 3cqw/1 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
+.r3 .btn { --f: 5px; border: 0; border-radius: 4px; padding-left: calc(var(--f) * 4 + 18px); color: #fff; font: 800 1.15rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .08em; text-transform: uppercase;
+  background: linear-gradient(90deg, #a8321c 0 var(--f), #f2b33d 0 calc(var(--f) * 2), #35603a 0 calc(var(--f) * 3), #7a4a2c 0 calc(var(--f) * 4), #141210 0); }
+.r3 .mock .btn { font-size: 4cqw; }
+.r3 button.btn:is(:hover, :focus-visible) { --f: 11px; }
+.r3 .etiqueta { top: 22%; border-left: 7cqw solid #a8321c; background: #f7f4ee; transform: none; }
+.r3 .etiqueta strong { font: 800 12cqw/.88 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
+.r3 .etiqueta small { font: 600 4.2cqw/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.r3 .pie-e { display: flex; align-items: center; justify-content: space-between; padding-top: 2.5cqw; border-top: .6cqw dashed #141210; font-size: 4.4cqw; }
+.r3 .pie-e svg { width: 11cqw; height: auto; color: #141210; }
+.esq-3 { background: #d9dcdd; }
+.esq-3 i { inset: 7%; border-radius: 6%; border: 9px solid #b4babd; background: #a8321c; }
+.esq-3 b { left: 13%; bottom: 14%; color: #fff; font: 800 1.2rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; }
+.tx-ticket { background: #f7f4ee; border-bottom: 3px dashed #141210; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform .15s, box-shadow .15s; }
+}

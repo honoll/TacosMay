@@ -15,7 +15,7 @@ cada paso y cuándo se da por bueno. No repite la doctrina del estudio: la aplic
 
 No es lujo ni minimalismo caro. Es **una taquería de barrio contada con mucho oficio**:
 
-1. **Material propio.** Su rótulo, su nopal, su pizarrón, sus guisos fotografiados. Nada de
+1. **Material propio.** Su rótulo, su cactus, su pizarrón, sus guisos fotografiados. Nada de
    stock, nada que sirva igual para otra taquería.
 2. **Un mundo coherente.** Todo parece pintado por la misma mano: letra, personaje, íconos,
    texturas y fotos comparten luz, color y trazo.
@@ -76,7 +76,7 @@ los materiales se generan con IA, comida y bolsa incluidas. Lo que se conserva:
 
 ### Control de calidad de materiales
 Una pieza se acepta si cumple todo:
-- [ ] Se parece al rótulo real (colores, contorno negro, carácter del nopal).
+- [ ] Se parece al rótulo real (colores, contorno negro, carácter del cactus).
 - [ ] No trae texto generado (las letras las pone la página), ni marcas de agua visibles en
       la zona útil, ni manos o dedos deformes.
 - [ ] Fondo liso del color pedido, o fondo real limpio en las fotos.
