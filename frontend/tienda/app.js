@@ -1,4 +1,5 @@
 import { api, session, money, esc, notice } from '../js/api.js';
+import { charola } from '../js/barra.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -57,16 +58,14 @@ const field = (prefix, name, label, value = '', attrs = '') => `
   <label for="${prefix}-${name}">${label}</label>
   <input id="${prefix}-${name}" name="${name}" value="${esc(value)}" required ${attrs}>`;
 
-const card = (g) => `
-  <li class="card">
-    <h3>${esc(g.nombre)}</h3>
+// Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
+const card = (g) => charola(g.nombre, `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} vendidos</p>` : ''}
     <p>${esc(g.descripcion)}</p>
     <p class="precio">${money(g.precio_centavos)}</p>
-    <p class="meta">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} disponibles` : 'Agotado'}</p>
+    <p class="meta">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} disponibles` : 'Se acabó por hoy'}</p>
     <button type="button" class="primario" data-click="add" data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"
-      ${g.stock > 0 ? '' : 'disabled'}>Agregar al carrito</button>
-  </li>`;
+      ${g.stock > 0 ? '' : 'disabled'}>Agregar al carrito</button>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
 
 const fecha = (v) => new Date(isNaN(v) ? v : Number(v))
   .toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });

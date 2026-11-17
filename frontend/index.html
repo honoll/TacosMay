@@ -3,214 +3,154 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Los Tacos May — Guisos de taquería al vacío, listos para calentar</title>
-  <meta name="description" content="Los guisos de Los Tacos May, la taquería de nuestra familia en Cabo San Lucas, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.">
+  <title>Los Tacos May — Guisos de taquería ya hechos, al vacío</title>
+  <meta name="description" content="Los guisos de Los Tacos May, la taquería de Cabo San Lucas, ya hechos y empacados al vacío. Rompes la bolsa, calientas y comes.">
   <meta name="theme-color" content="#141210">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_MX">
   <meta property="og:site_name" content="Los Tacos May">
-  <meta property="og:title" content="Los Tacos May — Guisos de taquería al vacío, listos para calentar">
-  <meta property="og:description" content="Los guisos de Los Tacos May, la taquería de nuestra familia en Cabo San Lucas, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.">
-  <!-- PENDIENTE-CLIENTE: dominio final (para canonical y og:url) e imagen real del producto para og:image -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f9e44'/%3E%3Cpath d='M5 12h22l-6-2-5-8-5 8z' fill='%23ffcf1f' stroke='%23141210' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cg fill='%23fff' stroke='%23141210'%3E%3Cellipse cx='11.5' cy='19' rx='3' ry='4'/%3E%3Cellipse cx='20.5' cy='19' rx='3' ry='4'/%3E%3C/g%3E%3Cpath d='M10 26q6 4 12 0' fill='none' stroke='%23141210' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="preload" href="fuentes/rammetto-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:title" content="Los Tacos May — Guisos de taquería ya hechos, al vacío">
+  <meta property="og:description" content="Los guisos de Los Tacos May, la taquería de Cabo San Lucas, ya hechos y empacados al vacío. Rompes la bolsa, calientas y comes.">
+  <!-- PENDIENTE-CLIENTE: dominio final (para canonical y og:url). La imagen para compartir se arma con el sistema (docs/diseno/sistema.md) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f7f4ee'/%3E%3Cpath d='M12 30V11a4 4 0 0 1 8 0v19zM5 17l7 3M20 20l7-6' fill='none' stroke='%23141210' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M8 7h16l-5-1-3-5-3 5z' fill='%23141210'/%3E%3C/svg%3E">
+  <link rel="preload" href="fuentes/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="barra.css">
   <link rel="stylesheet" href="landing.css">
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-  <!-- Mascota: versión provisional redibujada a partir de la foto del rótulo (docs/negocio/fotos/rotulo-logo.png).
-       PENDIENTE-CLIENTE: arte original del rótulo o una foto de frente y en buena resolución -->
-  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-    <symbol id="nopal" viewBox="0 0 240 300">
-      <g stroke="#141210" stroke-linecap="round" stroke-linejoin="round">
-        <g fill="#e3202c" stroke-width="4">
-          <ellipse cx="20" cy="98" rx="9" ry="14" transform="rotate(-24 20 98)"/>
-          <ellipse cx="8" cy="124" rx="9" ry="14" transform="rotate(-78 8 124)"/>
-          <ellipse cx="204" cy="78" rx="9" ry="14" transform="rotate(8 204 78)"/>
-          <ellipse cx="224" cy="96" rx="9" ry="14" transform="rotate(58 224 96)"/>
-        </g>
-        <path d="M100 160L36 134M146 160l52-44" fill="none" stroke-width="48"/>
-        <path d="M100 160L36 134M146 160l52-44" fill="none" stroke="#2f9e44" stroke-width="38"/>
-        <path d="M92 153L42 132M152 150l40-34" fill="none" stroke="#8ed66b" stroke-width="5"/>
-        <path d="M90 292V86a31 31 0 0 1 62 0v206z" fill="#2f9e44" stroke-width="5"/>
-        <path d="M106 96v186M121 90v194M136 96v186" fill="none" stroke="#8ed66b" stroke-width="5"/>
-        <path d="M96 62Q108 6 128 18q14 10 16 40z" fill="#ffcf1f" stroke-width="5"/>
-        <ellipse cx="120" cy="62" rx="52" ry="13" transform="rotate(-10 120 62)" fill="#ffcf1f" stroke-width="5"/>
-        <g fill="#fff" stroke-width="3.5"><ellipse cx="108" cy="116" rx="10" ry="14"/><ellipse cx="134" cy="116" rx="10" ry="14"/></g>
-        <g stroke="none" fill="#141210"><circle cx="111" cy="119" r="4.5"/><circle cx="131" cy="119" r="4.5"/></g>
-        <path d="M104 146q17 24 36 0-18 8-36 0z" fill="#e3202c" stroke-width="3.5"/>
-      </g>
-    </symbol>
-  </svg>
-
-  <!-- HUECOS DE MATERIAL: cada .pieza lleva en data-pieza el código de docs/diseno/materiales.md y muestra una
-       etiqueta. Al llegar el archivo se sustituye el contenido provisional y se quita data-pieza. -->
+  <!-- El cactus del letrero, de sello a una tinta. Provisional: redibujado por rasgos a partir de
+       docs/negocio/fotos/rotulo-logo.png. PENDIENTE-CLIENTE: foto de frente del letrero para calcarlo, igual que «May» -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><symbol id="cactus" viewBox="0 0 240 300"><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><g fill="currentColor" stroke-width="4"><ellipse cx="20" cy="98" rx="9" ry="14" transform="rotate(-24 20 98)"/><ellipse cx="8" cy="124" rx="9" ry="14" transform="rotate(-78 8 124)"/><ellipse cx="204" cy="78" rx="9" ry="14" transform="rotate(8 204 78)"/><ellipse cx="224" cy="96" rx="9" ry="14" transform="rotate(58 224 96)"/></g><path d="M100 160L36 134M146 160l52-44" fill="none" stroke-width="48"/><path d="M100 160L36 134M146 160l52-44" fill="none" stroke="currentColor" stroke-width="38"/><path d="M90 292V86a31 31 0 0 1 62 0v206z" fill="currentColor" stroke-width="5"/><path d="M106 150v132M121 150v134M136 150v132M92 153L42 132M152 150l40-34" fill="none" stroke="var(--papel)" stroke-width="5"/><path d="M96 62Q108 6 128 18q14 10 16 40z" fill="var(--papel)" stroke-width="5"/><ellipse cx="120" cy="62" rx="52" ry="13" transform="rotate(-10 120 62)" fill="var(--papel)" stroke-width="5"/><g fill="var(--papel)" stroke-width="3.5"><ellipse cx="108" cy="108" rx="10" ry="14"/><ellipse cx="134" cy="108" rx="10" ry="14"/></g><g stroke="none" fill="currentColor"><circle cx="110" cy="103" r="4.5"/><circle cx="132" cy="103" r="4.5"/></g><g stroke="none" fill="none"><circle cx="98" cy="128" r="6"/><circle cx="144" cy="128" r="6"/></g><path d="M106 132q15 22 32 0-16 7-32 0z" fill="var(--papel)" stroke-width="3.5"/></g></symbol></svg>
 
   <header class="cabecera caja">
-    <a class="marca" href="/" aria-label="Los Tacos May, inicio">
-      <svg class="nopal-mini" viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg>
-      <!-- M1a: al llegar el letrero limpio, sustituir este texto por <img src="media/letrero.webp" alt="Los Tacos May"> -->
-      <span class="letrero pinta"><span class="am">Los Tacos</span> <span class="ro">May</span></span>
+    <a class="logo fila" href="/" aria-label="Los Tacos May, inicio">
+      <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
+      <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
     </a>
     <nav aria-label="Principal">
-      <a href="#modo">Cómo se come</a>
+      <a href="#como">Cómo funciona</a>
       <a href="#guisos">Guisos</a>
       <a href="#taqueria">La taquería</a>
-      <a class="boton chico" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Tienda</a>
+      <a class="btn chico" href="/tienda/">Tienda</a>
     </nav>
   </header>
 
   <main id="contenido">
 
-    <!-- Escena 1 · llega sin saber qué es → sale sabiendo: guisos de Los Tacos May, en bolsa, para su casa -->
+    <!-- Escena 1 · llega sin saber qué es → sale sabiendo: guisos de una taquería, ya hechos, en bolsa.
+         Las tres charolas son los guisos que más salen (docs/negocio/datos.md). -->
     <section class="heroe">
-      <div class="caja heroe-rejilla">
-        <div class="heroe-texto">
-          <h1 class="rotulo">El guiso de la taquería, en tu congelador.</h1>
-          <p class="entrada">Los guisos de Los Tacos May, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.</p>
-          <div class="acciones">
-            <a class="boton" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Pedir guisos</a>
-            <a class="enlace" href="#modo"><span class="icono icono-bolsa" aria-hidden="true"></span>Ver cómo se come</a>
-          </div>
-          <p class="confianza">De nuestra taquería en el centro de Cabo San Lucas.</p>
-          <!-- PENDIENTE-CLIENTE: año en que empezó la taquería (la línea de confianza mejora con «desde …») -->
+      <div class="caja">
+        <h1 class="rot">Ya está hecho.</h1>
+        <p class="entrada">Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes.</p>
+        <div class="acciones">
+          <a class="btn" href="/tienda/">Pedir guisos</a>
+          <a class="enl" href="#como">Cómo funciona</a>
         </div>
 
-        <div class="heroe-arte">
-          <!-- M3: al llegar, sustituir el <svg> por
-               <img src="media/bolsa.webp" width="900" height="1200" alt="Bolsa al vacío con guiso de Los Tacos May" fetchpriority="high">
-               y dejar encima .bolsa-nombre (el nombre lo escribe la página, no el generador).
-               PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-          <figure class="pieza bolsa-marco" data-pieza="M3 · bolsa · 3:4">
-            <svg class="bolsa" viewBox="0 0 300 400" role="img" aria-labelledby="bolsa-titulo">
-              <title id="bolsa-titulo">Ilustración de una bolsa al vacío con guiso adentro; la etiqueta dice «Los Tacos May, guiso de taquería, al vacío»</title>
-              <rect class="plastico" x="16" y="12" width="268" height="376" rx="10"/>
-              <path class="costura" d="M30 28h240M30 36h240M30 44h240M30 356h240M30 364h240M30 372h240"/>
-              <path class="corte" d="M30 66h236"/>
-              <path class="muesca" d="M286 58l-16 8 16 8"/>
-              <path class="guiso" d="M52 150c-12-30 28-50 68-42 40-16 100-8 124 22s18 170-4 192c-40 26-144 24-178 0-26-22-18-132-10-172z"/>
-              <g class="trozos">
-                <circle cx="96" cy="150" r="14"/><circle cx="196" cy="140" r="17"/><circle cx="224" cy="196" r="11"/>
-                <circle cx="78" cy="300" r="13"/><circle cx="150" cy="316" r="16"/><circle cx="212" cy="296" r="10"/>
-              </g>
-              <path class="arruga" d="M30 92l28 36M270 98l-24 28M30 342l30-22M270 342l-26-22"/>
-              <g transform="rotate(-4 150 236)">
-                <rect class="etiqueta" x="58" y="188" width="184" height="96"/>
-                <text class="etiqueta-dato" x="150" y="207">LOS TACOS MAY</text>
-                <text class="rotulo etiqueta-nombre" x="150" y="234">Guiso de</text>
-                <text class="rotulo etiqueta-nombre" x="150" y="260">taquería</text>
-                <text class="etiqueta-dato" x="150" y="276">AL VACÍO · POR PORCIONES</text>
-              </g>
-              <g class="sello" aria-hidden="true">
-                <circle cx="232" cy="318" r="36"/>
-                <text class="rotulo" x="232" y="314">Al</text>
-                <text class="rotulo" x="232" y="332">vacío</text>
-              </g>
-            </svg>
-          </figure>
-          <!-- M4 (pose 3, abrazando la bolsa) y después M7 (saludo animado) -->
-          <div class="pieza nopal-heroe" data-pieza="M4 · nopal" role="img" aria-label="El nopal de Los Tacos May, con sombrero amarillo, junto a la bolsa"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
-        </div>
+        <ul class="barra entra">
+          <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+          <li class="charola" style="--c:#F2B33D;--t:#141210">
+            <div class="guiso"><img src="media/guisos/chorizo-con-huevo.webp" alt="" width="720" height="540"><span class="num">02</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h2>Chorizo con huevo</h2></div>
+          </li>
+          <!-- Hueco de I1-08 (docs/diseno/direccion-de-arte.md): al llegar, se optimiza a media/guisos/rajas-con-queso-y-crema.webp,
+               se pone aquí su <img> como en las otras dos y se registra en js/barra.js (FOTOS; quitar de PENDIENTES) -->
+          <li class="charola" style="--c:#35603A;--t:#FFFFFF">
+            <div class="guiso"><span class="num">08</span><span class="pieza">I1-08 · 4:3</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h2>Rajas con queso y crema</h2></div>
+          </li>
+          <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+          <li class="charola" style="--c:#A8321C;--t:#FFFFFF">
+            <div class="guiso"><img src="media/guisos/carne-en-salsa-roja.webp" alt="" width="720" height="540" fetchpriority="high"><span class="num">09</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h2>Carne en salsa roja</h2></div>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <p class="cinta rotulo" aria-hidden="true">Rompe · Calienta · Taquea · Rompe · Calienta · Taquea · Rompe · Calienta · Taquea · Rompe · Calienta · Taquea</p>
-
-    <!-- Escena 2 (firma) · llega preguntándose «¿y cómo se come?» → sale sabiendo que son tres gestos -->
-    <section class="modo" id="modo" aria-labelledby="modo-titulo">
-      <div class="modo-fija">
-        <div class="caja modo-rejilla">
-          <div>
-            <h2 class="sobre" id="modo-titulo">Modo de uso</h2>
-            <ol class="pasos">
-              <li>
-                <h3 class="rotulo">Rompe la bolsa</h3>
-                <p>Cada bolsa trae un guiso ya cocido, por porciones. Lo único que queda es abrirla.</p>
-              </li>
-              <li>
-                <h3 class="rotulo">Calienta</h3>
-                <p>A la sartén o a la olla, como recalientas cualquier guiso.</p>
-                <!-- PENDIENTE-CLIENTE: instrucciones exactas de calentado por guiso (método, tiempo) y qué hacer si llega descongelado -->
-              </li>
-              <li>
-                <h3 class="rotulo">Taquea</h3>
-                <p>Tortillas calientes, tu salsa, cebolla y cilantro. La taquería ya está en tu mesa.</p>
-              </li>
-            </ol>
-          </div>
-
-          <!-- M6: los cuadros de los tres clips van en media/modo/<ancho>/NNN.webp y se dibujan en el <canvas>
-               (js/landing.js, constante FRAMES). Mientras FRAMES es 0 se ve el pictograma provisional. -->
-          <figure class="pieza modo-marco" data-pieza="M6 · secuencia · 16:9 → 4:3">
-            <canvas id="secuencia" hidden aria-hidden="true"></canvas>
-            <svg class="pictograma" viewBox="0 0 400 420" role="img" aria-labelledby="picto-titulo">
-              <title id="picto-titulo">Ilustración: la bolsa se abre por una esquina, el guiso pasa a la sartén y termina en un taco</title>
-              <g class="vapor"><path d="M150 292q-14-18 0-36t0-36M200 292q-14-18 0-36t0-36M250 292q-14-18 0-36t0-36"/></g>
-              <rect class="tinta" x="300" y="316" width="96" height="14" rx="7"/>
-              <path class="tinta" d="M70 320h260l-18 52a14 14 0 0 1-13 9H101a14 14 0 0 1-13-9z"/>
-              <ellipse class="borde-sarten" cx="200" cy="320" rx="130" ry="16"/>
-              <ellipse class="guiso en-sarten" cx="200" cy="320" rx="112" ry="10"/>
-              <g class="bolsita">
-                <path class="plastico" d="M138 40h98l38 38v144a8 8 0 0 1-8 8H138a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8z"/>
-                <path class="costura" d="M142 54h88M142 62h96"/>
-                <ellipse class="guiso relleno" cx="200" cy="150" rx="50" ry="60"/>
-              </g>
-              <path class="plastico esquina" d="M236 40h38v38z"/>
-              <g class="taco">
-                <ellipse class="tortilla" cx="110" cy="380" rx="78" ry="24"/>
-                <ellipse class="guiso" cx="110" cy="375" rx="50" ry="11"/>
-                <path class="cilantro" d="M84 372h7M104 368h7M126 376h7M140 370h7"/>
-                <path class="cebolla" d="M94 378h7M116 371h7M70 376h7"/>
-              </g>
-            </svg>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis).
-         Las fotos de guisos (M2) se enchufan en js/landing.js (FOTOS). -->
-    <section id="guisos" aria-labelledby="guisos-titulo">
-      <div class="verde" id="populares-bloque" hidden>
+    <!-- Escena 2 · llega preguntándose «¿y cómo se come?» → sale sabiendo: rompo, caliento y ya.
+         Los tres estados del producto: en la charola, en la bolsa, en el taco. -->
+    <section class="como" id="como" aria-labelledby="como-titulo">
+      <div class="como-fija">
         <div class="caja">
-          <h2 class="rotulo" id="populares-titulo">Lo que más sale</h2>
-          <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
-          <ol class="ranking imprime" id="populares" aria-labelledby="populares-titulo"></ol>
+          <h2 class="rot" id="como-titulo">Cómo funciona</h2>
+          <ol class="pasos">
+            <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+            <li class="charola paso" style="--c:#A8321C;--t:#FFFFFF">
+              <div class="guiso"><img src="media/guisos/carne-en-salsa-roja.webp" alt="" width="720" height="540" loading="lazy"><span class="num">1</span></div>
+              <div class="datos">
+                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg>Ya está hecho</h3>
+                <p>El guiso sale de la barra de la taquería, donde se sirve todos los días.</p>
+              </div>
+            </li>
+            <!-- Hueco de I2 (bolsa al vacío, 1:1 recortada a 4:3). Al llegar: <img> aquí y, encima, la etiqueta del sistema
+                 con el nombre del guiso (la imagen trae la etiqueta en blanco).
+                 PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+            <li class="charola paso" style="--c:#D9DCDD;--t:#141210">
+              <div class="guiso"><span class="num">2</span><span class="pieza">I2 · bolsa · 4:3</span></div>
+              <div class="datos">
+                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h8l7 7v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M16.5 1l6.5 6.5-2.1 1.3-5.7-5.7z"/></svg>Rompe la bolsa</h3>
+                <p>Va empacado al vacío, por porciones. Lo único que queda es abrirla.</p>
+              </div>
+            </li>
+            <!-- Hueco de I3 (taco servido, 1:1 recortado a 4:3).
+                 PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+            <li class="charola paso" style="--c:#A8321C;--t:#FFFFFF">
+              <div class="guiso"><span class="num">3</span><span class="pieza">I3 · taco · 4:3</span></div>
+              <div class="datos">
+                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Calienta y taquea</h3>
+                <p>A la sartén o a la olla, como recalientas cualquier guiso, y a la tortilla.</p>
+                <!-- PENDIENTE-CLIENTE: instrucciones exactas de calentado por guiso (método, tiempo) y qué hacer si llega descongelado -->
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
+    </section>
 
-      <div class="caja carta">
-        <h2 class="rotulo" id="guisos-titulo">Todo el menú</h2>
-        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página. Toca un guiso para verlo.</p>
-        <ul class="menu imprime" id="menu"></ul>
+    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis);
+         el color, el número y la foto de cada charola los pone js/barra.js, buscados por el nombre del guiso. -->
+    <section class="guisos" id="guisos" aria-labelledby="guisos-titulo">
+      <div class="caja">
+        <div id="populares-bloque" hidden>
+          <h2 class="rot" id="populares-titulo">Lo que más sale</h2>
+          <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
+          <ol class="barra top" id="populares" aria-labelledby="populares-titulo"></ol>
+        </div>
+
+        <h2 class="rot" id="guisos-titulo">Todas las charolas</h2>
+        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página.</p>
+        <ul class="barra" id="menu"></ul>
         <div class="estado" id="menu-estado" role="status">
-          <span class="icono icono-tortilla gira" id="menu-icono" aria-hidden="true"></span>
-          <!-- M9: el nopal apenado solo aparece si el menú no se pudo leer -->
-          <span class="pieza nopal-estado" id="menu-nopal" data-pieza="M9" hidden><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></span>
+          <span class="cargando" aria-hidden="true"><i></i><i></i><i></i></span>
           <span id="menu-texto">Leyendo el menú…</span>
         </div>
         <noscript><p class="estado">El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda.</p></noscript>
         <div class="acciones">
-          <a class="boton" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Pedir en la tienda</a>
-          <button class="enlace" id="menu-reintentar" type="button" hidden><span class="icono icono-tortilla" aria-hidden="true"></span>Volver a intentar</button>
+          <a class="btn" href="/tienda/">Pedir en la tienda</a>
+          <button class="btn sec" id="menu-reintentar" type="button" hidden>Volver a intentar</button>
         </div>
       </div>
     </section>
 
-    <!-- Escena 4 · llega dudando «¿y sí llega bien?» → sale entendiendo por qué va congelado y qué falta confirmar -->
-    <section class="oscuro" id="envio" aria-labelledby="envio-titulo">
-      <div class="caja envio-rejilla">
-        <div>
-          <h2 class="rotulo" id="envio-titulo">Viaja congelado. Así tiene que ser.</h2>
-          <!-- M8 (o pose 5 de M4b): el nopal con frío -->
-          <div class="pieza nopal-frio" data-pieza="M8 · nopal con frío" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
-        </div>
-        <div>
-          <!-- PENDIENTE-CLIENTE: confirmar que el formato de venta es congelado (es la recomendación de docs/investigacion/viabilidad.md) -->
-          <p class="entrada">El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso se empaca, se congela y así se queda hasta que tú rompes la bolsa.</p>
-          <p>Todavía no publicamos a dónde llegamos, cuánto cuesta el envío ni en cuántos días. Preferimos no prometerlo antes de tenerlo confirmado; cuando lo esté, va a aparecer aquí.</p>
-          <!-- PENDIENTE-CLIENTE: cobertura, costo, tiempos y días de despacho del envío; ciudad desde donde se despacha; vida útil declarada -->
+    <!-- Escena 4 · llega dudando «¿y sí llega bien?» → sale sabiendo qué hay y qué falta confirmar -->
+    <section class="envio" id="envio" aria-labelledby="envio-titulo">
+      <div class="caja">
+        <div class="papel">
+          <h2 class="rot" id="envio-titulo">El envío, sin cuentos</h2>
+          <!-- PENDIENTE-CLIENTE: confirmar que el formato de venta es congelado (recomendación de docs/investigacion/viabilidad.md);
+               cobertura, costo, tiempos y días de despacho; ciudad de origen; vida útil declarada -->
+          <ul class="ticket">
+            <li><span>Formato</span><i></i><span>Al vacío, congelado</span></li>
+            <li><span>A dónde llega</span><i></i><span>Por confirmar</span></li>
+            <li><span>Cuánto cuesta</span><i></i><span>Por confirmar</span></li>
+            <li><span>En cuántos días</span><i></i><span>Por confirmar</span></li>
+          </ul>
+          <p>El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso va congelado y así se queda hasta que tú rompes la bolsa.</p>
+          <p>Lo que dice «por confirmar» todavía no lo publicamos. Preferimos no prometerlo antes de tenerlo seguro; cuando lo esté, va a aparecer aquí.</p>
           <p class="fuente">Sobre vacío y congelación: guías de inocuidad de
             <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe" rel="noopener">USDA-FSIS</a> y de la
             <a href="https://assets.publishing.service.gov.uk/media/69aea81a671a8a924c83ee87/the-safety-and-shelf-life-of-vacuum-and-modified-atmosphere-packed-chilled-foods-with-respect-to-non-proteolytic-clostridium-botulinum_1.pdf" rel="noopener">FSA del Reino Unido</a>.</p>
@@ -218,24 +158,31 @@
       </div>
     </section>
 
-    <!-- Escena 5 · llega viendo «un producto» → sale viendo a la taquería real que está detrás.
+    <!-- Escena 5 · llega viendo «un producto» → sale sabiendo que detrás hay una persona y una taquería.
          No lleva imagen generada del local: pasaría por el real. Cuando haya fotos reales, entran aquí. -->
     <section class="taqueria" id="taqueria" aria-labelledby="taqueria-titulo">
       <div class="caja taqueria-rejilla">
         <div>
-          <h2 class="rotulo" id="taqueria-titulo">Salen de la cocina de Los Tacos May.</h2>
-          <p class="entrada">No inventamos recetas para la bolsa: son guisos de la taquería de nuestra familia, en el centro de Cabo San Lucas.</p>
-          <address class="domicilio">
-            <!-- M4 (pose 2, señalando) -->
-            <span class="pieza nopal-senala" data-pieza="M4" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></span>
-            <a class="enlace" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener">José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a>
+          <h2 class="sr" id="taqueria-titulo">May y la taquería</h2>
+          <div class="logo" role="img" aria-label="Los Tacos May">
+            <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
+            <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
+          </div>
+          <ul class="hechos">
+            <li><strong>May es una persona</strong>Así le dicen al dueño desde siempre.</li>
+            <li><strong>Unos 22 años en Cabo San Lucas</strong>La taquería empezó ahí y ahí sigue.</li>
+            <li><strong>Menos de 10 minutos</strong>Los guisos ya están hechos y calientes: entras, comes y te vas.</li>
+          </ul>
+          <!-- PENDIENTE-CLIENTE: año exacto de inicio, de dónde es la familia, cómo quieren contar quién es May,
+               horario completo, las demás taquerías y fotos reales del local -->
+          <address>
+            <a class="enl" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a>
           </address>
-          <!-- PENDIENTE-CLIENTE: horario completo (de Maps solo se sabe una hora de cierre), las demás taquerías de la familia,
-               historia y año de inicio, y fotos reales del local y de quien atiende -->
         </div>
 
-        <!-- Nombres tal como están en el pizarrón de la taquería (docs/negocio/datos.md). Sin precios: los del pizarrón son del
-             taco en el local y la foto tiene meses. PENDIENTE-CLIENTE: confirmar «Corazón de vaca enamorada» y la carta vigente -->
+        <!-- Nombres tal como están en el pizarrón de la taquería (docs/negocio/datos.md), con su código de tres plumones.
+             Sin precios: los del pizarrón son del taco en el local y la foto tiene meses.
+             PENDIENTE-CLIENTE: confirmar «Corazón de vaca enamorada» y la carta vigente -->
         <div class="pizarron" role="group" aria-labelledby="pizarron-titulo">
           <h3 id="pizarron-titulo">En el pizarrón de la taquería</h3>
           <ul>
@@ -247,30 +194,29 @@
           </ul>
           <ul><li>Lengua</li></ul>
           <ul><li>Barbacoa de borrego</li></ul>
-          <p class="nota">Esto es lo que se sirve en la taquería. Los guisos que ya puedes pedir empacados están en <a href="#guisos">el menú en vivo</a>.</p>
+          <p class="nota">Esto es lo que se sirve en la taquería. Lo que ya puedes pedir empacado está en <a href="#guisos">las charolas en vivo</a>.</p>
         </div>
       </div>
     </section>
 
     <!-- Escena 6 · llega convencido → sale hacia la tienda -->
     <section class="cierre" aria-labelledby="cierre-titulo">
-      <div class="caja cierre-rejilla">
-        <div>
-          <h2 class="letrero" id="cierre-titulo"><span class="am">Rompe</span> <span class="ro">la bolsa.</span></h2>
-          <p class="entrada">Elige tus guisos y arma tu pedido en la tienda.</p>
-          <a class="boton grande" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Ir a la tienda</a>
-        </div>
-        <!-- M7 (saludo animado) o pose 1 de M4b -->
-        <div class="pieza nopal-cierre" data-pieza="M7 · nopal saluda" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
+      <div class="caja">
+        <h2 class="rot" id="cierre-titulo">Ya está hecho.</h2>
+        <p class="entrada">Tú nomás escoge.</p>
+        <div class="acciones"><a class="btn claro" href="/tienda/">Ir a la tienda</a></div>
       </div>
     </section>
   </main>
 
   <footer class="pie">
     <div class="caja">
-      <p class="letrero"><span class="am">Los Tacos</span> <span class="ro">May</span></p>
+      <div class="logo fila inv" role="img" aria-label="Los Tacos May">
+        <svg viewBox="0 0 240 300" aria-hidden="true"><use href="#cactus"/></svg>
+        <span class="palabras"><span class="los">Los Tacos</span><span class="may">May</span></span>
+      </div>
       <p>José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</p>
-      <p>El menú empacado y sus precios son de ejemplo mientras se confirma la carta real.</p>
+      <p>Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
       <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
     </div>
   </footer>

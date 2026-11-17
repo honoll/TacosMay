@@ -1,20 +1,12 @@
-/* Marca provisional: un solo acento, tipografía del sistema. */
+/* Tienda de Los Tacos May. Fuentes, colores, logotipo, botón principal y la charola vienen de
+   ../barra.css (sistema de marca, ruta 3); aquí, lo que es solo de la tienda. */
 :root {
-  --fondo: #fffaf3;
-  --texto: #1f1a17;
-  --suave: #5c524a;
-  --borde: #d9cfc3;
-  --acento: #b3261e;
+  --fondo: var(--crema);
+  --texto: var(--negro);
+  --suave: var(--gris);
+  --borde: var(--marco);
+  --alerta: #a8321c;
   --tarjeta: #fff;
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--fondo);
-  color: var(--texto);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 header, main { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
@@ -26,26 +18,23 @@ header {
   justify-content: space-between;
   gap: 4px 16px;
   padding-block: 8px;
-  border-bottom: 1px solid var(--borde);
+  border-bottom: 2px solid var(--negro);
 }
 
-.marca { font-size: 1.4rem; font-weight: 800; color: var(--acento); text-decoration: none; }
+.marca { min-height: 52px; font-size: 1.05rem; }
 
 nav { display: flex; flex-wrap: wrap; gap: 4px; }
-nav a, .marca { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-nav a { padding: 0 10px; border-radius: 8px; color: var(--texto); text-decoration: none; }
-nav a[aria-current] { background: var(--acento); color: #fff; }
+nav a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border-radius: 4px; color: var(--texto); font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+nav a[aria-current] { background: var(--negro); color: var(--crema); }
 
 main { padding-block: 16px 48px; }
 main:focus { outline: none; }
 
-h1 { font-size: 1.5rem; line-height: 1.2; margin: 8px 0 16px; }
-h2 { font-size: 1.2rem; margin: 24px 0 12px; }
+h1 { font: 800 clamp(2rem, 7vw, 3rem)/.92 var(--angosta); text-transform: uppercase; margin: 12px 0 16px; }
+h2 { font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; margin: 28px 0 12px; }
 h3 { font-size: 1.05rem; margin: 0; }
 ul { list-style: none; margin: 0; padding: 0; }
-a { color: var(--acento); }
-
-:focus-visible { outline: 3px solid #1a56db; outline-offset: 2px; }
+a { color: var(--texto); }
 
 /* Avisos y errores: un solo lugar, siempre a la vista. */
 #aviso {
@@ -61,33 +50,35 @@ a { color: var(--acento); }
 }
 #aviso.error { background: #fde8e6; color: #7a1410; }
 
-button, input { font: inherit; min-height: 44px; border-radius: 8px; }
+button, input { font: inherit; min-height: 44px; border-radius: 4px; }
 button {
   padding: 0 16px;
-  border: 1px solid var(--texto);
-  background: var(--tarjeta);
+  border: 2px solid var(--negro);
+  background: var(--crema);
   color: var(--texto);
+  font: 600 1rem/1 var(--angosta);
+  letter-spacing: .08em;
+  text-transform: uppercase;
   cursor: pointer;
 }
-button.primario { background: var(--acento); border-color: var(--acento); color: #fff; font-weight: 600; }
 button:disabled { opacity: .5; cursor: not-allowed; }
-input { width: 100%; padding: 0 12px; border: 1px solid var(--suave); background: #fff; color: var(--texto); }
+input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background: #fff; color: var(--texto); }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+/* El catálogo es una barra de charolas. */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.charola button { margin-top: 6px; }
 
 .card, .form, .lista li {
   background: var(--tarjeta);
-  border: 1px solid var(--borde);
-  border-radius: 12px;
+  border: 2px solid var(--borde);
+  border-radius: 8px;
   padding: 16px;
 }
 .card { display: flex; flex-direction: column; gap: 6px; }
 .card p { margin: 0; }
-.card button { margin-top: auto; }
 .card h2 { margin: 0; }
-.precio { font-size: 1.3rem; font-weight: 700; }
-.meta { color: var(--suave); font-size: .9rem; }
-.tag { align-self: flex-start; padding: 2px 8px; border-radius: 99px; background: #fff3cd; font-size: .85rem; font-weight: 600; }
+.meta { color: var(--suave); font-size: .95rem; }
+.tag { padding: 2px 8px; border-radius: 4px; background: var(--acero); font: 600 .85rem/1.5 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 
 .lista { display: grid; gap: 8px; }
 .lista li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
@@ -103,12 +94,10 @@ input { width: 100%; padding: 0 12px; border: 1px solid var(--suave); background
 
 .total { font-size: 1.2rem; text-align: right; margin: 12px 0 0; }
 
-/* La cuenta regresiva del TTL: es lo que se enseña en la demo, que se note. */
-.expira { margin: 0 0 16px; padding: 12px 16px; border: 2px solid #e0a800; border-radius: 12px; background: #fff3cd; }
-.expira strong { font-size: 1.8rem; margin-left: 4px; }
+/* La cuenta regresiva del TTL: es lo que se enseña en la demo, que se note. Va en papel de ticket. */
+.expira { margin: 0 0 16px; padding: 12px 16px; border: 2px dashed var(--negro); background: #fff; }
+.expira strong { margin-left: 4px; font: 800 2.2rem/1 var(--angosta); }
 .expira small { display: block; color: var(--suave); }
 [data-countdown] { font-variant-numeric: tabular-nums; font-weight: 700; }
-[data-countdown].urgente { color: var(--acento); }
-nav a[aria-current] .urgente { color: #fff; }
-
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[data-countdown].urgente { color: var(--alerta); }
+nav a[aria-current] .urgente { color: #f2b33d; }

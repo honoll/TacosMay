@@ -222,6 +222,44 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **La landing todavía dice «nopal»** y sigue con el diseño anterior: se rehace con el sistema
     aprobado y las imágenes.
 
+- **Séptima vuelta (17-nov-2026): landing rehecha en la ruta 3, «La barra», y tienda con el mismo
+  sistema en lo visual.**
+  - **Landing** (`frontend/index.html`, `landing.css`, `js/landing.js`): seis escenas del guion:
+    héroe «Ya está hecho.» con fila de tres charolas; «Cómo funciona» con los tres estados
+    (charola, bolsa, taco); charolas en vivo desde `GET /api/guisos/populares` y `GET /api/guisos`;
+    el envío en papel de ticket; May y la taquería con el pizarrón de tres plumones y la dirección;
+    cierre. Logotipo con «May» y el cactus de sello en cabecera, escena 5 y pie.
+  - **Compartido** (`frontend/barra.css`, `frontend/js/barra.js`): fuentes, colores, logotipo,
+    botones, pictogramas, cactus y la charola. Lo usan la landing, la tienda y los tableros de
+    `frontend/marca/` (una sola tabla de colores por guiso). Color, número y foto de cada charola
+    se buscan por el nombre del guiso; uno fuera de la tabla va en charola de acero.
+  - **Tienda** (`frontend/tienda/`): solo visual. Hoja de estilos al sistema, logotipo en la
+    cabecera y la tarjeta del catálogo convertida en charola (`card` en `app.js`). **No se tocaron
+    rutas, llamadas, estado ni acciones**; el botón conserva sus `data-*`.
+  - **Imágenes** (`frontend/media/guisos/`, WebP 720 × 540, recorte 4:3 centrado, unos 92 KB cada
+    una; originales en `frontend/media/originales/`): `carne-en-salsa-roja` (pieza maestra,
+    aprobada) y `chorizo-con-huevo` (provisional: Alejandro aún elige variante). Las dos son
+    **generadas con IA** y llevan `PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto
+    real antes de publicar o vender` (en `index.html` y en `FOTOS` de `js/barra.js`).
+  - **Huecos rotulados:** I1-08 rajas con queso y crema (héroe y, en vivo, su charola en landing y
+    tienda), I2 bolsa e I3 taco (escena 2). Cómo se enchufan: `docs/diseno/guion-landing.md`.
+  - **Retirado:** madera, rótulo recreado, «nopal», sprites provisionales (`media/sprites/`), los
+    huecos M2–M9 y la fuente Rammetto One con su licencia.
+  - **Verificado sin navegador:** `node --check` de `js/landing.js`, `js/barra.js`,
+    `tienda/app.js` y los módulos de `marca/`; `node frontend/js/api.test.mjs` → `api.test: OK`;
+    HTML bien anidado en landing y tienda, un `h1`, jerarquía sin saltos, ids únicos, 32 referencias
+    resueltas, las 3 imágenes con `alt` y medidas; ninguna clase sin regla en landing ni en tienda;
+    movimiento solo dentro de `prefers-reduced-motion: no-preference`; sin restos de la dirección
+    anterior; sin precios ni horarios escritos a mano; el manual (`marca/sistema.html`) sigue
+    armando igual tras mover los datos. Contraste: negro/crema 17.0, gris/crema 6.8, gris/acero
+    5.4, rojo plumón/pizarrón 5.8, alerta de la tienda 6.7, texto sobre cada color de guiso ≥ 5.3.
+  - **NO verificado:** nada de esto se ha visto en pantalla: ni la landing (375 px, escritorio, la
+    escena anclada, el movimiento) ni la tienda con su nuevo aspecto. **La tienda no se volvió a
+    correr contra Redis tras el cambio de tarjeta:** conviene repetir el flujo de la demo antes del
+    examen. Sin revisar: Lighthouse y lector de pantalla.
+  - **Provisional:** «May» en Alfa Slab One y cactus redibujado por rasgos (falta la foto de frente
+    del letrero); los 14 colores de guiso son hipótesis.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

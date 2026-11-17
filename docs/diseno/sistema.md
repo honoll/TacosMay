@@ -139,7 +139,8 @@ Reglas:
 2. El texto sobre un color de guiso es negro o blanco, el que la tabla indica.
 3. Los colores claros (02, 03, 06, 07, 12) van siempre dentro del marco de acero.
 4. Un color de guiso no se usa para otra cosa: ni botones, ni títulos, ni fondos de sección.
-5. La **franja de colores** (botón principal, cinta de la caja) usa cuatro: 09, 02, 08 y 05.
+5. La **franja de colores** (botón principal, cinta de la caja) usa cuatro: 09, 02, 08 y 07
+   (el 05, mole, no se distingue sobre el negro del botón).
 
 ---
 
@@ -160,7 +161,7 @@ Todas con licencia SIL Open Font License, guardadas en `frontend/fuentes/` con s
 Reglas: dos familias de trabajo (Barlow Condensed y Barlow); Kalam es la excepción
 registrada para el menú. Las mayúsculas angostas son para títulos y datos, nunca para un
 párrafo. «May» **no es una fuente**; mientras se redibuja lo sustituye Alfa Slab One, y solo
-dentro del logotipo. Rammetto One (de la landing anterior) queda fuera del sistema.
+dentro del logotipo. Rammetto One (de la landing anterior) quedó fuera del sistema y se retiró.
 
 ---
 

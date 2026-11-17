@@ -3,9 +3,9 @@
 La página escena por escena, con el [sistema](sistema.md) de la ruta 3. Sustituye al guion
 anterior (rótulo, madera y botones con taco), que queda en el historial de git.
 
-**Estado: guion listo; la página NO se ha rehecho.** `frontend/index.html` sigue siendo la
-versión anterior. Se reconstruye cuando el sistema esté aprobado y existan las imágenes de
-[direccion-de-arte.md](direccion-de-arte.md).
+**Estado (17-nov-2026): la página ya está rehecha con este guion** (`frontend/index.html`,
+`landing.css`, `js/landing.js`, y lo compartido con la tienda en `barra.css` y `js/barra.js`).
+Faltan tres imágenes (I1-08, I2 e I3), con su hueco rotulado. Nadie la ha visto en pantalla.
 
 ## Estrategia
 
@@ -119,11 +119,17 @@ movimiento reducido no hay transición.
 
 No hay librerías ni video.
 
-## Lo que hace falta para rehacer la página
+## Diferencias entre este guion y lo construido
+- Escena 2: las tres charolas se quedan en fila y el scroll resalta la activa (las otras bajan
+  de tamaño y pierden color); no se deslizan al centro.
+- Escena 5: el dato de la madrugada (se vende hasta las 4 a. m.) no se puso: falta el horario completo.
+- Escena 6: el cierre no lleva el sello suelto; el cactus va en el logotipo del pie.
 
-1. Sistema aprobado por Alejandro.
-2. Las cinco imágenes mínimas de [direccion-de-arte.md](direccion-de-arte.md).
-3. Pasar los datos del sistema (`frontend/marca/sistema.js`: colores de guiso y pictogramas)
-   a un archivo compartido que usen la landing y, cuando toque, la tienda.
-4. Corregir «nopal» por «cactus»: la landing actual todavía lo dice en comentarios, clases y
-   un texto alternativo; desaparece al rehacerla.
+## Cómo se enchufa una imagen que llega
+1. Dejar el original en `frontend/media/originales/`.
+2. Recortarla a 4:3 centrado y guardarla como WebP de 720 × 540 en
+   `frontend/media/guisos/<nombre-con-guiones>.webp`.
+3. Añadir ese nombre a `FOTOS` en `frontend/js/barra.js` (y quitarlo de `PENDIENTES`): con eso
+   aparece en la landing y en la tienda.
+4. Si es una de las charolas escritas a mano en `index.html` (héroe y escena 2), poner ahí su
+   `<img>` como en las que ya están y quitar el rótulo del hueco.
