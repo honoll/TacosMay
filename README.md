@@ -47,6 +47,8 @@ La tienda queda en <http://localhost:5000> y la API en `/api`. Para desarrollo,
 
 ## Desplegar en Render
 
+**Desplegado:** <https://tacosmay.onrender.com> (plan gratuito; se actualiza con cada push a `main`).
+
 La app corre tal cual en [Render](https://render.com) como servicio web: un solo servidor
 Express que sirve la API, la tienda y la landing, conectado a la misma base de Redis Cloud.
 
