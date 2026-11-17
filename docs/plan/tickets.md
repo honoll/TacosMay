@@ -110,6 +110,23 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   taquerías, historia y fotos propias · confirmar «Corazón de vaca enamorada» y la carta vigente ·
   teléfono, WhatsApp, correo, redes, razón social y aviso de privacidad.
 
+- **Tercera vuelta (17-nov-2026): rumbo a versión premium. Fases 1 y 2 hechas; fase 3 en espera
+  de materiales.** Documentos en `docs/diseno/`: `metodologia.md` (10 pasos con entregable y
+  criterio de salida, producción y control de materiales, presupuesto de peso, peldaños de
+  movimiento), `marca.md` (**propuesta por aprobar**: idea central «Hecho a mano, hasta el
+  letrero», voz, el nopal y sus poses, paleta con contraste, tipografía, texturas, foto e
+  ilustración, qué no es), `guion-landing.md` (7 escenas con material, movimiento y técnica, y el
+  sistema de botones animados: taco que se abre, bolsa que se rasga, tortilla que se voltea) y
+  `materiales.md` (pedido a Alejandro: 6 piezas indispensables M1–M6 y 7 de mejora, con prompts
+  para Gemini, formatos y nombres de archivo en `frontend/media/originales/`).
+  - **No se tocó `frontend/`** en esta vuelta: no hay prototipo nuevo; la página publicada sigue
+    siendo la de la segunda vuelta.
+  - **Bloqueos de Alejandro:** aprobar la marca; decir si ya existe una bolsa empacada real (de eso
+    depende que el producto y la escena firma sean foto y video reales o ilustración rotulada);
+    producir M1–M6.
+  - **Sin verificar:** los prompts no se han probado en Gemini; `docs/investigacion/landing-premium.md`
+    aún no existía al escribir esto y falta contrastarlo antes de construir.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
