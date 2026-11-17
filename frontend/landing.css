@@ -1,18 +1,27 @@
-/* Landing de TacosMay. Marca provisional: la identidad sale del producto
-   (bolsa al vacío, etiqueta de empaque, rótulo de taquería), no de una plantilla.
+/* Landing de Los Tacos May. La identidad sale del rótulo real de la taquería
+   (docs/negocio/fotos/rotulo-logo.png): tablón de madera clara, nopal verde con sombrero
+   amarillo, letras amarillas y rojas con contorno negro; y de su pizarrón de menú.
    Contrastes verificados con números: ver F6 en docs/plan/tickets.md. */
 
+/* Rammetto One, SIL Open Font License 1.1 (fuentes/OFL.txt). Guardada aquí: no depende de internet. */
+@font-face {
+  font-family: "Rammetto One";
+  src: url("fuentes/rammetto-one-latin.woff2") format("woff2");
+  font-display: swap;
+}
+
 :root {
-  --papel: #f3e9d8;    /* papel de estraza: el fondo que manda */
-  --crema: #fff8ea;
-  --tinta: #231813;
-  --apagado: #6b5a4c;
-  --guajillo: #9c2218; /* dominante */
-  --maiz: #f2b632;     /* acento: solo en lo que se puede accionar */
+  --madera: #ead7b0;      /* el tablón del rótulo: el fondo que manda */
+  --blanco: #fffdf7;      /* el pizarrón */
+  --negro: #141210;       /* el contorno del rótulo */
+  --apagado: #524636;
+  --verde: #1d6b30;       /* nopal, oscurecido para llevar texto encima */
+  --amarillo: #ffcf1f;    /* «Los Tacos» y lo que se puede accionar */
+  --rojo: #c8161f;        /* «May» */
+  --azul: #1f4fa3;        /* el plumón azul del pizarrón */
   --guiso: #7c2a14;
-  --foco: #1d4ed8;
-  /* Rótulo con fuentes del sistema: cero descargas y funciona sin internet el día de la demo. */
-  --rotulo: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", sans-serif-condensed, sans-serif;
+  --foco: #1f4fa3;
+  --rotulo: "Rammetto One", "Cooper Black", Georgia, serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -20,14 +29,16 @@
 
 body {
   margin: 0;
-  background: var(--papel);
-  color: var(--tinta);
+  /* Juntas de tablón: una línea tenue cada 180 px, sin imagen. */
+  background: var(--madera) repeating-linear-gradient(90deg, transparent 0 178px, rgb(20 18 16 / .1) 178px 180px);
+  color: var(--negro);
   font: 1.0625rem/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-h1, h2, h3, p, ol, ul, figure { margin: 0; }
+h1, h2, h3, p, ol, ul, figure, address { margin: 0; }
 ol, ul { list-style: none; padding: 0; }
 a { color: inherit; }
+address { font-style: normal; }
 section[id] { scroll-margin-top: 16px; }
 
 :focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
@@ -36,18 +47,25 @@ section[id] { scroll-margin-top: 16px; }
 
 .rotulo {
   font-family: var(--rotulo);
-  font-weight: 700;
-  font-synthesis-weight: none; /* Impact solo trae un peso: que no lo engorde el navegador */
-  text-transform: uppercase;
-  line-height: .95;
-  letter-spacing: .01em;
+  font-weight: 400;
+  line-height: 1.05;
   overflow-wrap: break-word;
   text-wrap: balance;
 }
 
+/* Letra de rótulo: relleno de color y contorno negro, como está pintado el letrero. */
+.letrero { font-family: var(--rotulo); font-weight: 400; line-height: 1; }
+.letrero span {
+  -webkit-text-stroke: .09em var(--negro);
+  paint-order: stroke fill;
+  text-shadow: .045em .06em 0 var(--negro);
+}
+.letrero .am { color: var(--amarillo); }
+.letrero .ro { color: var(--rojo); }
+
 .entrada { font-size: clamp(1.1rem, 1.6vw, 1.3rem); max-width: 34em; }
 
-.saltar { position: absolute; left: 16px; top: -100px; padding: 12px 16px; background: var(--tinta); color: var(--crema); z-index: 2; }
+.saltar { position: absolute; left: 16px; top: -100px; padding: 12px 16px; background: var(--negro); color: var(--blanco); z-index: 2; }
 .saltar:focus { top: 8px; }
 
 /* ---------- Botones y enlaces ---------- */
@@ -57,23 +75,21 @@ section[id] { scroll-margin-top: 16px; }
   align-items: center;
   min-height: 52px;
   padding: 0 24px;
-  border: 3px solid var(--tinta);
-  border-radius: 6px;
-  background: var(--maiz);
-  color: var(--tinta);
+  border: 3px solid var(--negro);
+  border-radius: 8px;
+  background: var(--amarillo);
+  color: var(--negro);
   font-weight: 800;
   font-size: 1.05rem;
   letter-spacing: .04em;
   text-transform: uppercase;
   text-decoration: none;
-  box-shadow: 4px 4px 0 var(--tinta);
+  box-shadow: 4px 4px 0 var(--negro);
 }
-.boton:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--tinta); }
-.boton:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--tinta); }
+.boton:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--negro); }
+.boton:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--negro); }
 .boton.chico { min-height: 44px; padding: 0 16px; font-size: .95rem; box-shadow: none; }
-.boton.chico:hover, .boton.chico:active { transform: none; box-shadow: none; background: var(--crema); }
-.boton.invertido { background: var(--tinta); color: var(--crema); box-shadow: none; }
-.boton.invertido:hover { transform: none; box-shadow: none; background: var(--guajillo); }
+.boton.chico:hover, .boton.chico:active { transform: none; box-shadow: none; background: var(--blanco); }
 
 .enlace {
   display: inline-flex;
@@ -85,6 +101,7 @@ section[id] { scroll-margin-top: 16px; }
   color: inherit;
   font: inherit;
   font-weight: 700;
+  text-align: left;
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
@@ -97,8 +114,10 @@ section[id] { scroll-margin-top: 16px; }
 /* ---------- Cabecera ---------- */
 
 .cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; padding-block: 10px; }
-.marca { font-size: 2rem; color: var(--guajillo); text-decoration: none; }
-a.marca { display: inline-flex; align-items: center; min-height: 44px; }
+.marca { display: inline-flex; align-items: center; gap: 8px; min-height: 56px; text-decoration: none; }
+.marca .letrero { font-size: 1.2rem; white-space: nowrap; }
+.marca .ro { font-size: 1.45em; }
+.nopal-mini { width: 42px; height: 52px; flex: none; transform-origin: 50% 100%; }
 .cabecera nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .cabecera nav a:not(.boton) {
   display: inline-flex;
@@ -112,47 +131,52 @@ a.marca { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ---------- Escena 1: héroe (no depende de JavaScript) ---------- */
 
-.heroe { overflow: clip; padding-block: clamp(24px, 5vw, 64px) clamp(40px, 7vw, 96px); }
-.heroe-rejilla { display: grid; gap: 40px; align-items: center; }
-h1 { font-size: clamp(2.9rem, 13vw, 7rem); margin-bottom: 24px; }
+.heroe { overflow: clip; padding-block: clamp(20px, 4vw, 56px) clamp(40px, 7vw, 96px); }
+.heroe-rejilla { display: grid; gap: 36px; align-items: center; }
+h1 { font-size: clamp(2.1rem, 8.4vw, 5rem); margin-bottom: 22px; }
+.confianza { margin-top: 22px; padding-left: 14px; border-left: 6px solid var(--verde); font-weight: 700; }
 
+/* El nopal del rótulo junto a la bolsa: marca y producto en una sola imagen. */
+.heroe-arte { position: relative; width: min(100%, 430px); aspect-ratio: 43 / 41; margin-inline: auto; }
 .bolsa {
-  display: block;
-  width: min(74%, 330px);
+  position: absolute;
+  top: 2%;
+  right: 3%;
+  width: 62%;
   height: auto;
-  margin-inline: auto;
   transform: rotate(-6deg);
-  filter: drop-shadow(10px 12px 0 rgb(35 24 19 / .16));
+  filter: drop-shadow(10px 12px 0 rgb(20 18 16 / .18));
 }
-.plastico { fill: var(--crema); stroke: var(--tinta); stroke-width: 5; stroke-linejoin: round; }
-.costura { fill: none; stroke: var(--tinta); stroke-width: 2; opacity: .45; }
-.corte { fill: none; stroke: var(--guajillo); stroke-width: 2; stroke-dasharray: 7 6; }
-.muesca { fill: var(--papel); stroke: var(--tinta); stroke-width: 5; stroke-linejoin: round; }
+.nopal-heroe { position: absolute; left: 0; bottom: 0; width: 50%; height: auto; transform-origin: 50% 100%; }
+
+.plastico { fill: var(--blanco); stroke: var(--negro); stroke-width: 5; stroke-linejoin: round; }
+.costura { fill: none; stroke: var(--negro); stroke-width: 2; opacity: .45; }
+.corte { fill: none; stroke: var(--rojo); stroke-width: 2; stroke-dasharray: 7 6; }
+.muesca { fill: var(--madera); stroke: var(--negro); stroke-width: 5; stroke-linejoin: round; }
 .guiso { fill: var(--guiso); }
 .trozos circle { fill: #5a1c0c; }
 .trozos circle:nth-child(even) { fill: #b4502c; }
-.arruga { fill: none; stroke: var(--tinta); stroke-width: 3; stroke-linecap: round; opacity: .3; }
-.etiqueta { fill: #fff; stroke: var(--tinta); stroke-width: 3; }
-.bolsa text { text-anchor: middle; fill: var(--tinta); }
-.etiqueta-nombre { font-size: 30px; }
+.arruga { fill: none; stroke: var(--negro); stroke-width: 3; stroke-linecap: round; opacity: .3; }
+.etiqueta { fill: #fff; stroke: var(--negro); stroke-width: 3; }
+.bolsa text { text-anchor: middle; fill: var(--negro); }
+.etiqueta-nombre { font-size: 23px; }
 .etiqueta-dato { font-size: 9.5px; font-weight: 700; letter-spacing: 1px; }
 .sello { transform-box: fill-box; transform-origin: center; transform: rotate(12deg); }
-.sello circle { fill: var(--crema); stroke: var(--guajillo); stroke-width: 4; }
-.sello text { fill: var(--guajillo); font-size: 17px; }
+.sello circle { fill: var(--blanco); stroke: var(--rojo); stroke-width: 4; }
+.sello text { fill: var(--rojo); font-size: 14px; }
 
 @media (min-width: 860px) {
-  .heroe-rejilla { grid-template-columns: 1.25fr .75fr; }
-  .bolsa { width: 100%; max-width: 400px; }
+  .heroe-rejilla { grid-template-columns: 1.2fr .8fr; }
 }
 
-/* Cinta de sellado entre escenas: textura tipográfica, quieta a propósito. */
+/* Cinta entre escenas: negro del contorno y amarillo del rótulo. Quieta a propósito. */
 .cinta {
   overflow: hidden;
-  padding: 12px 0 9px;
-  background: var(--guajillo);
-  color: var(--crema);
-  font-size: clamp(1.3rem, 3.4vw, 2.1rem);
-  letter-spacing: .08em;
+  padding: 12px 0;
+  background: var(--negro);
+  color: var(--amarillo);
+  font-size: clamp(1.1rem, 2.8vw, 1.7rem);
+  letter-spacing: .06em;
   white-space: nowrap;
   text-align: center;
   text-wrap: nowrap;
@@ -168,24 +192,25 @@ h1 { font-size: clamp(2.9rem, 13vw, 7rem); margin-bottom: 24px; }
   --a: clamp(0, var(--q), 1);        /* 1: se rompe la esquina */
   --b: clamp(0, var(--q) - 1.05, 1); /* 2: el guiso pasa a la sartén */
   --c: clamp(0, var(--q) - 2.1, 1);  /* 3: llega el taco */
+  background: var(--blanco);
   padding-block: clamp(56px, 9vw, 120px);
 }
 .modo-rejilla { display: grid; gap: 28px; align-items: center; }
 
-.sobre { font-size: .95rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--guajillo); margin-bottom: 20px; }
+.sobre { font-size: .95rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--rojo); margin-bottom: 20px; }
 
 .pasos { counter-reset: paso; display: grid; gap: 22px; }
-.pasos li { counter-increment: paso; padding-left: 20px; border-left: 6px solid var(--guajillo); }
-.pasos h3 { font-size: clamp(2.3rem, 7.5vw, 4.6rem); }
-.pasos h3::before { content: counter(paso) ". "; color: var(--guajillo); }
+.pasos li { counter-increment: paso; padding-left: 20px; border-left: 6px solid var(--rojo); }
+.pasos h3 { font-size: clamp(1.8rem, 5.6vw, 3.2rem); }
+.pasos h3::before { content: counter(paso) ". "; color: var(--rojo); }
 .pasos p { margin-top: 8px; max-width: 30em; }
 
 .pictograma { display: block; width: min(100%, 440px); height: auto; margin-inline: auto; order: -1; }
-.pictograma .tinta { fill: var(--tinta); }
-.borde-sarten { fill: #4a372d; stroke: var(--tinta); stroke-width: 4; }
+.pictograma .tinta { fill: var(--negro); }
+.borde-sarten { fill: #4a4039; stroke: var(--negro); stroke-width: 4; }
 .vapor path { fill: none; stroke: var(--apagado); stroke-width: 6; stroke-linecap: round; }
-.tortilla { fill: var(--maiz); stroke: var(--tinta); stroke-width: 5; }
-.cilantro { fill: none; stroke: #2f6b2a; stroke-width: 5; stroke-linecap: round; }
+.tortilla { fill: var(--amarillo); stroke: var(--negro); stroke-width: 5; }
+.cilantro { fill: none; stroke: #2f9e44; stroke-width: 5; stroke-linecap: round; }
 .cebolla { fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; }
 
 .bolsita, .relleno, .esquina, .vapor, .taco { transform-box: fill-box; transform-origin: center; }
@@ -209,21 +234,21 @@ h1 { font-size: clamp(2.9rem, 13vw, 7rem); margin-bottom: 24px; }
 
 /* ---------- Escena 3: guisos en vivo ---------- */
 
-.rojo { --foco: var(--crema); background: var(--guajillo); color: var(--crema); padding-block: clamp(56px, 8vw, 104px); }
-h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
+.verde { --foco: var(--blanco); background: var(--verde); color: var(--blanco); padding-block: clamp(56px, 8vw, 104px); }
+h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 
 .ranking { display: grid; gap: 20px 48px; margin-top: 40px; }
 .ranking li { display: flex; align-items: center; gap: 18px; }
-.ranking .num { flex: none; width: 1.1em; font-size: clamp(3.4rem, 10vw, 5rem); line-height: .8; text-align: center; }
-.ranking h3 { font-size: clamp(1.5rem, 4.2vw, 2.1rem); }
+.ranking .num { flex: none; width: 1.1em; font-size: clamp(3rem, 9vw, 4.4rem); line-height: .9; text-align: center; color: var(--amarillo); }
+.ranking h3 { font-size: clamp(1.25rem, 3.6vw, 1.7rem); }
 .ranking p { margin-top: 4px; font-variant-numeric: tabular-nums; }
 
 @media (min-width: 860px) {
   /* Rejilla asimétrica: el número uno pesa más que sus hermanos. */
   .ranking { grid-template-columns: 1.2fr 1fr; }
   .ranking li:first-child { grid-row: span 4; align-items: flex-start; flex-direction: column; gap: 8px; }
-  .ranking li:first-child .num { width: auto; font-size: 13rem; }
-  .ranking li:first-child h3 { font-size: 3.6rem; }
+  .ranking li:first-child .num { width: auto; font-size: 11rem; }
+  .ranking li:first-child h3 { font-size: 2.8rem; }
   .ranking li:first-child p { font-size: 1.2rem; }
 }
 
@@ -231,13 +256,13 @@ h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
 .menu { margin-top: 36px; }
 .menu li { padding: 18px 0; border-bottom: 2px dashed var(--apagado); break-inside: avoid; }
 .fila { display: flex; align-items: baseline; gap: 12px; }
-.fila h3 { min-width: 0; font-size: clamp(1.5rem, 4.4vw, 2rem); }
+.fila h3 { min-width: 0; font-size: clamp(1.2rem, 3.6vw, 1.6rem); }
 .fila .puntos { flex: 1; min-width: 16px; border-bottom: 3px dotted var(--apagado); }
 .fila strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .menu p { margin-top: 6px; max-width: 34em; }
 .dato { color: var(--apagado); font-size: .95rem; font-weight: 600; }
 
-.estado { margin-top: 28px; padding: 14px 18px; border-left: 6px solid var(--guajillo); background: var(--crema); font-weight: 600; }
+.estado { margin-top: 28px; padding: 14px 18px; border-left: 6px solid var(--rojo); background: var(--blanco); font-weight: 600; }
 
 @media (min-width: 860px) {
   .menu { columns: 2; column-gap: 64px; }
@@ -245,47 +270,68 @@ h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
 
 /* ---------- Escena 4: envío ---------- */
 
-.oscuro { --foco: var(--crema); background: var(--tinta); color: var(--crema); padding-block: clamp(72px, 11vw, 150px); }
+.oscuro { --foco: var(--blanco); background: var(--negro); color: var(--blanco); padding-block: clamp(72px, 11vw, 150px); }
 .envio-rejilla { display: grid; gap: 28px; }
 .envio-rejilla p + p { margin-top: 18px; }
 .oscuro p { max-width: 36em; }
 .fuente { font-size: .95rem; }
-.fuente a { display: inline-block; padding-block: 10px; color: var(--maiz); font-weight: 700; }
+.fuente a { display: inline-block; padding-block: 10px; color: var(--amarillo); font-weight: 700; }
 
 @media (min-width: 860px) {
   .envio-rejilla { grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
 }
 
-/* ---------- Escena 5: la taquería (huecos marcados para fotos reales) ---------- */
+/* ---------- Escena 5: la taquería ---------- */
 
-.familia { padding-block: clamp(56px, 9vw, 120px); }
-.familia-rejilla { display: grid; gap: 24px; }
+.taqueria { overflow: clip; padding-block: clamp(56px, 9vw, 120px); }
+.taqueria-rejilla { display: grid; gap: 40px; }
+.taqueria address { margin-top: 18px; }
+
+/* El pizarrón blanco del menú: título en negro, guisos en plumón rojo, rayas azules entre grupos. */
+.pizarron {
+  width: min(100%, 520px);
+  margin-inline: auto;
+  padding: 28px 26px;
+  border: 5px solid #b89a63;
+  border-radius: 30px;
+  background: var(--blanco);
+  box-shadow: 8px 10px 0 rgb(20 18 16 / .18);
+  transform: rotate(-1.2deg);
+}
+.pizarron h3 { font-size: 1.25rem; text-align: center; margin-bottom: 14px; }
+.pizarron ul { padding-block: 12px; border-top: 3px solid var(--azul); color: var(--rojo); font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
+.pizarron .nota { padding-top: 14px; border-top: 3px solid var(--azul); font-size: .95rem; }
+.pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 700; }
+
 .hueco {
   display: grid;
   place-items: center;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
+  margin-top: 28px;
   padding: 20px;
   border: 3px dashed var(--apagado);
-  background: repeating-linear-gradient(-45deg, transparent 0 14px, rgb(35 24 19 / .05) 14px 28px);
+  background: repeating-linear-gradient(-45deg, transparent 0 14px, rgb(20 18 16 / .05) 14px 28px);
   color: var(--apagado);
   font-weight: 700;
   text-align: center;
 }
 
 @media (min-width: 860px) {
-  .familia-rejilla { grid-template-columns: 5fr 4fr 3fr; gap: 32px; align-items: start; }
-  .hueco-alto { aspect-ratio: 3 / 4; }
-  .hueco:not(.hueco-alto) { aspect-ratio: 1; margin-top: 120px; }
+  .taqueria-rejilla { grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
 }
 
 /* ---------- Escena 6: cierre ---------- */
 
-.cierre { --foco: var(--tinta); background: var(--maiz); padding-block: clamp(64px, 10vw, 140px); }
-.cierre h2.rotulo { font-size: clamp(4rem, 17vw, 12rem); margin-bottom: 20px; }
+.cierre { --foco: var(--blanco); background: var(--rojo); color: var(--blanco); padding-block: clamp(64px, 10vw, 140px); }
+.cierre .letrero { font-size: clamp(3rem, 13vw, 8rem); margin-bottom: 20px; overflow-wrap: break-word; }
+.cierre .letrero .ro { color: var(--blanco); }
 .cierre .boton { margin-top: 28px; }
 
-.pie { --foco: var(--crema); background: var(--tinta); color: var(--crema); padding-block: 40px; }
-.pie .marca { color: var(--crema); margin-bottom: 8px; }
+.pie { --foco: var(--blanco); background: var(--negro); color: var(--blanco); padding-block: 40px; }
+.pie .letrero { font-size: 1.5rem; margin-bottom: 12px; }
+.pie .letrero span { -webkit-text-stroke: 0; text-shadow: none; }
+.pie .letrero .ro { color: var(--blanco); }
+.pie p + p { margin-top: 6px; }
 
 /* ---------- Movimiento: solo si el usuario lo acepta ---------- */
 
@@ -293,12 +339,17 @@ h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
   html { scroll-behavior: smooth; }
   .boton { transition: transform .15s, box-shadow .15s; }
 
-  /* Héroe: la bolsa «se sella» (sale el aire) y cae el sello. Solo CSS; el texto no se anima. */
+  /* Héroe: la bolsa «se sella» (sale el aire), cae el sello y se asoma el nopal. Solo CSS; el texto no se anima. */
   .bolsa { animation: sellar .9s cubic-bezier(.2, .9, .2, 1) both; }
   .sello { animation: sellazo .35s .8s cubic-bezier(.2, 1.5, .4, 1) both; }
+  .nopal-heroe { animation: asomar .6s .35s cubic-bezier(.2, 1.3, .4, 1) both; }
   @keyframes sellar { from { transform: rotate(-2deg) scale(1.08, .96); } }
   @keyframes sellazo { from { transform: rotate(-18deg) scale(2.4); opacity: 0; } }
+  @keyframes asomar { from { transform: translateY(16%) rotate(-9deg); opacity: 0; } }
 
+  /* El nopal de la cabecera saluda al pasar el cursor o el foco: un guiño, no un loop. */
+  .marca:hover .nopal-mini, .marca:focus-visible .nopal-mini { animation: saludo .6s ease-in-out; }
+  @keyframes saludo { 30% { transform: rotate(-10deg); } 65% { transform: rotate(8deg); } }
 }
 
 /* Firma: la escena se queda fija mientras el scroll recorre los tres pasos.
@@ -313,10 +364,10 @@ h2.rotulo { font-size: clamp(2.6rem, 9vw, 5.6rem); margin-bottom: 16px; }
   .js .pasos p { display: none; }
   .js .modo[data-step="1"] .pasos li:nth-child(1),
   .js .modo[data-step="2"] .pasos li:nth-child(2),
-  .js .modo[data-step="3"] .pasos li:nth-child(3) { border-left-color: var(--guajillo); }
+  .js .modo[data-step="3"] .pasos li:nth-child(3) { border-left-color: var(--rojo); }
   .js .modo[data-step="1"] .pasos li:nth-child(1) h3,
   .js .modo[data-step="2"] .pasos li:nth-child(2) h3,
-  .js .modo[data-step="3"] .pasos li:nth-child(3) h3 { color: var(--tinta); }
+  .js .modo[data-step="3"] .pasos li:nth-child(3) h3 { color: var(--negro); }
   .js .modo[data-step="1"] .pasos li:nth-child(1) p,
   .js .modo[data-step="2"] .pasos li:nth-child(2) p,
   .js .modo[data-step="3"] .pasos li:nth-child(3) p { display: block; }
