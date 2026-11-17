@@ -84,3 +84,36 @@
 .ficha dt { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5b5b5b; }
 .ficha dd { margin: 4px 0 0; }
 @media (min-width: 800px) { .ficha { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---------- Segundo pase (logos-2.html) ---------- */
+
+/* «LOS TACOS» ya es trazo de la fuente real: no lleva el redondeo de las letras dibujadas. */
+.logos path.t.lt, .logos path.p.lt, .logos path.r.lt { stroke: none; }
+/* Filo de papel que despega el sombrero y las flores de la letra cuando todo va a una tinta. */
+.logos .halo { fill: var(--papel); stroke: var(--papel); stroke-linejoin: round; }
+.logos .marco { fill: var(--papel); stroke: currentColor; stroke-width: 10; }
+.logos .aro { fill: var(--papel); stroke: currentColor; stroke-width: 8; }
+
+.logos .idea { margin-bottom: 16px; }
+.variantes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.variantes.dos { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.variante { display: grid; align-content: start; gap: 8px; padding: 14px; border-radius: 10px; background: #fff; }
+.variante h3 b { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 4px; background: #141210; color: #fff; }
+.variante .lienzo-l { min-height: 170px; }
+.variante .lienzo-l.alto > svg { max-height: 260px; }
+.par { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.par .lienzo-l { min-height: 0; padding: 12px; }
+.par svg { max-height: 80px; }
+.tinta-n { --may: currentColor; }
+.tinta-b { --may: currentColor; --papel: #141210; background: #141210; color: #f7f4ee; }
+
+.sello .lienzo-l > svg { max-height: 230px; }
+.en-pes .lienzo-l { background: #d9dcdd; }
+.pestana { display: flex; align-items: center; gap: 8px; width: min(100%, 230px); padding: 8px 10px; border-radius: 10px 10px 0 0; background: #f7f4ee; font-size: .85rem; }
+.pestana .fav { display: grid; place-items: center; flex: none; width: 16px; height: 16px; }
+.pestana .fav svg { width: auto; max-width: 100%; height: 100%; }
+.pestana span:nth-child(2) { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pestana i { font-style: normal; color: #5b5b5b; }
+.etq-m { position: relative; }
+.sello-etq { position: absolute; right: 8px; top: 8px; width: 22px; height: 30px; }
+.sello-etq svg { width: auto; max-width: 100%; height: 100%; }

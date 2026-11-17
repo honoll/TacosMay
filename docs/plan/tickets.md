@@ -333,6 +333,22 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     carrito, ni la reversa con error); la retícula a 1280, 1440 y 1920 px, y a 375 px; la tienda
     contra Redis con estos cambios (lo corre coordinación).
 
+- **Undécima vuelta (17-nov-2026): segundo pase de los logotipos 3 y 4. Nada aplicado todavía.**
+  - `frontend/marca/logos-2.html` (en `/marca/logos-2.html`, enlazado desde `/marca/` y `logos.html`):
+    cuatro variantes del 3 (3A sombrero en la horquilla · 3B sombrero en el brazo alto · 3C cactus
+    en negro · 3D sin sombrero, en una línea), tres del 4 (4A pastilla · 4B contorno · 4C vertical),
+    el híbrido como sistema y el juego completo de tres candidatos (principal, horizontal, sello,
+    una tinta, sobre claro, oscuro y rojo, 24 px, pestaña, cabecera y etiqueta).
+  - Redibujado: pesos y espacios de «May», hueco de la «A», postura del cactus (brazo izquierdo
+    corto y bajo, derecho largo y alto), sombrero, y un filo que separa sombrero y flores a una
+    tinta. «Los Tacos» es ahora el trazo real de Barlow Condensed SemiBold.
+  - `docs/diseno/logos.md`: **recomendación: 3A como logotipo y 4C como sello**; segunda opción,
+    3A solo. Fundirlos en una pieza no funciona (cactus dentro de cactus).
+  - **Verificado:** dibujos convertidos a imagen y revisados a la vista; `node --check`; página
+    armada con DOM simulado (463 etiquetas cuadradas, ninguna clase sin regla).
+  - **NO verificado:** la página en el navegador; búsqueda formal de marcas.
+  - **Bloqueo de Alejandro:** elegir (sistema 3A + 4C, o uno solo) y las tres decisiones de detalle.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

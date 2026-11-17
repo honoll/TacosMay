@@ -95,3 +95,78 @@ elegido hace falta una búsqueda formal** (`PENDIENTE-CLIENTE`).
 - **Sin verificar:** la página en el navegador (375 px y escritorio), los dibujos con las
   fuentes del sistema (en mi revisión «Los Tacos» salió con una fuente genérica), y el
   contorno del concepto 7, que en la página depende del CSS.
+
+---
+
+# Segundo pase: el 3 y el 4 (17-nov-2026)
+
+Alejandro eligió seguir con dos: «entre el 3 y el 4 se ven muy bien, solo hay que seguir
+mejorándolos».
+
+- **Verlo:** `http://localhost:5000/marca/logos-2.html` (enlazado desde `/marca/` y desde
+  `logos.html`). Código: `frontend/marca/logos-2.js` (dibujos) y `logos-2-vista.js`.
+- **Sigue sin aplicarse ninguno** al sistema, a la landing ni a la tienda.
+
+## Qué se redibujó
+- **Letras de «May»:** pesos parejos (28 de 100 de alto), el hueco de la «A» más abierto y la
+  barra más delgada, esquinas redondeadas un poco más. Espacios ajustados letra por letra: «M»
+  y «A» casi juntas, y la «A» y la «Y» metidas una en otra, porque sus diagonales dejan aire.
+- **El cactus:** se corrigió la postura. En el primer pase el brazo izquierdo quedaba más alto;
+  ahora el **izquierdo es el corto y bajo** y el **derecho el largo y alto**, como en el letrero.
+- **El sombrero:** copa en pico más baja y ala más ancha; en el 4 era demasiado grande y
+  tapaba el texto, y se redujo.
+- **Una tinta:** el sombrero y las flores llevan un **filo del color del fondo** que los
+  despega de la letra. Sin él, en negro o en blanco el sombrero se fundía con la «Y».
+- **«Los Tacos»:** ya no es texto que depende de que cargue la fuente; es el **trazo real de
+  Barlow Condensed SemiBold** convertido a dibujo, así que se revisó con la fuente verdadera.
+
+## Variantes del 3 · La Y es el cactus
+| | Qué cambia | A favor | En contra |
+|---|---|---|---|
+| **3A** | Sombrero en la horquilla, flores en las puntas, «Los Tacos» arriba | Es la que más se lee como cactus sin dejar de ser «Y» | El sombrero ocupa el centro de la letra: a tamaños muy chicos se empasta |
+| **3B** | Sombrero colgado del brazo alto; sin flores ni «Los Tacos» | La «Y» más limpia; la más corta | Sin flores se lee «una Y con sombrero», menos cactus |
+| **3C** | «MA» en rojo y la «Y» en negro, flores rojas, «Los Tacos» abajo | El cactus se ve de inmediato | Parte la palabra en dos colores: puede leerse «MA» + figura |
+| **3D** | Sin sombrero, solo brazos y flores; «Los Tacos» a la izquierda, en una línea | La más sobria; cabe en una cabecera baja | Pierde el sombrero, que es medio personaje |
+
+## Variantes del 4 · El cactus lleva el nombre
+| | Qué cambia | A favor | En contra |
+|---|---|---|---|
+| **4A** | Pastilla baja con «Los Tacos» y «May» calados dentro | Todo en una pieza; resuelve dónde va «Los Tacos» | Sigue siendo una mancha negra grande |
+| **4B** | El cuerpo es un marco; «May» en rojo; «Los Tacos» abajo | Pesa la mitad y «May» recupera su rojo | El marco fino se pierde en chico |
+| **4C** | De pie: tronco alto con las tres letras apiladas | Deja de ser chaparro: es un cactus y es un sello | Leer en vertical es más lento; no sirve como firma de una línea |
+
+## Los dos juntos
+**Fundirlos en una pieza no funciona:** los dos ya unen cactus y nombre, así que juntarlos
+pone un cactus dentro de otro y se duplica el sombrero.
+
+**Como sistema, sí:** el 3 firma y el 4 sella. La palabra (3A) va donde hay que leer el
+nombre: cabecera, etiqueta, caja. El cactus de pie (4C) va donde hace falta un símbolo: ícono
+de pestaña, cierre de la caja, esquina de la etiqueta. Comparten letras y sombrero, así que
+se reconocen como de la misma marca. Nunca van pegados.
+
+## Recomendación
+**El sistema: 3A como logotipo y 4C como sello.**
+1. No obliga a escoger entre los dos que le gustaron a Alejandro: cada uno hace lo que hace bien.
+2. **3A** es el más equilibrado del 3: se lee «MAY» de un vistazo y cactus al segundo.
+3. **4C** resuelve el diagnóstico del 4 (chaparro y pesado) cambiando la proporción en vez de
+   adelgazarlo, y es lo que mejor funciona a 24 px.
+
+**Segunda opción: el 3A solo,** con la «Y» como sello. Más simple; pierde al cactus de cuerpo
+entero.
+
+Si se prefiere el 4 como logotipo principal, que sea el **4B** (con 4C de sello); el 4A queda
+como versión compacta.
+
+Decisiones que le tocan a Alejandro: sombrero en la horquilla o en el brazo (3A o 3B); con
+flores o sin ellas; cactus rojo o negro (3A o 3C).
+
+## Verificación del segundo pase
+- Todos los dibujos se convirtieron a imagen y se revisaron a la vista, en color, en blanco
+  sobre negro y a 24 px de alto; se corrigieron el sombrero del 4 (tapaba «Los Tacos») y la
+  fusión del sombrero con la «Y» a una tinta.
+- `node --check` de los módulos; la página armada con un DOM simulado: 463 etiquetas que
+  abren y 463 que cierran, sin valores vacíos, sin ids repetidos, ninguna clase sin regla.
+- **Sin verificar:** la página en el navegador (los contextos de cabecera, etiqueta y pestaña
+  solo se armaron, no se vieron); el sello del 3 sobre rojo; parecidos con marcas registradas
+  (sigue siendo revisión de memoria).
+
