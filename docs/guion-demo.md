@@ -4,8 +4,9 @@
 [rubrica.md](rubrica.md); respaldo de todo lo que se dice en
 [TacosMay-Diseno-y-Justificacion.pdf](TacosMay-Diseno-y-Justificacion.pdf).
 
-> La tienda está hoy en `http://localhost:5000`. Cuando entre la landing (ticket F6) se
-> muda a `http://localhost:5000/tienda/`: ajustar las direcciones de este guion ese día.
+> La **tienda** está en `http://localhost:5000/tienda/` y es donde ocurre toda la demo. La
+> raíz (`http://localhost:5000`) es la landing: sirve de portada mientras te presentas, pero
+> no gastes tiempo de demo en ella; la rúbrica califica la tienda.
 
 ## Antes de pasar al frente (10 minutos antes)
 
