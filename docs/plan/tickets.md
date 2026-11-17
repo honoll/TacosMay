@@ -127,6 +127,46 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **Sin verificar:** los prompts no se han probado en Gemini; `docs/investigacion/landing-premium.md`
     aún no existía al escribir esto y falta contrastarlo antes de construir.
 
+- **Cuarta vuelta (17-nov-2026): todo con IA y página armada con huecos rotulados.** Por decisión
+  de Alejandro la página es una prueba y todos los materiales se generan con Gemini.
+  - **Documentos (`docs/diseno/`):** `materiales.md` reescrito (5 indispensables: M4 nopal, M2 seis
+    guisos fotorrealistas con una sola dirección de fotografía, M3 bolsa con etiqueta en blanco, M5
+    taco que se abre, M6 tres clips ilustrados de la escena firma; mejora: M1a letrero, M1b madera,
+    M7–M10); `marca.md`, `guion-landing.md` y `metodologia.md` ajustados. Se eligió M6 ilustrado y
+    no fotorrealista: el scroll recorre el video cuadro por cuadro y ahí se notan las fallas de
+    manos y líquidos. La taquería (antes M11) no se pide: generarla pasaría por el local real.
+  - **Página (`frontend/`):** cada material tiene su lugar definitivo como `.pieza` con su código a
+    la vista (`data-pieza`): M3 bolsa 3:4 y M4 nopal en el héroe, M6 secuencia en la escena firma
+    (16:9 recortado a 4:3), M2 una foto 4:3 por guiso, M9 nopal apenado en el error del menú, M8
+    nopal con frío en envío, M4 nopal señalando la dirección, M7 nopal en el cierre. Mientras
+    llegan, se ve la versión provisional dibujada (bolsa, nopal, pictograma) o un hueco rayado.
+  - **Botones animados funcionando con arte provisional:** tres tiras de 12 cuadros en
+    `frontend/media/sprites/` (taco que se abre, bolsa que se rasga, tortilla que se voltea) con un
+    solo mecanismo en CSS (`.icono` + `steps()`): con cursor o foco se animan al pasar; en táctil,
+    al entrar a pantalla y al tocar; con movimiento reducido quedan fijos en el cuadro final; el
+    texto del botón sigue siendo su nombre accesible. La tortilla es además el «cargando» del menú.
+  - **Otros cambios:** el letrero se pinta al cargar y la bolsa cae a la mesa; los renglones del
+    menú se abren (`<details>`) para ver foto y descripción; escarcha en la escena de envío; la
+    escena de la taquería queda con pizarrón, dirección y nopal. `slug()` nuevo en `js/api.js`
+    (compartido) con su caso en `api.test.mjs`. **No se añadió GSAP:** el reproductor de la
+    secuencia son unas líneas sobre el avance de scroll que ya existía.
+  - **Cómo se enchufa cada material:** M2 → `media/guisos/<slug>.webp` y añadir el slug a `FOTOS` en
+    `js/landing.js`; M6 → cuadros en `media/modo/<720|1280>/NNN.webp` y poner su número en `FRAMES`;
+    M5/M10 → sustituir las tiras de `media/sprites/` (misma geometría: 12 cuadros en fila); M3, M4,
+    M7, M8, M9 y M1a → cambiar el `<svg>` provisional por `<img>` donde lo indica el comentario.
+  - **Imágenes generadas con IA en la página hoy: ninguna** (aún no llega ningún archivo). Llevarán
+    `PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender`:
+    M2 (guisos) y M3 (bolsa); el comentario ya está puesto en sus huecos.
+  - **Verificado sin navegador:** `node --check` de `js/landing.js` y `tienda/app.js`;
+    `node frontend/js/api.test.mjs` → `api.test: OK`; HTML bien anidado, un `h1`, ids únicos, 33
+    referencias resueltas; las tres tiras son XML válido; cero movimiento fuera de
+    `prefers-reduced-motion: no-preference`; contrastes nuevos: etiqueta de pieza 12.63, «+» rojo
+    sobre madera 4.13 (signo grande, mínimo 3).
+  - **NO verificado:** nada de esta vuelta se ha visto en pantalla (ni los sprites, ni los huecos,
+    ni el `<details>`, ni la escarcha). El reproductor de la secuencia (`FRAMES > 0`) no se ha
+    ejecutado nunca: no hay cuadros con qué probarlo. Los prompts no se han probado en Gemini. La
+    tienda no se volvió a correr contra Redis (solo se añadió una función a `js/api.js`).
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

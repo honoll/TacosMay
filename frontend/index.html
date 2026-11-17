@@ -44,63 +44,73 @@
     </symbol>
   </svg>
 
+  <!-- HUECOS DE MATERIAL: cada .pieza lleva en data-pieza el código de docs/diseno/materiales.md y muestra una
+       etiqueta. Al llegar el archivo se sustituye el contenido provisional y se quita data-pieza. -->
+
   <header class="cabecera caja">
     <a class="marca" href="/" aria-label="Los Tacos May, inicio">
       <svg class="nopal-mini" viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg>
-      <span class="letrero"><span class="am">Los Tacos</span> <span class="ro">May</span></span>
+      <!-- M1a: al llegar el letrero limpio, sustituir este texto por <img src="media/letrero.webp" alt="Los Tacos May"> -->
+      <span class="letrero pinta"><span class="am">Los Tacos</span> <span class="ro">May</span></span>
     </a>
     <nav aria-label="Principal">
       <a href="#modo">Cómo se come</a>
       <a href="#guisos">Guisos</a>
       <a href="#taqueria">La taquería</a>
-      <a class="boton chico" href="/tienda/">Tienda</a>
+      <a class="boton chico" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Tienda</a>
     </nav>
   </header>
 
   <main id="contenido">
 
-    <!-- Escena 1 · llega sin saber qué es → sale sabiendo: el guiso de la taquería, en bolsa, para su casa -->
+    <!-- Escena 1 · llega sin saber qué es → sale sabiendo: guisos de Los Tacos May, en bolsa, para su casa -->
     <section class="heroe">
       <div class="caja heroe-rejilla">
         <div class="heroe-texto">
           <h1 class="rotulo">El guiso de la taquería, en tu congelador.</h1>
           <p class="entrada">Los guisos de Los Tacos May, empacados al vacío por porciones y congelados. Rompes la bolsa, calientas y pones las tortillas.</p>
           <div class="acciones">
-            <a class="boton" href="/tienda/">Pedir guisos</a>
-            <a class="enlace" href="#modo">Ver cómo se come</a>
+            <a class="boton" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Pedir guisos</a>
+            <a class="enlace" href="#modo"><span class="icono icono-bolsa" aria-hidden="true"></span>Ver cómo se come</a>
           </div>
           <p class="confianza">De nuestra taquería en el centro de Cabo San Lucas.</p>
           <!-- PENDIENTE-CLIENTE: año en que empezó la taquería (la línea de confianza mejora con «desde …») -->
         </div>
 
         <div class="heroe-arte">
-
-        <svg class="bolsa" viewBox="0 0 300 400" role="img" aria-labelledby="bolsa-titulo">
-          <title id="bolsa-titulo">Ilustración de una bolsa al vacío con guiso adentro; la etiqueta dice «Los Tacos May, guiso de taquería, al vacío»</title>
-          <rect class="plastico" x="16" y="12" width="268" height="376" rx="10"/>
-          <path class="costura" d="M30 28h240M30 36h240M30 44h240M30 356h240M30 364h240M30 372h240"/>
-          <path class="corte" d="M30 66h236"/>
-          <path class="muesca" d="M286 58l-16 8 16 8"/>
-          <path class="guiso" d="M52 150c-12-30 28-50 68-42 40-16 100-8 124 22s18 170-4 192c-40 26-144 24-178 0-26-22-18-132-10-172z"/>
-          <g class="trozos">
-            <circle cx="96" cy="150" r="14"/><circle cx="196" cy="140" r="17"/><circle cx="224" cy="196" r="11"/>
-            <circle cx="78" cy="300" r="13"/><circle cx="150" cy="316" r="16"/><circle cx="212" cy="296" r="10"/>
-          </g>
-          <path class="arruga" d="M30 92l28 36M270 98l-24 28M30 342l30-22M270 342l-26-22"/>
-          <g transform="rotate(-4 150 236)">
-            <rect class="etiqueta" x="58" y="188" width="184" height="96"/>
-            <text class="etiqueta-dato" x="150" y="207">LOS TACOS MAY</text>
-            <text class="rotulo etiqueta-nombre" x="150" y="234">Guiso de</text>
-            <text class="rotulo etiqueta-nombre" x="150" y="260">taquería</text>
-            <text class="etiqueta-dato" x="150" y="276">AL VACÍO · POR PORCIONES</text>
-          </g>
-          <g class="sello" aria-hidden="true">
-            <circle cx="232" cy="318" r="36"/>
-            <text class="rotulo" x="232" y="314">Al</text>
-            <text class="rotulo" x="232" y="332">vacío</text>
-          </g>
-        </svg>
-        <svg class="nopal-heroe" viewBox="0 0 240 300" role="img" aria-label="El nopal de Los Tacos May, con sombrero amarillo, junto a la bolsa"><use href="#nopal"/></svg>
+          <!-- M3: al llegar, sustituir el <svg> por
+               <img src="media/bolsa.webp" width="900" height="1200" alt="Bolsa al vacío con guiso de Los Tacos May" fetchpriority="high">
+               y dejar encima .bolsa-nombre (el nombre lo escribe la página, no el generador).
+               PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
+          <figure class="pieza bolsa-marco" data-pieza="M3 · bolsa · 3:4">
+            <svg class="bolsa" viewBox="0 0 300 400" role="img" aria-labelledby="bolsa-titulo">
+              <title id="bolsa-titulo">Ilustración de una bolsa al vacío con guiso adentro; la etiqueta dice «Los Tacos May, guiso de taquería, al vacío»</title>
+              <rect class="plastico" x="16" y="12" width="268" height="376" rx="10"/>
+              <path class="costura" d="M30 28h240M30 36h240M30 44h240M30 356h240M30 364h240M30 372h240"/>
+              <path class="corte" d="M30 66h236"/>
+              <path class="muesca" d="M286 58l-16 8 16 8"/>
+              <path class="guiso" d="M52 150c-12-30 28-50 68-42 40-16 100-8 124 22s18 170-4 192c-40 26-144 24-178 0-26-22-18-132-10-172z"/>
+              <g class="trozos">
+                <circle cx="96" cy="150" r="14"/><circle cx="196" cy="140" r="17"/><circle cx="224" cy="196" r="11"/>
+                <circle cx="78" cy="300" r="13"/><circle cx="150" cy="316" r="16"/><circle cx="212" cy="296" r="10"/>
+              </g>
+              <path class="arruga" d="M30 92l28 36M270 98l-24 28M30 342l30-22M270 342l-26-22"/>
+              <g transform="rotate(-4 150 236)">
+                <rect class="etiqueta" x="58" y="188" width="184" height="96"/>
+                <text class="etiqueta-dato" x="150" y="207">LOS TACOS MAY</text>
+                <text class="rotulo etiqueta-nombre" x="150" y="234">Guiso de</text>
+                <text class="rotulo etiqueta-nombre" x="150" y="260">taquería</text>
+                <text class="etiqueta-dato" x="150" y="276">AL VACÍO · POR PORCIONES</text>
+              </g>
+              <g class="sello" aria-hidden="true">
+                <circle cx="232" cy="318" r="36"/>
+                <text class="rotulo" x="232" y="314">Al</text>
+                <text class="rotulo" x="232" y="332">vacío</text>
+              </g>
+            </svg>
+          </figure>
+          <!-- M4 (pose 3, abrazando la bolsa) y después M7 (saludo animado) -->
+          <div class="pieza nopal-heroe" data-pieza="M4 · nopal" role="img" aria-label="El nopal de Los Tacos May, con sombrero amarillo, junto a la bolsa"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
         </div>
       </div>
     </section>
@@ -130,31 +140,37 @@
             </ol>
           </div>
 
-          <svg class="pictograma" viewBox="0 0 400 420" role="img" aria-labelledby="picto-titulo">
-            <title id="picto-titulo">Ilustración: la bolsa se abre por una esquina, el guiso pasa a la sartén y termina en un taco</title>
-            <g class="vapor"><path d="M150 292q-14-18 0-36t0-36M200 292q-14-18 0-36t0-36M250 292q-14-18 0-36t0-36"/></g>
-            <rect class="tinta" x="300" y="316" width="96" height="14" rx="7"/>
-            <path class="tinta" d="M70 320h260l-18 52a14 14 0 0 1-13 9H101a14 14 0 0 1-13-9z"/>
-            <ellipse class="borde-sarten" cx="200" cy="320" rx="130" ry="16"/>
-            <ellipse class="guiso en-sarten" cx="200" cy="320" rx="112" ry="10"/>
-            <g class="bolsita">
-              <path class="plastico" d="M138 40h98l38 38v144a8 8 0 0 1-8 8H138a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8z"/>
-              <path class="costura" d="M142 54h88M142 62h96"/>
-              <ellipse class="guiso relleno" cx="200" cy="150" rx="50" ry="60"/>
-            </g>
-            <path class="plastico esquina" d="M236 40h38v38z"/>
-            <g class="taco">
-              <ellipse class="tortilla" cx="110" cy="380" rx="78" ry="24"/>
-              <ellipse class="guiso" cx="110" cy="375" rx="50" ry="11"/>
-              <path class="cilantro" d="M84 372h7M104 368h7M126 376h7M140 370h7"/>
-              <path class="cebolla" d="M94 378h7M116 371h7M70 376h7"/>
-            </g>
-          </svg>
+          <!-- M6: los cuadros de los tres clips van en media/modo/<ancho>/NNN.webp y se dibujan en el <canvas>
+               (js/landing.js, constante FRAMES). Mientras FRAMES es 0 se ve el pictograma provisional. -->
+          <figure class="pieza modo-marco" data-pieza="M6 · secuencia · 16:9 → 4:3">
+            <canvas id="secuencia" hidden aria-hidden="true"></canvas>
+            <svg class="pictograma" viewBox="0 0 400 420" role="img" aria-labelledby="picto-titulo">
+              <title id="picto-titulo">Ilustración: la bolsa se abre por una esquina, el guiso pasa a la sartén y termina en un taco</title>
+              <g class="vapor"><path d="M150 292q-14-18 0-36t0-36M200 292q-14-18 0-36t0-36M250 292q-14-18 0-36t0-36"/></g>
+              <rect class="tinta" x="300" y="316" width="96" height="14" rx="7"/>
+              <path class="tinta" d="M70 320h260l-18 52a14 14 0 0 1-13 9H101a14 14 0 0 1-13-9z"/>
+              <ellipse class="borde-sarten" cx="200" cy="320" rx="130" ry="16"/>
+              <ellipse class="guiso en-sarten" cx="200" cy="320" rx="112" ry="10"/>
+              <g class="bolsita">
+                <path class="plastico" d="M138 40h98l38 38v144a8 8 0 0 1-8 8H138a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8z"/>
+                <path class="costura" d="M142 54h88M142 62h96"/>
+                <ellipse class="guiso relleno" cx="200" cy="150" rx="50" ry="60"/>
+              </g>
+              <path class="plastico esquina" d="M236 40h38v38z"/>
+              <g class="taco">
+                <ellipse class="tortilla" cx="110" cy="380" rx="78" ry="24"/>
+                <ellipse class="guiso" cx="110" cy="375" rx="50" ry="11"/>
+                <path class="cilantro" d="M84 372h7M104 368h7M126 376h7M140 370h7"/>
+                <path class="cebolla" d="M94 378h7M116 371h7M70 376h7"/>
+              </g>
+            </svg>
+          </figure>
         </div>
       </div>
     </section>
 
-    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis). -->
+    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis).
+         Las fotos de guisos (M2) se enchufan en js/landing.js (FOTOS). -->
     <section id="guisos" aria-labelledby="guisos-titulo">
       <div class="verde" id="populares-bloque" hidden>
         <div class="caja">
@@ -166,13 +182,18 @@
 
       <div class="caja carta">
         <h2 class="rotulo" id="guisos-titulo">Todo el menú</h2>
-        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página.</p>
+        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página. Toca un guiso para verlo.</p>
         <ul class="menu imprime" id="menu"></ul>
-        <p class="estado" id="menu-estado" role="status">Leyendo el menú…</p>
+        <div class="estado" id="menu-estado" role="status">
+          <span class="icono icono-tortilla gira" id="menu-icono" aria-hidden="true"></span>
+          <!-- M9: el nopal apenado solo aparece si el menú no se pudo leer -->
+          <span class="pieza nopal-estado" id="menu-nopal" data-pieza="M9" hidden><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></span>
+          <span id="menu-texto">Leyendo el menú…</span>
+        </div>
         <noscript><p class="estado">El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda.</p></noscript>
         <div class="acciones">
-          <a class="boton" href="/tienda/">Pedir en la tienda</a>
-          <button class="enlace" id="menu-reintentar" type="button" hidden>Volver a intentar</button>
+          <a class="boton" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Pedir en la tienda</a>
+          <button class="enlace" id="menu-reintentar" type="button" hidden><span class="icono icono-tortilla" aria-hidden="true"></span>Volver a intentar</button>
         </div>
       </div>
     </section>
@@ -180,7 +201,11 @@
     <!-- Escena 4 · llega dudando «¿y sí llega bien?» → sale entendiendo por qué va congelado y qué falta confirmar -->
     <section class="oscuro" id="envio" aria-labelledby="envio-titulo">
       <div class="caja envio-rejilla">
-        <h2 class="rotulo" id="envio-titulo">Viaja congelado. Así tiene que ser.</h2>
+        <div>
+          <h2 class="rotulo" id="envio-titulo">Viaja congelado. Así tiene que ser.</h2>
+          <!-- M8 (o pose 5 de M4b): el nopal con frío -->
+          <div class="pieza nopal-frio" data-pieza="M8 · nopal con frío" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
+        </div>
         <div>
           <!-- PENDIENTE-CLIENTE: confirmar que el formato de venta es congelado (es la recomendación de docs/investigacion/viabilidad.md) -->
           <p class="entrada">El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso se empaca, se congela y así se queda hasta que tú rompes la bolsa.</p>
@@ -193,18 +218,20 @@
       </div>
     </section>
 
-    <!-- Escena 5 · llega viendo «un producto» → sale viendo a la taquería real que está detrás -->
+    <!-- Escena 5 · llega viendo «un producto» → sale viendo a la taquería real que está detrás.
+         No lleva imagen generada del local: pasaría por el real. Cuando haya fotos reales, entran aquí. -->
     <section class="taqueria" id="taqueria" aria-labelledby="taqueria-titulo">
       <div class="caja taqueria-rejilla">
         <div>
           <h2 class="rotulo" id="taqueria-titulo">Salen de la cocina de Los Tacos May.</h2>
           <p class="entrada">No inventamos recetas para la bolsa: son guisos de la taquería de nuestra familia, en el centro de Cabo San Lucas.</p>
-          <address>
+          <address class="domicilio">
+            <!-- M4 (pose 2, señalando) -->
+            <span class="pieza nopal-senala" data-pieza="M4" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></span>
             <a class="enlace" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener">José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a>
           </address>
           <!-- PENDIENTE-CLIENTE: horario completo (de Maps solo se sabe una hora de cierre), las demás taquerías de la familia,
-               historia y año de inicio, y fotos propias (nada de stock): los guisos en la cocina, plano detalle; quien atiende, plano medio -->
-          <figure class="hueco"><figcaption>Aquí va una foto real de la taquería</figcaption></figure>
+               historia y año de inicio, y fotos reales del local y de quien atiende -->
         </div>
 
         <!-- Nombres tal como están en el pizarrón de la taquería (docs/negocio/datos.md). Sin precios: los del pizarrón son del
@@ -227,10 +254,14 @@
 
     <!-- Escena 6 · llega convencido → sale hacia la tienda -->
     <section class="cierre" aria-labelledby="cierre-titulo">
-      <div class="caja">
-        <h2 class="letrero" id="cierre-titulo"><span class="am">Rompe</span> <span class="ro">la bolsa.</span></h2>
-        <p class="entrada">Elige tus guisos y arma tu pedido en la tienda.</p>
-        <a class="boton" href="/tienda/">Ir a la tienda</a>
+      <div class="caja cierre-rejilla">
+        <div>
+          <h2 class="letrero" id="cierre-titulo"><span class="am">Rompe</span> <span class="ro">la bolsa.</span></h2>
+          <p class="entrada">Elige tus guisos y arma tu pedido en la tienda.</p>
+          <a class="boton grande" href="/tienda/"><span class="icono icono-taco" aria-hidden="true"></span>Ir a la tienda</a>
+        </div>
+        <!-- M7 (saludo animado) o pose 1 de M4b -->
+        <div class="pieza nopal-cierre" data-pieza="M7 · nopal saluda" aria-hidden="true"><svg viewBox="0 0 240 300" aria-hidden="true"><use href="#nopal"/></svg></div>
       </div>
     </section>
   </main>

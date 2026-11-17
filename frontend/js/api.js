@@ -44,6 +44,10 @@ export const money = (centavos) => mxn.format(centavos / 100);
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
 
+// «Tinga de res» → «tinga-de-res»: nombre de archivo de la foto de un guiso.
+export const slug = (v) => String(v).normalize('NFD').replace(/\p{M}/gu, '')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 // El único lugar que muestra avisos y errores. Sin argumentos lo limpia.
 export function notice(msg = '', kind = 'ok') {
   const el = document.getElementById('aviso');

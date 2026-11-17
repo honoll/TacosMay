@@ -15,9 +15,11 @@ const respond = (status, data) => {
   };
 };
 
-const { api, session, money, esc } = await import('./api.js');
+const { api, session, money, esc, slug } = await import('./api.js');
 
 assert.match(money(12345), /123\.45/);
+assert.equal(slug('Chicharrón en salsa'), 'chicharron-en-salsa');
+assert.equal(slug(' Rajas con queso y crema (EJEMPLO) '), 'rajas-con-queso-y-crema-ejemplo');
 assert.equal(esc('<b a="1">&\'</b>'), '&lt;b a=&quot;1&quot;&gt;&amp;&#39;&lt;/b&gt;');
 
 // Sin sesión: ruta relativa bajo /api, sin Authorization; un 401 es login fallido y habla el backend.

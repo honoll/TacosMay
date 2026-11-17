@@ -110,6 +110,50 @@ section[id] { scroll-margin-top: 16px; }
 .enlace:hover { text-decoration-thickness: 4px; }
 
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 28px; }
+.boton, .enlace { gap: 10px; }
+.boton.grande { min-height: 68px; padding: 0 30px; font-size: 1.25rem; }
+
+/* ---------- Íconos animados: un solo mecanismo para todos ---------- */
+/* Cada ícono es una tira de 12 cuadros. En reposo y con movimiento reducido se queda en el
+   último cuadro, que es el más claro (el taco abierto). El movimiento está al final del archivo. */
+
+.icono {
+  flex: none;
+  width: 40px;
+  aspect-ratio: 1;
+  background: 100% 0 / 1200% 100% no-repeat;
+}
+.icono-taco { background-image: url("media/sprites/taco.svg"); }
+.icono-bolsa { background-image: url("media/sprites/bolsa.svg"); }
+.icono-tortilla { background-image: url("media/sprites/tortilla.svg"); }
+.boton.chico .icono { width: 30px; }
+.boton.grande .icono { width: 56px; }
+
+/* ---------- Huecos de material (docs/diseno/materiales.md) ---------- */
+/* Todo lo que espera un archivo de Alejandro lleva su código a la vista. Se quita data-pieza al enchufarlo. */
+
+.pieza { position: relative; display: block; margin: 0; }
+.pieza[data-pieza]::after {
+  content: attr(data-pieza);
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--negro);
+  color: var(--amarillo);
+  font: 700 .7rem/1.5 ui-monospace, Consolas, monospace;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.pieza > svg { display: block; width: 100%; height: 100%; }
+.hueco {
+  aspect-ratio: 4 / 3;
+  border: 3px dashed var(--apagado);
+  background: repeating-linear-gradient(-45deg, transparent 0 14px, rgb(20 18 16 / .06) 14px 28px);
+}
+.foto { display: block; width: 100%; height: auto; border: 3px solid var(--negro); border-radius: 8px; }
 
 /* ---------- Cabecera ---------- */
 
@@ -138,16 +182,16 @@ h1 { font-size: clamp(2.1rem, 8.4vw, 5rem); margin-bottom: 22px; }
 
 /* El nopal del rótulo junto a la bolsa: marca y producto en una sola imagen. */
 .heroe-arte { position: relative; width: min(100%, 430px); aspect-ratio: 43 / 41; margin-inline: auto; }
-.bolsa {
+.bolsa-marco {
   position: absolute;
   top: 2%;
   right: 3%;
   width: 62%;
-  height: auto;
+  aspect-ratio: 3 / 4;
   transform: rotate(-6deg);
   filter: drop-shadow(10px 12px 0 rgb(20 18 16 / .18));
 }
-.nopal-heroe { position: absolute; left: 0; bottom: 0; width: 50%; height: auto; transform-origin: 50% 100%; }
+.nopal-heroe { position: absolute; left: 0; bottom: 0; width: 50%; aspect-ratio: 4 / 5; transform-origin: 50% 100%; }
 
 .plastico { fill: var(--blanco); stroke: var(--negro); stroke-width: 5; stroke-linejoin: round; }
 .costura { fill: none; stroke: var(--negro); stroke-width: 2; opacity: .45; }
@@ -205,7 +249,9 @@ h1 { font-size: clamp(2.1rem, 8.4vw, 5rem); margin-bottom: 22px; }
 .pasos h3::before { content: counter(paso) ". "; color: var(--rojo); }
 .pasos p { margin-top: 8px; max-width: 30em; }
 
-.pictograma { display: block; width: min(100%, 440px); height: auto; margin-inline: auto; order: -1; }
+.modo-marco { width: min(100%, 520px); aspect-ratio: 4 / 3; margin-inline: auto; order: -1; }
+.modo-marco canvas { display: block; width: 100%; height: 100%; border-radius: 12px; }
+.con-secuencia .pictograma { display: none; }
 .pictograma .tinta { fill: var(--negro); }
 .borde-sarten { fill: #4a4039; stroke: var(--negro); stroke-width: 4; }
 .vapor path { fill: none; stroke: var(--apagado); stroke-width: 6; stroke-linecap: round; }
@@ -229,7 +275,7 @@ h1 { font-size: clamp(2.1rem, 8.4vw, 5rem); margin-bottom: 22px; }
 
 @media (min-width: 860px) {
   .modo-rejilla { grid-template-columns: 1fr 1fr; gap: 56px; }
-  .pictograma { order: 0; }
+  .modo-marco { order: 0; }
 }
 
 /* ---------- Escena 3: guisos en vivo ---------- */
@@ -255,14 +301,22 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 .carta { padding-block: clamp(56px, 8vw, 104px); }
 .menu { margin-top: 36px; }
 .menu li { padding: 18px 0; border-bottom: 2px dashed var(--apagado); break-inside: avoid; }
-.fila { display: flex; align-items: baseline; gap: 12px; }
+.menu li:has(details) { padding: 0; }
+.fila { display: flex; align-items: baseline; gap: 12px; min-height: 56px; padding: 14px 0; cursor: pointer; list-style: none; }
+.fila::-webkit-details-marker { display: none; }
+.fila::after { content: "+"; flex: none; width: 1em; font-size: 1.5rem; font-weight: 800; line-height: 1; text-align: center; color: var(--rojo); }
+details[open] > .fila::after { content: "–"; }
+.detalle { display: grid; gap: 10px; padding-bottom: 20px; }
+.detalle .hueco, .detalle .foto { max-width: 420px; }
+.ranking .hueco, .ranking .foto { margin-top: 14px; max-width: 420px; border-color: var(--blanco); }
 .fila h3 { min-width: 0; font-size: clamp(1.2rem, 3.6vw, 1.6rem); }
 .fila .puntos { flex: 1; min-width: 16px; border-bottom: 3px dotted var(--apagado); }
 .fila strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.menu p { margin-top: 6px; max-width: 34em; }
+.menu p { max-width: 34em; }
 .dato { color: var(--apagado); font-size: .95rem; font-weight: 600; }
 
-.estado { margin-top: 28px; padding: 14px 18px; border-left: 6px solid var(--rojo); background: var(--blanco); font-weight: 600; }
+.estado { display: flex; align-items: center; gap: 12px; margin-top: 28px; padding: 14px 18px; border-left: 6px solid var(--rojo); background: var(--blanco); font-weight: 600; }
+.nopal-estado { flex: none; width: 48px; aspect-ratio: 4 / 5; }
 
 @media (min-width: 860px) {
   .menu { columns: 2; column-gap: 64px; }
@@ -270,9 +324,22 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 
 /* ---------- Escena 4: envío ---------- */
 
-.oscuro { --foco: var(--blanco); background: var(--negro); color: var(--blanco); padding-block: clamp(72px, 11vw, 150px); }
+.oscuro { --foco: var(--blanco); position: relative; background: var(--negro); color: var(--blanco); padding-block: clamp(72px, 11vw, 150px); }
+/* Escarcha: carámbanos en la orilla de arriba, hechos con degradados. */
+.oscuro::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 26px;
+  background:
+    radial-gradient(ellipse 9px 22px at 50% 0, var(--blanco) 98%, transparent) 0 0 / 34px 100% repeat-x,
+    radial-gradient(ellipse 6px 13px at 50% 0, var(--blanco) 98%, transparent) 17px 0 / 34px 100% repeat-x;
+  transform-origin: 50% 0;
+}
+.nopal-frio { width: min(46%, 190px); aspect-ratio: 4 / 5; margin-top: 24px; }
 .envio-rejilla { display: grid; gap: 28px; }
 .envio-rejilla p + p { margin-top: 18px; }
+.envio-rejilla h2.rotulo { margin-bottom: 0; }
 .oscuro p { max-width: 36em; }
 .fuente { font-size: .95rem; }
 .fuente a { display: inline-block; padding-block: 10px; color: var(--amarillo); font-weight: 700; }
@@ -285,7 +352,8 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 
 .taqueria { overflow: clip; padding-block: clamp(56px, 9vw, 120px); }
 .taqueria-rejilla { display: grid; gap: 40px; }
-.taqueria address { margin-top: 18px; }
+.domicilio { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+.nopal-senala { flex: none; width: 64px; aspect-ratio: 4 / 5; }
 
 /* El pizarrón blanco del menú: título en negro, guisos en plumón rojo, rayas azules entre grupos. */
 .pizarron {
@@ -303,19 +371,6 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 .pizarron .nota { padding-top: 14px; border-top: 3px solid var(--azul); font-size: .95rem; }
 .pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 700; }
 
-.hueco {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  margin-top: 28px;
-  padding: 20px;
-  border: 3px dashed var(--apagado);
-  background: repeating-linear-gradient(-45deg, transparent 0 14px, rgb(20 18 16 / .05) 14px 28px);
-  color: var(--apagado);
-  font-weight: 700;
-  text-align: center;
-}
-
 @media (min-width: 860px) {
   .taqueria-rejilla { grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
 }
@@ -326,6 +381,12 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 .cierre .letrero { font-size: clamp(3rem, 13vw, 8rem); margin-bottom: 20px; overflow-wrap: break-word; }
 .cierre .letrero .ro { color: var(--blanco); }
 .cierre .boton { margin-top: 28px; }
+.cierre-rejilla { display: grid; gap: 32px; align-items: end; }
+.nopal-cierre { width: min(50%, 220px); aspect-ratio: 4 / 5; }
+@media (min-width: 860px) {
+  .cierre-rejilla { grid-template-columns: 1fr auto; }
+  .nopal-cierre { width: 260px; }
+}
 
 .pie { --foco: var(--blanco); background: var(--negro); color: var(--blanco); padding-block: 40px; }
 .pie .letrero { font-size: 1.5rem; margin-bottom: 12px; }
@@ -339,11 +400,31 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
   html { scroll-behavior: smooth; }
   .boton { transition: transform .15s, box-shadow .15s; }
 
-  /* Héroe: la bolsa «se sella» (sale el aire), cae el sello y se asoma el nopal. Solo CSS; el texto no se anima. */
-  .bolsa { animation: sellar .9s cubic-bezier(.2, .9, .2, 1) both; }
+  /* Héroe: el letrero se pinta como brochazo, la bolsa cae a la mesa, recibe su sello y se asoma el nopal.
+     Solo CSS; el título no se anima. */
+  .pinta { animation: pintar .8s .1s cubic-bezier(.4, 0, .2, 1) both; }
+  .bolsa-marco { animation: caer .7s cubic-bezier(.3, 1.4, .5, 1) both; }
   .sello { animation: sellazo .35s .8s cubic-bezier(.2, 1.5, .4, 1) both; }
   .nopal-heroe { animation: asomar .6s .35s cubic-bezier(.2, 1.3, .4, 1) both; }
-  @keyframes sellar { from { transform: rotate(-2deg) scale(1.08, .96); } }
+  @keyframes pintar { from { clip-path: inset(-20% 100% -20% -10%); } to { clip-path: inset(-20% -10% -20% -10%); } }
+  @keyframes caer { from { transform: translateY(-22%) rotate(-15deg); opacity: 0; } }
+
+  /* Escarcha: se forma una vez al entrar a pantalla. */
+  .js .oscuro::before { transform: scaleY(0); transition: transform .9s cubic-bezier(.2, .8, .2, 1); }
+  .js .oscuro.visto::before { transform: none; }
+
+  /* Íconos animados. Con cursor: se abren al pasar o al enfocar y se cierran al salir.
+     En táctil: se abren al entrar a pantalla y se cierran un instante al tocar. Tocar navega de inmediato. */
+  .icono { transition: background-position-x .42s steps(12, jump-none); }
+  .icono.gira { animation: hoja .9s steps(12, jump-none) infinite; }
+  @keyframes hoja { from { background-position-x: 0; } to { background-position-x: 100%; } }
+  @media (hover: hover) {
+    .icono:not(.gira) { background-position-x: 0; }
+    :is(a, button):is(:hover, :focus-visible) > .icono { background-position-x: 100%; }
+  }
+  @media (hover: none) {
+    .js :is(a, button):not(.visto) > .icono, .js :is(a, button):active > .icono { background-position-x: 0; }
+  }
   @keyframes sellazo { from { transform: rotate(-18deg) scale(2.4); opacity: 0; } }
   @keyframes asomar { from { transform: translateY(16%) rotate(-9deg); opacity: 0; } }
 
@@ -357,7 +438,7 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 @media (prefers-reduced-motion: no-preference) and (min-height: 560px) {
   .js .modo { --p: var(--scroll, 0); height: 300vh; padding-block: 0; }
   .js .modo-fija { position: sticky; top: 0; display: grid; align-items: center; height: 100vh; height: 100svh; padding-block: 16px; }
-  .js .pictograma { max-height: 40svh; }
+  .js .modo-marco { height: 40svh; width: auto; max-width: 100%; }
   .js .pasos { gap: 14px; }
   .js .pasos li { border-left-color: transparent; transition: border-color .2s; }
   .js .pasos h3 { color: var(--apagado); transition: color .2s; }
@@ -376,10 +457,11 @@ h2.rotulo { font-size: clamp(1.9rem, 6vw, 3.6rem); margin-bottom: 16px; }
 @media (prefers-reduced-motion: no-preference) {
   /* Menú: cada renglón «se imprime» de izquierda a derecha, como etiqueta saliendo de la impresora. */
   .js .imprime:not(.visto) > li { clip-path: inset(0 100% 0 0); }
-  .js .imprime.visto > li { clip-path: inset(0 0 0 0); animation: imprimir .5s calc(var(--i) * 70ms) cubic-bezier(.3, .7, .2, 1) backwards; }
-  @keyframes imprimir { from { clip-path: inset(0 100% 0 0); } }
+  /* El recorte termina con margen negativo y luego desaparece, para no cortar el anillo de foco. */
+  .js .imprime.visto > li { animation: imprimir .5s calc(var(--i) * 70ms) cubic-bezier(.3, .7, .2, 1) backwards; }
+  @keyframes imprimir { from { clip-path: inset(-8px 100% -8px -8px); } to { clip-path: inset(-8px); } }
 }
 
 @media (prefers-reduced-motion: no-preference) and (min-height: 560px) and (min-width: 860px) {
-  .js .pictograma { max-height: 70svh; }
+  .js .modo-marco { height: auto; width: min(100%, 520px); }
 }

@@ -1,0 +1,2 @@
+Aqui deja Alejandro los archivos tal como salen de Gemini, con los nombres de docs/diseno/materiales.md.
+La pagina no enlaza nada de esta carpeta: de aqui se optimizan hacia frontend/media/.
