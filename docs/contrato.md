@@ -44,5 +44,9 @@ Auth: `Authorization: Bearer <jwt>`.
 `guiso` = `{id, nombre, descripcion, precio_centavos, porciones, stock}` (números como números).
 `pedido` = `{id, total_centavos, creado, items:[{guisoId, nombre, cantidad, precio_centavos}]}`.
 
+Detalles fijados al integrar (17-nov): `creado` es fecha ISO 8601; con el carrito vacío
+`expira_en_segundos` es `0`; `DELETE /carrito` y `PUT /carrito/items/:id` responden con la
+misma forma que `GET /carrito`; `POST /users` siempre crea `cliente` (el admin lo crea el seed).
+
 El frontend se sirve desde el mismo Express (`express.static('frontend')`), así que llama a
 `/api/...` con ruta relativa y no hay CORS.

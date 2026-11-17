@@ -3,7 +3,7 @@
 Fuente de verdad del trabajo. Entrega: semana del 17–20 nov 2026.
 
 ## Bloqueos que solo Alejandro puede quitar
-- 🔲 **Crear la base en Redis Cloud** (plan gratis) y poner `REDIS_URL` en `.env`. Sin esto
+- ✅ (17-nov) **Crear la base en Redis Cloud** (plan gratis) y poner `REDIS_URL` en `.env`. Sin esto
   nada se puede verificar contra la nube.
 - 🔲 **Fecha y hora exactas** de la exposición.
 - 🔲 Menú y precios reales de TacosMay (`PENDIENTE-CLIENTE`; no bloquea la entrega: el seed
@@ -57,7 +57,16 @@ Evidencia F1–F5 (17-nov-2026), `frontend/`: `index.html`, `styles.css`, `js/ap
 - ✅ I3 Insumos para el PDF: dominio del problema y justificación Clave-Valor vs SQL → `docs/investigacion/insumos-pdf.md` (17-nov). Ojo: el plan gratis de Redis Cloud no tiene persistencia en disco (sección c)
 
 ## Coordinación
-- 🔲 C1 Integrar y correr el flujo completo de la demo contra la nube
+- 🟡 C1 Integrar y correr el flujo completo de la demo contra la nube
+  - **Verificado 17-nov contra Redis Cloud (`…db.redis.io`), servidor local en :5000:**
+    `npm run seed` → `1 admin y 6 guisos de ejemplo`; 34 de 34 comprobaciones por HTTP en verde:
+    frontend servido, registro/login/`me`, 401 sin token, 403 de cliente en rutas de admin, CRUD
+    completo de guisos con 404, carrito con TTL (1800 → 1798 → se renueva a 1800 al cambiar),
+    409 por stock, pedido (stock 3 → 1, carrito vacío, ranking con 2 vendidos), 409 al pedir sin
+    stock, borrado de guiso sin romper populares ni carrito. Con esto B1–B6 quedan verificados
+    contra la nube y los cuatro supuestos del frontend se cumplen.
+  - **Falta:** verlo en un navegador (clics reales, cuenta regresiva, 375 px). Eso lo ve Alejandro.
+  - Quedaron en la base un usuario `prueba…@tacosmay.test` y el pedido 1; `npm run seed` los limpia.
 - 🔲 C2 PDF de diseño y justificación (5 secciones obligatorias de la rúbrica)
 - 🔲 C3 Guion de demo (4 min) y preguntas probables de la defensa
 
