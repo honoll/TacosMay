@@ -23,8 +23,8 @@ No es lujo ni minimalismo caro. Es **una taquería de barrio contada con mucho o
    producto o le da vida al personaje. Lo demás se queda quieto.
 4. **Acabado.** Tipografía afinada, espacios consistentes, estados cuidados (cargando, error,
    vacío), rápido en un celular de gama media.
-5. **Honestidad.** La comida que se muestra como producto es foto real. Lo que no se sabe
-   del negocio no se inventa.
+5. **Honestidad.** Lo generado con IA es provisional y va marcado en el código; lo que no se
+   sabe del negocio no se inventa.
 
 ## Los pasos
 
@@ -47,18 +47,21 @@ sin los materiales indispensables (paso 5). El prototipo gris sí puede adelanta
 ## Producción de materiales (lo que añade este proyecto)
 
 ### Quién hace qué
-- **Alejandro produce:** fotos reales, y con Gemini las ilustraciones, el personaje, las
-  texturas y los videos cortos de animación.
+- **Alejandro produce,** con Gemini: el personaje, las ilustraciones, las fotos de guisos y
+  de la bolsa, las texturas y los videos cortos de animación.
 - **El chat de frontend:** escribe el pedido exacto, revisa cada pieza, la optimiza y la monta.
 
-### La regla de honestidad
-- **Foto real obligatoria:** todo lo que se presente como «esto es lo que te llega» o «esto
-  se sirve en la taquería».
-- **IA permitida:** personaje, ilustración, íconos, texturas, fondos, animación y retoque de
-  fotos reales (limpiar fondo, corregir luz) **sin cambiar la comida**.
-- **Provisional marcado:** si una imagen generada ocupa el lugar de una foto real mientras
-  llega, lleva `PENDIENTE-CLIENTE` en el código y un rótulo visible; nunca se presenta como
-  el producto.
+### La regla de honestidad (ajustada el 17-nov-2026)
+Alejandro decidió que, **mientras la página sea una prueba y no se le venda a nadie**, todos
+los materiales se generan con IA, comida y bolsa incluidas. Lo que se conserva:
+- Cada imagen o video generado de comida, de la bolsa o del local lleva en el código
+  `PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender`,
+  y F6 las lista.
+- **Antes de publicar o vender se sustituyen por fotos reales.** La investigación
+  (`docs/investigacion/landing-premium.md`, sección 6) documenta por qué: la ley exige
+  publicidad veraz y la gente confía menos en fotos de producto generadas.
+- No se genera la fachada ni el interior de la taquería.
+- Los datos del negocio siguen sin inventarse: precios, horarios, contactos, cifras.
 
 ### Cómo se mantiene todo «de la misma mano»
 1. **Una hoja de estilo primero.** La primera pieza generada es la hoja del personaje
@@ -94,7 +97,7 @@ La doctrina manda subir de peldaño solo con justificación. Aquí queda así:
 | Respuesta de botones, enlaces y estados | CSS | Es usabilidad |
 | Íconos animados (taco, bolsa, tortilla) | CSS con hojas de sprites y `steps()` | El arte es de mapa de bits (viene de Gemini); un sprite pesa poco y no necesita librería |
 | Entradas puntuales (menú, pizarrón) | CSS + `IntersectionObserver` | Ya resuelto en la versión actual |
-| Escena firma: secuencia de imágenes ligada al scroll, y coreografía del héroe | **GSAP + ScrollTrigger**, guardado en `frontend/vendor/` | Aquí sí hay orquestación: anclado, avance por cuadros en `<canvas>`, y varias capas coordinadas. Es el único lugar donde se paga la librería |
+| Escena firma: secuencia de imágenes ligada al scroll | `position: sticky` + `<canvas>` + unas líneas de JavaScript propio | Se planeó con GSAP y al construir no hizo falta: el avance ya se calculaba y elegir el cuadro es una cuenta. La librería se añade solo si aparece una coreografía que esto no resuelva |
 
 No se usa: scroll suavizado por JavaScript, audio, cursores personalizados, ni animación en
 bucle sin pausa.

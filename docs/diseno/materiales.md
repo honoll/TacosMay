@@ -1,80 +1,75 @@
 # Pedido de materiales — landing de Los Tacos May
 
-Para Alejandro. Todo lo que hay que producir, en orden de prioridad. Con las **cinco piezas
-indispensables** (M1, M2, M4, M5 y M6b) ya se puede construir la primera versión premium; lo demás es
-mejora y puede llegar después.
+Para Alejandro. **Todo se produce con Gemini, desde casa**: no hacen falta fotos ni videos
+reales por ahora. Con las **cinco piezas indispensables** (M4, M2, M3, M5 y M6) la página se
+ve completa; lo demás es mejora y puede llegar después.
 
 - **Dónde dejar todo:** `frontend/media/originales/`, con el nombre exacto que se indica.
-- **No recortes, no comprimas, no pongas filtros.** Mándalo como salió; la optimización la
-  hace el chat de frontend.
+- **No recortes ni comprimas.** Mándalo como salió; optimizar y montar lo hace el chat de frontend.
+- La página ya tiene un hueco rotulado con el código de cada pieza (M2, M3…): al llegar el
+  archivo solo se optimiza y se enchufa.
 - A qué escena va cada pieza: [guion-landing.md](guion-landing.md). Estilo: [marca.md](marca.md).
 
-## Decidido el 17-nov-2026: todavía no existe la bolsa empacada
+## Decidido por Alejandro el 17-nov-2026
 
-Alejandro confirmó que aún no hay una bolsa de guiso al vacío de verdad. Por eso:
-- **M3 no se produce.** La bolsa del héroe será ilustración rotulada, en el estilo del nopal.
-- **M6 se sustituye por M6b** (tres clips ilustrados con Gemini).
-- La página dirá con franqueza que el empaque está en desarrollo; no se muestra una bolsa
-  inventada como si fuera el producto. Cuando exista la bolsa real, se hacen M3 y M6 y se cambian.
+1. Todavía **no existe la bolsa empacada** real.
+2. La página es **una prueba**: no se le vende a nadie todavía, así que la comida, la bolsa y
+   todo lo demás se generan con IA.
 
-## La regla de honestidad
+Consecuencia que se conserva: cada imagen o video generado de comida, de la bolsa o del
+local lleva en el código el comentario
+`PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender`,
+y F6 las lista. En la página no hay avisos visibles. Por qué importa sustituirlas antes de
+vender: [landing-premium.md](../investigacion/landing-premium.md), sección 6.
 
-| Qué | Cómo se produce |
-|---|---|
-| La comida y el producto («esto es lo que te llega», «esto se sirve») | **Foto o video real**, siempre |
-| El nopal, íconos, animaciones de botones, texturas, fondos | Gemini |
-| Retoque de fotos reales | Gemini, **solo** luz, color y limpiar el fondo; la comida no se toca |
+## Dos estilos, y nada más
 
-## Cómo tomar buenas fotos con el celular (vale para M1, M2, M3, M6 y M11)
+| Estilo | Para qué | Cómo se mantiene parejo |
+|---|---|---|
+| **Rótulo pintado** (ilustración plana, contorno negro) | El nopal, los botones, la escena del modo de uso, el letrero | Se adjunta siempre `M4a` y se pega el **bloque de rótulo** |
+| **Foto de taquería** (fotorrealista) | Los guisos y la bolsa | Se pega siempre el mismo **bloque de fotografía**; solo cambia la línea del platillo |
 
-1. **Luz:** de día, junto a una puerta o ventana, con la luz entrando **de lado**. Sin flash.
-   Apaga los focos amarillos de encima si puedes. Nada de sol directo sobre el plato.
-2. **Lente limpio:** pásale un trapo antes.
-3. **Ángulo:** platos y cazuelas, **desde arriba** (el celular plano, paralelo a la mesa); el
-   taco armado, **a 45°**; el local y el rótulo, **de frente y a la altura de los ojos**.
-4. **Fondo:** su mesa, su barra o su papel de siempre, limpios. Quita servilleteros, botellas
-   y cables del cuadro.
-5. **Encuadre:** horizontal, con aire alrededor del sujeto (se recorta después). Toca la
-   pantalla sobre la comida para enfocar.
-6. **Ajustes:** cámara normal (no retrato, no gran angular 0.5x), máxima resolución, sin
-   filtros, sin texto ni fecha encima.
-7. **La comida:** recién servida, como se sirve en la taquería. Si echa vapor, mejor.
-8. **Toma tres de cada una** y manda las tres.
+**Bloque de rótulo** (va al final de todos los prompts ilustrados):
+
+```
+Style: same as the attached reference: Mexican hand-painted sign art (rotulismo), flat solid
+colors, thick slightly irregular black outline, one flat shadow tone, subtle brush texture,
+chunky rounded shapes. No text, no letters, no watermark, no 3D, no realistic rendering.
+```
+
+**Bloque de fotografía** (va al final de todos los prompts fotorrealistas):
+
+```
+Photography direction: realistic food photograph, shot directly from above (90 degree top-down),
+on a light natural pine wood table with visible grain. Soft natural window light coming from
+the left, gentle soft shadows falling to the right, warm neutral white balance, true-to-life
+colors, no filters. 50mm lens look, everything in sharp focus. The subject is centered and
+fills about 60% of the frame, with empty wood around it. No hands, no people, no cutlery, no
+napkins, no garnish that is not listed, no text, no logos, no watermark. Landscape 4:3, 2K.
+```
+
+## Consejos para Gemini (valen para todo)
+
+- **Cuatro variantes por pieza;** elige una y corrige con «igual, pero…» en vez de empezar de cero.
+- **Para una serie** (los guisos): genera el primero, apruébalo y **adjúntalo como referencia**
+  en los siguientes con la frase `Match the attached photo exactly in table, light, bowl, angle and framing`.
+- **Si mete letras,** repite añadiendo `absolutely no text or letters anywhere`.
+- **Si el fondo no sale liso,** añade `the background must be one single flat color with no variation`.
+- **Video:** pide la duración más corta que te deje (3 a 5 segundos basta). Si tu Gemini
+  permite dar **primer y último cuadro**, úsalo: es lo que más control da.
+- La marca de agua en una esquina no importa si el sujeto está centrado y con margen.
+- Los prompts van en inglés porque los generadores suelen obedecerlos mejor; si el tuyo
+  responde mejor en español, tradúcelos sin cambiar el contenido.
+- Guarda el archivo original tal cual lo descargaste.
 
 ---
 
 # Indispensables
 
-## M1 — El rótulo, de frente (foto real)
-- **Para:** el logotipo y el nopal (escena 1) y los tonos exactos de la paleta.
-- **Tomas:** (a) el rótulo completo, de frente, sin ángulo, que no lo tape nada; (b) un
-  acercamiento al nopal; (c) un acercamiento a las letras; (d) un pedazo de tablón sin
-  pintura, de cerca, para la textura de madera.
-- **Formato:** JPG o HEIC, horizontal, máxima resolución.
-- **Archivos:** `M1a-rotulo-frente.jpg`, `M1b-rotulo-nopal.jpg`, `M1c-rotulo-letras.jpg`,
-  `M1d-tablon.jpg`.
-
-## M2 — Los guisos (fotos reales)
-- **Para:** el menú en vivo (escena 4). Mínimo **tres guisos**; lo ideal, todos los que se
-  vayan a vender empacados.
-- **Tomas por guiso:** (a) desde arriba, en su cazuela o en un plato; (b) a 45°, en taco, con
-  lo que lleva en la taquería.
-- **Formato:** horizontal 4:3, máxima resolución.
-- **Archivos:** el nombre del guiso en minúsculas, sin acentos y con guiones:
-  `M2-tinga-de-res-arriba.jpg`, `M2-tinga-de-res-taco.jpg`, `M2-chicharron-en-salsa-arriba.jpg`…
-
-## M3 — La bolsa empacada (foto real, si existe)
-- **Para:** el héroe (escena 1) y la imagen para compartir.
-- **Tomas:** (a) la bolsa sola, desde arriba, sobre madera o sobre su barra; (b) la bolsa a
-  45° con algo que dé escala (un plato, tortillas); (c) dos o tres bolsas juntas.
-- **Cuida:** que no brille el plástico (gírala hasta que el reflejo se vaya), que se vea el
-  guiso adentro, y que no haya etiquetas de otra marca.
-- **Archivos:** `M3a-bolsa-arriba.jpg`, `M3b-bolsa-45.jpg`, `M3c-bolsas-juntas.jpg`.
-
-## M4 — El nopal: hoja del personaje (Gemini, imagen)
-- **Para:** todas las escenas. **Es la primera pieza generada**: una vez aprobada, se adjunta
-  como referencia en todos los prompts siguientes para que todo salga de la misma mano.
-- **Paso 1, el nopal de frente.** Adjunta `M1a` y `M1b` (o, mientras, `docs/negocio/fotos/rotulo-logo.png`) y pega:
+## M4 — El nopal: de frente y poses (imagen, estilo rótulo)
+- **Para:** todas las escenas. **Es la primera pieza:** una vez aprobada, `M4a` se adjunta en
+  todos los prompts ilustrados para que todo salga de la misma mano.
+- **Paso 1, de frente.** Adjunta `docs/negocio/fotos/rotulo-logo.png` y pega:
 
 ```
 Use the attached photo of a hand-painted Mexican taqueria sign as the exact character reference.
@@ -82,146 +77,181 @@ Redraw the cactus mascot from the sign as a clean character illustration: a gree
 with lighter green vertical stripes, two arms (one on each side), small red flowers at the tips
 of the arms, a tilted yellow sombrero, big round white eyes with black pupils and a red smiling
 mouth. Full body, front view, standing, friendly neutral pose, centered with generous margin.
-Style: traditional Mexican hand-painted sign lettering art (rotulismo), flat solid colors, thick
-black outline of slightly irregular width, one flat shadow tone only, visible subtle brush
-texture, chunky rounded shapes. Keep the same proportions, colors and face as in the photo.
-Background: perfectly flat solid magenta (#FF00FF), no gradient, no floor, no shadow on the
-background. No text, no letters, no logo, no watermark, no 3D, no realistic rendering, no extra
-accessories. Square image, 2048 x 2048.
+Keep the same proportions, colors and face as in the photo.
+Background: perfectly flat solid magenta (#FF00FF), no gradient, no floor, no shadow.
+Style: traditional Mexican hand-painted sign art (rotulismo), flat solid colors, thick slightly
+irregular black outline, one flat shadow tone, subtle brush texture, chunky rounded shapes.
+No text, no letters, no logo, no watermark, no 3D, no realistic rendering, no extra accessories.
+Square image, 2K.
 ```
 
-- **Paso 2, las poses.** Adjunta el nopal aprobado del paso 1 y pega:
+- **Paso 2, las poses.** Adjunta el `M4a` aprobado y pega (más el bloque de rótulo):
 
 ```
 Using the attached character exactly as reference (same colors, outline, proportions and face),
-create a character pose sheet with 6 separate full-body poses arranged in a 3 x 2 grid, evenly
-spaced, none overlapping: (1) waving while lifting its sombrero with one arm, (2) pointing to
-the right with one arm, (3) hugging a clear vacuum-sealed food pouch filled with red stew,
-(4) eyes closed, happily smelling steam, (5) shivering, wearing a scarf, frost on the sombrero,
-(6) embarrassed, holding its sombrero in one hand. Style: Mexican hand-painted sign art, flat
-solid colors, thick slightly irregular black outline, one flat shadow tone, subtle brush
-texture. Background: perfectly flat solid magenta (#FF00FF). No text, no numbers, no labels, no
-watermark, no 3D. Landscape image, 3:2, at least 3000 px wide.
+create a character pose sheet with 6 separate full-body poses in a 3 x 2 grid, evenly spaced,
+none overlapping: (1) waving while lifting its sombrero with one arm, (2) pointing to the right
+with one arm, (3) hugging a clear vacuum-sealed food pouch filled with red stew, (4) eyes
+closed, happily smelling steam, (5) shivering, wearing a red scarf, frost on the sombrero,
+(6) embarrassed, holding its sombrero in one hand.
+Background: perfectly flat solid magenta (#FF00FF). Landscape 3:2, 4K if available.
 ```
 
-- **Se acepta si:** se reconoce como el nopal del rótulo, el contorno es negro y grueso, el
-  fondo es magenta liso y no trae letras.
-- **Archivos:** `M4a-nopal-frente.png`, `M4b-nopal-poses.png`. PNG, sin comprimir.
+- **Se acepta si:** se reconoce como el nopal del rótulo; contorno negro grueso; fondo magenta
+  liso; sin letras; las seis poses son el mismo personaje.
+- **Archivos:** `M4a-nopal-frente.png`, `M4b-nopal-poses.png`.
 - **Por qué magenta:** el nopal es verde; un fondo verde no se podría quitar.
 
-## M5 — El taco que se abre (Gemini, video)
-- **Para:** el botón principal de toda la página (el más importante de los botones).
-- **Cómo:** se pide **un video**, no cuadros sueltos; de ahí se extraen 12 cuadros. Así el
-  taco es el mismo en todos. Adjunta `M4a` como referencia de estilo y pega:
+## M2 — Los guisos (seis fotos, estilo foto de taquería)
+- **Para:** el menú en vivo (escena 4). Los seis primeros bastan; si haces más, mejor: la
+  página enchufa la foto de cualquier guiso cuyo archivo exista.
+- **Prompt base** (cambia solo `[PLATILLO]` y termina con el bloque de fotografía):
 
 ```
-Short 2D animation in the same hand-painted Mexican sign illustration style as the attached
-reference (flat solid colors, thick slightly irregular black outline, one flat shadow tone,
-subtle brush texture). Subject: a single taco seen from the front at a slight 3/4 angle,
-centered, filling about 60% of the frame. Start: the corn tortilla is folded closed. Action: the
-tortilla opens smoothly like a mouth, revealing saucy red stewed meat, chopped white onion and
-green cilantro inside; it ends fully open and holds still for the last second. Camera
-completely locked, no zoom, no pan, no camera shake. The taco stays in the same position and
-keeps the same shape and colors for the whole clip. Background: perfectly flat solid blue
-(#0033FF), no gradient, no table, no shadow. No text, no hands, no steam, no extra objects, no
-watermark in the center. 16:9, 1080p, the shortest duration available (about 4 to 8 seconds).
+A single small round dark brown glazed clay cazuela (Mexican clay bowl), about 18 cm wide,
+filled with [PLATILLO]. Freshly served, slightly steaming, homestyle taqueria stew, generous
+portion, natural and a little imperfect, not styled like fine dining. Two warm corn tortillas
+partly visible at the left edge of the frame.
 ```
 
-- **Se acepta si:** la cámara no se mueve, el taco no cambia de forma ni de color, empieza
-  cerrado y termina abierto y quieto.
-- **Archivo:** `M5-taco-abre.mp4`.
-- **Si Gemini no da video:** genera dos imágenes con el mismo prompt cambiando solo «folded
-  closed» y «fully open» (`M5-taco-cerrado.png`, `M5-taco-abierto.png`); el botón alternará
-  entre las dos. Se ve menos fino, pero funciona.
+| # | Guiso | `[PLATILLO]` | Archivo |
+|---|---|---|---|
+| 1 | Tinga de res | `shredded beef tinga stewed in a red tomato and chipotle sauce with soft sliced onion` | `M2-tinga-de-res.png` |
+| 2 | Chicharrón en salsa | `pork chicharron pieces softened and simmered in a red chile salsa` | `M2-chicharron-en-salsa.png` |
+| 3 | Mole con pollo | `shredded chicken covered in dark brown mole sauce, sprinkled with a few sesame seeds` | `M2-mole-con-pollo.png` |
+| 4 | Rajas con queso y crema | `roasted poblano pepper strips with sliced onion, melted white cheese and cream` | `M2-rajas-con-queso-y-crema.png` |
+| 5 | Bistek con papa | `chopped beef steak with small diced potatoes in a light tomato sauce` | `M2-bistek-con-papa.png` |
+| 6 | Barbacoa | `moist shredded beef barbacoa in its own dark juices` | `M2-barbacoa.png` |
+| 7 | Chorizo con huevo | `scrambled eggs mixed with crumbled red chorizo` | `M2-chorizo-con-huevo.png` |
+| 8 | Nopalitos | `diced cooked nopal cactus paddles with tomato, onion and cilantro` | `M2-nopalitos.png` |
+| 9 | Carne en salsa roja | `chunks of beef simmered in a smooth red chile sauce` | `M2-carne-en-salsa-roja.png` |
+| 10 | Salpicón | `shredded beef salpicon with chopped tomato, onion and cilantro` | `M2-salpicon.png` |
 
-## M6 — Romper, calentar, taquear (video real, desde arriba)
-- **Para:** la escena firma (escena 3): el video se convierte en una secuencia de cuadros que
-  avanza con el scroll. **Es la pieza que más levanta la página.**
-- **Preparación:** el celular fijo y plano sobre la mesa de trabajo, mirando hacia abajo
-  (apoyado en una repisa, en una pila de cajas o sostenido con cinta; que no lo sostenga una
-  mano). Luz de día de lado. Una superficie limpia. Una sartén oscura ya en la lumbre o en
-  una parrilla portátil, dentro del cuadro. Un plato con dos tortillas calientes a un lado.
-- **Una sola toma, sin cortes, tres acciones con dos segundos de pausa entre cada una:**
-  1. Entra la bolsa al cuadro y unas manos la rompen o la cortan.
-  2. El guiso cae a la sartén caliente y se mueve con una cuchara hasta que suelte vapor.
-  3. Se sirve el guiso en una tortilla y el taco queda al centro, quieto, tres segundos.
-- **Cuida:** manos limpias y sin anillos; que nada tape la cámara; que el encuadre no cambie
-  entre acciones; sin música ni voces importa poco (el audio no se usa).
-- **Formato:** horizontal, 1080p o 4K, 30 cuadros por segundo, 30 a 45 segundos.
-- **Archivo:** `M6-modo-de-uso.mp4`. Si salen varias tomas: `M6-modo-de-uso-2.mp4`…
+- **Ojo:** el color de cada salsa y lo que lleva cada guiso es **suposición mía** a partir del
+  nombre. Si en la taquería se hace distinto, cambia la línea (por ejemplo `green tomatillo salsa`).
+  No pedí «Corazón de vaca enamorada», Cabeza, Lengua ni Barbacoa de borrego: son los más
+  fáciles de que salgan mal o irreconocibles.
+- **Orden:** genera primero la tinga, apruébala y adjúntala en las demás (ver consejos).
+- **Se acepta si:** misma mesa, misma cazuela, misma luz y mismo encuadre en toda la serie; se
+  entiende qué guiso es; se ve casero y antojable, no de restaurante fino; sin manos, cubiertos
+  ni letras.
 
-### M6b — Si todavía no hay bolsa real (Gemini, tres videos ilustrados)
-Mismo estilo que M5, adjuntando `M4a`. Tres clips, uno por paso, con este prompt cambiando
-solo la línea `Action`:
+## M3 — La bolsa al vacío (foto, estilo foto de taquería)
+- **Para:** el héroe (escena 1) y la imagen para compartir.
+- **Prompt** (adjunta `M2-tinga-de-res.png` ya aprobada y termina con el bloque de fotografía,
+  cambiando su última línea por `Portrait 3:4, 2K.`):
 
 ```
-Short 2D animation in the same hand-painted Mexican sign illustration style as the attached
-reference (flat solid colors, thick slightly irregular black outline, one flat shadow tone,
-subtle brush texture). Top-down view. Action: [ACTION]. Camera completely locked, no zoom, no
-pan. Objects keep the same shape and colors for the whole clip and the final second holds
-still. Background: flat warm light wood tabletop color (#EAD7B0), no gradient. No text, no
-faces, no watermark in the center. 16:9, 1080p, shortest duration available.
+Match the attached photo exactly in table and light. A single clear vacuum-sealed plastic food
+pouch lying flat, tightly vacuum packed around a portion of shredded beef tinga in red sauce,
+the plastic clinging to the food with fine wrinkles, heat-sealed bands at the top and bottom, a
+small tear notch on one side. A light touch of frost on the plastic, as if just taken out of the
+freezer. In the center of the pouch there is one completely blank, plain white rectangular
+sticker label with nothing printed on it. Soft, controlled reflections on the plastic.
 ```
 
-- `[ACTION]` 1: `two hands tear open the corner of a clear vacuum-sealed pouch filled with red stewed meat`
-- `[ACTION]` 2: `red stewed meat is poured from an open pouch into a dark frying pan and starts steaming`
-- `[ACTION]` 3: `a spoon serves red stewed meat onto a warm corn tortilla on a plate, then onion and cilantro are sprinkled on top`
-- **Archivos:** `M6b-1-rompe.mp4`, `M6b-2-calienta.mp4`, `M6b-3-taquea.mp4`.
-- En la página irán rotulados como ilustración, no como foto del producto.
+- **La etiqueta va en blanco a propósito:** el nombre lo pone la página encima, bien escrito.
+- **Se acepta si:** la etiqueta es blanca, lisa y está de frente; el guiso se ve a través del
+  plástico; no hay ninguna letra; la madera y la luz coinciden con las fotos de los guisos.
+- **Archivo:** `M3-bolsa.png`.
+
+## M5 — El taco que se abre (video, estilo rótulo)
+- **Para:** el botón principal de toda la página.
+- **Cómo:** primero dos imágenes (cerrado y abierto) y luego un video que va de una a otra.
+  De ese video se extraen 12 cuadros.
+- **Paso 1, taco cerrado.** Adjunta `M4a` y pega (más el bloque de rótulo):
+
+```
+A single taco seen from the front at a slight 3/4 angle, centered, filling about 60% of the
+frame. The corn tortilla is folded closed, so the filling is hidden.
+Background: perfectly flat solid blue (#0033FF), no gradient, no table, no shadow. Landscape 16:9, 2K.
+```
+
+- **Paso 2, taco abierto.** Adjunta el taco cerrado y pega (más el bloque de rótulo):
+
+```
+The exact same taco as the attached image, same position, same size, same colors and outline,
+but now the tortilla is open like a mouth, showing saucy red stewed meat, chopped white onion
+and green cilantro inside. Same flat solid blue (#0033FF) background. Landscape 16:9, 2K.
+```
+
+- **Paso 3, el video.** Da el taco cerrado como primer cuadro y el abierto como último (o, si
+  no se puede, adjunta los dos) y pega:
+
+```
+Short 2D animation. The folded taco opens smoothly until it is fully open, then holds still for
+the last second. Camera completely locked: no zoom, no pan, no shake. The taco stays in the same
+place and keeps the same shape, colors and black outline during the whole clip. The background
+stays one flat solid blue. No text, no hands, no steam, no extra objects. 16:9, shortest
+duration available.
+```
+
+- **Se acepta si:** la cámara no se mueve; el taco no cambia de forma ni de color; empieza
+  cerrado y termina abierto y quieto; el fondo es azul liso todo el tiempo.
+- **Archivos:** `M5-taco-cerrado.png`, `M5-taco-abierto.png`, `M5-taco-abre.mp4`.
+- **Si el video no sale bien:** con las dos imágenes basta; el botón alterna entre ellas.
+
+## M6 — Romper, calentar, taquear (tres videos, estilo rótulo)
+- **Para:** la escena firma (escena 3): los cuadros de estos videos avanzan con el scroll.
+- **Por qué ilustrado y no fotorrealista:** en esta escena quien visita recorre el video
+  cuadro por cuadro con el dedo. En video fotorrealista las manos, el plástico que se rasga y
+  el guiso que cae son justo donde los generadores fallan, y aquí cada falla se ve detenida.
+  El dibujo plano aguanta mejor, sale más parejo entre clips y es del mismo mundo que el nopal.
+- **Prompt común** (adjunta `M4a`; cambia solo `[ACCIÓN]`; termina con el bloque de rótulo):
+
+```
+Short 2D animation, top-down view of a light wooden table. [ACCIÓN] Camera completely locked:
+no zoom, no pan, no shake. Objects keep the same shape, colors and black outline during the
+whole clip, and everything holds perfectly still for the last second. The background is one
+flat warm light wood color (#EAD7B0) for the whole clip, with no change. No faces, no text.
+16:9, 1080p, shortest duration available.
+```
+
+| Clip | `[ACCIÓN]` | Archivo |
+|---|---|---|
+| 1 Rompe | `A clear vacuum-sealed pouch filled with red stewed meat lies in the center. Two simple cartoon hands enter from the bottom and tear open its top corner; the corner peels away.` | `M6-1-rompe.mp4` |
+| 2 Calienta | `A dark round frying pan sits in the center. Red stewed meat slides out of an open pouch held at the top edge into the pan, spreads, and soft steam starts to rise.` | `M6-2-calienta.mp4` |
+| 3 Taquea | `A warm corn tortilla lies on a round plate in the center. A spoon serves red stewed meat onto the tortilla, then chopped white onion and green cilantro fall on top.` | `M6-3-taquea.mp4` |
+
+- **Se acepta si:** vista desde arriba en los tres; cámara quieta; fondo del mismo color de
+  madera; el último segundo está quieto; no hay letras. No hace falta que un clip empiece
+  donde termina el anterior: la página cambia de uno a otro en el salto entre pasos.
 
 ---
 
 # Mejora posterior (cuando lo anterior ya esté montado)
 
-En todos los prompts de Gemini de esta sección, adjunta `M4a` y termina con este **bloque de
-estilo**, tal cual:
+Todos son estilo rótulo: adjunta `M4a` y termina con el bloque de rótulo, salvo donde se indica.
 
-```
-Style: same as the attached reference: Mexican hand-painted sign art, flat solid colors, thick
-slightly irregular black outline, one flat shadow tone, subtle brush texture. No text, no
-letters, no watermark, no 3D, no realistic rendering.
-```
+| # | Pieza | Para | Prompt (antes del bloque) | Formato | Archivo |
+|---|---|---|---|---|---|
+| M1a | El letrero limpio, de frente | Logotipo en cabecera y héroe | Adjunta `docs/negocio/fotos/rotulo-logo.png`. `Recreate only the lettering "Los Tacos May" from the attached sign photo as a clean, flat, front-facing graphic. Keep the exact letter shapes, proportions, yellow and red fill colors and thick black outline of the original hand-painted letters; correct only the perspective. Do not redesign the letters. Background: flat solid magenta (#FF00FF).` **Revisa que diga «Los Tacos May» bien escrito;** si cambia las letras, no sirve y se queda la fuente | Horizontal 3:2, 4K, PNG | `M1a-letrero.png` |
+| M1b | Madera que se repite | Fondo de la página | **Sin bloque de rótulo.** `Seamless tileable texture of light natural pine wood planks, vertical boards, visible grain and a few small knots, flat even lighting, top-down, no shadows, no objects, no text.` | 1:1, 2K, PNG | `M1b-madera.png` |
+| M7 | Nopal saludando | Héroe y cierre | Video. `Short 2D animation of the attached cactus character, full body, front view, centered. It lifts its yellow sombrero with one arm, waves once and puts the sombrero back, ending in the exact starting pose. Camera locked. Background: flat solid magenta (#FF00FF).` | 16:9, lo más corto | `M7-nopal-saluda.mp4` |
+| M8 | Nopal con frío | Escena 5 | Solo si la pose 5 de `M4b` no sirve. `The attached cactus character, full body, shivering, wearing a red scarf, frost and small icicles on its sombrero. Background: flat solid magenta (#FF00FF).` | 1:1, 2K, PNG | `M8-nopal-frio.png` |
+| M9 | Nopal apenado | Error del menú | Solo si la pose 6 de `M4b` no sirve. Igual que M8 con `embarrassed, holding its sombrero in one hand, small shy smile.` | 1:1, 2K, PNG | `M9-nopal-apenado.png` |
+| M10a | Bolsa que se rasga | Botón «Ver cómo se come» | Video. `Short 2D animation of a clear vacuum-sealed pouch filled with red stew, front view, centered. Its top corner tears open and peels away, then holds still. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, lo más corto | `M10a-bolsa-rasga.mp4` |
+| M10b | Tortilla que se voltea | «Cargando» y «Volver a intentar» | Video. `Short 2D animation, top-down view of a single corn tortilla on a dark round comal. The tortilla flips over once in place and lands flat, ending like the first frame. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, lo más corto | `M10b-tortilla-voltea.mp4` |
 
-| # | Pieza | Para | Tipo | Prompt (antes del bloque de estilo) o instrucción | Formato | Archivo |
-|---|---|---|---|---|---|---|
-| M7 | Nopal saludando | Escena 1 y cierre | Gemini, video | `Short 2D animation of the attached cactus character, full body, front view, centered. It lifts its yellow sombrero with one arm, waves once and puts the sombrero back, ending in the exact starting pose. Camera locked. Background: flat solid magenta (#FF00FF).` | 16:9, 1080p, lo más corto | `M7-nopal-saluda.mp4` |
-| M8 | Nopal con frío | Escena 5 | Gemini, imagen | Si la pose 5 de M4b salió bien, no hace falta. Si no: `The attached cactus character, full body, shivering, wearing a red scarf, frost and small icicles on its sombrero. Background: flat solid magenta (#FF00FF).` | 1:1, 2048 px, PNG | `M8-nopal-frio.png` |
-| M9 | Nopal apenado | Error del menú | Gemini, imagen | Igual que M8 con: `embarrassed, holding its sombrero in one hand, small shy smile.` | 1:1, 2048 px, PNG | `M9-nopal-apenado.png` |
-| M10a | Bolsa que se rasga | Botón «Ver cómo se come» | Gemini, video | `Short 2D animation of a clear vacuum-sealed pouch filled with red stew, front view, centered. Its top corner tears open and peels away, then holds still. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, 1080p | `M10a-bolsa-rasga.mp4` |
-| M10b | Tortilla que se voltea | «Cargando» y «Volver a intentar» | Gemini, video | `Short 2D animation, top-down view of a single corn tortilla on a dark round comal. The tortilla flips over once in place and lands flat, ending like the first frame. Camera locked. Background: flat solid blue (#0033FF).` | 16:9, 1080p | `M10b-tortilla-voltea.mp4` |
-| M11 | La taquería | Escena 6 | **Fotos reales** | De frente y a la altura de los ojos: la fachada con el rótulo; la plancha o las cazuelas; manos sirviendo un taco; el pizarrón del menú como esté hoy. Personas solo con su permiso | Horizontal, máxima resolución | `M11-fachada.jpg`, `M11-cazuelas.jpg`, `M11-manos.jpg`, `M11-pizarron.jpg` |
-| M12 | Madera que se repite | Fondo | Gemini, imagen (solo si `M1d` no sirve) | `Seamless tileable texture of light natural pine wood planks, vertical boards, visible grain and a few knots, flat even lighting, top-down, no shadows, no objects.` (sin el bloque de estilo) | 1:1, 2048 px | `M12-madera.png` |
-| M13 | El letrero como logotipo | Escena 1, cabecera | Gemini, retoque de `M1a` | Adjunta `M1a` y pide: `Recreate only the lettering "Los Tacos May" from the attached sign photo as a clean front-facing graphic, keeping the exact letter shapes, proportions, yellow and red fill colors and black outline of the original hand-painted letters. Do not redesign or change the letters. Background: flat solid magenta (#FF00FF).` Revisa que las letras sean **las del rótulo** y estén bien escritas; si las cambia, no sirve | Horizontal, 3000 px, PNG | `M13-letrero.png` |
-
-**Imagen para compartir en redes:** no hay que producirla; se arma con el letrero, el nopal y
-la foto de la bolsa cuando lleguen.
+**No se pide (decidido):**
+- **La taquería (antes M11).** La escena 6 se resuelve con el pizarrón, la dirección y el
+  nopal señalando. Una fachada o un interior generados pasarían por el local real, y no lo son.
+- **Imagen para compartir en redes:** se arma con el letrero, el nopal y la bolsa cuando lleguen.
 
 ---
 
-## Consejos para Gemini
+## Resumen: lo mínimo para que la página se vea completa
 
-- **Cuatro variantes por pieza;** elige una y corrige con «igual, pero…» en vez de empezar de cero.
-- **Siempre adjunta la referencia** (la foto del rótulo al principio; después `M4a`).
-- **Si mete letras o texto,** repite añadiendo `absolutely no text or letters anywhere`.
-- **Si el fondo no sale liso,** repite añadiendo `the background must be one single flat color with no variation`.
-- **Marca de agua:** si sale en una esquina, no importa mientras el sujeto esté centrado y
-  con margen (se recorta).
-- Los prompts van en inglés porque los generadores de imagen y video suelen obedecerlos
-  mejor así; si tu Gemini responde mejor en español, tradúcelos sin cambiar el contenido.
-
-## Resumen: qué hace falta para ver la primera versión premium
-
-| # | Pieza | Tipo | Tiempo estimado |
+| Orden | Pieza | Qué es | Archivos |
 |---|---|---|---|
-| M1 | Rótulo de frente (4 fotos) | Foto real | 10 min en la taquería |
-| M2 | Tres guisos (6 fotos) | Foto real | 20 min |
-| M4 | El nopal: de frente y poses | Gemini | 30 min |
-| M5 | El taco que se abre | Gemini, video | 20 min |
-| M6b | Romper, calentar, taquear: tres clips ilustrados | Gemini, video | 40 min |
-
-Los tiempos son una estimación mía, no una medición.
+| 1 | **M4** | El nopal, de frente y en seis poses | 2 imágenes |
+| 2 | **M2** | Seis guisos en cazuela, misma mesa y misma luz | 6 imágenes |
+| 3 | **M3** | La bolsa al vacío con etiqueta en blanco | 1 imagen |
+| 4 | **M5** | El taco que se abre | 2 imágenes + 1 video |
+| 5 | **M6** | Romper, calentar, taquear | 3 videos |
 
 ## Lo que sigue pendiente y no es material
 Del negocio (`PENDIENTE-CLIENTE`): si el nopal tiene nombre; año de inicio e historia;
 horario completo; demás taquerías; teléfono, WhatsApp, correo y redes; instrucciones de
-calentado; todo lo del envío; razón social y aviso de privacidad.
+calentado; todo lo del envío; razón social y aviso de privacidad. Y, antes de publicar o
+vender: sustituir por fotos reales todo lo generado de comida y de la bolsa.

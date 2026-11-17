@@ -133,15 +133,24 @@ contraste se mide con números.
 
 ## 8. Fotografía
 
-- **Siempre real**, de sus guisos y de su taquería. Tomada con celular está bien si está bien
-  tomada (las instrucciones están en `materiales.md`).
-- **Luz natural de lado**, cálida; sin flash y sin filtros.
-- **Comida:** desde arriba para platos y cazuelas, a 45° para el taco armado; plano cerrado,
-  se ve la textura; se sirve como se sirve en la taquería, sin decoración inventada.
-- **Lugar y gente:** a la altura de los ojos; el rótulo, la plancha, las manos sirviendo.
-  Personas solo con su permiso.
-- **Fondo:** sus superficies reales (su mesa, su barra, su papel), limpias.
-- **Edición:** solo luz, color y limpieza de fondo. La comida no se altera.
+**Por ahora, generada** (decisión de Alejandro, 17-nov-2026: la página es una prueba y aún no
+hay producto empacado). Se produce con Gemini con una sola dirección, para que toda la serie
+parezca de la misma sesión:
+
+- **Desde arriba**, a 90°, sobre **mesa de pino claro** (la madera del rótulo).
+- **Cazuela de barro café oscuro**, la misma en todos los guisos; dos tortillas asomando a la
+  izquierda.
+- **Luz de ventana desde la izquierda**, suave, cálida; sombras cortas a la derecha.
+- Casero y antojable, un poco imperfecto; nada de emplatado de restaurante fino.
+- Sin manos, cubiertos, letras ni adornos que no lleve el guiso.
+- La bolsa al vacío sigue la misma mesa y la misma luz, con la **etiqueta en blanco** (el
+  nombre lo pone la página).
+
+**Antes de publicar o vender, todo esto se sustituye por fotos reales** de sus guisos y de su
+bolsa, tomadas con esta misma dirección (mesa, ángulo y luz), para que el cambio no rompa la
+página. En el código cada imagen generada lleva su `PENDIENTE-CLIENTE`.
+
+**No se genera** la fachada ni el interior de la taquería: pasarían por el local real.
 
 ## 9. Ilustración e íconos
 
@@ -156,7 +165,8 @@ animan con pocos cuadros, como dibujo animado hecho a mano.
   caricatura genérica. El nopal es **el suyo**, no un cliché.
 - No es gourmet minimalista: sin beige vacío, tipografía delgada ni platos de autor.
 - No es tecnológica: sin degradados, brillos de neón, vidrio esmerilado ni 3D.
-- No es de fotos de stock ni de comida generada por IA presentada como suya.
+- No es de fotos de stock. Y cuando se publique o se venda, tampoco de comida generada por
+  IA: lo generado de hoy es provisional (sección 8).
 - No es copia de Orinoco ni de ninguna otra taquería (`docs/investigacion/referencias-marca.md`
   dice qué se aprendió de cada una, y nada más).
 - No promete lo que no está confirmado.

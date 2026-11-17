@@ -4,8 +4,10 @@ La página escena por escena: qué siente y entiende quien la visita, qué mater
 se mueve y con qué técnica, y cómo se ve en celular. Los materiales (**M1, M2…**) están
 descritos en [materiales.md](materiales.md); la marca, en [marca.md](marca.md).
 
-**Estado: propuesta.** Se construye cuando la marca esté aprobada y lleguen los materiales
-indispensables.
+**Estado: en construcción (17-nov-2026).** La página ya está armada según este guion, con
+cada material en su lugar definitivo como hueco rotulado con su código (M2, M3…) o con una
+versión provisional dibujada. Todos los materiales se generan con Gemini; es una página de
+prueba.
 
 ## Estrategia
 
@@ -42,10 +44,11 @@ escena 3; las demás tienen un gesto cada una, o ninguno.
 - **Se ve:** pared de tablones de madera. El letrero «Los Tacos May» pintado, el nopal al
   lado, y sobre una mesa la bolsa al vacío. Título, una línea de apoyo, el botón del taco y
   la línea de confianza («De nuestra taquería en el centro de Cabo San Lucas»).
-- **Material:** letrero redibujado (M13; mientras, la fuente), nopal (M4, luego M7), foto real
-  de la bolsa (M3; mientras, la ilustración actual rotulada como ilustración), madera (M1 o M12).
+- **Material:** letrero limpio (M1a; mientras, la fuente), nopal (M4, luego M7), la bolsa
+  fotorrealista con etiqueta en blanco y el nombre sobrepuesto por la página (M3; mientras, la
+  bolsa dibujada), madera (M1b; mientras, juntas de tablón en CSS).
 - **Se mueve:** al cargar, el letrero se pinta de izquierda a derecha como brochazo; el nopal
-  levanta el sombrero una vez; la bolsa cae a la mesa con un rebote corto. Después, quieto.
+  se asoma; la bolsa cae a la mesa con un rebote corto y recibe su sello. Después, quieto.
   El nopal vuelve a saludar si se pasa el cursor o el foco por la marca.
 - **Técnica:** CSS (máscara que avanza, sprite del nopal con `steps()`). El héroe **no espera
   a JavaScript** y el título no se anima, para no retrasar la carga.
@@ -64,19 +67,19 @@ explicación y anuncia la escena que sigue.
 - **Se ve:** tres pasos (1. Rompe la bolsa · 2. Calienta · 3. Taquea) junto a una imagen
   grande que avanza con el scroll: la bolsa se rasga, el guiso cae a la sartén y echa vapor,
   y termina en un taco servido.
-- **Material:** video real grabado desde arriba (M6), convertido en secuencia de cuadros. Si
-  todavía no existe el producto empacado: tres clips ilustrados (M6b), rotulados como ilustración.
+- **Material:** tres clips ilustrados en estilo de rótulo, vistos desde arriba (M6), convertidos
+  en secuencia de cuadros. Mientras llegan, el pictograma dibujado hace el mismo recorrido.
 - **Se mueve:** la sección se queda anclada mientras el scroll recorre la secuencia; el paso
   activo se resalta. Hay reposo al principio y al final para que la primera y la última
   imagen se asienten; cada paso se queda quieto un tramo y cambia rápido al siguiente.
-- **Técnica:** `position: sticky` + `<canvas>` que dibuja el cuadro según el avance, con
-  GSAP y ScrollTrigger guardados en `frontend/vendor/`. Es el único lugar donde se justifica
-  la librería: anclado, cuadros y rótulos coordinados. Los cuadros se cargan al acercarse,
-  no al abrir la página.
+- **Técnica:** `position: sticky` + `<canvas>` que dibuja el cuadro según el avance. **Al
+  construirlo no hizo falta GSAP:** el avance del scroll ya se calculaba en unas líneas y
+  elegir el cuadro es una cuenta; cargar una librería para eso sería peso sin beneficio. Los
+  cuadros se cargan al acercarse, no al abrir la página.
 - **Celular:** imagen arriba (proporción 4:5), pasos abajo; 48 cuadros a 720 px. En pantallas
   muy bajas no se ancla.
-- **Sin movimiento o sin JavaScript:** tres fotos fijas (los cuadros clave), cada una con su
-  paso. El contenido es el mismo.
+- **Sin movimiento o sin JavaScript:** los tres pasos con su texto y una imagen fija (el
+  último cuadro). El contenido es el mismo.
 - `PENDIENTE-CLIENTE`: instrucciones exactas de calentado y qué hacer si llega descongelado.
 
 ## Escena 4 — Los guisos, en vivo
@@ -87,9 +90,10 @@ explicación y anuncia la escena que sigue.
   su foto y su descripción. Botón del taco hacia la tienda.
 - **Datos:** `GET /api/guisos/populares` y `GET /api/guisos` con el mismo `api()` de la
   tienda. Nombres, precios, porciones y existencias salen de ahí; nada escrito a mano.
-- **Material:** fotos reales de cada guiso (M2). La API no trae imagen: la foto se busca por
-  el nombre del guiso (`frontend/media/guisos/<nombre-en-minúsculas-con-guiones>.webp`); si no
-  hay, el renglón va sin foto. Nunca una foto generada en su lugar.
+- **Material:** una foto por guiso (M2), generada con una sola dirección de fotografía. La API
+  no trae imagen: la foto se busca por el nombre del guiso
+  (`frontend/media/guisos/<nombre-en-minúsculas-con-guiones>.webp`); si no hay, queda el hueco
+  rotulado.
 - **Se mueve:** los renglones se escriben de izquierda a derecha la primera vez que entran a
   pantalla; la foto se descubre con borde de brochazo.
 - **Estados:** cargando = la tortilla que se voltea y «Leyendo el menú…»; error = el nopal
@@ -113,13 +117,13 @@ explicación y anuncia la escena que sigue.
 ## Escena 6 — La taquería
 
 - **Siente:** cercanía. **Entiende:** que hay un lugar y una familia.
-- **Se ve:** fotos reales del local (M11) en una tira que se desliza con el dedo; el pizarrón
-  con los guisos que se sirven ahí (sin precios); la dirección enlazada al mapa con el nopal
-  señalándola.
-- **Se mueve:** nada automático. La tira se desliza con el gesto normal del dispositivo.
-- **Técnica:** desplazamiento nativo con `scroll-snap`; sin librería.
-- **Celular:** tira horizontal; el pizarrón debajo.
-- `PENDIENTE-CLIENTE`: horario completo, demás taquerías, historia, año de inicio.
+- **Se ve:** el pizarrón con los guisos que se sirven ahí (sin precios) y la dirección
+  enlazada al mapa, con el nopal señalándola.
+- **Material:** ninguno nuevo. No se genera fachada ni interior: pasarían por el local real.
+  Cuando haya fotos reales del local, entran aquí.
+- **Se mueve:** nada.
+- **Celular:** texto y dirección arriba, pizarrón debajo.
+- `PENDIENTE-CLIENTE`: horario completo, demás taquerías, historia, año de inicio, fotos reales.
 
 ## Escena 7 — Cierre
 
@@ -170,8 +174,8 @@ prototipo usa versiones provisionales dibujadas en SVG, rotuladas como provision
 
 1. HTML, CSS, fuente y la imagen del héroe: es lo único que se pide al abrir.
 2. Después: sprites de botones y el menú en vivo.
-3. Al acercarse a la escena 3: GSAP y la secuencia de cuadros.
-4. Al acercarse a cada una: fotos de guisos y de la taquería (carga diferida).
+3. Al acercarse a la escena 3: la secuencia de cuadros.
+4. Al abrir cada renglón del menú: la foto de ese guiso (carga diferida).
 
 Presupuestos de peso: en [metodologia.md](metodologia.md).
 
@@ -182,6 +186,4 @@ movimiento; la tienda en `/tienda/` sin tocar.
 
 ## Lo que este guion necesita de Alejandro
 1. Aprobar o cambiar el orden y el contenido de las escenas.
-2. Decir si **ya existe una bolsa empacada real** para fotografiar y grabar (de eso depende
-   que la escena 3 sea real o ilustrada).
-3. Producir los materiales indispensables de [materiales.md](materiales.md).
+2. Producir los cinco materiales indispensables de [materiales.md](materiales.md).
