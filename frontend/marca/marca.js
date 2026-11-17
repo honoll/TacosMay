@@ -143,7 +143,8 @@ const comparacion = () => `
   <header class="cab"><p class="num">Los Tacos May · exploración de marca</p><h1>Tres rutas para una misma idea</h1>
     <p class="idea"><strong>Idea central:</strong> Ya está hecho. <strong>Promesa:</strong> guiso de olla sin la espera.</p>
     <p class="nota">Son tableros de exploración: tipografía, color y dibujo vectorial provisionales, sin imágenes generadas. Sirven para elegir un rumbo, no son arte final. El razonamiento y la recomendación están en <code>docs/diseno/rutas.md</code>.</p>
-    <p class="elegida"><strong>Elegida: ruta 3, «La barra».</strong> <a class="ver" href="sistema.html">Ver el sistema de identidad →</a></p></header>
+    <p class="elegida"><strong>Elegida: ruta 3, «La barra».</strong> <a class="ver" href="sistema.html">Ver el sistema de identidad →</a></p>
+    <p class="elegida"><strong>En revisión: el logotipo.</strong> <a class="ver" href="logos.html">Ver la exploración de logotipos →</a></p></header>
   <main class="comparar">${RUTAS.map((r) => `
     <section class="col r${r.n}"><p class="num">Ruta ${r.n} · ${r.distancia}</p><h2>${r.nombre}</h2><p class="idea">${r.idea}</p>
       <div class="lienzo">${r.logo}</div>

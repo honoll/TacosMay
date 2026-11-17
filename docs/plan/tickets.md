@@ -285,6 +285,25 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     y tienda completas, a 375 px y en escritorio. La tienda sigue sin correrse contra Redis desde
     que cambió su tarjeta.
 
+- **Novena vuelta (17-nov-2026): exploración de logotipos. Nada aplicado todavía.** A Alejandro no
+  lo convenció el logotipo; abrió la puerta a un cactus en silueta y a una marca que una cactus y
+  nombre.
+  - `frontend/marca/logos.html` (visible en `/marca/logos.html`, enlazado desde `/marca/`) con
+    siete conceptos, cada uno grande, a 24 px, a una tinta en negro, en blanco sobre oscuro, sobre
+    el rojo, en la cabecera y en la etiqueta: 1 El cactus de May (silueta + nombre) · 2 La placa
+    (silueta mínima) · 3 La Y es el cactus (combinada) · 4 El cactus lleva el nombre (combinada) ·
+    5 La charola de May (cactus + producto) · 6 May, a secas (solo letras) · 7 El letrero.
+  - `docs/diseno/logos.md`: razonamiento y **recomendación: el 3**; segunda opción, el 1 con el 2
+    como ícono. El 5 no se recomienda: se lee como planta en maceta.
+  - Las letras de «May» y el cactus son dibujo propio en vector (por coordenadas), no una fuente.
+  - **Verificado:** los siete dibujos convertidos a imagen y revisados a la vista (color, blanco
+    sobre negro y 24 px); `node --check`; la página armada con un DOM simulado (651 etiquetas
+    cuadradas, sin valores vacíos, ninguna clase sin regla).
+  - **NO verificado:** la página en el navegador; los dibujos con las fuentes del sistema; el
+    parecido con marcas registradas (revisión de memoria, falta búsqueda formal).
+  - **Bloqueo de Alejandro:** elegir concepto. Después: segundo pase de dibujo, versiones del
+    sistema y aplicarlo a landing y tienda.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

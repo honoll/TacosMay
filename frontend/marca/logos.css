@@ -1,0 +1,86 @@
+/* Exploración de logotipos (docs/diseno/logos.md). Se apoya en marca.css: fuentes y marco del tablero.
+   Cada dibujo usa cuatro clases de color; el contexto decide qué valen:
+   .t tinta (color) · .r rojo May (--may) · .p papel (--papel) · .a amarillo (--sol). */
+
+.logos { --may: #c8161f; --sol: #ffcf1f; --papel: #f7f4ee; }
+
+.logos svg { display: block; width: 100%; height: auto; overflow: visible; }
+.logos .t { fill: currentColor; }
+.logos .r { fill: var(--may); }
+.logos .p { fill: var(--papel); }
+.logos .a { fill: var(--sol); }
+/* Las letras llevan un trazo del mismo color que redondea sus esquinas. */
+.logos path.t:not(.trazo) { stroke: currentColor; }
+.logos path.r:not(.trazo) { stroke: var(--may); }
+.logos path.p:not(.trazo) { stroke: var(--papel); }
+/* Brazos del cactus: se dibujan con trazo grueso de punta redonda. */
+.logos .trazo { fill: none; }
+.logos .trazo.t { stroke: currentColor; }
+.logos .trazo.r { stroke: var(--may); }
+.logos .trazo.p { stroke: var(--papel); }
+/* Contorno del letrero (concepto 7). */
+.logos .ctr { stroke: currentColor; stroke-width: 12; stroke-linejoin: round; }
+.logos .lt { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 600; }
+.logos .let { font-family: "Alfa Slab One", Georgia, serif; stroke: currentColor; stroke-width: 2.5; paint-order: stroke fill; }
+
+.logos > section { margin-top: 40px; }
+.logos h2 { font-size: 1.6rem; }
+
+/* ---------- Todos juntos ---------- */
+
+.todos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.ficha-l { display: grid; align-content: space-between; gap: 10px; padding: 14px; border-radius: 10px; background: #fff; color: #1a1a1a; text-decoration: none; }
+.ficha-l .lienzo-l { min-height: 150px; }
+.ficha-l b { display: inline-grid; place-items: center; width: 1.7em; height: 1.7em; margin-right: 6px; border-radius: 50%; background: #141210; color: #fff; }
+
+/* ---------- Un concepto en sus contextos ---------- */
+
+.concepto { padding-top: 28px; border-top: 3px solid #141210; scroll-margin-top: 8px; }
+.concepto > header { margin-bottom: 16px; }
+.contextos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.ctx { display: grid; grid-template-rows: 1fr auto; gap: 6px; margin: 0; }
+.ctx figcaption { font-size: .88rem; color: #4a4a4a; }
+.lienzo-l { display: grid; place-items: center; padding: 20px; border-radius: 8px; background: #f7f4ee; color: #141210; }
+.lienzo-l > svg { max-width: 420px; max-height: 190px; width: auto; }
+.todos .lienzo-l > svg { max-height: 120px; }
+
+.ctx.grande { grid-column: 1 / -1; }
+.ctx.grande .lienzo-l { padding: clamp(20px, 5vw, 48px); }
+.ctx.grande .lienzo-l > svg { max-width: min(100%, 760px); max-height: 320px; }
+
+.chico .lienzo-l { display: flex; align-items: end; justify-content: center; gap: 28px; }
+.px24, .px48 { display: grid; place-items: center; }
+.px24 { width: 24px; height: 24px; }
+.px48 { width: 48px; height: 48px; }
+.px24 svg, .px48 svg { width: auto; max-width: 100%; height: 100%; }
+
+/* Una tinta: «May» toma el color de la tinta. */
+.tinta .lienzo-l { --may: currentColor; --sol: currentColor; }
+.oscuro .lienzo-l { --may: currentColor; --sol: currentColor; --papel: #141210; background: #141210; color: #f7f4ee; }
+.rojo .lienzo-l { --may: currentColor; --sol: currentColor; --papel: #c8161f; background: #c8161f; color: #f7f4ee; }
+
+/* En la cabecera de la landing */
+.en-cab .lienzo-l { padding: 12px; }
+.cab-m { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding-bottom: 10px; border-bottom: 2px solid #141210; }
+.lg-cab { flex: none; height: 44px; }
+.lg-cab svg { width: auto; height: 100%; }
+.nav-m { display: flex; align-items: center; gap: 10px; font: 600 .8rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.nav-m i { font-style: normal; }
+.nav-m b { padding: 8px 10px; border-radius: 4px; background: #141210; color: #fff; }
+@media (max-width: 420px) { .nav-m i { display: none; } }
+
+/* En la etiqueta de la bolsa */
+.en-etq .lienzo-l { background: #d9dcdd; }
+.etq-m { display: grid; grid-template-columns: 44px 1fr; width: min(100%, 250px); overflow: hidden; border: 2px solid #141210; border-radius: 6px; background: #f7f4ee; }
+.franja-m { display: grid; place-items: start center; padding-top: 8px; background: #a8321c; color: #fff; font: 800 1.5rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; }
+.etq-m > div { display: grid; gap: 6px; padding: 10px; }
+.etq-m strong { font: 800 1.5rem/.9 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
+.etq-m small { font: 600 .72rem/1.2 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.lg-etq { display: block; height: 46px; padding-top: 8px; border-top: 2px dashed #141210; }
+.lg-etq svg { width: auto; height: 100%; }
+
+.ficha { display: grid; gap: 10px; margin: 16px 0 0; }
+.ficha > div { padding: 12px 14px; border-radius: 8px; background: #fff; }
+.ficha dt { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5b5b5b; }
+.ficha dd { margin: 4px 0 0; }
+@media (min-width: 800px) { .ficha { grid-template-columns: repeat(3, 1fr); } }
