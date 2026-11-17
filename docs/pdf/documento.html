@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<title>TacosMay — Diseño y justificación</title>
+<style>
+  @page { size: Letter; margin: 20mm 19mm 20mm 19mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.4pt; line-height: 1.45; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 17pt; margin: 22pt 0 8pt; padding-bottom: 4pt; border-bottom: 2px solid #b4451f; break-after: avoid; }
+  h2 { font-size: 12pt; margin: 14pt 0 5pt; color: #7a2e12; break-after: avoid; }
+  p { margin: 0 0 7pt; text-align: justify; }
+  ul, ol { margin: 0 0 7pt; padding-left: 16pt; }
+  li { margin-bottom: 2.5pt; }
+  code, pre { font-family: Consolas, "Courier New", monospace; }
+  code { font-size: 9.2pt; background: #f3efe9; padding: 0 2.5pt; border-radius: 2pt; }
+  pre { font-size: 8.5pt; line-height: 1.35; background: #f6f3ee; border-left: 3px solid #b4451f; padding: 6pt 8pt; margin: 0 0 8pt; white-space: pre-wrap; break-inside: avoid; }
+  table { border-collapse: collapse; width: 100%; margin: 0 0 9pt; font-size: 9.1pt; break-inside: avoid; }
+  tr { break-inside: avoid; }
+  th, td { border: 1px solid #c9c2b8; padding: 3.5pt 5pt; vertical-align: top; text-align: left; }
+  th { background: #efe7dc; }
+  .cover { height: 232mm; display: flex; flex-direction: column; justify-content: center; break-after: page; }
+  .cover .kicker { color: #b4451f; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 10pt; }
+  .cover .title { font-size: 34pt; font-weight: 700; line-height: 1.1; margin: 8pt 0 6pt; }
+  .cover .sub { font-size: 14pt; color: #444; margin-bottom: 40pt; }
+  .cover dl { display: grid; grid-template-columns: 34mm 1fr; row-gap: 5pt; font-size: 11pt; margin: 0; }
+  .cover dt { color: #666; } .cover dd { margin: 0; }
+  .note { background: #fbf4e6; border: 1px solid #e3cf9f; padding: 6pt 8pt; margin: 0 0 9pt; font-size: 9.6pt; break-inside: avoid; }
+  figure { margin: 4pt 0 10pt; break-inside: avoid; }
+  figcaption { font-size: 8.8pt; color: #555; text-align: center; margin-top: 3pt; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+  .refs p { text-align: left; padding-left: 18pt; text-indent: -18pt; font-size: 9.6pt; }
+  .q { break-inside: avoid; }
+  .q h2 { margin-bottom: 3pt; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="kicker">Documentación de diseño y justificación</div>
+  <div class="title">TacosMay</div>
+  <div class="sub">Tienda en línea de guisos empacados al vacío<br>sobre una base de datos Clave-Valor (Redis) en la nube</div>
+  <dl>
+    <dt>Proyecto</dt><dd>Desarrollo e Integración de Aplicaciones con Bases de Datos NoSQL en la Nube</dd>
+    <dt>Materia</dt><dd>Bases de Datos Avanzadas (SIS 2404)</dd>
+    <dt>Profesor</dt><dd>Fernando de Jesús Martínez Chacón</dd>
+    <dt>Alumno</dt><dd>Alejandro Garrido Torres</dd>
+    <dt>Fecha</dt><dd>Noviembre de 2026</dd>
+    <dt>Repositorio</dt><dd>https://github.com/honoll/TacosMay</dd>
+  </dl>
+</section>
+
+<h1>1. Introducción y dominio del problema</h1>
+
+<p>TacosMay nace de las taquerías de mi familia. La idea de negocio es vender sus guisos ya cocidos, empacados al vacío en porciones y enviados a cualquier parte de México, para que el cliente solo abra la bolsa, caliente y coma. El producto es perecedero: cada lote tiene pocas porciones y una vida útil limitada, así que el inventario es chico, cambia rápido y no se puede vender dos veces.</p>
+
+<p>La aplicación es la tienda en línea de ese negocio. Un <strong>cliente</strong> se registra, consulta el catálogo de guisos y los más vendidos, arma un carrito y confirma su pedido. Un <strong>administrador</strong> da de alta, edita y da de baja guisos y su existencia. El dominio impone cuatro necesidades:</p>
+
+<ol>
+  <li><strong>Lectura dominante.</strong> El catálogo se lee muchísimo más de lo que se escribe.</li>
+  <li><strong>Datos temporales.</strong> El carrito debe desaparecer solo si el cliente lo abandona, para no acumular basura.</li>
+  <li><strong>Concurrencia sobre el stock.</strong> La existencia debe descontarse sin vender de más cuando dos clientes compran la última porción al mismo tiempo.</li>
+  <li><strong>Ranking en vivo.</strong> El negocio quiere ver en todo momento qué guisos se venden más.</li>
+</ol>
+
+<p>Las cuatro son accesos por clave conocida, con expiración y con contadores. Por eso el proyecto usa el modelo Clave-Valor con Redis, alojado en Redis Cloud.</p>
+
+<div class="note"><strong>Alcance.</strong> El proyecto cubre catálogo, cuentas, carrito y pedidos. Quedan fuera pagos, cotización de envío y lotes con fecha de caducidad. El menú y los precios cargados por el script de datos iniciales son de ejemplo y están marcados como tales; los reales se definirán con el negocio.</div>
+
+<h1>2. Justificación del paradigma</h1>
+
+<h2>2.1 Qué pide el dominio y cómo responde cada modelo</h2>
+
+<table>
+  <tr><th style="width:16%">Necesidad</th><th style="width:31%">En Redis (este diseño)</th><th style="width:31%">En un SGBD relacional</th><th>Veredicto</th></tr>
+  <tr><td>Carrito que expira solo</td><td><code>tm:carrito:{userId}</code> es un Hash con TTL de 30 min; <code>EXPIRE</code> lo renueva en cada cambio y Redis lo borra sin código nuestro.</td><td>Columna <code>expira_en</code>, filtrar en cada consulta y un proceso programado que borre lo vencido.</td><td>Redis lo trae en el motor; en SQL hay que construirlo y operarlo.</td></tr>
+  <tr><td>Ranking de más vendidos</td><td><code>tm:guisos:vendidos</code> es un Sorted Set: <code>ZINCRBY</code> al vender y lectura del top 5 ya ordenado.</td><td><code>SUM … GROUP BY … ORDER BY … LIMIT 5</code> sobre el detalle de pedidos, o una tabla resumen mantenida aparte.</td><td>En Redis la lectura no recalcula nada.</td></tr>
+  <tr><td>Lecturas de catálogo frecuentes</td><td><code>HGETALL tm:guiso:{id}</code> por clave, en memoria; el Set <code>tm:guisos</code> sirve de índice.</td><td><code>SELECT</code> por llave primaria; rápido, pero pasa por analizador, planificador y disco o caché.</td><td>Ambos sirven; es el caso de uso típico de Redis.</td></tr>
+  <tr><td>No vender de más</td><td><code>WATCH</code> + <code>MULTI/EXEC</code>: si el stock cambió entre la lectura y el <code>EXEC</code>, la transacción no se aplica.</td><td><code>SELECT … FOR UPDATE</code> y una restricción <code>CHECK (stock &gt;= 0)</code>.</td><td><strong>Aquí gana el relacional:</strong> lo garantiza el motor. En Redis lo garantiza nuestro código.</td></tr>
+  <tr><td>Identificadores consecutivos</td><td><code>INCR tm:seq:{entidad}</code>, atómico.</td><td><code>SERIAL</code> / <code>AUTO_INCREMENT</code>.</td><td>Empate.</td></tr>
+</table>
+
+<h2>2.2 Lo que se pierde y cómo lo compensa el diseño</h2>
+
+<table>
+  <tr><th style="width:17%">Se pierde</th><th style="width:36%">Consecuencia</th><th>Cómo se resuelve</th></tr>
+  <tr><td>Joins</td><td>No se puede pedir «pedidos con sus guisos» en una consulta.</td><td>El pedido guarda sus <code>items</code> como JSON, con nombre y precio copiados al momento de la compra. Además de evitar el join es lo correcto: un pedido no debe cambiar si después cambia el precio.</td></tr>
+  <tr><td>Consultas no previstas</td><td>Solo se puede preguntar lo que se diseñó. «Ventas de marzo por guiso» no tiene clave que la responda.</td><td>Cada consulta que la aplicación sí hace tiene su estructura (ranking, pedidos por usuario, índice de guisos). Un reporte nuevo exige una estructura nueva o exportar los datos.</td></tr>
+  <tr><td>Integridad referencial</td><td>Redis no impide borrar un guiso que está en un carrito.</td><td>La cuida la aplicación: al borrar un guiso se quita también del índice y del ranking en la misma transacción; el carrito omite guisos que ya no existen y el checkout los rechaza con 409.</td></tr>
+  <tr><td>Esquema y tipos</td><td>Un Hash acepta cualquier campo y todo se guarda como texto.</td><td>Un solo validador (<code>utils.validar</code>) y una sola función que convierte el Hash a objeto con números.</td></tr>
+  <tr><td>Unicidad declarada</td><td>No existe <code>UNIQUE</code>.</td><td>El correo <em>es</em> la clave (<code>tm:user:{email}</code>): no puede haber dos.</td></tr>
+  <tr><td>Rollback</td><td>Redis no revierte una transacción si un comando falla dentro del <code>EXEC</code>.</td><td>Se valida todo antes de encolar; dentro del <code>MULTI</code> solo van comandos que no fallan por tipo.</td></tr>
+  <tr><td>Durabilidad</td><td>En el plan gratuito los datos viven solo en memoria.</td><td>Se acepta para el proyecto y se declara (sección 4.4); el script de datos iniciales repuebla la base.</td></tr>
+</table>
+
+<h2>2.3 Conclusión</h2>
+
+<p>Un SGBD relacional puede hacer todo lo que hace esta aplicación, y a este volumen lo haría con holgura; el argumento no es de capacidad, es de ajuste. Las cuatro operaciones centrales del dominio (leer por clave, expirar solo, contar y ordenar por ventas, descontar con control de concurrencia) son primitivas del motor en Redis, mientras que en SQL dos de ellas (la expiración y el ranking siempre ordenado) hay que construirlas encima. El costo es real y se asume de forma explícita: se renuncia a los joins, a las consultas no previstas y a que el motor cuide la integridad. El diseño lo compensa desnormalizando los pedidos, creando una estructura por cada consulta necesaria y concentrando las validaciones en una sola capa del backend. Si el negocio creciera hacia reportes, facturación o pagos, lo razonable sería añadir una base relacional para esos datos y dejar a Redis el carrito, el ranking y el catálogo.</p>
+
+<h1>3. Arquitectura de la solución</h1>
+
+<figure>
+<svg viewBox="0 0 760 300" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de bloques de la arquitectura">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#444"/></marker></defs>
+  <g font-size="12">
+    <rect x="10" y="60" width="170" height="180" rx="6" fill="#fdf6ee" stroke="#b4451f" stroke-width="1.5"/>
+    <text x="95" y="82" text-anchor="middle" font-weight="700">Cliente (navegador)</text>
+    <rect x="25" y="96" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="112" text-anchor="middle">index.html + styles.css</text><text x="95" y="127" text-anchor="middle" font-size="10" fill="#555">estático, sin build</text>
+    <rect x="25" y="142" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="158" text-anchor="middle">app.js</text><text x="95" y="173" text-anchor="middle" font-size="10" fill="#555">vistas y acciones</text>
+    <rect x="25" y="188" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="204" text-anchor="middle">api.js</text><text x="95" y="219" text-anchor="middle" font-size="10" fill="#555">único fetch + JWT</text>
+
+    <rect x="255" y="20" width="270" height="260" rx="6" fill="#f3f6fb" stroke="#2f5d9b" stroke-width="1.5"/>
+    <text x="390" y="42" text-anchor="middle" font-weight="700">Backend: Node.js + Express</text>
+    <rect x="270" y="54" width="240" height="30" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="390" y="74" text-anchor="middle">routes/ · rutas /api/*</text>
+    <rect x="270" y="90" width="240" height="30" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="390" y="110" text-anchor="middle">middleware/ · protect, soloAdmin, errores</text>
+    <rect x="270" y="126" width="240" height="30" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="390" y="146" text-anchor="middle">controllers/ · validación y respuesta HTTP</text>
+    <rect x="270" y="162" width="240" height="30" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="390" y="182" text-anchor="middle">models/ · guisos, users, carrito, pedidos</text>
+    <rect x="270" y="198" width="240" height="30" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="390" y="218" text-anchor="middle">config/keys.js · constructor de claves tm:*</text>
+    <rect x="270" y="234" width="240" height="34" rx="4" fill="#e3ecf8" stroke="#2f5d9b"/><text x="390" y="250" text-anchor="middle" font-weight="700">config/redis.js · SDK oficial node-redis</text><text x="390" y="263" text-anchor="middle" font-size="10" fill="#444">un solo cliente, REDIS_URL desde .env</text>
+
+    <rect x="600" y="80" width="150" height="150" rx="6" fill="#f1f8f1" stroke="#2e7d4f" stroke-width="1.5"/>
+    <text x="675" y="104" text-anchor="middle" font-weight="700">Redis Cloud</text>
+    <text x="675" y="120" text-anchor="middle" font-size="10" fill="#555">servicio administrado (DBaaS)</text>
+    <text x="675" y="146" text-anchor="middle" font-size="11">Hashes · Set</text>
+    <text x="675" y="162" text-anchor="middle" font-size="11">Sorted Set · List</text>
+    <text x="675" y="178" text-anchor="middle" font-size="11">Strings (contadores)</text>
+    <text x="675" y="204" text-anchor="middle" font-size="10" fill="#555">claves con prefijo tm:</text>
+
+    <line x1="180" y1="150" x2="253" y2="150" stroke="#444" stroke-width="1.4" marker-end="url(#a)" marker-start="url(#a)"/>
+    <text x="217" y="140" text-anchor="middle" font-size="10">HTTP + JSON</text><text x="217" y="166" text-anchor="middle" font-size="10">Bearer JWT</text>
+    <line x1="525" y1="251" x2="598" y2="190" stroke="#444" stroke-width="1.4" marker-end="url(#a)" marker-start="url(#a)"/>
+    <text x="578" y="250" text-anchor="middle" font-size="10">protocolo Redis</text><text x="578" y="263" text-anchor="middle" font-size="10">(TCP, RESP)</text>
+  </g>
+</svg>
+<figcaption>Figura 1. Diagrama de bloques: cliente, backend con el SDK de conexión y base de datos en la nube.</figcaption>
+</figure>
+
+<ul>
+  <li><strong>Cliente.</strong> Página estática servida por el mismo Express (<code>express.static</code>), por lo que llama a <code>/api/…</code> con rutas relativas y no necesita CORS. Todas las peticiones pasan por una sola función <code>api()</code> que agrega el token y convierte los errores en excepciones.</li>
+  <li><strong>Backend.</strong> Sigue la estructura por capas del backend desarrollado en clase (rutas → middleware → controladores → modelos). Los controladores validan y responden; solo los modelos hablan con Redis.</li>
+  <li><strong>SDK de conexión.</strong> Driver oficial <code>redis</code> (node-redis 6). Hay un único cliente compartido, creado al arrancar con <code>REDIS_URL</code>, con manejador del evento <code>error</code>. El servidor no acepta peticiones hasta que la conexión está lista y se niega a arrancar si falta la variable, para no conectarse por omisión a <code>localhost</code>.</li>
+  <li><strong>Credenciales.</strong> <code>REDIS_URL</code>, <code>JWT_SECRET</code> y las credenciales del administrador viven en <code>.env</code>, excluido del repositorio; <code>.env.example</code> documenta cada variable.</li>
+  <li><strong>Base de datos.</strong> Redis Cloud, plan gratuito: 30 MB de memoria y 30 conexiones simultáneas (Redis, s.f.-a).</li>
+</ul>
+
+<h1>4. Diseño del modelo NoSQL</h1>
+
+<h2>4.1 Convención de nombres de claves</h2>
+
+<p>Formato <code>tm:{entidad}:{identificador}</code>, con dos puntos como separador. El prefijo <code>tm:</code> aísla la aplicación dentro de la base, de modo que el script de datos iniciales puede limpiar solo lo suyo. Los plurales (<code>tm:guisos</code>, <code>tm:pedidos:{userId}</code>) son colecciones o índices; los singulares son una entidad. Ninguna clave se escribe a mano en el código: todas salen de <code>backend/config/keys.js</code>.</p>
+
+<table>
+  <tr><th style="width:23%">Clave</th><th style="width:11%">Tipo</th><th>Contenido</th><th style="width:16%">TTL</th></tr>
+  <tr><td><code>tm:guiso:{id}</code></td><td>Hash</td><td><code>nombre</code>, <code>descripcion</code>, <code>precio_centavos</code>, <code>porciones</code>, <code>stock</code></td><td>—</td></tr>
+  <tr><td><code>tm:guisos</code></td><td>Set</td><td>Ids de todos los guisos: índice para listar sin recorrer la base</td><td>—</td></tr>
+  <tr><td><code>tm:guisos:vendidos</code></td><td>Sorted Set</td><td>Miembro = id del guiso, puntaje = unidades vendidas</td><td>—</td></tr>
+  <tr><td><code>tm:seq:{entidad}</code></td><td>String</td><td>Contador para generar ids (<code>guiso</code>, <code>user</code>, <code>pedido</code>)</td><td>—</td></tr>
+  <tr><td><code>tm:user:{email}</code></td><td>Hash</td><td><code>id</code>, <code>nombre</code>, <code>email</code>, <code>password</code> (hash bcrypt), <code>rol</code></td><td>—</td></tr>
+  <tr><td><code>tm:carrito:{userId}</code></td><td>Hash</td><td>Campo = id del guiso, valor = cantidad</td><td><strong>30 min</strong>, renovado en cada cambio</td></tr>
+  <tr><td><code>tm:pedido:{id}</code></td><td>Hash</td><td><code>id</code>, <code>userId</code>, <code>total_centavos</code>, <code>creado</code>, <code>items</code> (JSON)</td><td>—</td></tr>
+  <tr><td><code>tm:pedidos:{userId}</code></td><td>List</td><td>Ids de los pedidos del usuario, el más nuevo primero</td><td>—</td></tr>
+</table>
+
+<figure>
+<svg viewBox="0 0 760 250" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Relación entre las claves">
+  <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#666"/></marker></defs>
+  <g font-size="11">
+    <g fill="#fff" stroke="#888">
+      <rect x="10" y="20" width="150" height="46" rx="4"/><rect x="10" y="100" width="150" height="46" rx="4"/><rect x="10" y="184" width="150" height="46" rx="4"/>
+      <rect x="290" y="20" width="170" height="46" rx="4" stroke="#b4451f" stroke-width="1.6"/><rect x="290" y="100" width="170" height="46" rx="4" stroke="#b4451f" stroke-width="1.6"/><rect x="290" y="184" width="170" height="46" rx="4"/>
+      <rect x="590" y="20" width="160" height="46" rx="4"/><rect x="590" y="100" width="160" height="46" rx="4"/><rect x="590" y="184" width="160" height="46" rx="4"/>
+    </g>
+    <text x="85" y="39" text-anchor="middle" font-weight="700">tm:guisos</text><text x="85" y="55" text-anchor="middle" fill="#555">Set · índice</text>
+    <text x="85" y="119" text-anchor="middle" font-weight="700">tm:guisos:vendidos</text><text x="85" y="135" text-anchor="middle" fill="#555">Sorted Set · ranking</text>
+    <text x="85" y="203" text-anchor="middle" font-weight="700">tm:seq:{entidad}</text><text x="85" y="219" text-anchor="middle" fill="#555">String · INCR</text>
+    <text x="375" y="39" text-anchor="middle" font-weight="700">tm:guiso:{id}</text><text x="375" y="55" text-anchor="middle" fill="#555">Hash · catálogo y stock</text>
+    <text x="375" y="119" text-anchor="middle" font-weight="700">tm:carrito:{userId}</text><text x="375" y="135" text-anchor="middle" fill="#555">Hash · TTL 30 min</text>
+    <text x="375" y="203" text-anchor="middle" font-weight="700">tm:user:{email}</text><text x="375" y="219" text-anchor="middle" fill="#555">Hash · cuenta y rol</text>
+    <text x="670" y="39" text-anchor="middle" font-weight="700">tm:pedido:{id}</text><text x="670" y="55" text-anchor="middle" fill="#555">Hash · items en JSON</text>
+    <text x="670" y="119" text-anchor="middle" font-weight="700">tm:pedidos:{userId}</text><text x="670" y="135" text-anchor="middle" fill="#555">List · historial</text>
+    <text x="670" y="203" text-anchor="middle" font-weight="700">JWT (fuera de Redis)</text><text x="670" y="219" text-anchor="middle" fill="#555">lleva el email del usuario</text>
+    <g stroke="#666" stroke-width="1.2" fill="none" marker-end="url(#b)">
+      <line x1="160" y1="43" x2="288" y2="43"/><line x1="160" y1="118" x2="288" y2="52"/>
+      <line x1="375" y1="100" x2="375" y2="68"/><line x1="460" y1="118" x2="588" y2="48"/>
+      <line x1="670" y1="100" x2="670" y2="68"/><line x1="588" y1="207" x2="462" y2="207"/>
+      <line x1="375" y1="184" x2="375" y2="148"/>
+    </g>
+    <g font-size="9.5" fill="#444">
+      <text x="224" y="37" text-anchor="middle">contiene ids</text><text x="196" y="80" text-anchor="middle">puntúa ids</text>
+      <text x="418" y="88" text-anchor="middle">campos = ids</text><text x="528" y="98" text-anchor="middle">checkout</text>
+      <text x="712" y="88" text-anchor="middle">contiene ids</text><text x="525" y="201" text-anchor="middle">identifica</text>
+      <text x="412" y="170" text-anchor="middle">id del dueño</text>
+    </g>
+  </g>
+</svg>
+<figcaption>Figura 2. Cómo se refieren las claves entre sí. En rojo, las dos que participan en el control de concurrencia del checkout.</figcaption>
+</figure>
+
+<h2>4.2 Por qué cada estructura</h2>
+
+<ul>
+  <li><strong>Hash para guisos, usuarios y pedidos.</strong> Son objetos con campos. El Hash permite leer el objeto completo con una operación y modificar un solo campo sin reescribir el resto; el stock se descuenta con <code>HINCRBY</code>, que es atómico.</li>
+  <li><strong>Set como índice de guisos.</strong> Listar el catálogo cuesta lo que mide el catálogo. La alternativa, <code>KEYS tm:guiso:*</code>, recorre todas las claves de la base y bloquea el servidor mientras lo hace.</li>
+  <li><strong>Sorted Set para el ranking.</strong> Mantiene los miembros ordenados por puntaje; sumar una venta y leer el top 5 no requieren recalcular nada.</li>
+  <li><strong>Hash con TTL para el carrito.</strong> Cada campo es un guiso y su valor la cantidad, así que cambiar una cantidad es una sola escritura. El TTL vive en la clave completa.</li>
+  <li><strong>List para el historial.</strong> <code>LPUSH</code> deja el pedido más nuevo al frente y el orden cronológico sale gratis.</li>
+  <li><strong>JSON dentro del pedido.</strong> Los <code>items</code> se leen siempre completos y nunca se modifican: guardarlos como una cadena JSON evita una clave por renglón y congela nombre y precio de la compra.</li>
+  <li><strong>El correo como clave del usuario.</strong> El inicio de sesión busca por correo, así que esa es la clave; de paso garantiza que no haya dos cuentas con el mismo correo.</li>
+</ul>
+
+<h2>4.3 Estrategia de expiración (TTL)</h2>
+
+<p>El carrito es el único dato temporal. Cada vez que el cliente agrega, cambia o quita un guiso, el backend escribe el campo y vuelve a fijar la expiración en 1800 segundos, de modo que el plazo corre desde la última actividad y no desde la creación. Modificar un campo de un Hash no altera el TTL de la clave, por eso se renueva de forma explícita. La API devuelve <code>expira_en_segundos</code>, leído con <code>TTL</code>, y la tienda lo muestra como cuenta regresiva. Al vencer, Redis elimina la clave por sí mismo: de forma perezosa cuando alguien intenta leerla y de forma activa con un muestreo periódico de claves con expiración (Redis, s.f.-b).</p>
+
+<p>Catálogo, usuarios, pedidos y ranking no expiran: son datos del negocio.</p>
+
+<h2>4.4 Políticas de persistencia</h2>
+
+<table>
+  <tr><th style="width:18%"></th><th style="width:41%">RDB (instantáneas)</th><th>AOF (bitácora de escrituras)</th></tr>
+  <tr><td>Qué guarda</td><td>Una copia compacta de todos los datos cada cierto tiempo.</td><td>Cada comando de escritura, en orden.</td></tr>
+  <tr><td>A favor</td><td>Un solo archivo, bueno para respaldos; reinicio rápido.</td><td>Más durable; la bitácora solo crece al final.</td></tr>
+  <tr><td>Cuánto se puede perder</td><td>Lo escrito desde la última instantánea.</td><td>Con <code>appendfsync everysec</code>, hasta un segundo.</td></tr>
+</table>
+
+<p>Fuente: Redis (s.f.-c).</p>
+
+<div class="note"><strong>Política de este proyecto.</strong> La base corre en el plan gratuito de Redis Cloud, que no ofrece persistencia en disco (Redis, s.f.-d): los datos viven en memoria. Sobreviven a reiniciar la aplicación, que es lo que muestra la demostración, pero no hay garantía si el nodo de Redis se reinicia. Se asume para el proyecto y se cubre con un script de datos iniciales reproducible (<code>npm run seed</code>). <strong>Para producción</strong> la política sería AOF con sincronización cada segundo, disponible en los planes de pago: los pedidos y el stock representan dinero y perder como máximo un segundo es aceptable.</div>
+
+<h2>4.5 Límites conocidos del diseño</h2>
+
+<ul>
+  <li><strong>El carrito no aparta stock.</strong> La existencia se revisa al agregar y se descuenta al confirmar; entre un momento y otro, otro cliente puede llevarse la última porción y el checkout responde 409. Un apartado real sería otra clave con TTL que reserve unidades.</li>
+  <li><strong>El checkout no reintenta.</strong> Si la transacción se cancela por un cambio concurrente, responde 409 y el cliente vuelve a confirmar.</li>
+  <li><strong>Escribir el carrito y fijar su TTL son dos comandos</strong>, no una transacción. Si la conexión se cortara justo entre ambos, un carrito nuevo quedaría sin expiración. Se corrige agrupándolos en un <code>MULTI</code>.</li>
+  <li><strong>Conexión sin cifrar.</strong> La URL de la demostración usa <code>redis://</code>. En producción debe usarse TLS (<code>rediss://</code>).</li>
+</ul>
+
+<h1>5. Catálogo de consultas</h1>
+
+<p>Cada consulta aparece como el comando de Redis y como el método del SDK tal como está en el repositorio. <code>client</code> es el cliente único de <code>backend/config/redis.js</code> y <code>keys</code> el constructor de claves.</p>
+
+<div class="q">
+<h2>5.1 Conexión</h2>
+<pre>// backend/config/redis.js
+const { createClient } = require('redis')
+const client = createClient({ url: process.env.REDIS_URL })
+client.on('error', (error) =&gt; console.error('Error de Redis:', error.message))
+await client.connect()</pre>
+</div>
+
+<div class="q">
+<h2>5.2 Crear (C): alta de un guiso</h2>
+<pre>INCR  tm:seq:guiso                         → 7
+MULTI
+HSET  tm:guiso:7 nombre "…" descripcion "…" precio_centavos 18000 porciones 4 stock 20
+SADD  tm:guisos 7
+EXEC</pre>
+<pre>// backend/models/guisosModel.js
+const id = String(await client.incr(keys.seq('guiso')))
+await client.multi()
+    .hSet(keys.guiso(id), datos)
+    .sAdd(keys.guisos, id)
+    .exec()</pre>
+<p>El Hash y su entrada en el índice se escriben en la misma transacción para que nunca exista uno sin el otro.</p>
+</div>
+
+<div class="q">
+<h2>5.3 Leer (R): un guiso y el catálogo completo</h2>
+<pre>HGETALL  tm:guiso:7
+SMEMBERS tm:guisos                         → ids; después un HGETALL por id</pre>
+<pre>const findById = async (id) =&gt; desdeHash(id, await client.hGetAll(keys.guiso(id)))
+const findMany = async (ids) =&gt; (await Promise.all(ids.map(findById))).filter(Boolean)
+
+const findAll = async () =&gt; {
+    const ids = await client.sMembers(keys.guisos)
+    return findMany(ids.sort((a, b) =&gt; a - b))
+}</pre>
+<p>Los <code>HGETALL</code> se lanzan juntos con <code>Promise.all</code> en lugar de esperar uno por uno; node-redis agrupa en un mismo envío los comandos emitidos en el mismo ciclo, lo que reduce los viajes de red a la nube. <code>findMany</code> se reutiliza en el catálogo, el carrito, el ranking y el checkout.</p>
+</div>
+
+<div class="q">
+<h2>5.4 Actualizar (U): edición parcial de un guiso</h2>
+<pre>EXISTS tm:guiso:7
+HSET   tm:guiso:7 precio_centavos 12000    → solo cambia ese campo</pre>
+<pre>if (!(await client.exists(keys.guiso(id)))) return null
+if (Object.keys(datos).length) await client.hSet(keys.guiso(id), datos)</pre>
+</div>
+
+<div class="q">
+<h2>5.5 Eliminar (D): baja de un guiso con limpieza de índices</h2>
+<pre>MULTI
+DEL  tm:guiso:7
+SREM tm:guisos 7
+ZREM tm:guisos:vendidos 7
+EXEC</pre>
+<pre>const [borrados] = await client.multi()
+    .del(keys.guiso(id))
+    .sRem(keys.guisos, id)
+    .zRem(keys.vendidos, id)
+    .exec()
+return borrados &gt; 0</pre>
+<p>Es la integridad referencial hecha a mano: el guiso desaparece del catálogo, del índice y del ranking a la vez.</p>
+</div>
+
+<div class="q">
+<h2>5.6 Usuarios: registro y búsqueda por correo</h2>
+<pre>INCR    tm:seq:user
+HSET    tm:user:ana@correo.com id 2 nombre "Ana" email "…" password "$2b$10$…" rol cliente
+HGETALL tm:user:ana@correo.com</pre>
+<pre>await client.hSet(keys.user(user.email), user)        // password = bcrypt.hash(password, 10)
+const user = await client.hGetAll(keys.user(normalizar(email)))</pre>
+</div>
+
+<div class="q">
+<h2>5.7 Especializada: carrito con expiración (TTL)</h2>
+<pre>HSET    tm:carrito:2 7 2                   → 2 porciones del guiso 7
+EXPIRE  tm:carrito:2 1800                  → renueva los 30 minutos
+HGETALL tm:carrito:2
+TTL     tm:carrito:2                       → segundos restantes; -2 si ya no existe
+HDEL    tm:carrito:2 7                     → quitar un guiso
+DEL     tm:carrito:2                       → vaciar</pre>
+<pre>// backend/models/carritoModel.js
+const TTL_SEGUNDOS = 30 * 60
+
+const setItem = async (userId, guisoId, cantidad) =&gt; {
+    const key = keys.carrito(userId)
+    if (cantidad === 0) await client.hDel(key, guisoId)
+    else await client.hSet(key, guisoId, cantidad)
+    await client.expire(key, TTL_SEGUNDOS)
+}
+
+const [hash, ttl] = await Promise.all([client.hGetAll(key), client.ttl(key)])</pre>
+</div>
+
+<div class="q">
+<h2>5.8 Especializada: ranking de más vendidos (Sorted Set)</h2>
+<pre>ZINCRBY tm:guisos:vendidos 2 7             → suma 2 ventas al guiso 7
+ZRANGE  tm:guisos:vendidos 0 4 REV WITHSCORES   → top 5, de mayor a menor</pre>
+<pre>const top = await client.zRangeWithScores(keys.vendidos, 0, 4, { REV: true })</pre>
+</div>
+
+<div class="q">
+<h2>5.9 Especializada: checkout con bloqueo optimista (WATCH + MULTI/EXEC)</h2>
+<pre>WATCH   tm:carrito:2
+HGETALL tm:carrito:2
+WATCH   tm:guiso:7
+HGETALL tm:guiso:7                         → se valida existencia y stock en la aplicación
+INCR    tm:seq:pedido                      → 1
+MULTI
+HINCRBY tm:guiso:7 stock -2
+ZINCRBY tm:guisos:vendidos 2 7
+HSET    tm:pedido:1 id 1 userId 2 total_centavos 24000 creado "2026-11-17T…" items "[…]"
+LPUSH   tm:pedidos:2 1
+DEL     tm:carrito:2
+EXEC                                       → nulo si alguna clave vigilada cambió</pre>
+<pre>// backend/models/pedidosModel.js (resumen)
+const conexion = client.duplicate()          // WATCH es por conexión
+await conexion.connect()
+try {
+    await conexion.watch(keys.carrito(userId))
+    const carrito = await client.hGetAll(keys.carrito(userId))
+    await conexion.watch(Object.keys(carrito).map(keys.guiso))
+    const pedido = armarPedido(carrito, await Guiso.findMany(Object.keys(carrito)))
+    const id = String(await client.incr(keys.seq('pedido')))
+
+    const multi = conexion.multi()
+    for (const { guisoId, cantidad } of pedido.items) {
+        multi.hIncrBy(keys.guiso(guisoId), 'stock', -cantidad)
+        multi.zIncrBy(keys.vendidos, cantidad, guisoId)
+    }
+    multi.hSet(keys.pedido(id), {
+        id, userId,
+        total_centavos: pedido.total_centavos,
+        creado: pedido.creado,
+        items: JSON.stringify(pedido.items)
+    })
+    multi.lPush(keys.pedidos(userId), id)
+    multi.del(keys.carrito(userId))
+    await multi.exec()
+} catch (error) {
+    if (error instanceof WatchError) {
+        throw httpError(409, 'El stock cambió mientras comprabas, intenta de nuevo')
+    }
+    throw error
+} finally {
+    conexion.destroy()
+}</pre>
+<p>Si otro cliente modifica el carrito o cualquiera de los guisos entre la lectura y el <code>EXEC</code>, Redis no aplica ningún comando y el driver lanza <code>WatchError</code>; la API responde 409. El <code>WATCH</code> se hace en una conexión propia porque el cliente compartido atiende a la vez otras peticiones, y una vigilancia en él se mezclaría con las de los demás (Redis, s.f.-f). Las transacciones de Redis ejecutan sus comandos en serie y aislados, pero no tienen rollback (Redis, s.f.-e); por eso toda la validación ocurre antes del <code>MULTI</code>, en la función pura <code>armarPedido</code>, que es la que cubre la prueba automatizada.</p>
+</div>
+
+<div class="q">
+<h2>5.10 Historial de pedidos (List)</h2>
+<pre>LRANGE  tm:pedidos:2 0 -1                  → ids, el más nuevo primero
+HGETALL tm:pedido:1</pre>
+<pre>const ids = await client.lRange(keys.pedidos(userId), 0, -1)
+const hashes = await Promise.all(ids.map((id) =&gt; client.hGetAll(keys.pedido(id))))</pre>
+</div>
+
+<div class="q">
+<h2>5.11 Datos iniciales: limpieza por prefijo sin bloquear</h2>
+<pre>SCAN 0 MATCH tm:* COUNT 100                → se repite con el cursor devuelto
+DEL  clave1 clave2 …</pre>
+<pre>// backend/seed.js
+for await (const claves of client.scanIterator({ MATCH: keys.todas, COUNT: 100 })) {
+    if (claves.length) borradas += await client.del(claves)
+}</pre>
+<p><code>SCAN</code> recorre la base por partes; a diferencia de <code>KEYS</code>, no detiene el servidor.</p>
+</div>
+
+<h1>Referencias</h1>
+<div class="refs">
+<p>Redis. (s.f.-a). <em>Redis Cloud Essentials plan details</em>. Redis Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/operate/rc/subscriptions/view-essentials-subscription/essentials-plan-details/</p>
+<p>Redis. (s.f.-b). <em>EXPIRE</em>. Redis Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/commands/expire/</p>
+<p>Redis. (s.f.-c). <em>Redis persistence</em>. Redis Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/</p>
+<p>Redis. (s.f.-d). <em>Data persistence</em>. Redis Cloud Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/operate/rc/databases/configuration/data-persistence/</p>
+<p>Redis. (s.f.-e). <em>Transactions</em>. Redis Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/develop/using-commands/transactions/</p>
+<p>Redis. (s.f.-f). <em>Pipelines and transactions (node-redis)</em>. Redis Docs. Recuperado el 17 de noviembre de 2026, de https://redis.io/docs/latest/develop/clients/nodejs/transpipe/</p>
+</div>
+
+</body>
+</html>

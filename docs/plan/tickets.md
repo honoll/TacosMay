@@ -67,7 +67,7 @@ Evidencia F1–F5 (17-nov-2026), `frontend/`: `index.html`, `styles.css`, `js/ap
     contra la nube y los cuatro supuestos del frontend se cumplen.
   - **Falta:** verlo en un navegador (clics reales, cuenta regresiva, 375 px). Eso lo ve Alejandro.
   - Quedaron en la base un usuario `prueba…@tacosmay.test` y el pedido 1; `npm run seed` los limpia.
-- 🔲 C2 PDF de diseño y justificación (5 secciones obligatorias de la rúbrica)
+- 🟡 C2 PDF de diseño y justificación: `docs/TacosMay-Diseno-y-Justificacion.pdf` (12 páginas, las 5 secciones + referencias APA; fuente en `docs/pdf/documento.html`, se regenera imprimiendo a PDF con Edge). Falta que Alejandro lo lea y lo haga suyo.
 - 🔲 C3 Guion de demo (4 min) y preguntas probables de la defensa
 
 ## Cambios al contrato
