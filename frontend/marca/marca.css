@@ -199,3 +199,6 @@ h3 small { font-weight: 400; color: #5b5b5b; }
 @media (prefers-reduced-motion: no-preference) {
   .btn { transition: transform .15s, box-shadow .15s; }
 }
+
+/* Aviso de la ruta elegida en la comparación. */
+.elegida { margin-top: 14px; padding: 10px 16px; border-left: 6px solid #c8161f; border-radius: 0 10px 10px 0; background: #fff; }

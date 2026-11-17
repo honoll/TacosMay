@@ -192,6 +192,36 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **Bloqueo de Alejandro:** aprobar o corregir la plataforma y elegir ruta. Para el sistema hará
     falta la foto de frente del letrero (`PENDIENTE-CLIENTE`).
 
+- **Sexta vuelta (17-nov-2026): sistema de identidad de la ruta 3, «La barra», y dirección de
+  arte. La landing no se tocó.** Alejandro eligió la ruta 3 con la condición de conservar «May»
+  y el cactus redibujados del letrero.
+  - `docs/diseno/sistema.md` + `frontend/marca/sistema.html` (visible en `/marca/sistema.html`,
+    enlazado desde `/marca/`): logotipo (construcción, seis versiones, área de respeto, mínimos,
+    usos incorrectos), paleta base y **un color por guiso para los 14 del pizarrón**, tipografía,
+    código de tres plumones, 12 pictogramas de despacho, la charola como módulo, materiales,
+    fotografía, voz, movimiento, y seis aplicaciones (etiqueta, tarjeta de guiso, botones, caja,
+    héroe, imagen para compartir). Los valores viven en `frontend/marca/sistema.js`.
+  - `docs/diseno/direccion-de-arte.md`: qué se define antes de generar, restricciones, señales de
+    rechazo y la lista de piezas con brief, prompt y criterio. **Mínimo: 5 imágenes** (tres
+    superficies de guiso, la bolsa y el taco); 15 para toda la tienda. Logotipo, cactus,
+    pictogramas, marco de acero, vapor y movimiento se hacen en vector y en código, no se generan.
+  - `guion-landing.md` y `materiales.md` sustituidos por sus versiones de la ruta 3; `marca.md`
+    queda como histórico con su nota.
+  - **Provisional, dicho claro:** «May» está escrito con Alfa Slab One y el cactus está redibujado
+    por rasgos, no calcado: la única foto del letrero mide 457 × 279 px, en ángulo y recortada.
+    Los 14 colores de guiso son hipótesis hasta ver los guisos reales.
+  - **Verificado sin navegador:** `node --check` de `marca/sistema.js` y `marca/marca.js`; la
+    página armada con un DOM simulado (720 etiquetas que abren y 720 que cierran, sin valores
+    vacíos, anclas resueltas, sin ids repetidos); contraste calculado con las funciones de la
+    propia página, mínimo 5.3 en los colores de guiso; movimiento solo dentro de
+    `prefers-reduced-motion: no-preference`. No se tocó la landing ni la tienda.
+  - **NO verificado:** nadie ha visto `sistema.html` en pantalla; los prompts no se han probado;
+    no se sabe si el generador de Antigravity respeta imágenes de referencia.
+  - **Bloqueos de Alejandro:** aprobar plataforma, frase de marca y sistema; foto de frente del
+    letrero (`PENDIENTE-CLIENTE`); ver los guisos reales para fijar colores.
+  - **La landing todavía dice «nopal»** y sigue con el diseño anterior: se rehace con el sistema
+    aprobado y las imágenes.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
