@@ -2,7 +2,8 @@ const { client } = require('../config/redis')
 const keys = require('../config/keys')
 const Guiso = require('./guisosModel')
 
-const TTL_SEGUNDOS = 30 * 60
+//30 minutos; CARRITO_TTL_SEGUNDOS lo acorta para ver la expiración en vivo (demo)
+const TTL_SEGUNDOS = Number(process.env.CARRITO_TTL_SEGUNDOS) || 30 * 60
 
 const get = async (userId) => {
     const key = keys.carrito(userId)

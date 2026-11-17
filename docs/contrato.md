@@ -11,7 +11,7 @@ Fuente única de las claves de Redis y de la API. Lo edita coordinación.
 | `tm:guisos:vendidos` | Sorted Set | miembro = id de guiso, score = unidades vendidas | — |
 | `tm:seq:{entidad}` | String | contador para ids (`INCR`) | — |
 | `tm:user:{email}` | Hash | `id`, `nombre`, `email`, `password` (bcrypt), `rol` (`cliente`/`admin`) | — |
-| `tm:carrito:{userId}` | Hash | campo = id de guiso, valor = cantidad | **30 min**, se renueva en cada cambio |
+| `tm:carrito:{userId}` | Hash | campo = id de guiso, valor = cantidad | **30 min** (o `CARRITO_TTL_SEGUNDOS`), se renueva en cada cambio |
 | `tm:pedido:{id}` | Hash | `id`, `userId`, `total_centavos`, `creado`, `items` (JSON) | — |
 | `tm:pedidos:{userId}` | List | ids de pedidos del usuario, el más nuevo primero (`LPUSH`) | — |
 

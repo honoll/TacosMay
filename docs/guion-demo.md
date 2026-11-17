@@ -38,6 +38,13 @@
 | 3:30 | En la terminal: `Ctrl+C`, luego `npm start`. Recargas la tienda: el pedido #1 y el stock en 1 siguen ahí. | «Apagué y prendí la aplicación y los datos persisten, porque viven en el servicio en la nube y no en mi proceso.» |
 | 3:55 | Fin. | «Eso es el flujo completo.» |
 
+**Opcional, ver la expiración de verdad:** pon `CARRITO_TTL_SEGUNDOS=20` en `.env` y reinicia
+el servidor. Agrega un guiso, deja correr la cuenta y a los 20 segundos la tienda avisa que
+el carrito expiró y Redis lo borró. Sirve como cierre de la demo o como respuesta en la
+defensa. Ojo: con 20 segundos, los pasos de 0:25 a 1:50 no alcanzan (el carrito de A se
+borraría antes de confirmar), así que úsalo **después** del flujo principal o quita la
+variable para la demo y actívala solo al final.
+
 **Si algo falla:**
 - *No conecta a Redis:* revisa la red; mientras, explica la arquitectura con la figura 1 del PDF.
 - *Datos raros de un ensayo anterior:* `npm run seed` tarda segundos y deja todo limpio.
