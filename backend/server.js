@@ -24,6 +24,9 @@ app.use('/api/pedidos', require('./routes/pedidosRoutes'))
 //la tienda (frontend estático) se sirve desde el mismo servidor
 app.use(express.static(path.join(__dirname, '..', 'frontend')))
 
+//lo que no sea de la API ni un archivo del frontend: página de «no encontrado» (las rutas /api no cambian)
+app.use((req, res, next) => req.path.startsWith('/api') ? next() : res.status(404).sendFile(path.join(__dirname, '..', 'frontend', '404.html')))
+
 app.use(errorHandler)
 
 connectRedis().then(() => {

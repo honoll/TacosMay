@@ -11,7 +11,6 @@ ol, ul { padding: 0; list-style: none; }
 address { font-style: normal; }
 section[id] { scroll-margin-top: 16px; }
 
-.caja { width: min(100% - 2 * var(--margen), var(--ancho)); margin-inline: auto; }
 .saltar { position: absolute; left: 16px; top: -100px; z-index: 2; padding: 12px 16px; background: var(--negro); color: var(--crema); }
 .saltar:focus { top: 8px; }
 
@@ -19,22 +18,6 @@ section[id] { scroll-margin-top: 16px; }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 24px; }
 h2.rot { font-size: clamp(2.2rem, 7vw, 4rem); margin-bottom: 14px; }
 main > section { padding-block: clamp(48px, 8vw, 104px); }
-
-/* ---------- Cabecera ---------- */
-
-.cabecera { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo tienda" "nav nav"; align-items: center; gap: 0 16px; padding-block: 8px 4px; }
-.cabecera .logo { grid-area: logo; justify-self: start; height: 52px; }
-.cabecera > .btn { grid-area: tienda; }
-.cabecera nav { grid-area: nav; display: flex; justify-content: space-between; gap: 4px; }
-.cabecera nav a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
-.cabecera nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
-
-@media (min-width: 700px) {
-  .cabecera { grid-template-columns: auto 1fr auto; grid-template-areas: "logo nav tienda"; padding-block: 10px; }
-  .cabecera .logo { height: 60px; }
-  .cabecera nav { justify-content: flex-end; gap: 4px 24px; }
-  .cabecera nav a { font-size: 1.05rem; letter-spacing: .08em; }
-}
 
 /* ---------- Escena 1: la barra (no depende de JavaScript) ---------- */
 
@@ -139,9 +122,11 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
 .cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
 .cierre .entrada { margin-top: 14px; }
-.pie { --foco: var(--crema); padding-block: 32px 48px; border-top: 1px solid var(--acero-osc); background: var(--negro); color: var(--crema); }
-.logo-pie { display: block; width: 200px; height: auto; margin-bottom: 16px; }
-.pie p + p { margin-top: 6px; }
+
+/* ---------- Página de «no encontrado» ---------- */
+
+main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
+.perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); }
 
 /* ---------- Movimiento de esta página ---------- */
 

@@ -31,6 +31,46 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 :focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
+.caja { width: min(100% - 2 * var(--margen), var(--ancho)); margin-inline: auto; }
+
+/* ---------- Cabecera: la misma en todo el sitio ---------- */
+/* Logotipo que lleva al inicio, los enlaces principales y, a la derecha, cuenta y carrito.
+   En celular: logotipo y cuenta en la primera línea, los enlaces en la segunda. */
+
+.cabecera { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "logo cuenta" "nav nav"; align-items: center; gap: 0 12px; padding-block: 8px 2px; border-bottom: 2px solid var(--negro); }
+.cabecera .logo { grid-area: logo; height: 52px; }
+.nav-principal { grid-area: nav; display: flex; justify-content: space-between; gap: 4px; }
+.nav-cuenta { grid-area: cuenta; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px 14px; }
+.cabecera nav :is(a:not(.btn), .salir) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
+.cabecera nav :is(a:not(.btn), .salir):hover, .cabecera nav a:not(.btn)[aria-current] { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.cabecera .btn[aria-current] { outline: 3px solid var(--negro); outline-offset: 2px; }
+.cabecera .btn .urgente { color: #f2b33d; }
+
+@media (min-width: 900px) {
+  .cabecera { grid-template-columns: auto 1fr auto; grid-template-areas: "logo nav cuenta"; gap: 0 32px; padding-block: 10px; }
+  .cabecera .logo { height: 60px; }
+  .nav-principal { justify-content: center; gap: 4px clamp(16px, 2.4vw, 40px); }
+  .cabecera nav :is(a:not(.btn), .salir) { font-size: 1.05rem; letter-spacing: .08em; }
+}
+
+/* ---------- Pie: el mismo en todo el sitio ---------- */
+
+.pie { --foco: var(--crema); margin-top: 0; padding-block: 36px 48px; background: var(--negro); color: var(--crema); }
+.pie-rejilla { display: grid; gap: 20px; }
+.logo-pie { display: block; width: 200px; height: auto; margin-bottom: 14px; }
+.pie address { font-style: normal; }
+.pie a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
+.pie nav { display: flex; flex-wrap: wrap; gap: 0 28px; }
+.pie nav a { font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+.pie nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.pie-nota { margin: 0; max-width: 46em; font-size: .95rem; }
+
+@media (min-width: 900px) {
+  .pie-rejilla { grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 64px; }
+  .pie nav { flex-direction: column; gap: 0; }
+  .pie-nota { grid-column: 1 / -1; }
+}
+
 /* ---------- Tipografía de despacho ---------- */
 
 .rot { font: 800 1em/.9 var(--angosta); text-transform: uppercase; overflow-wrap: break-word; }

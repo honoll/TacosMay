@@ -1,6 +1,7 @@
 import { api, session, money, esc, notice } from '../js/api.js';
 import { charola } from '../js/barra.js';
 import { empacar } from './empaque.js';
+import { cuentaYCarrito, piezas } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -77,6 +78,9 @@ function conDescripcion(lista) {
   return (g) => card(g, Boolean(g.descripcion) && veces.get(g.descripcion) === 1);
 }
 
+// Regreso evidente al catálogo desde cualquier otra vista.
+const VOLVER = '<p class="volver"><a href="#catalogo">← Seguir comprando</a></p>';
+
 const fecha = (v) => new Date(isNaN(v) ? v : Number(v))
   .toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
 
@@ -97,9 +101,10 @@ const VIEWS = {
   async carrito() {
     await loadCart();
     if (!cart.items.length) {
-      return '<h1>Tu carrito</h1><p>Tu carrito está vacío.</p><p><a href="#catalogo">Ver guisos</a></p>';
+      return `${VOLVER}<h1>Tu carrito</h1><p>Tu carrito está vacío. Las charolas, no.</p><p><a class="btn" href="#catalogo">Ver guisos</a></p>`;
     }
     return `
+      ${VOLVER}
       <h1>Tu carrito</h1>
       <p class="expira">Tu carrito expira en <strong data-countdown></strong>
         <small>Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL).</small></p>
@@ -121,8 +126,9 @@ const VIEWS = {
 
   async pedidos() {
     const pedidos = await api('/pedidos');
-    if (!pedidos.length) return '<h1>Mis pedidos</h1><p>Todavía no tienes pedidos.</p>';
+    if (!pedidos.length) return `${VOLVER}<h1>Mis pedidos</h1><p>Todavía no tienes pedidos.</p><p><a class="btn" href="#catalogo">Ver guisos</a></p>`;
     return `
+      ${VOLVER}
       <h1>Mis pedidos</h1>
       <ul class="grid">${pedidos.map((p) => `
         <li class="card">
@@ -139,6 +145,7 @@ const VIEWS = {
     const g = editing || {};
     const int = (min) => `type="number" min="${min}" step="1" inputmode="numeric"`;
     return `
+      ${VOLVER}
       <h1>Administrar guisos</h1>
       <form class="form" data-submit="saveGuiso">
         <h2>${editing ? `Editar «${esc(g.nombre)}»` : 'Nuevo guiso'}</h2>
@@ -165,6 +172,7 @@ const VIEWS = {
   async cuenta() {
     const u = user();
     return `
+      ${VOLVER}
       <h1>Tu cuenta</h1>
       <div class="acceso">
         <div class="form">
@@ -198,6 +206,7 @@ const LADO = `
 function acceso(esRegistro) {
   const id = esRegistro ? 'registro' : 'login';
   return `
+    ${VOLVER}
     <div class="acceso">
       <form class="form" data-submit="${id}">
         <h1>${esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}</h1>
@@ -334,19 +343,15 @@ function go(r) {
   return render();
 }
 
+// Cuenta y carrito de la cabecera (la misma pieza que usa el resto del sitio). Los enlaces principales
+// están escritos en el HTML; aquí solo se marca «Guisos» cuando se está en el catálogo.
 function renderNav() {
-  const u = user();
-  const n = cart.items.reduce((s, i) => s + i.cantidad, 0);
-  const links = [
-    ['catalogo', 'Guisos'],
-    ['carrito', `Carrito (${n}) <span data-countdown></span>`],
-    ...(u ? [['pedidos', 'Mis pedidos']] : []),
-    ...(isAdmin() ? [['admin', 'Admin']] : []),
-    u ? ['cuenta', esc(u.nombre)] : ['entrar', 'Entrar'],
-  ];
-  nav.innerHTML = links
-    .map(([r, text]) => `<a href="#${r}"${r === current || (r === 'entrar' && current === 'registro') ? ' aria-current="page"' : ''}>${text}</a>`)
-    .join('');
+  nav.innerHTML = cuentaYCarrito(user(), piezas(cart), {
+    base: '', actual: current === 'registro' ? 'entrar' : current, admin: isAdmin(),
+  });
+  const guisos = document.querySelector('#nav-principal a[href="/tienda/#catalogo"]');
+  if (current === 'catalogo') guisos?.setAttribute('aria-current', 'page');
+  else guisos?.removeAttribute('aria-current');
 }
 
 async function render() {
@@ -388,6 +393,7 @@ function dispatch(e, type) {
   run(() => ACTIONS[el.dataset[type]](el)).finally(() => { if (btn) btn.disabled = false; });
 }
 for (const type of ['click', 'submit', 'change']) view.addEventListener(type, (e) => dispatch(e, type));
+nav.addEventListener('click', (e) => dispatch(e, 'click')); // «Salir» vive en la cabecera
 
 addEventListener('hashchange', () => {
   if (location.hash === rendered) return;

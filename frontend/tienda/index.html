@@ -9,12 +9,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <a class="marca logo" href="#catalogo" aria-label="Los Tacos May, catálogo"><img src="../marca/logo/compacta.svg" alt="" width="480" height="186"></a>
-    <nav id="nav" aria-label="Principal"></nav>
+  <header class="cabecera caja">
+    <a class="logo" href="/" aria-label="Los Tacos May, inicio"><img src="/marca/logo/compacta.svg" alt="" width="480" height="186"></a>
+    <nav class="nav-principal" id="nav-principal" aria-label="Principal">
+      <a href="/">Inicio</a>
+      <a href="/tienda/#catalogo">Guisos</a>
+      <a href="/#como">Cómo funciona</a>
+      <a href="/#taqueria">La taquería</a>
+    </nav>
+    <nav class="nav-cuenta" id="nav" aria-label="Cuenta y carrito">
+      <a href="/tienda/#entrar">Entrar</a>
+      <a class="btn chico" href="/tienda/#carrito">Carrito (0) <span data-countdown></span></a>
+    </nav>
   </header>
   <p id="aviso" role="status" hidden></p>
-  <main id="vista" tabindex="-1"></main>
+  <main id="vista" class="caja" tabindex="-1"></main>
+  <footer class="pie">
+    <div class="caja pie-rejilla">
+      <div>
+        <img class="logo-pie" src="/marca/logo/principal-blanco.svg" alt="Los Tacos May" width="480" height="214" loading="lazy">
+        <address><a href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener">José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a></address>
+      </div>
+      <nav aria-label="Pie de página">
+        <a href="/">Inicio</a>
+        <a href="/tienda/#catalogo">Guisos</a>
+        <a href="/#como">Cómo funciona</a>
+        <a href="/#taqueria">La taquería</a>
+        <a href="/tienda/#carrito">Carrito</a>
+        <a href="/tienda/#entrar">Entrar</a>
+      </nav>
+      <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
+      <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
+    </div>
+  </footer>
   <script type="module" src="app.js"></script>
 </body>
 </html>

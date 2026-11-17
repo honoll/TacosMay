@@ -439,6 +439,35 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     probados. Tampoco carrito, pedidos, admin ni el empacado con sesión iniciada. Conviene correr
     el flujo completo de la demo contra Redis antes del examen.
 
+- **Decimoquinta vuelta (17-nov-2026): navegación global como un solo sistema** (hallazgos N1–N7 de
+  `docs/calidad/hallazgos.md`, todos en 🟡: corregidos, falta verlos).
+  - **Una sola cabecera** en landing, tienda y «no encontrado»: logotipo que lleva a `/`; enlaces
+    principales (Inicio, Guisos, Cómo funciona, La taquería); a la derecha, cuenta («Entrar», o el
+    nombre y «Salir», más «Mis pedidos» y «Admin» si aplican) y carrito con contador. La página
+    actual va subrayada. En celular: logotipo y cuenta en la primera línea, enlaces en la segunda.
+  - **Un solo pie:** marca, dirección enlazada al mapa, enlaces principales y la nota de que guisos
+    empacados y precios son de ejemplo.
+  - **Cuenta y carrito** se pintan con una sola pieza (`frontend/js/cabecera.js`): la tienda la usa
+    en su `renderNav`; la landing y el 404 la llenan al cargar. El contador se lee con el mismo
+    `api()` (`GET /carrito`); sin sesión dice «Carrito (0)» y al tocarlo pide iniciar sesión.
+  - **Regresos en la tienda:** «← Seguir comprando» arriba de carrito, pedidos, cuenta, admin,
+    iniciar sesión y crear cuenta. Estados vacíos con salida: carrito vacío y sin pedidos → botón
+    «Ver guisos».
+  - **No encontrado:** `frontend/404.html` con cabecera, mensaje, botones a inicio y a los guisos, y
+    pie. En `backend/server.js`, una línea antes del manejador de errores: lo que no empiece con
+    `/api` y no sea un archivo responde esa página con estado 404; `/api` sigue igual.
+  - `/marca/` no está enlazado desde cabecera ni pie (solo se usan sus archivos de logotipo).
+  - **Prueba en el repo:** `node frontend/js/nav.test.mjs` comprueba que cabecera y pie son
+    idénticos en las tres páginas, que enlazan inicio, guisos, carrito y entrar, que no enlazan
+    `/marca/` y que todas sus rutas son absolutas.
+  - **Verificado sin navegador:** `nav.test: OK`, `api.test: OK`, `svg.test: OK`; `node --check` de
+    `js/cabecera.js`, `js/landing.js`, `tienda/app.js` y `backend/server.js`; HTML de las tres
+    páginas bien anidado y con sus rutas resueltas; ninguna clase sin regla.
+  - **NO verificado:** nada en pantalla. **La línea del servidor no se ha ejecutado** (no levanté el
+    servidor): falta comprobar que una dirección inexistente da la página con 404 y que `/api/…`
+    sigue respondiendo JSON. «Salir» desde la cabecera y el contador en la landing tampoco se han
+    ejecutado.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

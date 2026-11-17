@@ -9,27 +9,10 @@
   --tarjeta: #fff;
 }
 
-/* Todo el ancho de la pantalla (--margen y --ancho vienen de barra.css). */
-header, main { width: min(100% - 2 * var(--margen), var(--ancho)); margin: 0 auto; }
+/* La cabecera, el pie y el ancho (.caja) vienen de ../barra.css: son los mismos en todo el sitio. */
 main p { max-width: 60em; }
 
-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px 16px;
-  padding-block: 8px;
-  border-bottom: 2px solid var(--negro);
-}
-
-.marca { height: 56px; }
-
-nav { display: flex; flex-wrap: wrap; gap: 4px; }
-nav a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border-radius: 4px; color: var(--texto); font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
-nav a[aria-current] { background: var(--negro); color: var(--crema); }
-
-main { padding-block: 16px 48px; }
+main { min-height: 62vh; padding-block: 16px 64px; }
 main:focus { outline: none; }
 
 h1 { font: 800 clamp(2rem, 7vw, 3rem)/.92 var(--angosta); text-transform: uppercase; margin: 12px 0 16px; }
@@ -111,7 +94,6 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
 .expira small { display: block; color: var(--suave); }
 [data-countdown] { font-variant-numeric: tabular-nums; font-weight: 700; }
 [data-countdown].urgente { color: var(--alerta); }
-nav a[aria-current] .urgente { color: #f2b33d; }
 
 /* ---------- Pantalla ancha: carrito y admin en dos columnas ---------- */
 /* main lleva data-vista con la vista pintada. La lista a la izquierda; a la derecha, lo que se decide. */
@@ -212,3 +194,8 @@ nav a[aria-current] .urgente { color: #f2b33d; }
 @media (min-width: 700px) {
   [data-vista="pedidos"] .grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
 }
+
+/* Regreso evidente en cada vista: arriba del título. */
+.volver { margin: 8px 0 0; }
+.volver a { display: inline-flex; align-items: center; min-height: 44px; font: 600 1rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
+[data-vista] > .volver { grid-column: 1 / -1; }

@@ -2,8 +2,10 @@
 // Reúsa el api() y el money() de la tienda, y la charola de barra.js.
 import { api, money, esc } from './api.js';
 import { charola } from './barra.js';
+import { iniciarCabecera } from './cabecera.js';
 
 document.documentElement.classList.add('js');
+iniciarCabecera();
 
 // ---------- Las charolas, en vivo (GET /guisos/populares y GET /guisos) ----------
 
