@@ -13,6 +13,7 @@ let editing = null;  // guiso en edición en el panel admin
 let current = '';    // vista pintada (puede diferir del hash si un guard redirige)
 let rendered = null; // hash ya pintado, para no repintar en el hashchange de go()
 let renderId = 0;
+let desde = 'catalogo'; // última vista que no es de acceso: ahí se regresa después de entrar o registrarse
 
 const user = () => session.get();
 const isAdmin = () => user()?.rol === 'admin';
@@ -60,13 +61,21 @@ const field = (prefix, name, label, value = '', attrs = '') => `
   <input id="${prefix}-${name}" name="${name}" value="${esc(value)}" required ${attrs}>`;
 
 // Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
-const card = (g) => charola(g.nombre, `
+// La descripción solo se muestra si dice algo propio de ese guiso (conDescripcion lo decide).
+const card = (g, mostrarDescripcion) => charola(g.nombre, `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} vendidos</p>` : ''}
-    <p>${esc(g.descripcion)}</p>
+    ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
     <p class="meta">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} disponibles` : 'Se acabó por hoy'}</p>
     <button type="button" class="primario" data-click="add" data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"
-      ${g.stock > 0 ? '' : 'disabled'}>Agregar al carrito</button>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+      ${g.stock > 0 ? '' : 'disabled'}>Agregar<span class="sr"> ${esc(g.nombre)} al carrito</span></button>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+
+// Una descripción repetida en varios guisos no informa nada: devuelve cómo pintar cada tarjeta de esa lista.
+function conDescripcion(lista) {
+  const veces = new Map();
+  for (const g of lista) veces.set(g.descripcion, (veces.get(g.descripcion) || 0) + 1);
+  return (g) => card(g, Boolean(g.descripcion) && veces.get(g.descripcion) === 1);
+}
 
 const fecha = (v) => new Date(isNaN(v) ? v : Number(v))
   .toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
@@ -77,11 +86,12 @@ const VIEWS = {
   async catalogo() {
     const [populares, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
     guisos = todos;
+    const tarjeta = conDescripcion(todos);
     return `
       <h1>Guisos de taquería empacados al vacío</h1>
-      ${populares.length ? `<h2>Los más pedidos</h2><ul class="grid">${populares.map(card).join('')}</ul>` : ''}
+      ${populares.length ? `<h2>Los más pedidos</h2><ul class="grid">${populares.map(tarjeta).join('')}</ul>` : ''}
       <h2>Todos los guisos</h2>
-      ${todos.length ? `<ul class="grid">${todos.map(card).join('')}</ul>` : '<p>Todavía no hay guisos en el catálogo.</p>'}`;
+      ${todos.length ? `<ul class="grid">${todos.map(tarjeta).join('')}</ul>` : '<p>Todavía no hay guisos en el catálogo.</p>'}`;
   },
 
   async carrito() {
@@ -154,32 +164,54 @@ const VIEWS = {
 
   async cuenta() {
     const u = user();
-    if (u) {
-      return `
-        <h1>Tu cuenta</h1>
-        <p><strong>${esc(u.nombre)}</strong><br>${esc(u.email)}${isAdmin() ? '<br>Rol: administrador' : ''}</p>
-        <button type="button" data-click="logout">Cerrar sesión</button>`;
-    }
-    const email = 'type="email" autocomplete="email"';
     return `
-      <h1>Cuenta</h1>
-      <div class="dos">
-        <form class="form" data-submit="login">
-          <h2>Iniciar sesión</h2>
-          ${field('login', 'email', 'Correo', '', email)}
-          ${field('login', 'password', 'Contraseña', '', 'type="password" autocomplete="current-password"')}
-          <button class="primario">Entrar</button>
-        </form>
-        <form class="form" data-submit="registro">
-          <h2>Crear cuenta</h2>
-          ${field('registro', 'nombre', 'Nombre', '', 'autocomplete="name"')}
-          ${field('registro', 'email', 'Correo', '', email)}
-          ${field('registro', 'password', 'Contraseña', '', 'type="password" autocomplete="new-password"')}
-          <button class="primario">Registrarme</button>
-        </form>
+      <h1>Tu cuenta</h1>
+      <div class="acceso">
+        <div class="form">
+          <p><strong>${esc(u.nombre)}</strong><br>${esc(u.email)}${isAdmin() ? '<br>Rol: administrador' : ''}</p>
+          <p><a href="#pedidos">Ver mis pedidos</a></p>
+          <button type="button" data-click="logout">Cerrar sesión</button>
+        </div>
+        ${LADO}
       </div>`;
   },
+
+  entrar: async () => acceso(false),
+  registro: async () => acceso(true),
 };
+
+// Lo que acompaña a los formularios de cuenta en pantalla ancha: para qué sirve tener cuenta.
+const LADO = `
+  <aside class="acceso-lado" aria-label="Para qué sirve tu cuenta">
+    <img src="../marca/logo/sello.svg" alt="" width="220" height="360">
+    <div>
+      <h2>Con tu cuenta</h2>
+      <ul>
+        <li>Agregas guisos a tu carrito.</li>
+        <li>Confirmas tu pedido.</li>
+        <li>Ves tus pedidos anteriores.</li>
+      </ul>
+    </div>
+  </aside>`;
+
+// Iniciar sesión (#entrar) y crear cuenta (#registro): el mismo molde, con un enlace para pasar de una a otra.
+function acceso(esRegistro) {
+  const id = esRegistro ? 'registro' : 'login';
+  return `
+    <div class="acceso">
+      <form class="form" data-submit="${id}">
+        <h1>${esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}</h1>
+        ${esRegistro ? field(id, 'nombre', 'Nombre', '', 'autocomplete="name"') : ''}
+        ${field(id, 'email', 'Correo', '', 'type="email" autocomplete="email"')}
+        ${field(id, 'password', 'Contraseña', '', `type="password" autocomplete="${esRegistro ? 'new' : 'current'}-password"`)}
+        <button class="primario">${esRegistro ? 'Crear mi cuenta' : 'Entrar'}</button>
+        <p class="cambio">${esRegistro
+          ? '¿Ya tienes cuenta? <a href="#entrar">Entra</a>'
+          : '¿No tienes cuenta? <a href="#registro">Créala</a>'}</p>
+      </form>
+      ${LADO}
+    </div>`;
+}
 
 // ---------- Acciones: data-click / data-submit / data-change apuntan aquí ----------
 
@@ -187,7 +219,7 @@ async function auth(form, path) {
   session.set(await api(path, { method: 'POST', body: Object.fromEntries(new FormData(form)) }));
   await loadCart();
   notice(`Hola, ${user().nombre}.`);
-  await go(route() === 'cuenta' ? 'catalogo' : route());
+  await go(desde); // de vuelta a donde estaba: el catálogo si quería agregar, el carrito si iba para allá
 }
 
 const ACTIONS = {
@@ -203,7 +235,7 @@ const ACTIONS = {
   async add(el) {
     if (!user()) {
       notice('Inicia sesión para agregar guisos al carrito.', 'error');
-      return go('cuenta');
+      return go('entrar');
     }
     const actual = cart.items.find((i) => String(i.guiso.id) === el.dataset.id)?.cantidad || 0;
     const pack = empacar(el); // respuesta visual: no espera a la llamada ni la retrasa
@@ -281,10 +313,15 @@ async function run(fn) {
     notice(err.message, 'error');
     if (err.status === 401) { // sesión vencida: api() ya borró el token
       setCart(EMPTY);
-      await go('cuenta');
+      await go('entrar');
     }
   }
 }
+
+const TITULOS = {
+  catalogo: 'Guisos', carrito: 'Tu carrito', pedidos: 'Mis pedidos', admin: 'Administrar guisos',
+  cuenta: 'Tu cuenta', entrar: 'Iniciar sesión', registro: 'Crear cuenta',
+};
 
 const route = () => {
   const r = location.hash.slice(1);
@@ -302,12 +339,13 @@ function renderNav() {
   const n = cart.items.reduce((s, i) => s + i.cantidad, 0);
   const links = [
     ['catalogo', 'Guisos'],
-    ...(u ? [['carrito', `Carrito (${n}) <span data-countdown></span>`], ['pedidos', 'Mis pedidos']] : []),
+    ['carrito', `Carrito (${n}) <span data-countdown></span>`],
+    ...(u ? [['pedidos', 'Mis pedidos']] : []),
     ...(isAdmin() ? [['admin', 'Admin']] : []),
-    ['cuenta', u ? esc(u.nombre) : 'Entrar'],
+    u ? ['cuenta', esc(u.nombre)] : ['entrar', 'Entrar'],
   ];
   nav.innerHTML = links
-    .map(([r, text]) => `<a href="#${r}"${r === current ? ' aria-current="page"' : ''}>${text}</a>`)
+    .map(([r, text]) => `<a href="#${r}"${r === current || (r === 'entrar' && current === 'registro') ? ' aria-current="page"' : ''}>${text}</a>`)
     .join('');
 }
 
@@ -315,11 +353,14 @@ async function render() {
   rendered = location.hash;
   const id = ++renderId;
   let r = route();
-  if ((r === 'carrito' || r === 'pedidos') && !user()) {
-    notice('Inicia sesión para continuar.', 'error');
-    r = 'cuenta';
+  if (!user() && (r === 'carrito' || r === 'pedidos' || r === 'cuenta')) {
+    if (r !== 'cuenta') { notice('Inicia sesión para continuar.', 'error'); desde = r; } // al entrar, se sigue hacia allá
+    r = 'entrar';
   }
+  if (user() && (r === 'entrar' || r === 'registro')) r = 'cuenta';
   if (r === 'admin' && !isAdmin()) r = 'catalogo';
+  if (r !== 'entrar' && r !== 'registro') desde = r;
+  document.title = `${TITULOS[r]} — Los Tacos May`;
   const changed = r !== current;
   current = r;
   renderNav();

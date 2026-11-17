@@ -408,6 +408,37 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     `api.test: OK`; `node --check` de los módulos; HTML bien anidado; ninguna clase sin regla.
   - **NO verificado:** nada de esto en pantalla. La animación de empacado sigue sin verse correr.
 
+- **Decimocuarta vuelta (17-nov-2026): escritorio vista por vista y cuenta separada (tiempo 1).**
+  La reestructura de la tienda espera a `docs/investigacion/estructura-tiendas-comida.md`.
+  - **Cuenta, en tres vistas con su dirección:** `#entrar` (iniciar sesión), `#registro` (crear
+    cuenta) y `#cuenta` (perfil, con enlace a pedidos y cerrar sesión). Cada formulario enlaza al
+    otro («¿No tienes cuenta? Créala» / «¿Ya tienes cuenta? Entra»). «Entrar» de la cabecera lleva
+    a iniciar sesión. **Después de entrar o registrarse se regresa a donde estaba la persona:** al
+    catálogo si quería agregar un guiso, al carrito o a pedidos si iba para allá. `#cuenta` sin
+    sesión lleva a `#entrar`; `#entrar` con sesión lleva al perfil. Mismas llamadas y mismo `api()`.
+  - **Composición de cuenta en escritorio:** formulario de hasta 520 px a la izquierda y, al lado,
+    un panel de acero con el sello y para qué sirve la cuenta (agregar al carrito, confirmar el
+    pedido, ver pedidos anteriores).
+  - **Catálogo:** la charola sin foto mide lo mismo que la que tiene foto (4:3) y se ve como
+    charola tapada (cepillado, agarradera y número grande), así la fila cierra pareja; aplica
+    también a «Todas las charolas» de la landing. La descripción solo se muestra si es propia de
+    ese guiso: la que se repite en varios se omite (hoy, las 14 del seed). El botón dice «Agregar»
+    (el lector de pantalla oye «Agregar <guiso> al carrito»), cabe en una línea y queda al pie.
+  - **Cabecera:** «Carrito (0)» se ve también sin sesión (al tocarlo pide iniciar sesión y luego
+    sigue al carrito). La pestaña del navegador dice en qué vista estás.
+  - **Carrito, pedidos y admin en ancho:** carrito con lista y resumen lado a lado y admin con
+    formulario y lista lado a lado (ya estaban desde 1100 px); pedidos en tarjetas de 340 px o
+    más, y de una columna en celular.
+  - **Cambios en `tienda/app.js`:** vistas `entrar` y `registro`, guardas de ruta, la variable
+    `desde`, el título de pestaña, el enlace del carrito y la tarjeta. Ninguna llamada nueva ni
+    distinta a la API.
+  - **Verificado sin navegador:** `node --check tienda/app.js`; `api.test: OK`; `svg.test: OK`;
+    HTML bien anidado; ninguna clase sin regla.
+  - **NO verificado:** nada en pantalla, y **el flujo de cuenta no se ha ejecutado**: entrar,
+    registrarse, el regreso a la vista anterior y las guardas están razonados en código, no
+    probados. Tampoco carrito, pedidos, admin ni el empacado con sesión iniciada. Conviene correr
+    el flujo completo de la demo contra Redis antes del examen.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

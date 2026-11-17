@@ -87,11 +87,12 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola p { margin: 0; }
 .charola.agotada .guiso { filter: grayscale(1); }
 
-/* Sin foto: una charola tapada. Más baja, con el cepillado del acero sobre su color y el número grande.
-   Así no es un bloque liso enorme mientras llegan más fotos. */
-.charola .guiso:not(:has(img)) { aspect-ratio: 5 / 2; background: var(--c) repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / .09) 3px 4px); }
-.charola .guiso:not(:has(img)) .num { top: 50%; padding: 0 12px; background: none; font-size: clamp(2.2rem, 9vw, 3rem); transform: translateY(-50%); }
-.charola .guiso:not(:has(img)) .vapor { top: 50%; right: 12px; transform: translateY(-50%); }
+/* Sin foto: una charola tapada, del mismo alto que las que tienen foto para que la fila cierre pareja.
+   Cepillado de acero sobre su color, la agarradera de la tapa al centro y el número grande. */
+.charola .guiso:not(:has(img)) { container-type: inline-size; background: var(--c) repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / .09) 3px 4px); }
+.charola .guiso:not(:has(img))::after { content: ""; position: absolute; left: 30%; right: 30%; top: 50%; height: 9%; border-radius: 99px; background: var(--t); opacity: .28; transform: translateY(-50%); }
+.charola .guiso:not(:has(img)) .num { padding: 6px 12px; background: none; font-size: clamp(2rem, 24cqw, 4.5rem); }
+.charola .guiso:not(:has(img)) .vapor { top: 10px; right: 12px; }
 
 @media (min-width: 700px) {
   .barra { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
