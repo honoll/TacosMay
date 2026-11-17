@@ -68,7 +68,7 @@ Evidencia F1–F5 (17-nov-2026), `frontend/`: `index.html`, `styles.css`, `js/ap
   - **Falta:** verlo en un navegador (clics reales, cuenta regresiva, 375 px). Eso lo ve Alejandro.
   - Quedaron en la base un usuario `prueba…@tacosmay.test` y el pedido 1; `npm run seed` los limpia.
 - 🟡 C2 PDF de diseño y justificación: `docs/TacosMay-Diseno-y-Justificacion.pdf` (12 páginas, las 5 secciones + referencias APA; fuente en `docs/pdf/documento.html`, se regenera imprimiendo a PDF con Edge). Falta que Alejandro lo lea y lo haga suyo.
-- 🔲 C3 Guion de demo (4 min) y preguntas probables de la defensa
+- 🟡 C3 Guion de demo (4 min) y preguntas probables de la defensa: `docs/guion-demo.md`. Falta ensayarlo con cronómetro, confirmar cómo se ven las claves en la consola de Redis Cloud y ajustar las direcciones cuando la tienda se mude a `/tienda/`.
 
 ## Cambios al contrato
 _(propuestas de backend/frontend; coordinación las aplica en `docs/contrato.md`)_
