@@ -331,7 +331,9 @@ async function render() {
     view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
     tick();
     // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.
-    ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.();
+    // Sin desplazar: enfocar <main> escondía la cabecera (y el logotipo) al cargar.
+    ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.({ preventScroll: true });
+    if (changed) scrollTo(0, 0);
   });
 }
 
