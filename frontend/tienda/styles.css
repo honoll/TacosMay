@@ -199,3 +199,21 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
 .volver { margin: 8px 0 0; }
 .volver a { display: inline-flex; align-items: center; min-height: 44px; font: 600 1rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 [data-vista] > .volver { grid-column: 1 / -1; }
+
+/* ---------- Respuesta de botones, campos y avisos (movimiento básico del sistema) ---------- */
+/* Todo interactivo responde al pasar, al enfocar y al presionar; nada dura más de 180 ms. */
+
+button:not(.primario, .salir, :disabled):is(:hover, :focus-visible) { background: var(--negro); color: var(--crema); }
+input:hover { border-color: var(--negro); }
+input:focus { border-color: var(--negro); outline: 3px solid var(--foco); outline-offset: 2px; }
+/* Solo después de que la persona tocó el campo: no se regaña un formulario vacío. */
+input:user-invalid { border-color: var(--alerta); }
+.volver a:hover, .cambio a:hover, main p a:not(.btn):hover { text-decoration-thickness: 3px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  button, input { transition: background-color .12s, color .12s, border-color .12s; }
+  button:not(.primario, .salir, :disabled):active { transform: translateY(2px); }
+  /* El aviso baja a su lugar en vez de aparecer de golpe. */
+  #aviso:not([hidden]) { animation: aviso .18s cubic-bezier(.2, .7, .2, 1); }
+  @keyframes aviso { from { transform: translateY(-100%); } }
+}

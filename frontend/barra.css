@@ -107,6 +107,7 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 }
 :is(.btn, button.primario):is(:hover, :focus-visible) { --f: 11px; }
 .btn.sec { padding-left: 22px; border: 2.5px solid var(--negro); background: none; color: var(--negro); }
+.btn.sec:is(:hover, :focus-visible) { background: var(--negro); color: var(--crema); }
 .btn.claro { --fondo-btn: var(--crema); color: var(--negro); }
 .btn.chico { min-height: 44px; font-size: 1rem; }
 .enl { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: inherit; font-weight: 600; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }

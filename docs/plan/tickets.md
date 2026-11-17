@@ -468,6 +468,13 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     sigue respondiendo JSON. «Salir» desde la cabecera y el contador en la landing tampoco se han
     ejecutado.
 
+- **Movimiento básico en las vistas nuevas (17-nov-2026):** botones secundarios, campos y enlaces
+  de la tienda responden al pasar, al enfocar y al presionar (120 ms); el campo inválido se marca
+  solo después de tocarlo; el aviso baja a su lugar (180 ms). Todo dentro de
+  `prefers-reduced-motion: no-preference`. Verificado solo en código. El segundo tiempo (estructura
+  y movimiento premium por vista) espera a `docs/investigacion/estructura-tiendas-comida.md` e
+  `interacciones-premium.md`.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
