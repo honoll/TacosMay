@@ -336,3 +336,14 @@ input[aria-invalid="true"] { border-color: var(--alerta); }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* ---------- Cuenta: el botón con estado y el campo que avisa ---------- */
+button.enviando { cursor: progress; }
+button.enviando::after { content: "…"; }
+@media (prefers-reduced-motion: no-preference) {
+  button.enviando::after { animation: espera .9s steps(4, jump-none) infinite; display: inline-block; overflow: hidden; vertical-align: bottom; }
+  @keyframes espera { from { width: 0; } to { width: 1em; } }
+  /* Sacudida corta del campo con error; con movimiento reducido queda solo el mensaje. */
+  input[aria-invalid="true"] { animation: sacude var(--t-grande) var(--entra); }
+  @keyframes sacude { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+}

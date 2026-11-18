@@ -619,8 +619,11 @@ function dispatch(e, type) {
   notice();
   if (type === 'submit' && !validar(el)) return;
   const btn = e.submitter || (el.tagName === 'BUTTON' ? el : null);
-  if (btn) btn.disabled = true; // evita el doble clic (p. ej. confirmar dos veces)
-  run(() => ACTIONS[el.dataset[type]](el)).finally(() => { if (btn) btn.disabled = false; });
+  // El botón dice en sí mismo que está enviando; deshabilitado evita el doble clic (p. ej. confirmar dos veces).
+  if (btn) { btn.disabled = true; btn.classList.add('enviando'); btn.setAttribute('aria-busy', 'true'); }
+  run(() => ACTIONS[el.dataset[type]](el)).finally(() => {
+    if (btn) { btn.disabled = false; btn.classList.remove('enviando'); btn.removeAttribute('aria-busy'); }
+  });
 }
 for (const type of ['click', 'submit', 'change']) view.addEventListener(type, (e) => dispatch(e, type));
 nav.addEventListener('click', (e) => dispatch(e, 'click')); // «Salir» vive en la cabecera
