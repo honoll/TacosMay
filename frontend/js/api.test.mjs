@@ -50,4 +50,26 @@ assert.equal(session.get(), null);
 globalThis.fetch = async () => { throw new TypeError('fetch failed'); };
 await assert.rejects(api('/guisos'), { message: /No se pudo conectar/ });
 
+// Transición de vista saltada (pestaña oculta, otra en curso): el cambio se hace igual y no queda
+// ningún rechazo sin atrapar (Node terminaría con error).
+const { transicion } = await import('./api.js');
+let hechos = 0;
+let movimiento = true;
+globalThis.matchMedia = () => ({ matches: movimiento });
+globalThis.document = {
+  startViewTransition(fn) {
+    fn();
+    const saltada = () => Promise.reject(new DOMException('Transition was skipped', 'AbortError'));
+    return { ready: saltada(), finished: saltada(), updateCallbackDone: Promise.resolve() };
+  },
+};
+await transicion(() => { hechos++; });
+await new Promise((r) => setTimeout(r, 20));
+assert.equal(hechos, 1, 'transición saltada: el contenido cambia igual');
+movimiento = false;
+let directa = false;
+globalThis.document.startViewTransition = () => { directa = 'no'; };
+await transicion(() => { directa = directa || true; });
+assert.equal(directa, true, 'con movimiento reducido: directo, sin transición');
+
 console.log('api.test: OK');

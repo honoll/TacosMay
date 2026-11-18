@@ -1,4 +1,4 @@
-import { api, session, money, esc, notice } from '../js/api.js';
+import { api, session, money, esc, notice, transicion } from '../js/api.js';
 import { charola, picto } from '../js/barra.js';
 import { empacar } from './empaque.js';
 import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
@@ -75,7 +75,7 @@ async function setQty(id, cantidad) {
 
 // Repinta dentro de una transición del navegador cuando existe: los renglones que salen o entran se animan
 // y los que se quedan se recorren. Sin soporte (o con movimiento reducido, vía CSS) el cambio es inmediato.
-const cambiar = (fn) => (document.startViewTransition ? document.startViewTransition(fn).updateCallbackDone : fn());
+const cambiar = transicion;
 
 // ---------- El carrito como panel lateral ----------
 const panel = document.getElementById('panel-carrito');
@@ -671,10 +671,10 @@ async function render() {
     };
     // Entre vistas, un fundido corto del navegador; sin soporte, cambia sin animar. Solo al cambiar de
     // vista: los repintados de la misma (carrito) ya traen su propia transición.
-    if (!changed || !document.startViewTransition) return pintar();
+    if (!changed) return pintar();
     // Hacia la ficha, la charola que se tocó se convierte en la de la ficha (mismo nombre de transición).
     if (r === 'guiso') view.querySelector(`[data-control="${CSS.escape(param)}"]`)?.closest('.charola')?.style.setProperty('view-transition-name', 'charola-ficha');
-    await document.startViewTransition(pintar).updateCallbackDone;
+    await transicion(pintar);
   });
 }
 

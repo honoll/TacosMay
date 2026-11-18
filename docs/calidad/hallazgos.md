@@ -3,6 +3,19 @@
 Registro de lo encontrado al ejecutar [plan-de-revision.md](plan-de-revision.md). Estado:
 🔴 abierto · 🟡 corregido, falta volver a verlo · ✅ corregido y visto.
 
+## Vuelta 5 — 17-nov-2026: entre la landing y la tienda sin recargar
+
+Revisión del enrutador (`frontend/js/paginas.js`) a 1440: ida y vuelta tres veces, «atrás» y
+«adelante», sin recarga, con la misma cabecera, un solo `main`, una cabecera y un pie.
+
+| # | Dónde | Gravedad | Hallazgo | Estado |
+|---|---|---|---|---|
+| Y1 | Landing → tienda sin recargar | Bloquea | La tienda quedaba sin estilos: las hojas con ruta relativa resolvían contra `/tienda/` después del `pushState`, el enrutador dejaba de reconocer `barra.css` y lo apagaba | 🟡 coordinación fija las hojas absolutas al arrancar (20973e3); además las tres páginas usan rutas desde la raíz en hojas, scripts, ícono e imágenes, y `navegacion.test` resuelve `link.href` contra la dirección vigente y falla si se quita esa línea |
+| Y2 | Consola, cualquier cambio de vista o de página | Menor | Rechazos sin atrapar de las transiciones de vista saltadas («Transition was skipped», «Document hidden») | 🟡 una sola función `transicion()` en `js/api.js` atrapa `ready` y `finished`; el cambio se hace igual (probado en `api.test` y `navegacion.test`) |
+
+Sin revisar todavía: celular, Safari y Firefox; llegar a un ancla de la landing desde la
+tienda; navegar con sesión iniciada (contador y cuenta regresiva tras varias idas y vueltas).
+
 ## Vuelta 4 — 17-nov-2026: vistas 2 a 8 del segundo tiempo
 
 Recorrido con cuenta de prueba (cliente y administrador) a 1440 × 900, y la landing también

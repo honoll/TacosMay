@@ -1,3 +1,5 @@
+import { transicion } from './api.js';
+
 // Entre la landing y la tienda sin recargar. Al tocar un enlace a la otra página, la pide con fetch y
 // cambia solo lo que es de cada página: todo el <body> menos la cabecera, su script en línea, el pie y
 // los scripts de módulo. La cabecera y el pie no se tocan.
@@ -20,7 +22,6 @@ const hojas = () => [...document.head.querySelectorAll('link[rel="stylesheet"]')
 // Las hojas vienen con ruta relativa: tras pushState resolverían contra la otra carpeta y
 // dejarían de reconocerse (la tienda quedaba sin barra.css). Se fijan absolutas al arrancar.
 for (const l of hojas()) l.setAttribute('href', l.href);
-const animar = () => document.startViewTransition && matchMedia('(prefers-reduced-motion: no-preference)').matches;
 
 // Para lector de pantalla: se dice a qué página se llegó.
 const anuncio = Object.assign(document.createElement('p'), { id: 'anuncio', className: 'sr' });
@@ -128,8 +129,11 @@ export async function ir(url, { empuja = true } = {}) {
     if (!main.hasAttribute('tabindex')) main.tabIndex = -1;
     main.focus({ preventScroll: true });
   };
-  if (animar()) await document.startViewTransition(cambiar).updateCallbackDone;
-  else cambiar();
+  try {
+    await transicion(cambiar);
+  } catch {
+    if (actual !== ruta) { location.assign(url.href); return; } // no alcanzó a cambiar: navegación normal
+  }
 
   anuncio.textContent = '';
   setTimeout(() => { anuncio.textContent = `Página: ${document.title}`; }, 50);

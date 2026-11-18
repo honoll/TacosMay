@@ -26,7 +26,13 @@ class El {
   scrollIntoView() { anclado = this.id; }
 }
 const cuerpo = (lista) => { lista.forEach((n) => { n.dueno = lista; }); return lista; };
-const hoja = (href) => Object.assign(new El('link', { rel: 'stylesheet', href }), { rel: 'stylesheet', href: ORIGEN + href, dueno: null });
+// Como en el navegador, link.href se resuelve contra la dirección vigente: tras pushState, una ruta
+// relativa apunta a otra carpeta (así quedó la tienda sin barra.css en la vuelta 5).
+class Hoja extends El {
+  get href() { return new URL(this.attrs.href, url()).href; }
+  set href(v) { this.attrs.href = v; }
+}
+const hoja = (href) => Object.assign(new Hoja('link', { rel: 'stylesheet', href }), { rel: 'stylesheet' });
 
 let enfocado = null;
 let anclado = null;
@@ -54,12 +60,12 @@ const PARTES = {
 };
 // La tienda de juguete: cuenta cuántas veces corre y cuántas veces la despiertan estando a la vista.
 const MODULO_TIENDA = `data:text/javascript,globalThis.cargasTienda=(globalThis.cargasTienda||0)+1;addEventListener('tm:pagina',()=>{if(location.pathname==='/tienda/')globalThis.despiertaTienda=(globalThis.despiertaTienda||0)+1})`;
-const HOJAS = { '/': ['/barra.css', '/landing.css'], '/tienda/': ['../barra.css', 'styles.css'] };
+const HOJAS = { '/': ['barra.css', 'landing.css'], '/tienda/': ['../barra.css', 'styles.css'] };
 
 function montar(ruta) {
   html = cuerpo(PARTES[ruta]().nodos);
   document.title = ruta === '/' ? 'Inicio' : 'Tienda';
-  links = HOJAS[ruta].map((h) => hoja(new URL(h, ORIGEN + ruta).pathname));
+  links = HOJAS[ruta].map(hoja); // relativas, como estaban en el HTML: paginas.js no puede depender de eso
   pila.length = 0;
   pila.push({ url: ORIGEN + ruta, state: null });
   pos = 0;
@@ -79,10 +85,15 @@ Object.assign(globalThis, {
     },
     querySelectorAll: () => [],
     getElementById: (id) => html.find((n) => n.id === id) ?? null,
-    createElement: (tag) => new El(tag),
+    createElement: (tag) => (tag === 'link' ? new Hoja(tag) : new El(tag)),
     importNode: (n) => Object.assign(n, { importado: true }),
     addEventListener: (t, fn) => { (docEsc[t] ??= []).push(fn); },
-    startViewTransition(fn) { transiciones++; fn(); return { updateCallbackDone: Promise.resolve() }; },
+    startViewTransition(fn) {
+      transiciones++;
+      fn();
+      const saltada = () => Promise.reject(new Error('Transition was skipped'));
+      return { ready: saltada(), finished: saltada(), updateCallbackDone: Promise.resolve() };
+    },
   },
   location: {
     get pathname() { return url().pathname; }, get href() { return url().href; }, get hash() { return url().hash; },

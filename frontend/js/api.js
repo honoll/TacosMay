@@ -63,3 +63,14 @@ export function notice(msg = '', kind = 'ok') {
   // Una confirmación se va sola; un error se queda hasta que se cierra o llega otro aviso.
   if (kind !== 'error') { seVa = setTimeout(notice, 8000); seVa.unref?.(); }
 }
+
+// Cambia la página dentro de una transición de vista si el navegador la tiene y se permite movimiento;
+// si no, directo. Una transición saltada (pestaña oculta, otra en curso) rechaza ready y finished:
+// se atrapan para no dejar errores en la consola, y el cambio se hace igual (el navegador sí llama a fn).
+export function transicion(fn) {
+  if (!document.startViewTransition || !matchMedia('(prefers-reduced-motion: no-preference)').matches) return Promise.resolve(fn());
+  const t = document.startViewTransition(fn);
+  t.ready.catch(() => {});
+  t.finished.catch(() => {});
+  return t.updateCallbackDone; // solo rechaza si fn falla
+}
