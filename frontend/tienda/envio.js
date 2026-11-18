@@ -51,7 +51,7 @@ export function enviar(colores = []) {
     <p class="envio-aviso sr" aria-live="polite">Empacando tu pedido</p>
     <p class="envio-espera">Confirmando tu pedido…</p>
     <div class="envio-escena" aria-hidden="true">
-      <svg viewBox="0 0 ${ANCHO} 210"><defs><clipPath id="envio-piso"><rect width="${ANCHO}" height="${SUELO}"/></clipPath></defs>
+      <svg viewBox="0 0 ${ANCHO} 210"><defs><clipPath id="envio-piso"><rect y="-200" width="${ANCHO}" height="${SUELO + 200}"/></clipPath></defs>
         <path class="envio-vel" d="M40 150h36M24 166h48M48 182h28" stroke="#141210" stroke-width="3" stroke-linecap="round"/>
         <g clip-path="url(#envio-piso)">${bolsaSvg(colores)}</g>
         ${CAJA}
