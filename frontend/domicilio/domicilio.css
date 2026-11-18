@@ -59,8 +59,13 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
   :where(.en-domicilio) .pasos-dom li:not([aria-current="step"]) .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   :where(.en-domicilio) .pasos-dom [aria-current="step"] { flex: 1 1 auto; min-width: 0; }
   :where(.en-domicilio) .pasos-dom [aria-current="step"] .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  /* Pasado el primer paso, la explicación de arriba sobra: lo del paso queda arriba sin bajar. */
+  /* Fuera de «Entrega», la explicación de arriba sobra: el menú (el primer paso) se ve sin bajar. */
   :where(.en-domicilio) main:not([data-vista="modo"]) .entrada { display: none; }
+  :where(.en-domicilio) .aviso-prueba { padding: 6px 12px; font-size: .95rem; }
+  :where(.en-domicilio) .dom-cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 12px; margin-bottom: 8px; }
+  :where(.en-domicilio) .dom-cabeza .entrada { flex-basis: 100%; }
+  /* El título «Menú» repite el paso de arriba: se queda para lector y para el foco, no a la vista. */
+  :where(.en-domicilio) #t-menu { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 
 /* Vista y cuenta: una columna en celular (la cuenta, barra fija abajo); a un lado y fija desde 900 px. */
