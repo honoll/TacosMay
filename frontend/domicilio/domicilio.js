@@ -48,7 +48,7 @@ $('.tacos').addEventListener('click', (e) => {
   f.cambiar(li.dataset.id, Number(b.dataset.cambio));
   pintar();
   const ahora = f.estado.cantidades[li.dataset.id] ?? 0;
-  if (ahora !== antes) animador()?.fromTo(li.querySelector('output'), { yPercent: ahora > antes ? 70 : -70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.22, ease: 'back.out(2)' });
+  if (ahora !== antes) animador()?.fromTo(li.querySelector('output'), { yPercent: ahora > antes ? 70 : -70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.22, ease: 'back.out(2)' });
 });
 
 // ---------- Paso 2: a dónde ----------
@@ -138,7 +138,7 @@ function pintar() {
   // La cuenta del pedido
   $('.c-piezas').textContent = `${p.piezas} ${p.piezas === 1 ? 'taco' : 'tacos'}`;
   $('.c-tacos').textContent = money(p.subtotal_centavos);
-  $('.c-envio').textContent = s.cotizacion ? money(s.cotizacion.envio_centavos) : 'se cotiza con tu dirección';
+  $('.c-envio').textContent = s.cotizacion ? money(s.cotizacion.envio_centavos) : 'por cotizar';
   $('.c-total').textContent = money(f.total());
   const cont = $('#continuar');
   cont.hidden = s.paso !== 'pedido';
@@ -159,7 +159,8 @@ function pintar() {
     resumenPuesto = html;
   }
   if (s.paso !== pasoPintado) {
-    animador()?.fromTo(`#paso-${s.paso}`, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.28, ease: 'power3.out', clearProps: 'transform,opacity,visibility' });
+    // Solo opacidad, no autoAlpha: con visibility oculta el título no puede recibir el foco.
+    animador()?.fromTo(`#paso-${s.paso}`, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: 'power3.out', clearProps: 'transform,opacity' });
     pasoPintado = s.paso;
   }
 }
@@ -173,6 +174,7 @@ const TEXTOS = {
   entregado: '¡Entregado! Buen provecho.',
 };
 let mostrado = null;
+let escenaTl = null;
 let reloj = 0;
 async function seguir() {
   clearTimeout(reloj);
@@ -195,16 +197,19 @@ async function seguir() {
 
 // La escena de cada paso: palomita, la charola que se sirve, la bolsa que se cierra, la moto que sale, el lugar.
 function escena(paso) {
-  for (const el of main.querySelectorAll('.escena > *')) el.hidden = el.dataset.escena !== paso;
+  // toggleAttribute y no .hidden: en un <svg> .hidden no existe y no esconde nada.
+  for (const el of main.querySelectorAll('.escena > *')) el.toggleAttribute('hidden', el.dataset.escena !== paso);
   const el = main.querySelector(`.escena [data-escena="${paso}"]`);
+  escenaTl?.kill(); // el vapor y la moto se repiten: la escena anterior se detiene
   const gsap = animador();
   if (!gsap || !el) return;
   const tl = gsap.timeline();
+  escenaTl = tl;
   tl.fromTo(el, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: 'back.out(2)' });
   if (paso === 'preparando') tl.fromTo(el.querySelectorAll('.vapor-linea'), { y: 6, autoAlpha: 0 }, { y: -6, autoAlpha: 1, duration: 0.8, stagger: 0.15, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 0.2);
   if (paso === 'asignado') tl.fromTo(el.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, transformOrigin: '50% 100%', duration: 0.4, ease: 'power2.inOut' }, 0.25);
   if (paso === 'en_camino') tl.fromTo(el.querySelector('.moto'), { x: -40 }, { x: 60, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, 0.1);
-  if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: 'back.out(3)' }, 0.2);
+  if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(3)' }, 0.2);
 }
 
 // Al volver a esta página sin recargar (js/paginas.js), el seguimiento sigue donde iba.

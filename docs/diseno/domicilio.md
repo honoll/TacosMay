@@ -20,7 +20,7 @@ la landing. No está en la navegación principal.
 1. **Tus tacos.** Los catorce nombres del pizarrón con su precio de barra ($40, $45 y $60), marcados en
    la página como «precios de ejemplo» y en el código como `PENDIENTE-CLIENTE` (la foto del pizarrón
    tiene meses). Botones − n + con tope de 20 por guiso. A un lado (abajo en celular), la cuenta:
-   tacos + envío = total; el envío dice «se cotiza con tu dirección» hasta cotizar.
+   tacos + envío = total; el envío dice «por cotizar» hasta cotizar.
 2. **A dónde.** Calle y número, colonia (lista de zonas de ejemplo + «Otra colonia»), referencias
    (opcional), quién recibe y teléfono de 10 dígitos. «Cotizar el envío» pide la cotización.
    - **Fuera de cobertura** («Otra colonia»): mensaje franco y enlace al guiso empacado.
