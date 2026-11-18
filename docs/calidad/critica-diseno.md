@@ -128,3 +128,27 @@ usan las hojas compartidas** — `/`, `/tienda/` (lista, ficha, carrito, entrar,
 orden, entrega, pagar, seguimiento), `/proyecto/` y la 404 — a **390, 1234 y 1440**. Las capturas de esta vuelta
 están en `capturas/despues/` (39 pantallas, más la lista de la tienda a 1920); en las 40, `scrollWidth` = ancho
 de la ventana.
+
+## Lista y bolsa de la tienda: una sola regla (`6b6fcad`)
+
+El arreglo anterior (lista de 760 px + bolsa de 400 px alineadas a la izquierda) dejaba ~110 px muertos a la
+derecha de la bolsa a 1440. Ahora la rejilla es **`minmax(0, 1fr) clamp(360px, 30%, 520px)` con 56 px fijos
+entre las dos**, y los renglones ya no tienen `max-width` propio. Medido en el DOM ya pintado:
+
+| Ancho | Lista ↔ cabecera (izq.) | Entre lista y bolsa | Bolsa ↔ cabecera (der.) | Bolsa |
+|---|---|---|---|---|
+| 1100 | 0 | 56 | 0 | 360 |
+| 1234 | 0 | 56 | 0 | 360 |
+| 1440 | 0 | 56 | 0 | 397 |
+| 1680 | 0 | 56 | 0 | 466 |
+| 1920 | 0 | 56 | 0 | 504 |
+
+**El aviso que caía sobre el pie.** «Inicia sesión para continuar» salía en el aviso fijo de abajo como error
+(los errores no se van solos), así que en páginas cortas tapaba el pie. No es un error: es el porqué de estar en
+la pantalla de entrar. Ahora va **bajo el título de iniciar sesión** («Inicia sesión para ver tu carrito» o «tus
+pedidos») y el aviso fijo queda para confirmaciones y errores de verdad. Prueba en `app.test`.
+
+**El carrito, capturado de verdad** (`tienda-carrito-*`, `tienda-lista-con-bolsa-*`): sin crear cuentas ni
+iniciar sesión en el sitio publicado. En el Chrome de captura se respondieron `/api/carrito` y `/api/users/me` con
+datos de prueba (dos guisos reales del catálogo, sesión simulada); nada se escribe en el servidor ni en Redis.
+`tienda-entrar-desde-carrito-*` es la pantalla de entrar a la que se llega desde el carrito sin sesión.
