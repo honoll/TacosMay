@@ -108,3 +108,23 @@ convención útil, no adorno.
 **Comprobado** (capturas de `capturas/despues/`, página completa, movimiento reducido): a 390 y a 1440, inicio,
 lista de la tienda, ficha, carrito, entrar y registro; `scrollWidth === innerWidth` en las doce. Pruebas de
 `frontend/` pasando. **No comprobado:** el movimiento (las capturas van sin él) ni en un iPhone de verdad.
+
+## Regresiones de la pasada de sistema (corregidas en `eabfb82` y `9b6ff6a`)
+
+Alejandro las vio en computadora (`capturas/reportes/domicilio-cuenta-encimada.png`, ~1234 px). La pasada de
+sistema tocó las hojas compartidas y no se revisó `/domicilio/`.
+
+| Regresión | Causa | Qué se hizo |
+|---|---|---|
+| Un parche crema encima de «Tu cuenta» en `/domicilio/` | Los chips de sección (`.secciones`) se hicieron de orilla a orilla con margen negativo en la pasada para iPhone, **a todo ancho**. En escritorio se salían 25 px de su columna; con fondo crema, `sticky` y `z-index: 1`, tapaban el principio de «Tacos» y «Envío». | El margen negativo solo en celular (< 900 px). En escritorio los chips no salen de su columna. |
+| Nada compartía el ancho de caja en `/domicilio/` | El aviso tenía el `max-width` de los párrafos; la columna del menú tenía tope de 720 px, así que la cuenta no llegaba a la orilla. | El aviso al ancho de la caja; columna del menú flexible: la cuenta cierra en la orilla de la cabecera y de las rayas. El texto corrido conserva su medida de lectura (60 em). |
+| La raya bajo «Propina» partida en dos | El filo del total iba en `dt` y `dd` por separado; el hueco entre columnas lo cortaba. | El filo del `dt` cruza el hueco (una sola raya). |
+| `/domicilio/` sin las reglas nuevas | No pasó por la crítica. | Una tarjeta (filo gris 1,5 px) para menú, orden, barra, cuenta e historial; formularios y propina con rayas; sin sombra dura en el modo elegido; la franja solo en el botón principal; títulos con la escala compartida. |
+| Tienda en escritorio: la bolsa muy a la derecha y un hueco en medio | El cambio 12 (columna flexible + bolsa de 400 px) separaba lista y bolsa en pantallas anchas. | Lista de hasta 760 px y la bolsa enseguida, alineadas con la cabecera; lo que sobra queda a la derecha, no entre ellas. Comprobado a 1234, 1440 y 1920. |
+| El cierre del inicio, reducido a franja | El cambio 15. A Alejandro le gustaba más el grande. | Vuelve el «Ya está hecho.» grande sobre negro, con la línea y el botón (sin ollas). |
+
+**Regla desde ahora:** después de cada pasada de sistema, antes de publicar, se revisan **todas las páginas que
+usan las hojas compartidas** — `/`, `/tienda/` (lista, ficha, carrito, entrar, registro), `/domicilio/` (menú,
+orden, entrega, pagar, seguimiento), `/proyecto/` y la 404 — a **390, 1234 y 1440**. Las capturas de esta vuelta
+están en `capturas/despues/` (39 pantallas, más la lista de la tienda a 1920); en las 40, `scrollWidth` = ancho
+de la ventana.
