@@ -91,6 +91,8 @@ Object.assign(globalThis, {
         pause() { pausada = true; return tl; },
         play() { pausada = false; setTimeout(fin, 5); return tl; },
         paused: () => pausada,
+        duration: () => 0.32, // lo que dura el vuelo
+        time: () => 0,
         progress() { pausada = false; fin(); return tl; },
         seek() { return tl; },
       };
