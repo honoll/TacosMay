@@ -16,6 +16,7 @@ let current = '';    // vista pintada (puede diferir del hash si un guard rediri
 let rendered = null; // hash ya pintado, para no repintar en el hashchange de go()
 let renderId = 0;
 let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
+let nuevo = null;        // el pedido recién confirmado: llega resaltado a «Mis pedidos»
 let ultimo = null;       // lo último que se quitó del carrito, para poder deshacerlo
 let param = '';         // lo que sigue a la vista en la dirección: #guiso/3 → '3'
 
@@ -261,14 +262,24 @@ const VIEWS = {
     return `
       ${VOLVER}
       <h1>Mis pedidos</h1>
-      <ul class="pedidos">${pedidos.map((p) => `
-        <li class="card">
-          <h2>Pedido #${esc(p.id)}</h2>
-          <p class="meta">${esc(fecha(p.creado))}</p>
-          <ul>${p.items.map((i) => `
-            <li>${esc(i.cantidad)} × ${esc(i.nombre)} — ${money(i.precio_centavos * i.cantidad)}</li>`).join('')}</ul>
-          <p class="total">Total: <strong>${money(p.total_centavos)}</strong></p>
-        </li>`).join('')}</ul>
+      <ul class="pedidos">${pedidos.map((p, n) => {
+        // El recién confirmado llega abierto y resaltado; si no hay uno, se abre el más nuevo.
+        const esNuevo = String(p.id) === String(nuevo);
+        const piezas = p.items.reduce((t, i) => t + i.cantidad, 0);
+        return `
+        <li class="card${esNuevo ? ' nuevo' : ''}">
+          <details${esNuevo || (!nuevo && n === 0) ? ' open' : ''}>
+            <summary>
+              <h2>Pedido #${esc(p.id)}</h2>
+              <span class="meta">${esc(fecha(p.creado))} · ${piezas} ${piezas === 1 ? 'guiso' : 'guisos'}</span>
+              <strong>${money(p.total_centavos)}</strong>
+            </summary>
+            <ul>${p.items.map((i) => `
+              <li><span>${esc(i.cantidad)} × ${esc(i.nombre)}</span><span>${money(i.precio_centavos * i.cantidad)}</span></li>`).join('')}</ul>
+            <p class="total">Total: <strong>${money(p.total_centavos)}</strong></p>
+          </details>
+        </li>`;
+      }).join('')}</ul>
       <aside class="otro" aria-label="Seguir comprando">
         ${picto('Charola')}
         <h2>¿Otro guiso?</h2>
@@ -496,7 +507,9 @@ const ACTIONS = {
     const p = await api('/pedidos', { method: 'POST' });
     setCart(EMPTY);
     notice(`Pedido #${p.id} confirmado por ${money(p.total_centavos)}.`);
+    nuevo = p.id;
     await go('pedidos');
+    nuevo = null;
   },
 
   async saveGuiso(form) {

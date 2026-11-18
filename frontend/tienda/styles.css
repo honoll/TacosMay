@@ -231,6 +231,24 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
 
 /* Pedidos: una tarjeta por pedido, a lo ancho de su columna; al lado, la salida para seguir comprando. */
 .pedidos { display: grid; gap: 12px; }
+/* Cada pedido es un renglón que se abre en su lugar (<details>: teclado y lector los pone el navegador). */
+.pedidos summary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 16px; min-height: 48px; cursor: pointer; list-style: none; }
+.pedidos summary::-webkit-details-marker { display: none; }
+.pedidos summary h2 { margin: 0; }
+.pedidos summary h2::before { content: "+ "; }
+.pedidos details[open] summary h2::before { content: "− "; }
+.pedidos summary .meta { grid-column: 1; }
+.pedidos summary strong { grid-area: 1 / 2 / 3 / 3; font: 800 1.5rem var(--angosta); }
+.pedidos details[open] summary strong { visibility: hidden; } /* abierto, el total ya va abajo */
+.pedidos details > ul { margin-top: 12px; }
+.pedidos details li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 2px dashed var(--negro); }
+.pedidos .nuevo { outline: 4px solid var(--negro); outline-offset: -4px; }
+@media (prefers-reduced-motion: no-preference) {
+  .pedidos .nuevo { animation: llega-pedido 1.2s var(--sale); }
+  @keyframes llega-pedido { from { background: #f2b33d; } }
+  .pedidos details[open] > :not(summary) { animation: abre var(--t-chico) var(--entra); }
+  @keyframes abre { from { opacity: 0; transform: translateY(-6px); } }
+}
 .otro, .vacio { display: grid; justify-items: center; gap: 12px; padding: clamp(24px, 5vw, 56px); border-radius: 12px; background: var(--acero); text-align: center; }
 .otro { margin-top: 16px; }
 .otro h2, .vacio h2 { margin: 0; }
