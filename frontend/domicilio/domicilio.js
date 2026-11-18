@@ -255,7 +255,7 @@ $('#form-pagar').addEventListener('submit', async (e) => {
     r = { ok: false, texto: err.message };
   }
   pintar(r);
-  if (r?.ok) { enfocar('#vista-seguimiento .confirmado'); seguir(); } else if (f.estado.vista === 'pagar') $('.problema-pagar').focus(); else enfocar('#vista-modo h2');
+  if (r?.ok) { enfocar('#vista-seguimiento .confirmado'); entrando = true; seguir(); } else if (f.estado.vista === 'pagar') $('.problema-pagar').focus(); else enfocar('#vista-modo h2');
 });
 
 // ---------- 5 · Seguimiento ----------
@@ -493,24 +493,31 @@ function ponerTotal(centavos) {
 }
 
 // ---------- El seguimiento, que avanza solo ----------
+// Cómo se pinta: «entrada» al confirmar (secuencia breve), «paso» cuando el estado cambia a la vista,
+// «quieto» al llegar a un pedido ya avanzado (recargar, volver a la página): se ve donde va, sin repetir nada.
 let mostrado = null;
 let escenaTl = null;
 let reloj = 0;
+let hechosPuestos = 0;
+let entrando = false;
 async function seguir() {
   clearTimeout(reloj);
   if (!f.estado.pedido || !activa()) return;
   const e = await f.seguir();
   const modo = f.estado.pedido.modo;
-  const linea = e.pasos.map((x) => `<li data-paso="${x}">${ETIQUETAS[x]}</li>`).join('');
+  const linea = e.pasos.map((x) => `<li data-paso="${x}"><span class="punto" aria-hidden="true"></span><span class="tramo" aria-hidden="true"><i></i></span>${ETIQUETAS[x]}</li>`).join('');
   if (linea !== lineaPuesta) { $('.linea').innerHTML = linea; lineaPuesta = linea; }
   const i = e.pasos.indexOf(e.paso);
+  const entregado = e.paso === 'entregado'; // entregado: todos hechos, ninguno «en curso»
+  const hechos = entregado ? e.pasos.length : Math.max(i, 0);
   $$('.linea li').forEach((li, k) => {
-    li.classList.toggle('hecho', k < i);
-    li.classList.toggle('ahora', k === i);
+    li.classList.toggle('hecho', k < hechos);
+    li.classList.toggle('ahora', k === i && !entregado);
     li.setAttribute('aria-current', k === i ? 'step' : 'false');
   });
   $('.estado-texto').textContent = e.paso === 'cancelado' ? 'Pedido cancelado. No se cobró nada.' : TEXTOS[modo][e.paso] ?? '';
-  const fin = e.paso === 'entregado' || e.paso === 'cancelado';
+  const fin = entregado || e.paso === 'cancelado';
+  $('.linea').classList.toggle('fin', fin);
   $('.llega').textContent = fin || !e.llega ? '' : `${modo === 'domicilio' ? 'Llega' : 'Listo'} cerca de las ${hora(e.llega)} (hora de prueba).`;
   $('.repartidor').hidden = !e.repartidor || fin;
   $('#cancelar').hidden = !e.cancelable;
@@ -518,29 +525,64 @@ async function seguir() {
   $('#nuevo').hidden = !fin;
   $('.n-pedidos').textContent = `(${f.pedidos.length})`;
   const escenaPaso = ESCENA[e.paso] ?? e.paso;
-  if (escenaPaso !== mostrado) { escena(escenaPaso); mostrado = escenaPaso; }
+  const como = entrando ? 'entrada' : mostrado == null ? 'quieto' : 'paso';
+  if (escenaPaso !== mostrado || como === 'entrada') escena(escenaPaso, como, hechosPuestos, hechos);
+  [mostrado, hechosPuestos, entrando] = [escenaPaso, hechos, false];
   if (!fin) reloj = setTimeout(seguir, 500);
 }
 
 // La escena de cada paso: palomita, la charola que se sirve, la bolsa que se cierra, la moto que sale, el lugar.
-function escena(paso) {
-  // toggleAttribute y no .hidden: en un <svg> .hidden no existe y no esconde nada.
-  for (const el of $$('.escena > *')) el.toggleAttribute('hidden', el.dataset.escena !== paso);
-  const el = main.querySelector(`.escena [data-escena="${paso}"]`);
+// Con ella se mueve la línea: el paso que se completa se sella, su tramo se llena hacia el siguiente y el
+// siguiente se enciende. Los orígenes dentro del SVG van en sus unidades (svgOrigin), no en porcentaje:
+// así no dependen de getBBox, que en Safari falla con elementos que se acaban de mostrar.
+function escena(paso, como, de, a) {
   escenaTl?.kill(); // el vapor y la moto se repiten: la escena anterior se detiene
   const gsap = animador();
-  if (!gsap || !el) return;
+  const nueva = main.querySelector(`.escena [data-escena="${paso}"]`);
+  // La que sale se queda visible mientras se va (solo si hay movimiento y es un cambio de paso).
+  const vieja = gsap && como === 'paso' ? $$('.escena > :not([hidden])').find((el) => el !== nueva) : null;
+  // toggleAttribute y no .hidden: en un <svg> .hidden no existe y no esconde nada.
+  for (const el of $$('.escena > *')) el.toggleAttribute('hidden', el !== nueva && el !== vieja);
+  if (!gsap || !nueva) return;
+  gsap.set(nueva, { clearProps: 'transform,opacity,visibility' });
   const tl = gsap.timeline();
   escenaTl = tl;
-  tl.fromTo(el, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: T.grande, ease: CURVA });
-  // El texto del estado entra con la escena, desde abajo, sin rehacerse: un solo movimiento por paso.
-  tl.fromTo(main.querySelectorAll('.estado-texto, .llega'), { y: 6, opacity: 0 }, { y: 0, opacity: 1, duration: T.chico, ease: CURVA, stagger: 0.04, clearProps: 'transform,opacity' }, 0.06);
+  const lis = $$('.linea li');
   const ahora = main.querySelector('.linea li.ahora');
-  if (ahora) tl.fromTo(ahora, { x: -8 }, { x: 0, duration: T.chico, ease: CURVA, clearProps: 'transform' }, 0.06);
-  if (paso === 'preparando') tl.fromTo(el.querySelectorAll('.vapor-linea'), { y: 6, autoAlpha: 0 }, { y: -6, autoAlpha: 1, duration: 0.8, stagger: 0.15, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 0.2);
-  if (paso === 'asignado') tl.fromTo(el.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, transformOrigin: '50% 100%', duration: T.grande, ease: CURVA }, 0.2);
-  if (paso === 'en_camino') tl.fromTo(el.querySelector('.moto'), { x: -16 }, { x: 16, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, 0.1);
-  if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: T.grande, ease: CURVA }, 0.15);
+  const textos = main.querySelectorAll('.estado-texto, .llega');
+  const sale = { y: 0, opacity: 1, ease: CURVA, clearProps: 'transform,opacity' };
+
+  if (como === 'entrada') {
+    // El número se pega como la etiqueta de la caja en la tienda; luego la escena, el estado y la línea.
+    tl.fromTo('#vista-seguimiento .confirmado', { y: 8, opacity: 0 }, { ...sale, duration: T.chico }, 0)
+      .fromTo('#vista-seguimiento .numero', { scale: 1.25, rotation: -6, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' }, 0.1)
+      .fromTo(nueva, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: T.grande, ease: CURVA }, 0.22)
+      .fromTo(textos, { y: 6, opacity: 0 }, { ...sale, duration: T.chico, stagger: 0.05 }, 0.3)
+      // Solo opacidad: si el renglón se moviera, su tramo se saldría de la línea.
+      .fromTo(lis, { opacity: 0 }, { opacity: 1, duration: T.chico, ease: CURVA, stagger: 0.05, clearProps: 'opacity' }, 0.36);
+    if (ahora) tl.fromTo(ahora.querySelector('.punto'), { scale: 0.3 }, { scale: 1, duration: 0.3, ease: 'back.out(2.5)', clearProps: 'transform' }, 0.5);
+  } else if (como === 'paso') {
+    if (vieja) tl.to(vieja, { x: -18, autoAlpha: 0, duration: 0.16, ease: 'power2.in', onComplete: () => { vieja.setAttribute('hidden', ''); gsap.set(vieja, { clearProps: 'transform,opacity,visibility' }); } }, 0);
+    tl.fromTo(nueva, { x: 18, scale: 0.92, autoAlpha: 0 }, { x: 0, scale: 1, autoAlpha: 1, duration: T.grande, ease: CURVA }, 0.12)
+      .fromTo(textos, { y: 6, opacity: 0 }, { ...sale, duration: T.chico, stagger: 0.04 }, 0.14);
+    // Lo que se completó: el punto se sella y su tramo se llena de arriba hacia abajo, uno tras otro.
+    const completos = lis.slice(de, a);
+    completos.forEach((li, k) => {
+      tl.fromTo(li.querySelector('.punto'), { scale: 1.35 }, { scale: 1, duration: T.grande, ease: CURVA, clearProps: 'transform', immediateRender: false }, 0.04 + k * 0.14)
+        .fromTo(li.querySelector('.tramo i'), { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: 'power2.inOut', clearProps: 'transform' }, 0.08 + k * 0.14);
+    });
+    // Y el que sigue se enciende cuando el tramo llega a él.
+    if (ahora) {
+      const t = 0.08 + Math.max(completos.length, 1) * 0.14 + 0.12;
+      tl.fromTo(ahora.querySelector('.punto'), { scale: 0.3 }, { scale: 1, duration: 0.3, ease: 'back.out(2.5)', clearProps: 'transform' }, t);
+    }
+  }
+  // La vida de cada escena mientras espera (también al llegar a un pedido ya avanzado).
+  const t0 = como === 'quieto' ? 0 : 0.3;
+  if (paso === 'preparando') tl.fromTo(nueva.querySelectorAll('.vapor-linea'), { y: 6, autoAlpha: 0 }, { y: -6, autoAlpha: 1, duration: 0.8, stagger: 0.15, repeat: -1, yoyo: true, ease: 'sine.inOut' }, t0);
+  if (paso === 'asignado' && como !== 'quieto') tl.fromTo(nueva.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, svgOrigin: '32 16', duration: T.grande, ease: CURVA }, t0);
+  if (paso === 'en_camino') tl.fromTo(nueva.querySelector('.moto'), { x: -16 }, { x: 16, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, t0);
+  if (paso === 'entregado' && como !== 'quieto') tl.fromTo(nueva.querySelector('.palomita'), { scale: 0.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, svgOrigin: '44 34', duration: T.grande, ease: 'back.out(2)' }, t0);
 }
 
 // Al volver a esta página sin recargar (js/paginas.js), todo sigue donde iba.

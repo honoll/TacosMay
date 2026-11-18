@@ -183,8 +183,9 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 
 /* 5 · Confirmación y seguimiento */
 :where(.en-domicilio) .confirmado { margin: 0 0 4px; font: 600 1.1rem/1.2 var(--fuente); }
-:where(.en-domicilio) .confirmado b { font: 800 1.5rem/1 var(--angosta); letter-spacing: .04em; }
+:where(.en-domicilio) .confirmado b { display: inline-block; font: 800 1.5rem/1 var(--angosta); letter-spacing: .04em; } /* inline-block: el número se «pega» como la etiqueta de la caja */
 :where(.en-domicilio) .escena { display: grid; place-items: center; height: 140px; margin-bottom: 8px; border-radius: 12px; background: #fff; color: var(--negro); overflow: hidden; }
+:where(.en-domicilio) .escena > * { grid-area: 1 / 1; } /* encimadas: la que sale y la que entra se cruzan sin mover nada */
 :where(.en-domicilio) .escena svg { width: auto; height: 120px; max-width: 100%; }
 :where(.en-domicilio) .estado-texto { margin: 0 0 4px; font-weight: 600; font-size: 1.15rem; }
 :where(.en-domicilio) .llega { margin: 0 0 12px; color: var(--gris); }
@@ -192,12 +193,25 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 :where(.en-domicilio) .aviso-cancelar { font-weight: 600; }
 :where(.en-domicilio) .linea { display: grid; margin-bottom: 12px !important; }
 :where(.en-domicilio) .linea li { position: relative; padding: 6px 0 6px 34px; color: var(--gris); }
-:where(.en-domicilio) .linea li::before { content: ""; position: absolute; left: 6px; top: 50%; width: 14px; height: 14px; border: 2.5px solid currentColor; border-radius: 50%; background: var(--crema); transform: translateY(-50%); }
-:where(.en-domicilio) .linea li:not(:last-child)::after { content: ""; position: absolute; left: 13px; top: calc(50% + 9px); height: calc(100% - 18px); border-left: 2.5px solid var(--marco); }
+/* Cada paso: su punto y el tramo hacia el siguiente (spans decorativos, para que GSAP los mueva; los
+   pseudoelementos no se pueden animar). Sin animación, las clases dejan cada estado completo. */
+:where(.en-domicilio) .linea .punto { position: absolute; left: 6px; top: calc(50% - 7px); width: 14px; height: 14px; border: 2.5px solid currentColor; border-radius: 50%; background: var(--crema); }
+:where(.en-domicilio) .linea .tramo { position: absolute; left: 11.75px; top: calc(50% + 9px); width: 2.5px; height: calc(100% - 18px); background: var(--marco); overflow: hidden; }
+:where(.en-domicilio) .linea li:last-child .tramo { display: none; }
+:where(.en-domicilio) .linea .tramo i { display: block; height: 100%; background: var(--negro); transform: scaleY(0); transform-origin: 50% 0; }
 :where(.en-domicilio) .linea li.hecho { color: var(--negro); }
-:where(.en-domicilio) .linea li.hecho::before { background: var(--negro); border-color: var(--negro); }
+:where(.en-domicilio) .linea li.hecho .punto { background: var(--negro); border-color: var(--negro); }
+:where(.en-domicilio) .linea li.hecho .tramo i { transform: none; }
+/* La palomita del paso hecho */
+:where(.en-domicilio) .linea li.hecho .punto::after { content: ""; position: absolute; left: 2.6px; top: .6px; width: 3px; height: 6px; border: solid var(--crema); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 :where(.en-domicilio) .linea li.ahora { color: var(--negro); font-weight: 700; }
-:where(.en-domicilio) .linea li.ahora::before { background: var(--rojo-may); border-color: var(--negro); }
+:where(.en-domicilio) .linea li.ahora .punto { background: var(--rojo-may); border-color: var(--negro); }
+/* El paso en curso late mientras espera: un aro que se abre y se apaga (solo transform y opacidad). */
+:where(.en-domicilio) .linea li.ahora .punto::before { content: ""; position: absolute; inset: -6px; border: 2px solid var(--rojo-may); border-radius: 50%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  :where(.en-domicilio) .linea:not(.fin) li.ahora .punto::before { animation: latido 1.8s cubic-bezier(.2, .6, .3, 1) infinite; }
+}
+@keyframes latido { 0% { transform: scale(.55); opacity: .9; } 70%, 100% { transform: scale(1.35); opacity: 0; } }
 :where(.en-domicilio) .repartidor { display: flex; align-items: center; gap: 8px; color: var(--gris); }
 :where(.en-domicilio) .contacto-barra { color: var(--gris); }
 
