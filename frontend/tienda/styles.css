@@ -80,9 +80,6 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
 .acabo { margin: 0; min-height: 48px; display: grid; align-items: center; font: 600 .95rem/1.2 var(--angosta); letter-spacing: .1em; text-transform: uppercase; color: var(--suave); }
 
 /* Esqueleto: charolas vacías mientras llegan los guisos. */
-.charola.hueca .guiso { background: var(--acero); }
-.charola.hueca .datos p { height: 1.1em; margin: 0; border-radius: 4px; background: var(--acero); }
-.charola.hueca .datos p + p { width: 55%; }
 
 .card, .form, .lista li {
   background: var(--tarjeta);
@@ -191,8 +188,6 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
   .cant.baja { animation: rueda-baja var(--t-chico) var(--entra); }
   @keyframes rueda-sube { from { transform: translateY(70%); opacity: 0; } }
   @keyframes rueda-baja { from { transform: translateY(-70%); opacity: 0; } }
-  .charola.hueca { animation: late 1s var(--entra) infinite alternate; }
-  @keyframes late { to { opacity: .55; } }
 
   @keyframes emp-aparece { from { transform: translateY(10px) scale(.9); opacity: 0; } }
   @keyframes emp-cae { from { transform: translateY(-140%); } }
@@ -375,3 +370,8 @@ button.enviando::after { content: "…"; }
   .palomita { animation: palomea var(--t-grande) var(--entra) var(--t-chico) backwards; }
   @keyframes palomea { from { opacity: 0; transform: scale(.6); } }
 }
+
+/* ---------- Envíos y preguntas ---------- */
+.ayuda { display: grid; gap: 12px; max-width: 72ch; }
+.ayuda h2 { margin: 16px 0 0; font-size: 1.5rem; }
+.ayuda p { margin: 0; }

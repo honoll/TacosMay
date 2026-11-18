@@ -223,12 +223,33 @@ const VIEWS = {
         </section>
         <section>
           <h2>${picto('Congelado')} Cómo se conserva</h2>
-          <p>Va empacado al vacío y congelado. Guárdalo en el congelador hasta que lo vayas a usar.</p>
+          <p>Va empacado al vacío y congelado. Guárdalo en el congelador hasta que lo vayas a usar. <a href="#ayuda">Envíos y preguntas</a></p>
         </section>
       </div>
       ${otros.length ? `<h2>Otros guisos</h2><ul class="barra">${otros.map(conDescripcion(todos)).join('')}</ul>` : ''}`;
     // PENDIENTE-CLIENTE: instrucciones exactas de calentado y de conservación por guiso, cuánto dura,
     // ingredientes y alérgenos (necesitan campos nuevos: docs/diseno/plan-segundo-tiempo.md).
+  },
+
+  // Envíos y preguntas: solo lo que es cierto hoy. Lo demás se dice que falta, no se inventa.
+  // PENDIENTE-CLIENTE: cobertura, costo, tiempos y días de envío; vida útil; formas de pago; contacto.
+  async ayuda() {
+    return `
+      ${VOLVER}
+      <h1>Envíos y preguntas</h1>
+      <div class="ayuda">
+        <h2>¿Cómo vienen los guisos?</h2>
+        <p>Empacados al vacío y congelados. Rompes la bolsa, calientas y comes.</p>
+        <h2>¿Ya hacen envíos?</h2>
+        <p>Todavía no. A dónde llega, cuánto cuesta y en cuántos días está por confirmar; cuando esté seguro, va a aparecer aquí.</p>
+        <h2>¿Se paga en la página?</h2>
+        <p>No. La tienda todavía no cobra: confirmar un pedido lo deja registrado en «Mis pedidos».</p>
+        <h2>¿Por qué mi carrito tiene reloj?</h2>
+        <p>El carrito se guarda por un tiempo y el reloj dice cuánto le queda. Cada cambio lo renueva; si llega a cero, se vacía solo.</p>
+        <h2>¿Los precios son los reales?</h2>
+        <p>Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
+        <p><a class="btn" href="#catalogo">Ver guisos</a></p>
+      </div>`;
   },
 
   async carrito() {
@@ -240,7 +261,7 @@ const VIEWS = {
       ${VOLVER}
       <h1>Tu carrito</h1>
       <p class="expira">Tu carrito expira en <strong data-countdown></strong>
-        <small>Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL).</small></p>
+        <small>Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL). <a href="#ayuda">Envíos y preguntas</a></small></p>
       <ul class="lista">${cart.items.map(({ guiso: g, cantidad }) => `
         <li style="view-transition-name: fila-${String(g.id).replace(/\W/g, '')}">
           <div class="crece"><strong>${esc(g.nombre)}</strong><br>${money(g.precio_centavos)} c/u</div>
@@ -572,6 +593,7 @@ async function run(fn) {
 const TITULOS = {
   catalogo: 'Guisos', carrito: 'Tu carrito', pedidos: 'Mis pedidos', admin: 'Administrar guisos',
   cuenta: 'Tu cuenta', entrar: 'Iniciar sesión', registro: 'Crear cuenta', guiso: 'Guiso',
+  ayuda: 'Envíos y preguntas',
 };
 
 // La dirección es #vista o #vista/parámetro (la ficha: #guiso/3).

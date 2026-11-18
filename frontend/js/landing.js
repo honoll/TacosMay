@@ -16,9 +16,14 @@ const estado = document.getElementById('menu-estado');
 const texto = document.getElementById('menu-texto');
 const reintentar = document.getElementById('menu-reintentar');
 
-const guiso = (g) => charola(g.nombre, `
+const ficha = (g) => `/tienda/#guiso/${encodeURIComponent(g.id)}`;
+const HUECAS = '<li class="charola hueca" aria-hidden="true"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li>'.repeat(8);
+
+// Cada charola lleva a su ficha en la tienda; las que más salen traen además el botón.
+const guiso = (g, boton = false) => charola(g.nombre, `
     <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} en existencia` : 'Se acabó por hoy'}${g.vendidos > 0 ? ` · ${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}` : ''}</p>
-    <p class="precio">${money(g.precio_centavos)}</p>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+    <p class="precio">${money(g.precio_centavos)}</p>${boton && g.stock > 0 ? `
+    <a class="btn chico" href="${ficha(g)}">Pedir<span class="sr"> ${esc(g.nombre)}</span></a>` : ''}`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: ficha(g) });
 
 // Un solo lugar decide qué muestra el estado del menú: cargando, error o nada.
 function setEstado(msg, kind) {
@@ -30,13 +35,15 @@ function setEstado(msg, kind) {
 
 async function loadMenu() {
   setEstado('Leyendo el menú…', 'cargando');
+  menu.innerHTML = HUECAS; // charolas huecas mientras responde la API
   try {
     const [top, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
-    populares.innerHTML = top.map(guiso).join('');
+    populares.innerHTML = top.map((g) => guiso(g, true)).join('');
     bloquePopulares.hidden = !top.length;
-    menu.innerHTML = todos.map(guiso).join('');
+    menu.innerHTML = todos.map((g) => guiso(g)).join('');
     setEstado(todos.length ? '' : 'Todavía no hay guisos en el menú.');
   } catch {
+    menu.innerHTML = '';
     // Estado digno: la página sigue completa y la tienda sigue a un clic.
     setEstado('No pudimos leer el menú. Dale otra vez, o entra a la tienda.', 'error');
   }
@@ -54,10 +61,25 @@ const seen = new IntersectionObserver((entries) => {
 }, { rootMargin: '0px 0px -10% 0px' });
 document.querySelectorAll('.barra:not(.entra)').forEach((el) => seen.observe(el));
 
+const como = document.getElementById('como');
+
+// ---------- La cabecera marca la sección que está al centro de la pantalla ----------
+const enlaces = document.querySelectorAll('#nav-principal a');
+const alCentro = new Set();
+const centro = new IntersectionObserver((entries) => {
+  for (const e of entries) alCentro[e.isIntersecting ? 'add' : 'delete'](e.target.id);
+  const actual = alCentro.size ? `/#${[...alCentro][0]}` : '/';
+  for (const a of enlaces) {
+    if (a.getAttribute('href') === actual) a.setAttribute('aria-current', actual === '/' ? 'page' : 'location');
+    else a.removeAttribute('aria-current');
+  }
+}, { rootMargin: '-45% 0px -45% 0px' });
+centro.observe(como);
+centro.observe(document.getElementById('taqueria'));
+
 // ---------- Escena «Cómo funciona»: el scroll elige el estado activo ----------
 // JS solo publica el paso (1 a 3); el resalte está en CSS, que lo ignora en celular y con movimiento reducido.
 
-const como = document.getElementById('como');
 const STEPS = 3;
 let queued = false;
 

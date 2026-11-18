@@ -73,6 +73,16 @@
       </div>
     </section>
 
+    <!-- Lo que más sale, con precio y botón, justo después del héroe: quien ya sabe qué quiere no baja más.
+         Sale en vivo de GET /guisos/populares; sin pedidos todavía, la sección no aparece. -->
+    <section class="salen" id="populares-bloque" aria-labelledby="populares-titulo" hidden>
+      <div class="caja">
+        <h2 class="rot" id="populares-titulo">Lo que más sale</h2>
+        <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
+        <ol class="barra top" id="populares"></ol>
+      </div>
+    </section>
+
     <!-- Escena 2 · llega preguntándose «¿y cómo se come?» → sale sabiendo: rompo, caliento y ya.
          Los tres estados del producto: en la charola, en la bolsa, en el taco. -->
     <section class="como" id="como" aria-labelledby="como-titulo">
@@ -116,12 +126,6 @@
          el color, el número y la foto de cada charola los pone js/barra.js, buscados por el nombre del guiso. -->
     <section class="guisos" id="guisos" aria-labelledby="guisos-titulo">
       <div class="caja">
-        <div id="populares-bloque" hidden>
-          <h2 class="rot" id="populares-titulo">Lo que más sale</h2>
-          <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
-          <ol class="barra top" id="populares" aria-labelledby="populares-titulo"></ol>
-        </div>
-
         <h2 class="rot" id="guisos-titulo">Todas las charolas</h2>
         <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página.</p>
         <ul class="barra" id="menu"></ul>
@@ -220,6 +224,7 @@
         <a href="/#taqueria">La taquería</a>
         <a href="/tienda/#carrito">Carrito</a>
         <a href="/tienda/#entrar">Entrar</a>
+        <a href="/tienda/#ayuda">Envíos y preguntas</a>
       </nav>
       <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
       <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->

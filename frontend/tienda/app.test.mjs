@@ -200,6 +200,12 @@ assert.equal(cuerpos[n], '{"cantidad":2}', 'deshacer regresa la cantidad que hab
 await ir('pedidos');
 assert.match(vista().innerHTML, /<details open>\s*<summary>\s*<h2>Pedido #/, 'el pedido más nuevo viene abierto');
 
+// Envíos y preguntas: vista pública, enlazada desde el carrito
+await ir('carrito');
+assert.match(vista().innerHTML, /href="#ayuda"/);
+await ir('ayuda');
+assert.match(vista().innerHTML, /<h1>Envíos y preguntas<\/h1>/);
+
 // Estados vacíos con salida
 carritoVacio = true;
 await ir('catalogo'); await ir('carrito');

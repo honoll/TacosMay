@@ -67,7 +67,9 @@ h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom:
 
 /* ---------- Escena 3: las charolas, en vivo ---------- */
 
-.guisos h2 + .entrada { margin-bottom: 24px; }
+.guisos h2 + .entrada, .salen h2 + .entrada { margin-bottom: 24px; }
+main > .salen { padding-block: 0 clamp(32px, 5vw, 64px); }
+.salen .btn { position: relative; margin-top: 6px; } /* por encima de la zona de toque de la charola */
 .guisos .barra + h2 { margin-top: clamp(40px, 6vw, 72px); }
 .estado { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 14px 18px; border-left: 6px solid var(--negro); background: var(--acero); font-weight: 600; }
 
@@ -132,6 +134,10 @@ main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
+  /* El titular entra por renglón: título, entrada y botones, uno tras otro. */
+  .heroe :is(h1, .entrada, .acciones) { animation: entrar var(--t-grande) var(--entra) backwards; }
+  .heroe .entrada { animation-delay: 80ms; }
+  .heroe .acciones { animation-delay: 160ms; }
 }
 
 /* Escena 2 anclada: el scroll pasa de un estado al siguiente. Solo en pantallas anchas y altas;
