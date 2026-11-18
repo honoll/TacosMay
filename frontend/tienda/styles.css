@@ -387,8 +387,8 @@
 /* Según la referencia que eligió Alejandro: cada guiso en su tarjeta, el texto a la izquierda con su «+» al
    pie y la foto a la derecha; la bolsa, plástico translúcido con cámaras y la foto prensada en cada una. */
 :where(.en-tienda) .lista-guisos > h2 { margin-top: 28px; }
-:where(.en-tienda) .renglones { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(104px, 38%, 176px); min-height: 128px; overflow: hidden; border: 2px solid var(--negro); border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgb(20 18 16 / .12); }
+:where(.en-tienda) .renglones { display: grid; gap: 12px; max-width: 720px; margin: 0; padding: 0; list-style: none; }
+:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(120px, 44%, 320px); min-height: 136px; overflow: hidden; border: 2px solid var(--negro); border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgb(20 18 16 / .12); }
 :where(.en-tienda) .renglon > .charola.mini { position: relative; display: block; grid-column: 2; grid-row: 1; border: 0; outline: 0; border-radius: 0; }
 :where(.en-tienda) .renglon > .charola.mini .guiso { position: absolute; inset: 0; aspect-ratio: auto; }
 :where(.en-tienda) .renglon > .charola.mini :is(.num, .vapor) { display: none; }
@@ -404,8 +404,6 @@
 :where(.en-tienda) .renglon.agotado > .charola { filter: grayscale(1); opacity: .7; }
 :where(.en-tienda) .renglones[aria-busy] .datos p { height: 1.1em; border-radius: 4px; background: var(--acero); }
 :where(.en-tienda) .renglones[aria-busy] .datos p + p { width: 55%; }
-@media (min-width: 700px) {
-  :where(.en-tienda) .renglones { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
 }
 
 /* La bolsa: la imagen que eligió Alejandro. Cada guiso ocupa una de sus seis cámaras (posiciones medidas
@@ -437,18 +435,17 @@
 :where(.en-tienda) .comp-plastico { position: absolute; inset: 0; opacity: .9; mix-blend-mode: hard-light; background: center / 100% 100% no-repeat; }
 /* El láser de sellado: solo se ve mientras sella. */
 :where(.en-tienda) .comp-banda { position: absolute; left: 0; right: 0; top: 0; z-index: 2; height: 3px; background: #c8161f; box-shadow: 0 0 8px #c8161f; opacity: 0; }
-:where(.en-tienda) .comp-etq { position: absolute; left: 6%; right: 6%; bottom: 7%; z-index: 2; display: flex; justify-content: center; gap: 4px; overflow: hidden; padding: 4px 8px; border-radius: 999px; background: var(--negro); color: #fff; font: 700 .74rem/1.2 var(--angosta); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+:where(.en-tienda) .comp-etq { position: absolute; left: 6%; right: 6%; bottom: 7%; z-index: 2; display: block; padding: 4px 8px; border-radius: 10px; background: var(--negro); color: #fff; font: 700 .74rem/1.15 var(--angosta); letter-spacing: .03em; text-align: center; text-transform: uppercase; }
 :where(.en-tienda) .comp-etq b { font-weight: 700; }
 :where(.en-tienda) .comp-etq b::after { content: " ·"; }
-:where(.en-tienda) .comp-nombre { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-:where(.en-tienda) .comp-cant { flex: none; }
+:where(.en-tienda) .comp-cant { white-space: nowrap; }
 :where(.en-tienda) .comp-cant .n { display: inline-block; }
 :where(.en-tienda) .bolsa-vacia { margin: 12px 0 0; }
 :where(.en-tienda) .bolsa-lado:not(.vacia) .bolsa-vacia, :where(.en-tienda) .bolsa-lado.vacia .bolsa-cuentas { display: none; }
 /* Debajo de la bolsa: el reloj y el total a la izquierda, «Confirmar pedido» a la derecha. */
 :where(.en-tienda) .bolsa-cuentas { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "expira confirmar" "total confirmar" "ver ver"; gap: 4px 16px; align-items: center; margin-top: 18px; }
 :where(.en-tienda) .bolsa-cuentas .acciones { display: contents; }
-:where(.en-tienda) .bolsa-cuentas .expira { grid-area: expira; display: flex; align-items: center; gap: 6px; margin: 0; font: 600 .95rem/1.2 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
+:where(.en-tienda) .bolsa-cuentas .expira { grid-area: expira; display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; border: 0; background: none; font: 600 .95rem/1.2 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
 :where(.en-tienda) .bolsa-cuentas .expira .picto { order: 2; width: 18px; height: 18px; }
 :where(.en-tienda) .bolsa-cuentas .total { grid-area: total; margin: 0; font: 800 clamp(1.6rem, 3vw, 2.1rem)/1 var(--angosta); text-transform: uppercase; text-align: left; }
 :where(.en-tienda) .bolsa-cuentas .total strong { display: inline-block; font: inherit; }
@@ -456,10 +453,10 @@
 :where(.en-tienda) .bolsa-cuentas [data-click="checkout"]:is(:hover, :focus-visible) { background: #a8121a; color: #fff; }
 :where(.en-tienda) .bolsa-cuentas .btn.sec { grid-area: ver; justify-content: center; margin-top: 10px; }
 :where(.en-tienda) .bolsa-barra { display: none; }
-:where(.en-tienda) .vuela { position: fixed; z-index: 5; margin: 0; pointer-events: none; border-radius: 12px; background: center / cover no-repeat; box-shadow: 0 8px 20px rgb(20 18 16 / .25); }
+:where(.en-tienda) .vuela { position: fixed; z-index: 5; margin: 0; pointer-events: none; border-radius: 12px; background: center / cover no-repeat; border: 2px solid var(--negro); box-shadow: 0 10px 24px rgb(20 18 16 / .3); }
 
 @media (min-width: 900px) {
-  :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); column-gap: clamp(24px, 4vw, 56px); align-items: start; }
+  :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 720px) minmax(320px, 420px); justify-content: center; column-gap: clamp(24px, 4vw, 64px); align-items: start; }
   :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos { grid-area: 1 / 1 / 2 / 2; }
   :where(.en-tienda) [data-vista="catalogo"] > .bolsa-lado { grid-area: 1 / 2 / 2 / 3; position: sticky; top: 16px; max-height: calc(100dvh - 32px); overflow-y: auto; margin-top: 12px; }
 }

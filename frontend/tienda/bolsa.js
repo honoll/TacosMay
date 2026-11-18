@@ -18,7 +18,9 @@ export function bolsa(raiz) {
   const cont = raiz.querySelector('.bolsas');
   const comps = new Map();    // id del guiso → su cámara
   const orden = [];           // ids, en el orden en que entraron a la bolsa
-  const llegadas = new Map(); // id → cuándo aterriza su vuelo (ms), para que el llenado espere al guiso
+  // id → su vuelo: el llenado espera lo que le falte. Se mide con el reloj de GSAP, que es el del vuelo
+  // (si la pestaña va lenta, o la animación se frena, los dos se frenan igual).
+  const llegadas = new Map();
   const volando = new Set();  // guisos con un vuelo en el aire: tocar «+» otra vez no lanza otro
   let vuelos = 0;
   let totalAntes = null;
@@ -44,7 +46,8 @@ export function bolsa(raiz) {
   const DURA = { llena: 450, suma: 300 };
   function paso(li, clase) {
     if (clase === 'suma' && ahora() < Number(li.dataset.hasta || 0)) return;
-    const espera = Math.max(0, (llegadas.get(li.dataset.clave) ?? 0) - ahora()) / 1000;
+    const v = llegadas.get(li.dataset.clave);
+    const espera = !v ? 0 : v.tween?.duration ? Math.max(0, v.tween.duration() - v.tween.time()) : Math.max(0, v.fin - ahora()) / 1000;
     li.dataset.hasta = String(ahora() + espera * 1000 + DURA[clase]);
     li.classList.remove('llena', 'suma');
     li.classList.add(clase);
@@ -188,7 +191,8 @@ export function bolsa(raiz) {
     const arco = 40 + Math.min(120, Math.abs(dx) * 0.25);
     vuelos++;
     volando.add(String(id));
-    llegadas.set(String(id), ahora() + VUELO * 1000);
+    const llegada = { fin: ahora() + VUELO * 1000, tween: null };
+    llegadas.set(String(id), llegada);
     let quitado = false;
     const quitar = () => { if (quitado) return; quitado = true; vuelos--; volando.delete(String(id)); clon.remove(); };
     const vuelo = gsap.to(clon, {
@@ -198,6 +202,7 @@ export function bolsa(raiz) {
       ],
       onComplete: quitar,
     });
+    llegada.tween = vuelo;
     return {
       cancel() {
         llegadas.delete(String(id));
