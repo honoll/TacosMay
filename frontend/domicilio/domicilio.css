@@ -8,7 +8,8 @@
 html:where(.en-domicilio) { scroll-padding: calc(var(--alto-cabecera, 106px) + 12px) 0 24px; }
 @media (max-width: 899px) { html:where(.en-domicilio) { scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); } }
 /* El paso que entra se desliza 24 px de lado: que eso nunca abra un desplazamiento horizontal en celular. */
-:where(.en-domicilio) body { overflow-x: clip; }
+/* En html y en body: Safari de iOS no siempre respeta el de body solo. */
+html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 :where(.en-domicilio) main { min-height: 62dvh; padding-block: 16px 64px; }
 :where(.en-domicilio) :is(main, dialog) :is(button, a, label, input, select, textarea) { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 :where(.en-domicilio) main:focus, :where(.en-domicilio) [tabindex="-1"]:focus { outline: none; }
