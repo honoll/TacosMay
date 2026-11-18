@@ -668,19 +668,19 @@ const ACTIONS = {
   },
 
   async checkout() {
-    // La bolsa entra en una caja y sube a un avión mientras responde la API; si rechaza, la escena se va.
+    // La escena (tienda/envio.js) corre mientras responde la API; si rechaza (409), se retira y sale el error.
+    // Con el pedido, la escena termina en «Pedido #N confirmado» y la persona elige: sus pedidos o seguir comprando.
     const escena = enviar(cart.items.map((it) => guisoDe(it.guiso.nombre).color));
     let p;
-    try { p = await api('/pedidos', { method: 'POST' }); } catch (err) { escena?.cancel(); throw err; }
-    await escena?.listo;
-    // Después de la escena, «Mis pedidos» de un solo paso: la bolsa no se vacía a la vista y no hay fundido.
-    // Lo único que se mueve es el resaltado del pedido nuevo.
+    try { p = await api('/pedidos', { method: 'POST' }); } catch (err) { escena.cancel(); throw err; }
+    escena.confirmar(p, money(p.total_centavos));
+    const destino = await escena.listo;
+    // Después, la vista elegida de un solo paso: la bolsa no se vacía a la vista y no hay fundido.
     bolsaUI = null;
     directo = true;
     setCart(EMPTY);
-    notice(`Pedido #${p.id} confirmado por ${money(p.total_centavos)}.`);
-    nuevo = p.id;
-    await go('pedidos');
+    nuevo = p.id; // en «Mis pedidos», el pedido nuevo llega resaltado
+    await go(destino === 'catalogo' ? 'catalogo' : 'pedidos');
     nuevo = null;
   },
 

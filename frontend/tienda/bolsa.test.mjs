@@ -76,12 +76,26 @@ Object.assign(globalThis, {
     },
     to(el, vars) { this.llamadas.push(['to', el, vars]); return this.animacion(vars); },
     fromTo(el, de, a) { this.llamadas.push(['fromTo', el, a]); return this.animacion(a); },
+    // Línea de tiempo de juguete: a los pocos ms corre sus .call() (la etiqueta) y, si nadie la pausó, termina.
     timeline(vars = {}) {
       const g = this;
-      const tl = { to: () => tl, fromTo: () => tl, from: () => tl, kill() { viva = false; } };
+      const llamar = [];
       let viva = true;
+      let pausada = false;
+      let hecha = false;
+      const fin = () => { if (!viva || pausada || hecha) return; hecha = true; vars.onComplete?.(); };
+      const tl = {
+        to: () => tl, fromTo: () => tl, from: () => tl, set: () => tl, addLabel: () => tl,
+        call: (f) => { llamar.push(f); return tl; },
+        kill() { viva = false; },
+        pause() { pausada = true; return tl; },
+        play() { pausada = false; setTimeout(fin, 5); return tl; },
+        paused: () => pausada,
+        progress() { pausada = false; fin(); return tl; },
+        seek() { return tl; },
+      };
       g.llamadas.push(['timeline', null, vars]);
-      setTimeout(() => { if (viva) vars.onComplete?.(); }, 5);
+      setTimeout(() => { if (!viva) return; for (const f of llamar) f(); fin(); }, 5); // a los 5 ms, como antes
       return tl;
     },
   },
@@ -215,24 +229,43 @@ barra.h.click[0]();
 assert.equal(barra.attrs['aria-expanded'], 'false');
 barra.visible = false;
 
-// ---------- Confirmar: la escena se salta con Escape o tocando, y no se encima ----------
+// ---------- Confirmar: la escena termina en «Pedido #N confirmado» y la persona elige a dónde ir ----------
+const capaDe = () => cuerpo.children.find((c) => c.cl().includes('envio'));
 let escena = enviar(['#a8321c', '#f2b33d']);
-const capa = cuerpo.children.find((c) => c.cl().includes('envio'));
+let capa = capaDe();
 assert.ok(capa && capa.attrs.role === 'dialog', 'sale la escena de envío');
 assert.equal(enfocado?.cl().includes('envio-saltar'), true, '«Saltar» recibe el foco');
-let termino = false;
-escena.listo.then(() => { termino = true; });
-oyentesDoc.keydown({ key: 'Escape' });
+let eleccion = 'sin elegir';
+escena.listo.then((e) => { eleccion = e; });
+oyentesDoc.keydown({ key: 'Escape' }); // saltar antes de que responda la API
+await espera(30);
+assert.ok(cuerpo.children.includes(capa) && capa.querySelector('.envio-final').hidden, 'saltar sin número no cierra: espera el número');
+escena.confirmar({ id: 42 }, '$580.00');
+await espera(30);
+assert.equal(capa.querySelector('.envio-final').hidden, false, 'con el número, el final');
+assert.equal(capa.querySelector('.envio-numero').textContent, '#42', '«Pedido #42 confirmado»');
+assert.equal(capa.querySelector('.envio-num').textContent, '#42', 'y el número en la etiqueta de la caja');
+assert.equal(capa.querySelector('.envio-total').textContent, '$580.00');
+assert.equal(enfocado?.cl().includes('envio-ver'), true, '«Ver mis pedidos» recibe el foco');
+capa.querySelector('.envio-seguir').h.click[0]();
 await espera();
-assert.ok(termino && !cuerpo.children.includes(capa), 'Escape la salta');
+assert.ok(eleccion === 'catalogo' && !cuerpo.children.includes(capa), '«Seguir comprando» cierra y vuelve a los guisos');
+
 escena = enviar([]);
-const capa2 = cuerpo.children.find((c) => c.cl().includes('envio'));
-capa2.h.click[0]();
-await escena.listo;
-assert.ok(!cuerpo.children.includes(capa2), 'tocar la salta');
-escena = enviar([]);
-await escena.listo;
-assert.equal(cuerpo.children.filter((c) => c.cl().includes('envio')).length, 0, 'al terminar su línea de tiempo (despega el avión), termina');
+capa = capaDe();
+escena.cancel(); // la API rechazó (409)
+assert.equal(await escena.listo, null);
+assert.ok(!cuerpo.children.includes(capa), 'si falla la API, la escena se retira');
+
+escena = enviar(['#35603a']);
+capa = capaDe();
+escena.confirmar({ id: 7 }, '$180.00');
+await espera(40);
+assert.equal(capa.querySelector('.envio-final').hidden, false, 'sin tocar nada, la línea llega sola al final');
+capa.h.click[0](); // un toque en el final no lo cierra: hay que elegir
+assert.ok(cuerpo.children.includes(capa));
+oyentesDoc.keydown({ key: 'Escape' });
+assert.equal(await escena.listo, 'pedidos', 'Escape en el final lleva a «Mis pedidos»');
 
 // ---------- Movimiento reducido: sin vuelo, sin pasos, sin escena ----------
 reducido = true;
@@ -244,11 +277,20 @@ assert.equal(cuerpo.children.length, nVuelos, 'sin vuelo');
 b2.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
 b2.pintar([], 0);
 assert.equal(r2.cont.querySelectorAll('.comp').length, 0, 'quitar es inmediato, sin esperar a su animación');
-assert.equal(enviar([]), null, 'sin escena de envío: se llega directo a «Mis pedidos»');
+escena = enviar(['#a8321c']);
+capa = capaDe();
+assert.ok(capa.cl().includes('quieta'), 'sin coreografía: «Confirmando…» y nada se mueve');
+escena.confirmar({ id: 9 }, '$200.00');
+assert.equal(capa.querySelector('.envio-final').hidden, false, 'directo al final en cuanto se confirma');
+capa.querySelector('.envio-ver').h.click[0]();
+assert.equal(await escena.listo, 'pedidos');
 reducido = false;
 const g = globalThis.gsap;
 delete globalThis.gsap;
-assert.equal(enviar([]), null, 'sin GSAP (no cargó) tampoco hay escena: nada se queda a medias');
+escena = enviar([]);
+escena.confirmar({ id: 10 });
+assert.equal(capaDe().querySelector('.envio-final').hidden, false, 'sin GSAP (no cargó), igual: nada se queda a medias');
+escena.cancel();
 globalThis.gsap = g;
 
-console.log('bolsa.test: OK (llenar, sumar, otra bolsa, quitar, vuelo y error, celular, envío y saltar, movimiento reducido)');
+console.log('bolsa.test: OK (llenar, sumar, otra bolsa, quitar, vuelo y error, celular, envío con número y salidas, movimiento reducido)');

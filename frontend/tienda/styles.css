@@ -501,22 +501,22 @@
   :where(.en-tienda) body:has(.bolsa-lado) #aviso { bottom: 84px; }
 }
 
-/* ---------- La escena del envío (tienda/envio.js) ---------- */
-:where(.en-tienda) .envio { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center; background: rgb(247 244 238 / .95); }
-:where(.en-tienda) .envio-escena { position: relative; width: min(560px, 90vw); aspect-ratio: 3 / 2; }
-:where(.en-tienda) .envio-caja { position: absolute; left: 46%; bottom: 6%; width: 44%; overflow: visible; }
-:where(.en-tienda) .envio-caja .etiqueta { opacity: 0; }
-/* La bolsa de la escena: la misma imagen, con el color de cada guiso en su cámara. */
-:where(.en-tienda) .envio-bolsa { position: absolute; left: 57%; top: -8%; width: 22%; aspect-ratio: 1152 / 1573; background: url("/media/bolsa/bolsa.webp") center / 100% 100% no-repeat; }
-:where(.en-tienda) .envio-bolsa i { position: absolute; border-radius: 5% / 6%; background: var(--c); opacity: .9; }
-:where(.en-tienda) .envio-bolsa i:nth-child(1) { left: 3.993%; top: 9.727%; right: 51.997%; bottom: 63.318%; }
-:where(.en-tienda) .envio-bolsa i:nth-child(2) { left: 51.215%; top: 9.727%; right: 4.167%; bottom: 63.318%; }
-:where(.en-tienda) .envio-bolsa i:nth-child(3) { left: 3.993%; top: 39.034%; right: 51.997%; bottom: 33.376%; }
-:where(.en-tienda) .envio-bolsa i:nth-child(4) { left: 51.215%; top: 39.034%; right: 4.167%; bottom: 33.376%; }
-:where(.en-tienda) .envio-bolsa i:nth-child(5) { left: 3.993%; top: 69.485%; right: 51.997%; bottom: 3.433%; }
-:where(.en-tienda) .envio-bolsa i:nth-child(6) { left: 51.215%; top: 69.485%; right: 4.167%; bottom: 3.433%; }
-:where(.en-tienda) .envio-avion { position: absolute; left: 6%; bottom: 8%; width: 24%; color: var(--negro); opacity: 0; }
+/* ---------- La escena del envío (tienda/envio.js, docs/calidad/critica-envio.md) ---------- */
+/* Fondo crema entero (el carrito de atrás no se asoma); el dibujo y el final ocupan el mismo lugar. */
+:where(.en-tienda) .envio { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center; padding: 24px var(--margen) 96px; background: var(--crema); }
+:where(.en-tienda) .envio > :is(.envio-escena, .envio-final, .envio-espera) { grid-area: 1 / 1; }
+:where(.en-tienda) .envio-escena { width: min(520px, 92vw); }
+:where(.en-tienda) .envio-escena svg { display: block; width: 100%; height: auto; overflow: visible; }
+:where(.en-tienda) .envio-final { display: grid; justify-items: center; gap: 12px; text-align: center; }
+:where(.en-tienda) .envio-final h2 { margin: 0; font: 800 var(--t-seccion)/.95 var(--angosta); text-transform: uppercase; }
+:where(.en-tienda) .envio-dato { margin: 0; font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
+:where(.en-tienda) .envio-total { margin: 0; font: 800 1.5rem/1 var(--angosta); font-variant-numeric: tabular-nums; }
+:where(.en-tienda) .envio-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 12px; }
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
+:where(.en-tienda) .envio-espera { margin: 0; font-weight: 600; }
+:where(.en-tienda) .envio:not(.quieta) .envio-espera, :where(.en-tienda) .envio.terminado .envio-espera { display: none; }
+/* Sin coreografía (movimiento reducido o sin GSAP): no hay dibujo; «Confirmando…» y luego el final. */
+:where(.en-tienda) .envio.quieta .envio-escena, :where(.en-tienda) .envio.terminado .envio-escena { display: none; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* El toque del «+»: se hunde y suelta un anillo. El resto del agregar (vuelo, llenar, sellar, etiqueta,
@@ -524,7 +524,6 @@
   :where(.en-tienda) .renglon .mas.toque::after { content: ""; position: absolute; inset: -2px; border: 2px solid var(--negro); border-radius: 50%; animation: anillo .3s var(--sale) forwards; }
   @keyframes anillo { to { transform: scale(1.7); opacity: 0; } }
 
-  /* Enviar: entra la caja, la bolsa entra, se cierra, cinta y etiqueta, al avión, despega (≈ 2.4 s). */
 }
 
 /* El «+» y el «−» son dibujos (no letras): quedan al centro exacto de su botón. */
