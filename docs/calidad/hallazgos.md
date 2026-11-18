@@ -12,8 +12,8 @@ servidor ya sirve la página de no encontrado. Cuenta de prueba y su pedido, bor
 
 | # | Dónde | Gravedad | Hallazgo | Estado |
 |---|---|---|---|---|
-| W1 | T2 Catálogo | Menor | La ficha dice «1 vendidos»: falta el singular | 🔴 |
-| W2 | T1 Cabecera, celular con sesión | Menor | «Mis pedidos», «Admin», el nombre y «Salir» quedan fuera de la pantalla en la fila deslizable, sin ninguna señal de que hay más a la derecha | 🔴 |
+| W1 | T2 Catálogo | Menor | La ficha dice «1 vendidos»: falta el singular | 🟡 |
+| W2 | T1 Cabecera, celular con sesión | Menor | «Mis pedidos», «Admin», el nombre y «Salir» quedan fuera de la pantalla en la fila deslizable, sin ninguna señal de que hay más a la derecha | 🟡 |
 
 Sin revisar todavía: landing completa con la cabecera nueva (N5, N6); tableta y 1920 px;
 editar y eliminar un guiso; carrito expirado; solo teclado y movimiento reducido; la

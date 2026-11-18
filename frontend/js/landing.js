@@ -17,7 +17,7 @@ const texto = document.getElementById('menu-texto');
 const reintentar = document.getElementById('menu-reintentar');
 
 const guiso = (g) => charola(g.nombre, `
-    <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} en existencia` : 'Se acabó por hoy'}${g.vendidos > 0 ? ` · ${esc(g.vendidos)} vendidos` : ''}</p>
+    <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} en existencia` : 'Se acabó por hoy'}${g.vendidos > 0 ? ` · ${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}` : ''}</p>
     <p class="precio">${money(g.precio_centavos)}</p>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
 
 // Un solo lugar decide qué muestra el estado del menú: cargando, error o nada.

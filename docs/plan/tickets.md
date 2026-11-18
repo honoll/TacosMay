@@ -514,6 +514,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Segundo tiempo · vista 2 Ficha de un guiso (17-nov-2026):** vista nueva en `/tienda/#guiso/<id>` (usa `GET /guisos/:id`): charola grande, nombre, precio, porciones, existencias y el mismo selector de cantidad; bloques generales de calentado y conservación; «otros guisos»; si el guiso no existe, estado vacío con salida. Cada charola del catálogo enlaza a su ficha y después de iniciar sesión se regresa a la ficha donde se estaba. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
 
+- **Segundo tiempo · vista 3 Carrito (17-nov-2026):** Panel lateral con `<dialog>` desde el catálogo y la ficha, tiempo restante con umbrales (5 min, 1 min) y destello al renovarse, total que rueda, renglones animados con `startViewTransition`, el 409 junto a la cantidad del guiso, quitar con «Deshacer» y confirmar fijo abajo en celular. Además W1 (singular de «vendido») y W2 (la fila de enlaces se desvanece a la derecha). Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

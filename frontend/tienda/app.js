@@ -5,6 +5,7 @@ import { cuenta, pintarCarrito, piezas } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
+const aviso = document.getElementById('aviso');
 
 const EMPTY = { items: [], total_centavos: 0, expira_en_segundos: 0 };
 let cart = EMPTY;
@@ -15,6 +16,7 @@ let current = '';    // vista pintada (puede diferir del hash si un guard rediri
 let rendered = null; // hash ya pintado, para no repintar en el hashchange de go()
 let renderId = 0;
 let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
+let ultimo = null;       // lo último que se quitó del carrito, para poder deshacerlo
 let param = '';         // lo que sigue a la vista en la dirección: #guiso/3 → '3'
 
 const user = () => session.get();
@@ -27,6 +29,7 @@ function setCart(c) {
   deadline = cart.items.length && cart.expira_en_segundos > 0
     ? Date.now() + cart.expira_en_segundos * 1000 : 0;
   renderNav();
+  if (panel.open) pintarPanel();
   tick();
 }
 
@@ -38,6 +41,8 @@ function tick() {
   const left = deadline ? Math.max(0, Math.ceil((deadline - Date.now()) / 1000)) : 0;
   document.querySelectorAll('[data-countdown]').forEach((el) => {
     el.textContent = deadline ? clock(left) : '';
+    // Umbrales: a 5 minutos avisa, a 1 minuto apura. La clase dispara un pulso una sola vez (CSS).
+    el.classList.toggle('pronto', deadline > 0 && left <= 300 && left > 60);
     el.classList.toggle('urgente', deadline > 0 && left <= 60);
   });
   if (deadline && left === 0) {
@@ -54,7 +59,50 @@ setInterval(tick, 1000);
 
 async function setQty(id, cantidad) {
   setCart(await api(`/carrito/items/${id}`, { method: 'PUT', body: { cantidad } }));
+  // Cada cambio renueva el TTL en Redis: el reloj lo enseña con un destello.
+  for (const el of document.querySelectorAll('[data-countdown]')) {
+    el.classList.remove('renovado');
+    void el.offsetWidth;
+    el.classList.add('renovado');
+  }
 }
+
+// Repinta dentro de una transición del navegador cuando existe: los renglones que salen o entran se animan
+// y los que se quedan se recorren. Sin soporte (o con movimiento reducido, vía CSS) el cambio es inmediato.
+const cambiar = (fn) => (document.startViewTransition ? document.startViewTransition(fn).updateCallbackDone : fn());
+
+// ---------- El carrito como panel lateral ----------
+const panel = document.getElementById('panel-carrito');
+
+function pintarPanel() {
+  panel.innerHTML = `
+    <div class="panel-caja">
+      <header>
+        <h2 id="panel-titulo">Tu carrito</h2>
+        <button type="button" data-cierra aria-label="Cerrar el carrito">✕</button>
+      </header>
+      ${cart.items.length ? `
+        <p class="expira">Expira en <strong data-countdown></strong></p>
+        <ul class="panel-lista">${cart.items.map(({ guiso: g, cantidad }) => `
+          <li><span>${esc(cantidad)} × ${esc(g.nombre)}</span><strong>${money(g.precio_centavos * cantidad)}</strong></li>`).join('')}</ul>
+        <p class="total">Total: <strong>${money(cart.total_centavos)}</strong></p>` : '<p>Tu carrito está vacío. Las charolas, no.</p>'}
+      <div class="acciones">
+        ${cart.items.length ? '<a class="btn" href="#carrito" data-cierra>Ver carrito</a>' : ''}
+        <button type="button" data-cierra>Seguir comprando</button>
+      </div>
+    </div>`;
+  tick();
+}
+
+// Desde el catálogo o una ficha, el botón del carrito abre el panel en vez de cambiar de vista.
+document.getElementById('nav-carrito').addEventListener('click', (e) => {
+  if (!user() || !['catalogo', 'guiso'].includes(current) || !panel.showModal) return;
+  e.preventDefault();
+  pintarPanel();
+  panel.showModal();
+});
+// Se cierra con ✕, con «Seguir comprando», al ir al carrito, con Esc (lo da el navegador) o tocando fuera.
+panel.addEventListener('click', (e) => { if (e.target === panel || e.target.closest('[data-cierra]')) panel.close(); });
 
 // ---------- Piezas de HTML reusadas ----------
 
@@ -82,7 +130,7 @@ function control(g, cambio = '') {
 // Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
 // La descripción solo se muestra si dice algo propio de ese guiso (conDescripcion lo decide).
 const card = (g, mostrarDescripcion) => charola(g.nombre, `
-    ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} vendidos</p>` : ''}
+    ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
     <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
@@ -192,13 +240,13 @@ const VIEWS = {
       <p class="expira">Tu carrito expira en <strong data-countdown></strong>
         <small>Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL).</small></p>
       <ul class="lista">${cart.items.map(({ guiso: g, cantidad }) => `
-        <li>
+        <li style="view-transition-name: fila-${String(g.id).replace(/\W/g, '')}">
           <div class="crece"><strong>${esc(g.nombre)}</strong><br>${money(g.precio_centavos)} c/u</div>
           <label for="cant-${esc(g.id)}">Cantidad<span class="sr"> de ${esc(g.nombre)}</span></label>
           <input id="cant-${esc(g.id)}" type="number" min="0" max="${esc(g.stock)}" step="1" inputmode="numeric"
             value="${esc(cantidad)}" data-change="qty" data-id="${esc(g.id)}">
           <strong>${money(g.precio_centavos * cantidad)}</strong>
-          <button type="button" data-click="remove" data-id="${esc(g.id)}">Quitar<span class="sr"> ${esc(g.nombre)}</span></button>
+          <button type="button" data-click="remove" data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}">Quitar<span class="sr"> ${esc(g.nombre)}</span></button>
         </li>`).join('')}</ul>
       <p class="total">Total: <strong>${money(cart.total_centavos)}</strong></p>
       <div class="acciones">
@@ -403,13 +451,40 @@ const ACTIONS = {
   },
 
   async qty(el) {
-    // Si el backend rechaza (sin stock), repintar regresa el input a la cantidad real.
-    try { await setQty(el.dataset.id, Math.max(0, parseInt(el.value, 10) || 0)); } finally { await render(); }
+    const id = el.dataset.id;
+    const antes = enCarrito(id);
+    const quiere = Math.max(0, parseInt(el.value, 10) || 0);
+    try {
+      await setQty(id, quiere);
+    } catch (err) {
+      await render(); // regresa el campo a la cantidad real
+      const input = document.getElementById(`cant-${id}`);
+      if (err.status !== 409 || !input) throw err;
+      // Sin existencia suficiente: se dice en el renglón de ese guiso, no como aviso general.
+      errorDeCampo(input, err.message);
+      input.focus();
+      return;
+    }
+    await cambiar(render);
+    view.querySelector('.total strong')?.classList.add(quiere >= antes ? 'sube' : 'baja');
   },
 
   async remove(el) {
-    await setQty(el.dataset.id, 0);
-    await render();
+    const id = el.dataset.id;
+    ultimo = { id, cantidad: enCarrito(id) };
+    await setQty(id, 0);
+    await cambiar(render);
+    // Perdona el error sin preguntar antes: el aviso trae cómo regresarlo.
+    notice(`Quitaste ${el.dataset.nombre}.`);
+    aviso.insertAdjacentHTML('beforeend', ' <button type="button" data-click="deshacer">Deshacer</button>');
+  },
+
+  async deshacer() {
+    if (!ultimo) return;
+    const { id, cantidad } = ultimo;
+    ultimo = null;
+    await setQty(id, cantidad);
+    if (current === 'carrito') await cambiar(render);
   },
 
   async empty() {
@@ -549,6 +624,7 @@ function dispatch(e, type) {
 }
 for (const type of ['click', 'submit', 'change']) view.addEventListener(type, (e) => dispatch(e, type));
 nav.addEventListener('click', (e) => dispatch(e, 'click')); // «Salir» vive en la cabecera
+aviso.addEventListener('click', (e) => dispatch(e, 'click')); // «Deshacer» vive en el aviso
 
 addEventListener('hashchange', () => {
   if (location.hash === rendered) return;

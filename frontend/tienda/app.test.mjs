@@ -50,7 +50,7 @@ globalThis.fetch = async (url, { method = 'GET', body } = {}) => {
   if (url.startsWith('/api/guisos/') && url !== '/api/guisos/populares') return ok({ message: 'Guiso no encontrado' }, 404);
   if (url === '/api/guisos/populares') return ok([{ ...GUISOS[0], vendidos: 3 }]);
   if (url === '/api/carrito') return ok(carritoVacio ? { items: [], total_centavos: 0, expira_en_segundos: 0 } : CARRITO);
-  if (url.startsWith('/api/carrito/items/')) return ok(CARRITO);
+  if (url.startsWith('/api/carrito/items/')) return JSON.parse(body).cantidad > 5 ? ok({ message: 'Solo quedan 5 de Carne en salsa roja' }, 409) : ok(CARRITO);
   if (url === '/api/pedidos') return ok([PEDIDO]);
   if (url === '/api/users/login') return JSON.parse(body).password === 'buena' ? ok(USUARIO) : ok({ message: 'Credenciales incorrectas' }, 401);
   if (url === '/api/users') return ok({ message: 'Ese email ya está registrado' }, 400);
@@ -178,6 +178,23 @@ async function revisarVista(v, esperados) {
 await revisarVista('carrito', ['.volver', 'h1', '.expira', '.lista', '.total', '.acciones']);
 await revisarVista('pedidos', ['.volver', 'h1', '.pedidos', '.otro']);
 await revisarVista('admin', ['.volver', 'h1', '.form', 'h2', '.lista']);
+
+// Carrito: sin existencia suficiente se dice en el renglón; quitar se puede deshacer
+await ir('carrito');
+porId['cant-1'] = nodo({ id: 'cant-1' });
+const cambio = async (el) => { vista().h.change({ target: { closest: (s) => (s === '[data-change]' ? el : null) }, preventDefault() {} }); await espera(); };
+await cambio(nodo({ value: '9', dataset: { change: 'qty', id: '1' } }));
+assert.match(porId['cant-1'].despues, /Solo quedan 5/, 'el 409 va junto a la cantidad de ese guiso');
+assert.equal(porId.aviso.hidden, true, 'y no como aviso general');
+n = llamadas.length;
+await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'remove', id: '1', nombre: 'Carne en salsa roja' } }));
+assert.equal(cuerpos[n], '{"cantidad":0}');
+assert.match(porId.aviso.textContent, /Quitaste Carne en salsa roja/);
+assert.match(porId.aviso.despues, /data-click="deshacer"/, 'el aviso de quitar trae «Deshacer»');
+n = llamadas.length;
+porId.aviso.h.click({ target: { closest: (s) => (s === '[data-click]' ? nodo({ tagName: 'BUTTON', dataset: { click: 'deshacer' } }) : null) }, preventDefault() {} });
+await espera();
+assert.equal(cuerpos[n], '{"cantidad":2}', 'deshacer regresa la cantidad que había');
 
 // Estados vacíos con salida
 carritoVacio = true;
