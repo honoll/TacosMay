@@ -49,10 +49,17 @@ export const slug = (v) => String(v).normalize('NFD').replace(/\p{M}/gu, '')
   .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // El único lugar que muestra avisos y errores. Sin argumentos lo limpia.
+let seVa;
 export function notice(msg = '', kind = 'ok') {
   const el = document.getElementById('aviso');
   el.textContent = msg;
   el.className = kind;
   el.setAttribute('role', kind === 'error' ? 'alert' : 'status');
   el.hidden = !msg;
+  clearTimeout(seVa);
+  if (!msg) return;
+  el.insertAdjacentHTML('beforeend', ' <button type="button" class="cierra" aria-label="Cerrar el aviso">✕</button>');
+  el.querySelector?.('.cierra')?.addEventListener('click', () => notice());
+  // Una confirmación se va sola; un error se queda hasta que se cierra o llega otro aviso.
+  if (kind !== 'error') { seVa = setTimeout(notice, 8000); seVa.unref?.(); }
 }

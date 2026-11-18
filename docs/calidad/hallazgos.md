@@ -15,10 +15,10 @@ renglón palomeado.
 
 | # | Dónde | Gravedad | Hallazgo | Estado |
 |---|---|---|---|---|
-| X1 | Landing, «Lo que más sale», escritorio | Grave | La primera charola sale enorme y la segunda chica; si el más vendido no tiene foto queda un bloque gigante de color liso. Con solo dos guisos vendidos el bloque se ve roto | 🔴 |
-| X2 | Tienda, aviso flotante | Grave | La ficha de aviso de abajo tapa lo que tiene debajo y se queda con el clic: no se pudo pulsar «Eliminar» del último renglón de administración mientras estaba visible | 🔴 |
-| X3 | T9 Administración | Menor | Eliminar un guiso usa el cuadro de confirmación nativo del navegador; no es del sistema visual y hay navegadores embebidos que lo descartan solos. Usar confirmación propia en la página | 🔴 |
-| X4 | Todo el sitio, sin sesión | Menor | La consola registra un error 401 al cargar: se pide el carrito aunque no haya sesión | 🔴 |
+| X1 | Landing, «Lo que más sale», escritorio | Grave | La primera charola sale enorme y la segunda chica; si el más vendido no tiene foto queda un bloque gigante de color liso. Con solo dos guisos vendidos el bloque se ve roto | 🟡 |
+| X2 | Tienda, aviso flotante | Grave | La ficha de aviso de abajo tapa lo que tiene debajo y se queda con el clic: no se pudo pulsar «Eliminar» del último renglón de administración mientras estaba visible | 🟡 |
+| X3 | T9 Administración | Menor | Eliminar un guiso usa el cuadro de confirmación nativo del navegador; no es del sistema visual y hay navegadores embebidos que lo descartan solos. Usar confirmación propia en la página | 🟡 |
+| X4 | Todo el sitio, sin sesión | Menor | La consola registra un error 401 al cargar: se pide el carrito aunque no haya sesión | 🟡 |
 
 Sin revisar todavía: editar un guiso; carrito expirado; panel lateral del carrito; W2 en
 celular; tableta y 1920 px; solo teclado y movimiento reducido; la dirección pública.

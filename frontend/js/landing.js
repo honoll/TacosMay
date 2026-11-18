@@ -38,8 +38,11 @@ async function loadMenu() {
   menu.innerHTML = HUECAS; // charolas huecas mientras responde la API
   try {
     const [top, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
-    populares.innerHTML = top.map((g) => guiso(g, true)).join('');
-    bloquePopulares.hidden = !top.length;
+    // Cuatro charolas iguales llenan la fila (2 × 2 en celular). Con menos de cuatro guisos vendidos
+    // el bloque no sale: rellenarlo con otros diría que «salen» guisos que nadie ha pedido.
+    const salen = top.filter((g) => g.vendidos > 0).slice(0, 4);
+    populares.innerHTML = salen.map((g) => guiso(g, true)).join('');
+    bloquePopulares.hidden = salen.length < 4;
     menu.innerHTML = todos.map((g) => guiso(g)).join('');
     setEstado(todos.length ? '' : 'Todavía no hay guisos en el menú.');
   } catch {

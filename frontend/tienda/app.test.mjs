@@ -206,6 +206,15 @@ assert.match(vista().innerHTML, /href="#ayuda"/);
 await ir('ayuda');
 assert.match(vista().innerHTML, /<h1>Envíos y preguntas<\/h1>/);
 
+// Administración: eliminar pregunta en el renglón y no borra hasta el «Sí»
+await ir('admin');
+n = llamadas.length;
+await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'pedirDel', id: '1' } }));
+assert.match(vista().innerHTML, /¿Eliminar\?[\s\S]*data-click="del" data-id="1"[\s\S]*data-click="cancelDel"/);
+assert.ok(!llamadas.slice(n).some((l) => /DELETE/.test(String(l))), 'pedir eliminar todavía no borra');
+await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'cancelDel' } }));
+assert.doesNotMatch(vista().innerHTML, /¿Eliminar\?/);
+
 // Estados vacíos con salida
 carritoVacio = true;
 await ir('catalogo'); await ir('carrito');

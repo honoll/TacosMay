@@ -41,7 +41,7 @@ export async function iniciarCabecera() {
     session.set(null);
     pintar(0);
   });
-  if (!session.get()) return;
+  if (!session.get()?.token) return; // sin sesión no se pide el carrito
   pintar(0);
   try {
     pintar(piezas(await api('/carrito')));

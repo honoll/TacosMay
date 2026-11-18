@@ -40,6 +40,13 @@ a { color: var(--texto); }
   transform: translateX(-50%);
 }
 #aviso.error { background: #fde8e6; color: #7a1410; }
+/* El aviso no se queda con los clics: lo que tiene debajo se sigue pudiendo pulsar; solo sus botones
+   responden. Y mientras está, la página deja espacio abajo para que nada quede tapado al final. */
+#aviso { pointer-events: none; }
+#aviso button { pointer-events: auto; }
+body:has(#aviso:not([hidden])) { padding-bottom: 96px; }
+/* Confirmación en el renglón (eliminar un guiso). */
+.lista .confirma { font-weight: 600; }
 
 button, input { font: inherit; min-height: 44px; border-radius: 4px; }
 button {

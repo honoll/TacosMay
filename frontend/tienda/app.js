@@ -18,6 +18,7 @@ let renderId = 0;
 let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
 let nuevo = null;        // el pedido recién confirmado: llega resaltado a «Mis pedidos»
 let guardado = null;     // el guiso que se acaba de guardar en administración
+let borrando = null;     // el guiso cuyo renglón está preguntando «¿Eliminar?»
 let ultimo = null;       // lo último que se quitó del carrito, para poder deshacerlo
 let param = '';         // lo que sigue a la vista en la dirección: #guiso/3 → '3'
 
@@ -333,8 +334,12 @@ const VIEWS = {
         <li${String(x.id) === String(guardado) ? ' class="guardado"' : ''}>
           <div class="crece"><strong>${esc(x.nombre)}</strong>${String(x.id) === String(guardado) ? ' <span class="palomita">✓ Guardado</span>' : ''}<br>
             ${money(x.precio_centavos)} · ${esc(x.porciones)} porciones · stock ${esc(x.stock)}</div>
+          ${String(x.id) === String(borrando) ? `
+          <span class="confirma">¿Eliminar?</span>
+          <button type="button" id="del-si" data-click="del" data-id="${esc(x.id)}">Sí, eliminar<span class="sr"> ${esc(x.nombre)}</span></button>
+          <button type="button" id="del-no" data-click="cancelDel">No</button>` : `
           <button type="button" data-click="edit" data-id="${esc(x.id)}">Editar<span class="sr"> ${esc(x.nombre)}</span></button>
-          <button type="button" data-click="del" data-id="${esc(x.id)}">Eliminar<span class="sr"> ${esc(x.nombre)}</span></button>
+          <button type="button" data-click="pedirDel" data-id="${esc(x.id)}">Eliminar<span class="sr"> ${esc(x.nombre)}</span></button>`}
         </li>`).join('')}</ul>`;
   },
 
@@ -565,9 +570,21 @@ const ACTIONS = {
     return render();
   },
 
+  // Eliminar se confirma en el mismo renglón: «¿Eliminar? Sí / No». El foco cae en «No».
+  async pedirDel(el) {
+    borrando = el.dataset.id;
+    await render();
+    document.getElementById('del-no')?.focus();
+  },
+
+  cancelDel() {
+    borrando = null;
+    return render();
+  },
+
   async del(el) {
     const g = guisos.find((x) => String(x.id) === el.dataset.id);
-    if (!confirm(`¿Eliminar «${g.nombre}» del catálogo?`)) return;
+    borrando = null;
     await api(`/guisos/${g.id}`, { method: 'DELETE' });
     if (editing?.id === g.id) editing = null;
     notice(`Eliminado: ${g.nombre}.`);
@@ -633,6 +650,7 @@ async function render() {
   if (r !== 'entrar' && r !== 'registro') desde = r === 'guiso' ? `guiso/${encodeURIComponent(param)}` : r;
   document.title = `${TITULOS[r]} — Los Tacos May`;
   const changed = r !== current;
+  if (changed) borrando = null;
   current = r;
   renderNav();
   const tarda = setTimeout(() => { if (id === renderId && changed && r === 'catalogo') view.innerHTML = ESQUELETO; }, TARDA);
