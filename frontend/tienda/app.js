@@ -5,7 +5,7 @@ import { empacar } from './empaque.js';
 import { bolsa } from './bolsa.js';
 import { toques } from '../js/toques.js';
 import { enviar } from './envio.js';
-import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
+import { cuenta, pintarCarrito, piezas, clock, medirCabecera } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -207,13 +207,7 @@ const BOLSA = document.getElementById('bolsa-molde').innerHTML;
 const ESQUELETO = document.getElementById('esqueleto').innerHTML + BOLSA;
 toques(); // todo botón se hunde al presionarlo y rebota al soltarlo
 let bolsaUI = null; // la bolsa de la lista de guisos, mientras está a la vista
-// El alto de la cabecera fija: la lista de guisos y la bolsa se acomodan debajo de ella.
-const altoCabecera = () => {
-  const h = document.querySelector?.('.cabecera')?.offsetHeight;
-  if (h) document.documentElement.style.setProperty('--alto-cabecera', `${h}px`);
-};
-altoCabecera();
-addEventListener('resize', altoCabecera);
+medirCabecera(); // la lista de guisos y la bolsa se acomodan debajo de la cabecera fija
 let directo = false; // la próxima vista se pinta sin fundido (después de la escena del pedido)
 const moverse = () => globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ?? false;
 const TARDA = 200;

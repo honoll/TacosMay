@@ -3,7 +3,14 @@
    porque esta hoja se carga en todas las páginas (js/paginas.js). docs/diseno/domicilio.md */
 :root:where(.en-domicilio) { --alerta: #a8321c; --bien: #14532d; }
 
-:where(.en-domicilio) main { min-height: 62vh; padding-block: 16px 64px; }
+/* Al enfocar o desplazar a algo (teclado, foco al cambiar de paso, el campo activo con el teclado de iOS),
+   que no quede bajo la cabecera fija ni bajo la barra de la cuenta en celular. */
+html:where(.en-domicilio) { scroll-padding: calc(var(--alto-cabecera, 106px) + 12px) 0 24px; }
+@media (max-width: 899px) { html:where(.en-domicilio) { scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); } }
+/* El paso que entra se desliza 24 px de lado: que eso nunca abra un desplazamiento horizontal en celular. */
+:where(.en-domicilio) body { overflow-x: clip; }
+:where(.en-domicilio) main { min-height: 62dvh; padding-block: 16px 64px; }
+:where(.en-domicilio) :is(main, dialog) :is(button, a, label, input, select, textarea) { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 :where(.en-domicilio) main:focus, :where(.en-domicilio) [tabindex="-1"]:focus { outline: none; }
 :where(.en-domicilio) h1 { font: 800 clamp(2rem, 7vw, 3rem)/.92 var(--angosta); text-transform: uppercase; margin: 12px 0 12px; }
 :where(.en-domicilio) h2 { font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; margin: 8px 0 12px; }
@@ -37,9 +44,18 @@
 /* Los cinco pasos, como migas: el actual en negro. */
 :where(.en-domicilio) .pasos-dom { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 20px !important; padding: 10px 0 !important; border-block: 2px solid var(--negro); font: 600 1rem/1.2 var(--angosta); text-transform: uppercase; letter-spacing: .05em; color: var(--gris); }
 :where(.en-domicilio) .pasos-dom li { display: flex; align-items: center; gap: 6px; }
-:where(.en-domicilio) .pasos-dom span { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border: 2px solid currentColor; border-radius: 50%; }
+:where(.en-domicilio) .pasos-dom .n { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border: 2px solid currentColor; border-radius: 50%; }
 :where(.en-domicilio) .pasos-dom [aria-current="step"] { color: var(--negro); }
-:where(.en-domicilio) .pasos-dom [aria-current="step"] span { background: var(--negro); border-color: var(--negro); color: var(--crema); }
+:where(.en-domicilio) .pasos-dom [aria-current="step"] .n { background: var(--negro); border-color: var(--negro); color: var(--crema); }
+/* En celular, un solo renglón: los números, y el nombre solo del paso actual (los demás, para lector). */
+@media (max-width: 599px) {
+  :where(.en-domicilio) .pasos-dom { flex-wrap: nowrap; justify-content: space-between; gap: 8px; margin-bottom: 16px !important; }
+  :where(.en-domicilio) .pasos-dom li:not([aria-current="step"]) .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :where(.en-domicilio) .pasos-dom [aria-current="step"] { flex: 1 1 auto; min-width: 0; }
+  :where(.en-domicilio) .pasos-dom [aria-current="step"] .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Pasado el primer paso, la explicación de arriba sobra: lo del paso queda arriba sin bajar. */
+  :where(.en-domicilio) main:not([data-vista="modo"]) .entrada { display: none; }
+}
 
 /* Vista y cuenta: una columna en celular (la cuenta, barra fija abajo); a un lado y fija desde 900 px. */
 :where(.en-domicilio) .dom-rejilla { display: grid; gap: 24px; }
@@ -49,11 +65,16 @@
   :where(.en-domicilio) .cuenta-dom { position: sticky; top: calc(var(--alto-cabecera, 96px) + 16px); }
 }
 @media (max-width: 899px) {
-  :where(.en-domicilio) .cuenta-dom { position: sticky; bottom: 0; z-index: 2; padding: 10px 14px !important; border-radius: 10px 10px 0 0 !important; box-shadow: 0 -4px 16px rgb(0 0 0 / .12); }
+  /* La barra de la cuenta: un renglón, total a la izquierda y el botón a la derecha, sobre el área segura
+     de abajo (la barra de inicio del iPhone). Ocupa todo el ancho de la pantalla, como una barra de app. */
+  :where(.en-domicilio) .cuenta-dom { position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 12px; margin-inline: calc(-1 * var(--margen)); padding: 10px var(--margen) max(10px, env(safe-area-inset-bottom)) !important; border-width: 2px 0 0 !important; border-radius: 0 !important; box-shadow: 0 -4px 16px rgb(0 0 0 / .12); }
   :where(.en-domicilio) .cuenta-dom :is(h2, .vacio-dom) { display: none; }
-  :where(.en-domicilio) .cuenta-dom dl { margin-bottom: 8px !important; }
+  :where(.en-domicilio) .cuenta-dom dl { flex: 1 1 auto; min-width: 0; margin: 0 !important; gap: 0 8px !important; }
   :where(.en-domicilio) .cuenta-dom :is(dt, dd):not(.total) { display: none; }
   :where(.en-domicilio) .cuenta-dom .total { padding-top: 0 !important; border-top: 0 !important; }
+  :where(.en-domicilio) .cuenta-dom dt.total { align-self: center; font: 600 .95rem/1 var(--fuente); color: var(--gris); }
+  :where(.en-domicilio) .cuenta-dom dd.total { font: 800 1.5rem/1 var(--angosta); }
+  :where(.en-domicilio) .cuenta-dom .primario { width: auto !important; flex: none; }
 }
 
 /* 1 · Cómo lo quieres */
@@ -93,10 +114,11 @@
 
 /* 2 · Menú por secciones */
 :where(.en-domicilio) .precios-ejemplo { margin: 0 0 12px; color: var(--gris); }
-:where(.en-domicilio) .secciones { position: sticky; top: var(--alto-cabecera, 96px); z-index: 1; display: flex; gap: 8px; margin: 0 -4px 8px; padding: 8px 4px; overflow-x: auto; background: var(--crema); }
+:where(.en-domicilio) .secciones { position: sticky; top: var(--alto-cabecera, 106px); z-index: 1; display: flex; gap: 8px; margin: 0 calc(-1 * var(--margen)) 8px; padding: 8px var(--margen); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; background: var(--crema); }
+:where(.en-domicilio) .secciones::-webkit-scrollbar { display: none; }
 :where(.en-domicilio) .secciones a { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 2px solid var(--negro); border-radius: 99px; font-weight: 600; text-decoration: none; }
 :where(.en-domicilio) .secciones a:hover { background: var(--negro); color: var(--crema); }
-:where(.en-domicilio) .seccion { scroll-margin-top: calc(var(--alto-cabecera, 96px) + 64px); }
+:where(.en-domicilio) .seccion { scroll-margin-top: calc(var(--alto-cabecera, 106px) + 64px); }
 :where(.en-domicilio) .tacos { display: grid; gap: 8px; }
 :where(.en-domicilio) .taco { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px; border: 2px solid var(--marco); border-radius: 10px; background: #fff; }
 :where(.en-domicilio) .taco.lleva { border-color: var(--negro); }
@@ -166,6 +188,11 @@
 /* Detalle del taco e historial: diálogos */
 :where(.en-domicilio) .dom-dialogo { width: min(100% - 24px, 520px); max-height: calc(100dvh - 24px); padding: 20px; border: 2px solid var(--negro); border-radius: 12px; background: var(--crema); color: var(--negro); box-shadow: 6px 6px 0 var(--negro); }
 :where(.en-domicilio) .dom-dialogo::backdrop { background: rgb(20 18 16 / .55); }
+:where(.en-domicilio) .dom-dialogo { overflow-y: auto; overscroll-behavior: contain; }
+/* En celular, los diálogos son una hoja que sale de abajo: al alcance del pulgar y sobre el área segura. */
+@media (max-width: 599px) {
+  :where(.en-domicilio) .dom-dialogo { width: 100%; max-width: none; max-height: 92dvh; margin: auto 0 0; padding: 20px var(--margen) max(20px, env(safe-area-inset-bottom)); border-width: 2px 0 0; border-radius: 16px 16px 0 0; box-shadow: none; }
+}
 :where(.en-domicilio) .detalle-form { position: relative; display: grid; gap: 6px; }
 :where(.en-domicilio) .det-foto .charola { border-width: 4px; }
 :where(.en-domicilio) .det-foto .charola .guiso { aspect-ratio: 16 / 9; }

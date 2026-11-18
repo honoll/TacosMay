@@ -5,6 +5,16 @@
 import { api, session, esc } from './api.js';
 import { picto } from './barra.js';
 
+// El alto de la cabecera fija, en --alto-cabecera: lo fijo de cada página se acomoda debajo de ella.
+export function medirCabecera() {
+  const medir = () => {
+    const h = document.querySelector?.('.cabecera')?.offsetHeight;
+    if (h) document.documentElement.style.setProperty('--alto-cabecera', `${h}px`);
+  };
+  medir();
+  addEventListener('resize', medir);
+}
+
 // Cuántas piezas lleva un carrito (la respuesta de GET /carrito).
 export const piezas = (carrito) => carrito.items.reduce((s, i) => s + i.cantidad, 0);
 

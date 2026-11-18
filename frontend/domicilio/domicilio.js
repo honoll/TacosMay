@@ -5,7 +5,7 @@
 // vista se ve. Movimiento con GSAP; sin GSAP o con movimiento reducido cada estado se ve quieto y completo.
 import { money, esc, session } from '../js/api.js';
 import { charola, picto } from '../js/barra.js';
-import { iniciarCabecera } from '../js/cabecera.js';
+import { iniciarCabecera, medirCabecera } from '../js/cabecera.js';
 import { toques } from '../js/toques.js';
 import { SECCIONES, guiso, MAX_POR_GUISO } from './menu.js';
 import { SUCURSALES, sucursal, abierta, demostrarCerrada } from './sucursales.js';
@@ -13,6 +13,7 @@ import * as reparto from './reparto.js';
 import { flujo, PROPINAS } from './flujo.js';
 
 iniciarCabecera();
+medirCabecera();
 toques();
 
 const main = document.getElementById('domicilio');
@@ -20,6 +21,11 @@ const $ = (sel) => main.querySelector(sel);
 const $$ = (sel) => [...main.querySelectorAll(sel)];
 const dialogo = (id) => document.getElementById(id);
 const animador = () => (globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ? globalThis.gsap ?? null : null);
+// Los tiempos de barra.css (--t-gesto, --t-chico, --t-grande) y una sola curva, la de --entra: arranca rápido y frena.
+const T = { gesto: 0.12, chico: 0.18, grande: 0.24 };
+const CURVA = 'power3.out';
+const VISTAS = ['modo', 'menu', 'orden', 'pagar', 'seguimiento'];
+const celular = () => globalThis.matchMedia?.('(max-width: 599px)').matches;
 const activa = () => main.isConnected && location.pathname.startsWith('/domicilio/');
 
 // Para enseñar los estados de «cerrado» y de error: /domicilio/?demo=cerrado o ?demo=falla.
@@ -83,7 +89,12 @@ main.addEventListener('click', (e) => {
   else if (b.dataset.ir) irA(b.dataset.ir);
   else if (b.dataset.detalle) abrirDetalle(b.dataset.detalle);
   else if (b.dataset.abrir === 'historial') abrirHistorial();
-  else if (b.dataset.cambio) { f.cambiar(b.closest('[data-id]').dataset.id, Number(b.dataset.cambio)); pintar(); }
+  else if (b.dataset.cambio) {
+    const li = b.closest('[data-id]');
+    f.cambiar(li.dataset.id, Number(b.dataset.cambio));
+    pintar();
+    if (b.disabled) li.querySelector(`[data-cambio="${-b.dataset.cambio}"]`)?.focus(); // en el tope, el foco no se pierde
+  }
   else if (b.dataset.quitar) { f.quitar(b.dataset.quitar); pintar(); enfocar('#t-orden'); }
 });
 
@@ -98,6 +109,17 @@ function enfocar(sel) {
   h.setAttribute('tabindex', '-1');
   h.focus({ preventScroll: true });
   h.scrollIntoView({ block: 'nearest' });
+}
+// Al cambiar de paso, la página sube hasta los pasos (si ya se había bajado): el paso nuevo empieza arriba.
+function subir() {
+  const alto = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--alto-cabecera')) || 106;
+  const arriba = Math.max(0, $('.pasos-dom').getBoundingClientRect().top + scrollY - alto - 8);
+  if (scrollY > arriba) scrollTo({ top: arriba, behavior: 'instant' });
+}
+// Los diálogos entran: en celular, la hoja sube desde abajo; en pantalla grande, aparece en su lugar.
+function abrir(d) {
+  d.showModal();
+  animador()?.fromTo(d, { y: celular() ? 48 : 12, opacity: 0 }, { y: 0, opacity: 1, duration: T.grande, ease: CURVA, clearProps: 'transform,opacity' });
 }
 async function ocupado(boton, trabajo) {
   boton.disabled = true;
@@ -121,7 +143,7 @@ function abrirDetalle(id) {
   det.querySelector('#det-nota').value = f.estado.notas[id] ?? '';
   det.querySelector('.det-agregar').dataset.editar = yaLleva ? '1' : '';
   pintarDetalle();
-  det.showModal();
+  abrir(det);
 }
 function pintarDetalle() {
   const g = guiso(detId);
@@ -133,15 +155,24 @@ function pintarDetalle() {
 }
 det.addEventListener('click', (e) => {
   const b = e.target.closest('[data-det]');
-  if (b) { detN = Math.max(1, Math.min(MAX_POR_GUISO, detN + Number(b.dataset.det))); pintarDetalle(); }
+  if (!b) return;
+  const antes = detN;
+  detN = Math.max(1, Math.min(MAX_POR_GUISO, detN + Number(b.dataset.det)));
+  pintarDetalle();
+  if (detN !== antes) brinca(det.querySelector('.det-n'), detN - antes);
+  if (b.disabled) det.querySelector(`[data-det="${-b.dataset.det}"]`).focus();
 });
+// Un número que cambia entra desde el lado hacia donde va: de arriba si sube, de abajo si baja.
+function brinca(el, hacia) {
+  animador()?.fromTo(el, { y: hacia > 0 ? -8 : 8, opacity: 0.2 }, { y: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
+}
 det.addEventListener('close', () => {
   if (det.returnValue === 'agregar' && detId) {
     f.poner(detId, detN, det.querySelector('#det-nota').value);
     pintar();
     const li = main.querySelector(`.taco[data-id="${detId}"]`);
     if (li && f.estado.vista === 'menu') {
-      animador()?.fromTo(li, { backgroundColor: '#fff4c7' }, { backgroundColor: '#ffffff', duration: 0.8, ease: 'power1.out', clearProps: 'backgroundColor' });
+      animador()?.fromTo(li.querySelector('.lleva-n'), { x: -6, opacity: 0 }, { x: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
       li.querySelector('.agregar').focus();
     }
   }
@@ -188,7 +219,7 @@ function abrirHistorial() {
       <p>${p.modo === 'domicilio' ? 'A domicilio' : 'Recoger en la barra'} · ${p.piezas} ${p.piezas === 1 ? 'taco' : 'tacos'} · ${money(p.total_centavos)} · ${esc(ETIQUETAS[p.estado] ?? p.estado)}</p>
       <button type="button" data-repetir="${esc(p.numero)}" ${f.enCurso() ? 'disabled' : ''}>Pedir lo mismo</button>
     </li>`).join('');
-  hist.showModal();
+  abrir(hist);
 }
 hist.addEventListener('click', async (e) => {
   const b = e.target.closest('button');
@@ -217,7 +248,6 @@ const ESCENA = { listo: 'asignado' }; // recoger: «listo» usa la bolsa cerrada
 
 // ---------- Pintar el estado (sin rehacer el DOM: números, textos, la orden y qué vista se ve) ----------
 let vistaPintada = null;
-let ordenPuesta = '';
 let resumenPuesto = '';
 let lineaPuesta = '';
 function pintar(resultado = null) {
@@ -261,19 +291,8 @@ function pintar(resultado = null) {
     b.disabled = enCurso;
   }
 
-  // 3 · Tu orden (la lista se rehace solo si cambió)
-  const orden = p.items.map((i) => `
-    <li class="linea-orden" data-id="${i.id}">
-      <div class="linea-nombre"><h3>${esc(i.nombre)}</h3><p class="meta">${money(i.precio_centavos)} el taco${i.nota ? ` · Nota: ${esc(i.nota)}` : ''}</p></div>
-      <div class="cuantos" role="group" aria-label="Tacos de ${esc(i.nombre)}">
-        <button type="button" data-cambio="-1" aria-label="Uno menos de ${esc(i.nombre)}" ${i.cantidad <= 1 ? 'disabled' : ''}>${MENOS}</button>
-        <output>${i.cantidad}</output>
-        <button type="button" data-cambio="1" aria-label="Uno más de ${esc(i.nombre)}" ${i.cantidad >= MAX_POR_GUISO ? 'disabled' : ''}>${MAS}</button>
-      </div>
-      <p class="linea-total">${money(i.cantidad * i.precio_centavos)}</p>
-      <div class="linea-acciones"><button type="button" class="enlace-boton" data-detalle="${i.id}" aria-label="Editar ${esc(i.nombre)}">Editar</button><button type="button" class="enlace-boton" data-quitar="${i.id}" aria-label="Quitar ${esc(i.nombre)}">Quitar</button></div>
-    </li>`).join('');
-  if (orden !== ordenPuesta) { $('.orden-lineas').innerHTML = orden; ordenPuesta = orden; }
+  // 3 · Tu orden
+  pintarOrden(p.items);
   $('.orden-vacia').hidden = p.piezas > 0;
   const suc = sucursal(s.sucursal);
   const entrega = s.modo === 'domicilio' && s.destino
@@ -316,7 +335,7 @@ function pintar(resultado = null) {
   $('.c-tacos').textContent = money(c.subtotal);
   $('.c-envio').textContent = s.modo === 'recoger' ? 'no aplica' : c.envio == null ? 'por cotizar' : money(c.envio);
   $('.c-propina').textContent = money(c.propina);
-  $('.c-total').textContent = money(c.total);
+  ponerTotal(c.total);
   $('.vacio-dom').hidden = c.piezas > 0;
   const siguiente = { menu: ['orden', 'Ver tu orden'], orden: ['pagar', 'Ir a pagar'] }[s.vista];
   const cont = $('#continuar');
@@ -326,11 +345,74 @@ function pintar(resultado = null) {
   // 5 · Confirmación
   if (s.pedido) $('.numero').textContent = s.pedido.numero;
 
+  main.dataset.vista = s.vista;
   if (s.vista !== vistaPintada) {
+    // Al cargar la página, quieta. Después: hacia la izquierda al avanzar, hacia la derecha al regresar.
     // Solo opacidad, no autoAlpha: con visibility oculta el título no puede recibir el foco.
-    animador()?.fromTo(`#vista-${s.vista}`, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: 'power3.out', clearProps: 'transform,opacity' });
+    if (vistaPintada) {
+      subir();
+      const hacia = VISTAS.indexOf(s.vista) > VISTAS.indexOf(vistaPintada) ? 1 : -1;
+      animador()?.fromTo(`#vista-${s.vista}`, { x: 24 * hacia, opacity: 0 }, { x: 0, opacity: 1, duration: T.grande, ease: CURVA, clearProps: 'transform,opacity' });
+    }
     vistaPintada = s.vista;
   }
+}
+
+// La orden: si son los mismos renglones, cambian en su lugar (el foco se queda en el botón que se tocó);
+// si entra o sale uno, se rehace y cada renglón se desliza de donde estaba a donde queda.
+let idsPuestos = '';
+const renglon = (i) => `
+    <li class="linea-orden" data-id="${i.id}">
+      <div class="linea-nombre"><h3>${esc(i.nombre)}</h3><p class="meta"></p></div>
+      <div class="cuantos" role="group" aria-label="Tacos de ${esc(i.nombre)}">
+        <button type="button" data-cambio="-1" aria-label="Uno menos de ${esc(i.nombre)}">${MENOS}</button>
+        <output></output>
+        <button type="button" data-cambio="1" aria-label="Uno más de ${esc(i.nombre)}">${MAS}</button>
+      </div>
+      <p class="linea-total"></p>
+      <div class="linea-acciones"><button type="button" class="enlace-boton" data-detalle="${i.id}" aria-label="Editar ${esc(i.nombre)}">Editar</button><button type="button" class="enlace-boton" data-quitar="${i.id}" aria-label="Quitar ${esc(i.nombre)}">Quitar</button></div>
+    </li>`;
+function pintarOrden(items) {
+  const lista = $('.orden-lineas');
+  const ids = items.map((i) => i.id).join();
+  const gsap = lista.offsetParent ? animador() : null; // escondida (otra vista) no se anima
+  if (ids !== idsPuestos) {
+    const antes = new Map([...lista.children].map((li) => [li.dataset.id, li.getBoundingClientRect().top]));
+    lista.innerHTML = items.map(renglon).join('');
+    idsPuestos = ids;
+    if (gsap && antes.size) {
+      for (const li of lista.children) {
+        const de = antes.get(li.dataset.id);
+        if (de == null) gsap.from(li, { x: 16, opacity: 0, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
+        else if (de !== li.getBoundingClientRect().top) gsap.from(li, { y: de - li.getBoundingClientRect().top, duration: T.chico, ease: CURVA, clearProps: 'transform' });
+      }
+    }
+  }
+  for (const i of items) {
+    const li = lista.querySelector(`[data-id="${i.id}"]`);
+    const out = li.querySelector('output');
+    const antes = Number(out.textContent) || 0;
+    if (antes !== i.cantidad) {
+      out.textContent = String(i.cantidad);
+      if (gsap && antes) brinca(out, i.cantidad - antes);
+    }
+    li.querySelector('.meta').textContent = `${money(i.precio_centavos)} el taco${i.nota ? ` · Nota: ${i.nota}` : ''}`;
+    li.querySelector('.linea-total').textContent = money(i.cantidad * i.precio_centavos);
+    li.querySelector('[data-cambio="-1"]').disabled = i.cantidad <= 1;
+    li.querySelector('[data-cambio="1"]').disabled = i.cantidad >= MAX_POR_GUISO;
+  }
+}
+
+// El total de la cuenta cuenta hasta su nuevo valor en vez de saltar; quieto con movimiento reducido.
+const cifra = { v: 0 };
+let totalPuesto = null;
+function ponerTotal(centavos) {
+  if (centavos === totalPuesto) return;
+  const el = $('.c-total');
+  const gsap = totalPuesto != null && el.offsetParent ? animador() : null;
+  totalPuesto = centavos;
+  if (!gsap) { globalThis.gsap?.killTweensOf(cifra); cifra.v = centavos; el.textContent = money(centavos); return; }
+  gsap.to(cifra, { v: centavos, duration: T.grande, ease: CURVA, overwrite: true, onUpdate: () => { el.textContent = money(Math.round(cifra.v)); } });
 }
 
 // ---------- El seguimiento, que avanza solo ----------
@@ -373,11 +455,15 @@ function escena(paso) {
   if (!gsap || !el) return;
   const tl = gsap.timeline();
   escenaTl = tl;
-  tl.fromTo(el, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: 'back.out(2)' });
+  tl.fromTo(el, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: T.grande, ease: CURVA });
+  // El texto del estado entra con la escena, desde abajo, sin rehacerse: un solo movimiento por paso.
+  tl.fromTo(main.querySelectorAll('.estado-texto, .llega'), { y: 6, opacity: 0 }, { y: 0, opacity: 1, duration: T.chico, ease: CURVA, stagger: 0.04, clearProps: 'transform,opacity' }, 0.06);
+  const ahora = main.querySelector('.linea li.ahora');
+  if (ahora) tl.fromTo(ahora, { x: -8 }, { x: 0, duration: T.chico, ease: CURVA, clearProps: 'transform' }, 0.06);
   if (paso === 'preparando') tl.fromTo(el.querySelectorAll('.vapor-linea'), { y: 6, autoAlpha: 0 }, { y: -6, autoAlpha: 1, duration: 0.8, stagger: 0.15, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 0.2);
-  if (paso === 'asignado') tl.fromTo(el.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, transformOrigin: '50% 100%', duration: 0.4, ease: 'power2.inOut' }, 0.25);
+  if (paso === 'asignado') tl.fromTo(el.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, transformOrigin: '50% 100%', duration: T.grande, ease: CURVA }, 0.2);
   if (paso === 'en_camino') tl.fromTo(el.querySelector('.moto'), { x: -16 }, { x: 16, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, 0.1);
-  if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(3)' }, 0.2);
+  if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: T.grande, ease: CURVA }, 0.15);
 }
 
 // Al volver a esta página sin recargar (js/paginas.js), todo sigue donde iba.
