@@ -278,7 +278,7 @@ function pintar(resultado = null) {
   const suc = sucursal(s.sucursal);
   const entrega = s.modo === 'domicilio' && s.destino
     ? `A domicilio: ${s.destino.calle}, ${s.destino.colonia}${s.destino.referencias ? ` (${s.destino.referencias})` : ''}. Lo prepara la ${suc?.nombre.toLowerCase() ?? 'barra'}.`
-    : s.modo === 'recoger' && suc ? `Recoger en la ${suc.nombre.toLowerCase()}: ${suc.direccion}.` : 'Falta elegir cómo lo quieres.';
+    : s.modo === 'recoger' && suc ? `Recoger en la ${suc.nombre.toLowerCase()}: ${suc.direccion}` : 'Falta elegir cómo lo quieres.';
   $('.entrega-texto').textContent = entrega;
   for (const r of $$('input[name="propina"]')) {
     const pct = Number(r.value);
