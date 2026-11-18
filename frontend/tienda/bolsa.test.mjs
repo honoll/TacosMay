@@ -66,6 +66,25 @@ Object.assign(globalThis, {
   matchMedia: (q) => ({ matches: q.includes('no-preference') ? !reducido : reducido }),
   performance: { now: () => reloj },
   getComputedStyle: () => ({ transform: 'none' }),
+  // GSAP de juguete: registra cada animación y la termina a los pocos milisegundos (llama a onComplete).
+  gsap: {
+    llamadas: [],
+    animacion(vars = {}) {
+      let viva = true;
+      setTimeout(() => { if (viva) vars.onComplete?.(); }, 5);
+      return { kill() { viva = false; } };
+    },
+    to(el, vars) { this.llamadas.push(['to', el, vars]); return this.animacion(vars); },
+    fromTo(el, de, a) { this.llamadas.push(['fromTo', el, a]); return this.animacion(a); },
+    timeline(vars = {}) {
+      const g = this;
+      const tl = { to: () => tl, fromTo: () => tl, from: () => tl, kill() { viva = false; } };
+      let viva = true;
+      g.llamadas.push(['timeline', null, vars]);
+      setTimeout(() => { if (viva) vars.onComplete?.(); }, 5);
+      return tl;
+    },
+  },
   document: {
     createElement: (t) => new E(t),
     body: cuerpo,
@@ -167,7 +186,8 @@ mini.className = 'charola mini';
 let vuelo = b.volar(mini, '1');
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 1, 'la miniatura vuela');
 b.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
-assert.equal(comps()[0].style.vars['--espera'], '260ms', 'el compartimento se llena cuando aterriza el guiso');
+const llenado = gsap.llamadas.filter(([t]) => t === 'timeline').at(-1)[2];
+assert.equal(llenado.delay, 0.32, 'la cámara se llena cuando aterriza el guiso');
 await espera(20);
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 0, 'al aterrizar, la miniatura se retira');
 vuelo = b.volar(mini, '2');
@@ -175,7 +195,8 @@ b.volar(mini, '2');
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 1, 'un solo vuelo por guiso a la vez');
 const antes = animaciones.length;
 vuelo.cancel();
-assert.ok(animaciones.length > antes && JSON.stringify(animaciones.at(-1)).includes('translateX(6px)'), 'la API rechazó: el guiso se sacude y se desvanece');
+const sacudida = gsap.llamadas.at(-1);
+assert.ok(sacudida[0] === 'to' && JSON.stringify(sacudida[2].keyframes).includes('+=12'), 'la API rechazó: el guiso se sacude y se desvanece');
 await espera(20);
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 0);
 assert.equal(comps().length, 1, 'y no se abre compartimento');
@@ -210,10 +231,8 @@ capa2.h.click[0]();
 await escena.listo;
 assert.ok(!cuerpo.children.includes(capa2), 'tocar la salta');
 escena = enviar([]);
-const avion = cuerpo.children.find((c) => c.cl().includes('envio')).querySelector('.envio-avion');
-avion.h.animationend[0]({ animationName: 'env-despega' });
 await escena.listo;
-assert.equal(cuerpo.children.filter((c) => c.cl().includes('envio')).length, 0, 'al despegar el avión, termina');
+assert.equal(cuerpo.children.filter((c) => c.cl().includes('envio')).length, 0, 'al terminar su línea de tiempo (despega el avión), termina');
 
 // ---------- Movimiento reducido: sin vuelo, sin pasos, sin escena ----------
 reducido = true;
@@ -226,5 +245,10 @@ b2.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
 b2.pintar([], 0);
 assert.equal(r2.cont.querySelectorAll('.comp').length, 0, 'quitar es inmediato, sin esperar a su animación');
 assert.equal(enviar([]), null, 'sin escena de envío: se llega directo a «Mis pedidos»');
+reducido = false;
+const g = globalThis.gsap;
+delete globalThis.gsap;
+assert.equal(enviar([]), null, 'sin GSAP (no cargó) tampoco hay escena: nada se queda a medias');
+globalThis.gsap = g;
 
 console.log('bolsa.test: OK (llenar, sumar, otra bolsa, quitar, vuelo y error, celular, envío y saltar, movimiento reducido)');

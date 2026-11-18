@@ -559,7 +559,10 @@ const ACTIONS = {
     // En la lista, la miniatura vuela a su compartimento de la bolsa; en la ficha, la bolsa vuela al carrito
     // (la primera vez con el empacado completo; después, solo volando).
     const fila = el.closest?.('.renglon');
-    if (fila) { el.classList.remove('toque'); void el.offsetWidth; el.classList.add('toque'); }
+    if (fila) {
+      el.classList.remove('toque'); void el.offsetWidth; el.classList.add('toque');
+      if (moverse()) globalThis.gsap?.fromTo(el, { scale: 0.86 }, { scale: 1, duration: 0.35, ease: 'back.out(3)' });
+    }
     const pack = fila && bolsaUI?.conectada ? bolsaUI.volar(fila.querySelector('.charola'), id) : empacar(el, actual > 0);
     try { await setQty(id, actual + 1); } catch (err) { pack.cancel(); throw err; }
     pintarControles(id, 'sube');

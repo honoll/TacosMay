@@ -27,7 +27,8 @@ seco; agregar un guiso nunca detiene la compra.
 | El botón del carrito de la cabecera, en la lista: en escritorio lleva a la bolsa; en celular la abre | En la lista la bolsa ya está a la vista; el panel lateral se queda para la ficha |
 | La ficha de un guiso conserva el empacado de hoy (la bolsa vuela al carrito de la cabecera) | Ahí no hay bolsa a la vista |
 | «Confirmar pedido» en el rojo de la marca y el láser de sellado en rojo | Así viene en la referencia que eligió Alejandro. Es una excepción a «el rojo, solo en el logotipo» (`sistema.md`); si se queda, hay que escribirla ahí como regla |
-| **Sin GSAP**: CSS para los pasos y la API de animaciones del navegador para el vuelo | Ninguno de los pasos pide más; una dependencia sería peso sin razón |
+| **Con GSAP** (vendor/gsap.min.js, 3.15.1, licencia estándar sin costo: uso comercial permitido, conservando su aviso de copyright) | Alejandro lo pidió el 17-nov-2026 al ver que las animaciones de CSS se veían mal: GSAP encadena los pasos en líneas de tiempo (nada se encima), hace el arco del vuelo y respeta el movimiento reducido. Sin GSAP, el estado cambia directo |
+| **La bolsa es la imagen que eligió Alejandro** (`media/bolsa/bolsa.webp`), no dibujo de CSS | Con degradados de CSS el plástico parecía un filtro. Cada guiso va en una de las seis cámaras medidas sobre la imagen, y encima lleva el plástico de esa cámara (`camara-N.webp`, gris neutro en hard-light): las arrugas y los brillos reales caen sobre la foto. Imagen generada con IA: `PENDIENTE-CLIENTE` |
 | El avión es una imagen de «va en camino», **sin texto que prometa** | Cobertura, costo y tiempos siguen por confirmar (`PENDIENTE-CLIENTE`) |
 
 ## Coreografía

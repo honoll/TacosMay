@@ -1,8 +1,8 @@
 // Al confirmar el pedido: la bolsa sellada entra en una caja, la caja se cierra con su cinta y su
-// etiqueta, y sube a un avión que despega (docs/diseno/empacado.md). Unos 2.4 s; se salta tocando,
-// con «Saltar» o con Escape. Es una imagen de «va en camino», sin texto que prometa envío.
-// Con movimiento reducido no hay escena: devuelve null y se llega directo a «Mis pedidos».
-// Dibujo en la retícula de los pictogramas (caja en 120 × 110, avión en 24 × 24).
+// etiqueta, y sube a un avión que despega (docs/diseno/empacado.md). Una línea de tiempo de GSAP, un paso
+// después de otro, ≈ 2.6 s; se salta tocando, con «Saltar» o con Escape. Es una imagen de «va en camino»,
+// sin texto que prometa envío. Sin GSAP o con movimiento reducido no hay escena: devuelve null y se llega
+// directo a «Mis pedidos». Dibujo en la retícula de los pictogramas (caja en 120 × 110, avión en 24 × 24).
 
 const CAJA = '<path class="tapa izq" fill="#b58a4f" d="M14 46 4 24h48l8 22Z"/>'
   + '<path class="tapa der" fill="#b58a4f" d="M106 46l10-22H68l-8 22Z"/>'
@@ -13,7 +13,8 @@ const CAJA = '<path class="tapa izq" fill="#b58a4f" d="M14 46 4 24h48l8 22Z"/>'
 const AVION = '<path d="M11 2.5a1 1 0 0 1 2 0V8l9 5.5V16l-9-2.6v5l2.6 1.9V22L12 21l-3.6 1v-1.7L11 18.4v-5L2 16v-2.5L11 8Z"/>';
 
 export function enviar(colores = []) {
-  if (!globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches) return null;
+  const gsap = globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ? globalThis.gsap : null;
+  if (!gsap) return null;
   const el = document.createElement('div');
   el.className = 'envio';
   el.setAttribute('role', 'dialog');
@@ -33,10 +34,12 @@ export function enviar(colores = []) {
   let fin;
   const listo = new Promise((r) => { fin = r; });
   let hecho = false;
+  let tl = null;
   const terminar = () => {
     if (hecho) return;
     hecho = true;
     clearTimeout(seguro);
+    tl?.kill();
     document.removeEventListener('keydown', tecla);
     el.remove();
     antes?.focus?.({ preventScroll: true });
@@ -45,8 +48,28 @@ export function enviar(colores = []) {
   const tecla = (e) => { if (e.key === 'Escape') terminar(); };
   document.addEventListener('keydown', tecla);
   el.addEventListener('click', terminar); // tocar en cualquier lugar (o «Saltar») la termina
-  el.querySelector('.envio-avion').addEventListener('animationend', (e) => { if (e.animationName === 'env-despega') terminar(); });
-  const seguro = setTimeout(terminar, 4000); // por si una animación no llega a terminar
+  const seguro = setTimeout(terminar, 4500); // por si la línea de tiempo no llega a terminar
+
+  const $ = (s) => el.querySelector(s);
+  const caja = $('.envio-caja');
+  const bolsa = $('.envio-bolsa');
+  const avion = $('.envio-avion');
+  tl = gsap.timeline({ onComplete: terminar })
+    // entra la caja, abierta
+    .from(caja, { scale: 0.8, autoAlpha: 0, duration: 0.25, ease: 'power2.out' })
+    // la bolsa baja y se oculta dentro
+    .to(bolsa, { yPercent: 95, scale: 0.8, duration: 0.35, ease: 'power2.in' })
+    .to(bolsa, { autoAlpha: 0, duration: 0.1 }, '-=0.08')
+    // se cierran las tapas, pasa la cinta, se pega la etiqueta
+    .to(caja.querySelectorAll('.tapa'), { scaleY: 0.12, transformOrigin: '50% 100%', duration: 0.3, ease: 'power2.inOut', stagger: 0.05 })
+    .fromTo(caja.querySelector('.cinta'), { scaleY: 0 }, { scaleY: 1, transformOrigin: '50% 0%', duration: 0.15, ease: 'none' })
+    .fromTo(caja.querySelector('.etiqueta'), { scale: 1.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: 0.18, ease: 'back.out(2)' })
+    // el avión llega a un lado de la caja, sin tocarla
+    .fromTo(avion, { xPercent: -160, rotation: 90, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.35, ease: 'power3.out' })
+    // la caja se encoge hacia el avión y desaparece en él
+    .to(caja, { xPercent: -114, yPercent: 16, scale: 0.15, autoAlpha: 0, duration: 0.4, ease: 'power2.in' })
+    // despega
+    .to(avion, { xPercent: 320, yPercent: -300, rotation: 70, autoAlpha: 0, duration: 0.7, ease: 'power2.in' });
 
   return { listo, cancel: terminar };
 }

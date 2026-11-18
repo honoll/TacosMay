@@ -1,58 +1,73 @@
 // La bolsa al vacío con compartimentos: el carrito, dibujado (docs/diseno/empacado.md).
-// Un compartimento por guiso distinto; seis por bolsa (el séptimo abre otra). Se pinta desde el carrito
-// que devuelve la API, por clave: un compartimento no se rehace cuando cambia su cantidad, así no repite
-// su llenado. El vuelo de la miniatura al compartimento y los pasos de llenar, sellar y etiquetar son
-// respuesta visual: el compartimento aparece cuando la API confirma. Con movimiento reducido no hay vuelo
-// ni pasos (CSS): el compartimento aparece ya sellado.
-import { guisoDe, tinta } from '../js/barra.js';
+// La bolsa es la imagen que eligió Alejandro (media/bolsa/bolsa.webp); cada guiso ocupa una de sus seis
+// cámaras: su foto queda debajo del plástico de esa cámara (media/bolsa/camara-N.webp, en hard-light).
+// PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender.
+// Se pinta desde el carrito que devuelve la API, por clave: una cámara no se rehace cuando cambia su
+// cantidad. El movimiento lo lleva GSAP (vendor/gsap.min.js): sin GSAP o con movimiento reducido, el
+// estado cambia directo, sin animación.
+import { guisoDe } from '../js/barra.js';
 import { esc, money } from '../js/api.js';
 
 export const POR_BOLSA = 6;
-const VUELO = 260;        // ms: un arco rápido
-const MAX_VUELOS = 3;     // del cuarto vuelo simultáneo en adelante, sin vuelo
+const VUELO = 0.32;     // s: un arco rápido
+const MAX_VUELOS = 3;   // del cuarto vuelo simultáneo en adelante, sin vuelo
 const moverse = () => globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ?? false;
+const animador = () => (moverse() ? globalThis.gsap ?? null : null);
 
 export function bolsa(raiz) {
   const cont = raiz.querySelector('.bolsas');
-  const comps = new Map();    // id del guiso → su compartimento
+  const comps = new Map();    // id del guiso → su cámara
   const orden = [];           // ids, en el orden en que entraron a la bolsa
-  const llegadas = new Map(); // id → cuándo aterriza su vuelo (para que el llenado espere al guiso)
+  const llegadas = new Map(); // id → cuándo aterriza su vuelo (ms), para que el llenado espere al guiso
   const volando = new Set();  // guisos con un vuelo en el aire: tocar «+» otra vez no lanza otro
   let vuelos = 0;
   let totalAntes = null;
-  let esperaMayor = 0; // lo que falta para que aterrice el último guiso en vuelo (para que el total brinque al llegar)
+  let esperaMayor = 0;        // s: lo que falta para que aterrice el último guiso (el total brinca entonces)
 
   const ahora = () => performance.now();
 
-  function compartimento(it) {
+  function camara(it) {
     const g = guisoDe(it.guiso.nombre);
     const li = document.createElement('li');
     li.className = 'comp';
     li.dataset.clave = String(it.guiso.id);
     li.style.setProperty('--c', g.color);
-    li.style.setProperty('--t', tinta(g.color));
     if (g.foto) li.style.setProperty('--foto', `url("/media/guisos/${g.slug}.webp")`);
-    li.innerHTML = `<span class="comp-guiso"></span><span class="comp-banda"></span>`
+    li.innerHTML = '<span class="comp-guiso"></span><span class="comp-plastico"></span><span class="comp-banda"></span>'
       + `<span class="comp-etq"><b>${esc(g.n)}</b><span class="comp-nombre">${esc(it.guiso.nombre)}</span>`
       + `<span class="comp-cant"><span aria-hidden="true">× </span><span class="n">${esc(it.cantidad)}</span></span></span>`;
     return li;
   }
 
-  // Un paso del compartimento (llena, suma, sale). Espera a que aterrice el guiso que viene volando.
-  // Si el compartimento todavía se está llenando, sumar solo cambia el número: no reinicia la animación.
-  const DURA = { llena: 300, suma: 250 };
+  // Llenar: la foto entra prensada bajo el plástico, el láser sella arriba y cae la etiqueta.
+  // Sumar: el láser vuelve a pasar y la cantidad rueda. Si la cámara se está llenando, sumar solo cambia el número.
+  const DURA = { llena: 450, suma: 300 };
   function paso(li, clase) {
     if (clase === 'suma' && ahora() < Number(li.dataset.hasta || 0)) return;
-    const espera = Math.max(0, (llegadas.get(li.dataset.clave) ?? 0) - ahora());
-    li.dataset.hasta = String(ahora() + espera + DURA[clase]);
-    esperaMayor = Math.max(esperaMayor, espera + 250);
-    li.style.setProperty('--espera', `${Math.round(espera)}ms`);
+    const espera = Math.max(0, (llegadas.get(li.dataset.clave) ?? 0) - ahora()) / 1000;
+    li.dataset.hasta = String(ahora() + espera * 1000 + DURA[clase]);
     li.classList.remove('llena', 'suma');
-    void li.offsetWidth;
     li.classList.add(clase);
+    esperaMayor = Math.max(esperaMayor, espera + DURA[clase] / 1000);
+    const gsap = animador();
+    if (!gsap) return;
+    const q = (s) => li.querySelector(s);
+    const tl = gsap.timeline({ delay: espera });
+    if (clase === 'llena') {
+      tl.fromTo(q('.comp-guiso'), { scale: 1.1, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.24, ease: 'power3.out' })
+        .fromTo(q('.comp-plastico'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, ease: 'power1.in' }, '<')
+        .fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.18, ease: 'none', transformOrigin: '0% 50%' }, '<0.05')
+        .to(q('.comp-banda'), { autoAlpha: 0, duration: 0.12 })
+        .fromTo(q('.comp-etq'), { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.2, ease: 'back.out(2)' }, '-=0.14');
+    } else {
+      tl.fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.18, ease: 'none', transformOrigin: '0% 50%' })
+        .to(q('.comp-banda'), { autoAlpha: 0, duration: 0.12 })
+        .fromTo(q('.n'), { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.2, ease: 'power2.out' }, 0);
+    }
   }
 
-  // Bolsas y huecos: cada compartimento en su lugar; los huecos completan la última bolsa.
+  // Bolsas y huecos: cada cámara en su lugar (la posición en la bolsa sale del orden, en CSS); los huecos
+  // completan la última bolsa. Con más de seis guisos, cada bolsa dice cuál es.
   function acomodar() {
     const n = Math.max(1, Math.ceil(orden.length / POR_BOLSA));
     while (cont.children.length < n) {
@@ -68,7 +83,6 @@ export function bolsa(raiz) {
       const li = comps.get(id);
       if (li.parentNode !== ul || ul.children[i % POR_BOLSA] !== li) ul.insertBefore(li, ul.children[i % POR_BOLSA] ?? null);
     });
-    // Con más de seis guisos, cada bolsa dice cuál es: «Bolsa 1 de 2 · llena».
     [...cont.children].forEach((b, i) => {
       const num = b.querySelector('.bolsa-num');
       if (!num) return;
@@ -91,13 +105,21 @@ export function bolsa(raiz) {
     comps.delete(id);
     orden.splice(orden.indexOf(id), 1);
     li.removeAttribute('data-clave');
-    if (!moverse()) return li.remove();
+    const gsap = animador();
+    if (!gsap) return li.remove();
     li.classList.add('sale');
-    setTimeout(() => { li.remove(); acomodar(); }, 260);
+    gsap.to(li, { scale: 0.92, autoAlpha: 0, duration: 0.22, ease: 'power2.in', onComplete: () => { li.remove(); acomodar(); } });
   }
 
-  // Lo que dice el carrito, en la bolsa: compartimentos nuevos se llenan, cantidades nuevas suman,
-  // los que ya no están se vacían. Abajo, el resumen (para la barra de celular) y el total.
+  function golpe(el, clase) {
+    if (!el) return;
+    el.classList.remove(clase);
+    void el.offsetWidth;
+    el.classList.add(clase);
+  }
+
+  // Lo que dice el carrito, en la bolsa: cámaras nuevas se llenan, cantidades nuevas suman, las que ya no
+  // están se vacían. Abajo, el resumen (para la barra de celular) y el total, que brinca si sube.
   function pintar(items, total) {
     const ids = items.map((it) => String(it.guiso.id));
     for (const id of [...comps.keys()]) if (!ids.includes(id)) vaciar(id);
@@ -105,7 +127,7 @@ export function bolsa(raiz) {
       const id = String(it.guiso.id);
       const li = comps.get(id);
       if (!li) {
-        const nuevo = compartimento(it);
+        const nuevo = camara(it);
         comps.set(id, nuevo);
         orden.push(id);
         acomodar();
@@ -121,35 +143,35 @@ export function bolsa(raiz) {
     raiz.querySelector('.bolsa-mini').innerHTML = items.map((it) => `<i style="--c:${guisoDe(it.guiso.nombre).color}"></i>`).join('');
     raiz.querySelector('.bolsa-n').textContent = `${piezas} ${piezas === 1 ? 'guiso' : 'guisos'}`;
     for (const t of raiz.querySelectorAll('.bolsa-total')) t.textContent = money(total);
-    // Si el total sube, brinca, y «Confirmar pedido» hace un pulso, cuando aterriza el guiso.
     if (totalAntes !== null && total > totalAntes && moverse()) {
-      raiz.style.setProperty('--espera-cuenta', `${Math.round(esperaMayor)}ms`);
-      golpe(raiz.querySelector('.bolsa-cuentas .total'), 'salta');
-      golpe(raiz.querySelector('.bolsa-cuentas [data-click="checkout"]'), 'pulso');
+      const cifra = raiz.querySelector('.bolsa-cuentas .total');
+      const confirmar = raiz.querySelector('.bolsa-cuentas [data-click="checkout"]');
+      golpe(cifra, 'salta');
+      golpe(confirmar, 'pulso');
+      const gsap = animador();
+      if (gsap && cifra && confirmar) {
+        gsap.timeline({ delay: esperaMayor })
+          .fromTo(cifra.querySelector('strong') ?? cifra, { y: 0 }, { keyframes: [{ y: -6, duration: 0.12, ease: 'power2.out' }, { y: 0, duration: 0.3, ease: 'bounce.out' }] })
+          .fromTo(confirmar, { scale: 1 }, { scale: 1.05, duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 0);
+      }
     }
     totalAntes = total;
     esperaMayor = 0;
   }
 
-  function golpe(el, clase) {
-    if (!el) return;
-    el.classList.remove(clase);
-    void el.offsetWidth;
-    el.classList.add(clase);
-  }
-
   const desplegada = () => !raiz.querySelector('.bolsa-barra')?.offsetParent || raiz.classList.contains('abierta');
 
-  // A dónde vuela un guiso: a su compartimento, al primer hueco o, con la bolsa plegada, a la barra.
+  // A dónde vuela un guiso: a su cámara, al primer hueco o, con la bolsa plegada, a la barra.
   function destino(id) {
     if (!desplegada()) return raiz.querySelector('.bolsa-barra');
     return comps.get(String(id)) ?? cont.querySelector('.hueco') ?? cont;
   }
 
-  // La miniatura de la charola vuela del renglón a la bolsa. Devuelve cancel() para cuando la API rechaza:
-  // el guiso se sacude y se desvanece donde vaya.
+  // La foto del guiso vuela en arco del renglón a su cámara y llega de su tamaño. Devuelve cancel() para
+  // cuando la API rechaza: el guiso se sacude y se desvanece donde vaya.
   function volar(miniatura, id) {
-    if (!moverse() || !miniatura || vuelos >= MAX_VUELOS || volando.has(String(id))) return { cancel() {} };
+    const gsap = animador();
+    if (!gsap || !miniatura || vuelos >= MAX_VUELOS || volando.has(String(id))) return { cancel() {} };
     const a = miniatura.getBoundingClientRect();
     const b = destino(id).getBoundingClientRect();
     const clon = document.createElement('div');
@@ -164,23 +186,24 @@ export function bolsa(raiz) {
     const dx = b.left + b.width / 2 - (a.left + a.width / 2);
     const dy = b.top + b.height / 2 - (a.top + a.height / 2);
     const arco = 40 + Math.min(120, Math.abs(dx) * 0.25);
-    const medio = `translate(${dx / 2}px, ${dy / 2 - arco}px) scale(${(1 + k) / 2})`;
-    const fin = `translate(${dx}px, ${dy}px) scale(${k})`;
     vuelos++;
     volando.add(String(id));
-    llegadas.set(String(id), ahora() + VUELO);
-    const anim = clon.animate([{ transform: 'none' }, { transform: medio, offset: 0.5 }, { transform: fin }], { duration: VUELO, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'forwards' });
+    llegadas.set(String(id), ahora() + VUELO * 1000);
     let quitado = false;
     const quitar = () => { if (quitado) return; quitado = true; vuelos--; volando.delete(String(id)); clon.remove(); };
-    anim.finished.then(quitar, quitar);
+    const vuelo = gsap.to(clon, {
+      keyframes: [
+        { x: dx / 2, y: dy / 2 - arco, scale: (1 + k) / 2, duration: VUELO / 2, ease: 'power1.out' },
+        { x: dx, y: dy, scale: k, duration: VUELO / 2, ease: 'power2.in' },
+      ],
+      onComplete: quitar,
+    });
     return {
       cancel() {
         llegadas.delete(String(id));
         if (quitado) return;
-        const t = getComputedStyle(clon).transform;
-        anim.cancel();
-        clon.style.transform = t;
-        clon.animate([{ transform: t }, { transform: `${t} translateX(-6px)` }, { transform: `${t} translateX(6px)`, opacity: 0 }], { duration: 300 }).finished.then(quitar, quitar);
+        vuelo.kill();
+        gsap.to(clon, { keyframes: [{ x: '-=6', duration: 0.06 }, { x: '+=12', duration: 0.08 }, { x: '-=6', autoAlpha: 0, duration: 0.14 }], onComplete: quitar });
       },
     };
   }
