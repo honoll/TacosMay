@@ -65,7 +65,7 @@
 
 <p>Las cuatro son accesos por clave conocida, con expiración y con contadores. Por eso el proyecto usa el modelo Clave-Valor con Redis, alojado en Redis Cloud.</p>
 
-<div class="note"><strong>Alcance.</strong> El proyecto cubre catálogo, cuentas, carrito y pedidos. Quedan fuera pagos, cotización de envío y lotes con fecha de caducidad. El menú y los precios cargados por el script de datos iniciales son de ejemplo y están marcados como tales; los reales se definirán con el negocio.</div>
+<div class="note"><strong>Alcance.</strong> El proyecto cubre catálogo, cuentas, carrito y pedidos. Quedan fuera pagos, cotización de envío y lotes con fecha de caducidad. El sitio incluye además una página de inicio y un prototipo de pedidos a domicilio que no leen ni escriben en la base y no forman parte de este documento. El menú y los precios cargados por el script de datos iniciales son de ejemplo y están marcados como tales; los reales se definirán con el negocio.</div>
 
 <h1>2. Justificación del paradigma</h1>
 
@@ -105,7 +105,7 @@
   <g font-size="12">
     <rect x="10" y="60" width="170" height="180" rx="6" fill="#fdf6ee" stroke="#b4451f" stroke-width="1.5"/>
     <text x="95" y="82" text-anchor="middle" font-weight="700">Cliente (navegador)</text>
-    <rect x="25" y="96" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="112" text-anchor="middle">index.html + styles.css</text><text x="95" y="127" text-anchor="middle" font-size="10" fill="#555">estático, sin build</text>
+    <rect x="25" y="96" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="112" text-anchor="middle">tienda/index.html + CSS</text><text x="95" y="127" text-anchor="middle" font-size="10" fill="#555">estático, sin build</text>
     <rect x="25" y="142" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="158" text-anchor="middle">app.js</text><text x="95" y="173" text-anchor="middle" font-size="10" fill="#555">vistas y acciones</text>
     <rect x="25" y="188" width="140" height="38" rx="4" fill="#fff" stroke="#c9c2b8"/><text x="95" y="204" text-anchor="middle">api.js</text><text x="95" y="219" text-anchor="middle" font-size="10" fill="#555">único fetch + JWT</text>
 
@@ -136,11 +136,12 @@
 </figure>
 
 <ul>
-  <li><strong>Cliente.</strong> Página estática servida por el mismo Express (<code>express.static</code>), por lo que llama a <code>/api/…</code> con rutas relativas y no necesita CORS. Todas las peticiones pasan por una sola función <code>api()</code> que agrega el token y convierte los errores en excepciones.</li>
+  <li><strong>Cliente.</strong> Páginas estáticas, sin paso de compilación, servidas por el mismo Express (<code>express.static</code>). La tienda vive en <code>/tienda/</code>: una lista de guisos con el carrito a un lado, la cuenta, los pedidos y la administración. Al venir del mismo servidor, llama a <code>/api/…</code> con rutas relativas y no necesita CORS. Todas las peticiones pasan por una sola función <code>api()</code> que agrega el token y convierte los errores en excepciones.</li>
   <li><strong>Backend.</strong> Sigue la estructura por capas del backend desarrollado en clase (rutas → middleware → controladores → modelos). Los controladores validan y responden; solo los modelos hablan con Redis.</li>
   <li><strong>SDK de conexión.</strong> Driver oficial <code>redis</code> (node-redis 6). Hay un único cliente compartido, creado al arrancar con <code>REDIS_URL</code>, con manejador del evento <code>error</code>. El servidor no acepta peticiones hasta que la conexión está lista y se niega a arrancar si falta la variable, para no conectarse por omisión a <code>localhost</code>.</li>
   <li><strong>Credenciales.</strong> <code>REDIS_URL</code>, <code>JWT_SECRET</code> y las credenciales del administrador viven en <code>.env</code>, excluido del repositorio; <code>.env.example</code> documenta cada variable.</li>
   <li><strong>Base de datos.</strong> Redis Cloud, plan gratuito: 30 MB de memoria y 30 conexiones simultáneas (Redis, s.f.-a).</li>
+  <li><strong>Despliegue.</strong> El mismo proceso de Express está publicado en Render (<code>https://tacosmay.onrender.com</code>), con las credenciales como variables de entorno del servicio y apuntando a la misma base en la nube.</li>
 </ul>
 
 <h1>4. Diseño del modelo NoSQL</h1>
@@ -210,7 +211,7 @@
 
 <h2>4.3 Estrategia de expiración (TTL)</h2>
 
-<p>El carrito es el único dato temporal. Cada vez que el cliente agrega, cambia o quita un guiso, el backend escribe el campo y vuelve a fijar la expiración en 1800 segundos, de modo que el plazo corre desde la última actividad y no desde la creación. Modificar un campo de un Hash no altera el TTL de la clave, por eso se renueva de forma explícita. La API devuelve <code>expira_en_segundos</code>, leído con <code>TTL</code>, y la tienda lo muestra como cuenta regresiva. Al vencer, Redis elimina la clave por sí mismo: de forma perezosa cuando alguien intenta leerla y de forma activa con un muestreo periódico de claves con expiración (Redis, s.f.-b).</p>
+<p>El carrito es el único dato temporal. Cada vez que el cliente agrega, cambia o quita un guiso, el backend escribe el campo y vuelve a fijar la expiración en 1800 segundos, de modo que el plazo corre desde la última actividad y no desde la creación. Modificar un campo de un Hash no altera el TTL de la clave, por eso se renueva de forma explícita. La API devuelve <code>expira_en_segundos</code>, leído con <code>TTL</code>, y la tienda lo muestra como cuenta regresiva, con un anillo que se vacía junto al carrito. Al vencer, Redis elimina la clave por sí mismo: de forma perezosa cuando alguien intenta leerla y de forma activa con un muestreo periódico de claves con expiración (Redis, s.f.-b).</p>
 
 <p>Catálogo, usuarios, pedidos y ranking no expiran: son datos del negocio.</p>
 
