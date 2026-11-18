@@ -226,4 +226,13 @@ await espera();
 assert.equal(store.tm_sesion, undefined, '«Salir» cierra la sesión');
 assert.match(porId.nav.innerHTML, /href="#entrar"/);
 
+// Vuelta con «atrás»: la página sale de la memoria del navegador y se pone al día (carrito y vista)
+n = llamadas.length;
+oyentes.pageshow({ persisted: false });
+await espera();
+assert.equal(llamadas.length, n, 'una carga normal no repite nada');
+oyentes.pageshow({ persisted: true });
+await espera();
+assert.ok(llamadas.slice(n).length > 0, 'al volver con «atrás» se vuelve a leer lo que pudo cambiar');
+
 console.log('app.test: OK (flujo de cuenta y celdas de carrito, pedidos y admin)');

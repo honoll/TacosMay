@@ -6,6 +6,11 @@
   <meta name="robots" content="noindex">
   <title>No encontramos esa página — Los Tacos May</title>
   <link rel="icon" type="image/svg+xml" href="/marca/logo/icono.svg">
+  <link rel="preload" href="/fuentes/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-condensed-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="speculationrules">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/marca/*"}}]}, "eagerness": "moderate"}]}</script>
   <link rel="stylesheet" href="/barra.css">
   <link rel="stylesheet" href="/landing.css">
 </head>
@@ -26,6 +31,19 @@
     </div>
     <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito">Carrito <b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
   </header>
+  <script>
+    /* Antes del primer cuadro: la cuenta y el carrito como estaban en la página anterior (los guarda
+       js/cabecera.js), para que la cabecera no cambie al llegar. Luego el JS los confirma con la API. */
+    try {
+      var c = JSON.parse(sessionStorage.getItem('tm_cabecera'));
+      if (c && localStorage.getItem('tm_sesion')) {
+        document.getElementById('nav').innerHTML = c.nav;
+        document.getElementById('nav-carrito-n').textContent = c.n;
+        var s = Math.ceil((c.fin - Date.now()) / 1000);
+        if (s > 0) document.querySelector('.carrito [data-countdown]').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+      }
+    } catch (e) {}
+  </script>
 
   <main id="contenido">
     <section class="perdida">

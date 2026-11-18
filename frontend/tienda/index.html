@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Los Tacos May — Tienda</title>
   <link rel="icon" type="image/svg+xml" href="../marca/logo/icono.svg">
+  <link rel="preload" href="/fuentes/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-condensed-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="speculationrules">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/marca/*"}}]}, "eagerness": "moderate"}]}</script>
+  <link rel="prefetch" href="/">
+  <link rel="prefetch" href="/landing.css">
   <link rel="stylesheet" href="../barra.css">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -24,8 +31,30 @@
     </div>
     <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito">Carrito <b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
   </header>
+  <script>
+    /* Antes del primer cuadro: la cuenta y el carrito como estaban en la página anterior (los guarda
+       js/cabecera.js), para que la cabecera no cambie al llegar. Luego el JS los confirma con la API. */
+    try {
+      var c = JSON.parse(sessionStorage.getItem('tm_cabecera'));
+      if (c && localStorage.getItem('tm_sesion')) {
+        document.getElementById('nav').innerHTML = c.nav;
+        document.getElementById('nav-carrito-n').textContent = c.n;
+        var s = Math.ceil((c.fin - Date.now()) / 1000);
+        if (s > 0) document.querySelector('.carrito [data-countdown]').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+      }
+    } catch (e) {}
+  </script>
   <p id="aviso" role="status" hidden></p>
   <main id="vista" class="caja" tabindex="-1"></main>
+  <!-- Esqueleto del catálogo: lo usa app.js mientras responde la API y, al llegar al catálogo, ya está
+       puesto desde el primer cuadro en vez de una vista vacía. -->
+  <template id="esqueleto">
+    <h1>Guisos de taquería empacados al vacío</h1>
+    <ul class="barra" aria-busy="true" aria-label="Cargando los guisos"><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li></ul>
+  </template>
+  <script>
+    if (/^(#catalogo)?$/.test(location.hash)) document.getElementById('vista').innerHTML = document.getElementById('esqueleto').innerHTML;
+  </script>
   <!-- El carrito como panel lateral: se abre desde el catálogo y la ficha, sin salir de ellos (app.js lo llena) -->
   <dialog class="panel" id="panel-carrito" aria-labelledby="panel-titulo"></dialog>
   <footer class="pie">

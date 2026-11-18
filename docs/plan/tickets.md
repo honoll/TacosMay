@@ -528,6 +528,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Seis fotos más de guisos (17-nov-2026):** salpicón, nopalitos, mole con pollo, bistek con papa, chicharrón en salsa y tinga de res, recortadas a 4:3 y en WebP (720 y 1024); ya son nueve de catorce charolas con foto en landing, catálogo y ficha. Colores de charola revisados contra cada foto: sin cambios. Imágenes generadas con IA, `PENDIENTE-CLIENTE`. Sin ver en pantalla.
 
+- **Entre páginas sin destello (17-nov-2026):** la cabecera llega pintada como se fue (cuenta, carrito y reloj guardados por la página anterior y puestos antes del primer cuadro), la tienda llega con el esqueleto del catálogo, las cuatro fuentes precargadas sin brinco (`font-display: fallback`), lienzo crema, precarga de la otra página y transición entre documentos solo como mejora; «atrás» pone al día la página. Prueba nueva `frontend/js/paginas.test.mjs`. Propuesta al backend: caché de archivos estáticos. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

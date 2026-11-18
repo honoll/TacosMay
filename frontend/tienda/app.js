@@ -1,7 +1,7 @@
 import { api, session, money, esc, notice } from '../js/api.js';
 import { charola, picto } from '../js/barra.js';
 import { empacar } from './empaque.js';
-import { cuenta, pintarCarrito, piezas } from '../js/cabecera.js';
+import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -38,7 +38,6 @@ function setCart(c) {
 
 const loadCart = async () => setCart(await api('/carrito'));
 
-const clock = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
 function tick() {
   const left = deadline ? Math.max(0, Math.ceil((deadline - Date.now()) / 1000)) : 0;
@@ -148,9 +147,7 @@ function pintarControles(id, cambio) {
 }
 
 // Esqueleto del catálogo: las mismas charolas, vacías. Solo aparece si la respuesta tarda.
-const ESQUELETO = `
-  <h1>Guisos de taquería empacados al vacío</h1>
-  <ul class="barra" aria-busy="true" aria-label="Cargando los guisos">${'<li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li>'.repeat(8)}</ul>`;
+const ESQUELETO = document.getElementById('esqueleto').innerHTML; // en index.html: el mismo del primer cuadro
 const TARDA = 200; // ms antes de mostrar el esqueleto, para que no parpadee si la API contesta rápido
 
 // Una descripción repetida en varios guisos no informa nada: devuelve cómo pintar cada tarjeta de esa lista.
@@ -631,7 +628,7 @@ function go(r) {
 function renderNav() {
   const actual = current === 'registro' ? 'entrar' : current;
   nav.innerHTML = cuenta(user(), { base: '', actual, admin: isAdmin() });
-  pintarCarrito(piezas(cart), { base: '', actual });
+  pintarCarrito(piezas(cart), { base: '', actual, fin: deadline });
   const guisos = document.querySelector('#nav-principal a[href="/tienda/#catalogo"]');
   if (current === 'catalogo') guisos?.setAttribute('aria-current', 'page');
   else guisos?.removeAttribute('aria-current');
@@ -700,11 +697,22 @@ addEventListener('hashchange', () => {
   render();
 });
 
-// Arranque: si hay sesión guardada, se valida contra el backend y se carga su carrito.
+// Al volver con «atrás» la página sale de la memoria del navegador tal como se dejó (quizá con otra
+// sesión o con otro carrito, cambiados en la landing): se pone al día sin recargar.
+addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  run(async () => {
+    if (user()) await loadCart();
+    else setCart(EMPTY);
+    await render();
+  });
+});
+
+// Arranque: si hay sesión guardada, se valida contra el backend y se carga su carrito (a la vez).
 if (user()) {
   await run(async () => {
-    session.set({ ...user(), ...(await api('/users/me')) });
-    await loadCart();
+    const [yo] = await Promise.all([api('/users/me'), loadCart()]);
+    session.set({ ...user(), ...yo });
   });
 }
 render();

@@ -120,6 +120,7 @@ Investigación y chocan con la marca.
 | Mínimo de compra y costo de envío | Datos nuevos y su regla | Mostrarlos en el carrito, como hacen todas |
 | Recoger en la taquería como forma de entrega | Un campo en el pedido | Es lo más barato de ofrecer |
 | Cajas armadas de tamaño fijo | Un tipo de producto nuevo | Llenar la hielera y justificar el envío |
+| Caché de los archivos del sitio: `express.static(…, { maxAge: '1d' })` (o al menos para `/fuentes` y `/media`) | Una opción en `backend/server.js` | Hoy cada cambio de página vuelve a preguntar por cada hoja, fuente, script e imagen (`max-age=0`): un viaje de ida y vuelta por archivo antes del primer cuadro. Es lo que más tarda en pasar de la landing a la tienda |
 
 ## Estado
 | Vista | Estado |
@@ -133,3 +134,4 @@ Investigación y chocan con la marca.
 | 6 Administración | Hecho, sin ver en pantalla (17-nov-2026) |
 | 7 Landing y ayuda | Hecho, sin ver en pantalla (17-nov-2026) |
 | 8 Transiciones | Hecho, sin ver en pantalla (17-nov-2026) |
+| Entre páginas sin destello | Hecho, sin ver en pantalla (17-nov-2026) |
