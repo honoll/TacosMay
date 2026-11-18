@@ -17,12 +17,16 @@ Fuente única de las claves de Redis y de la API. Lo edita coordinación.
 
 El carrito que expira solo es la «consulta especializada» de la rúbrica (TTL); el ranking
 es la estructura compuesta (Sorted Set). El checkout es una transacción `MULTI/EXEC` con
-`WATCH` sobre el stock: descuenta stock, suma al ranking, crea el pedido y borra el carrito.
+`WATCH` sobre el carrito y el stock de sus guisos (en una conexión propia, porque `WATCH` es
+por conexión): descuenta stock, suma al ranking, crea el pedido y borra el carrito. Si otra
+compra cambió algo, `EXEC` se cancela y la API responde `409`.
 
 ## API (todo JSON, base `/api`)
 
 Errores: el status HTTP correcto y `{ "message": "..." }` (igual que el repo base).
-Auth: `Authorization: Bearer <jwt>`.
+Auth: `Authorization: Bearer <jwt>`; el token lleva `{id, email}` y dura 30 días.
+Además de los de la tabla: `400` dato faltante o inválido (o email ya registrado), `401` sin
+token, token inválido o credenciales malas, `403` la ruta es de admin.
 
 | Método y ruta | Auth | Cuerpo | Respuesta |
 |---|---|---|---|
@@ -41,7 +45,9 @@ Auth: `Authorization: Bearer <jwt>`.
 | `POST /pedidos` | sí | — (toma el carrito) | `201 pedido` · `400` carrito vacío · `409` sin stock |
 | `GET /pedidos` | sí | — | `200 [pedido]` |
 
-`guiso` = `{id, nombre, descripcion, precio_centavos, porciones, stock}` (números como números).
+`guiso` = `{id, nombre, descripcion, precio_centavos, porciones, stock}` (números como números;
+los ids son texto: `"5"`). `precio_centavos`, `porciones`, `stock` y `cantidad` se mandan como
+enteros JSON ≥ 0. El email se guarda en minúsculas. Borrar un guiso también lo saca del ranking.
 `pedido` = `{id, total_centavos, creado, items:[{guisoId, nombre, cantidad, precio_centavos}]}`.
 
 Detalles fijados al integrar (17-nov): `creado` es fecha ISO 8601; con el carrito vacío
@@ -49,4 +55,5 @@ Detalles fijados al integrar (17-nov): `creado` es fecha ISO 8601; con el carrit
 misma forma que `GET /carrito`; `POST /users` siempre crea `cliente` (el admin lo crea el seed).
 
 El frontend se sirve desde el mismo Express (`express.static('frontend')`), así que llama a
-`/api/...` con ruta relativa y no hay CORS.
+`/api/...` con ruta relativa y no hay CORS. Una dirección que no empieza con `/api` y no es un
+archivo responde `frontend/404.html` con estado 404.

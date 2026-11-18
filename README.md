@@ -9,7 +9,7 @@ frontend estático servido por el mismo servidor.
 
 ## Requerimientos
 
-- Node.js 20 o más nuevo (probado con 24) y npm
+- Node.js 22 o más nuevo (probado con 24) y npm
 - Una base de Redis en la nube: [Redis Cloud](https://redis.io/try-free/), plan gratis
 
 ## Instalación
@@ -25,6 +25,8 @@ Copia `.env.example` como `.env` y llena los valores. El `.env` no se sube al re
 | `PORT` | Puerto del servidor (5000 si se omite) |
 | `REDIS_URL` | Conexión a Redis Cloud: `redis://default:<password>@<host>:<puerto>` |
 | `JWT_SECRET` | Cadena larga y aleatoria para firmar los tokens |
+| `CARRITO_TTL_SEGUNDOS` | Opcional: vida del carrito sin actividad (1800 = 30 min si se omite) |
+| `NODE_ENV` | Opcional: `production` oculta el `stack` en las respuestas de error |
 | `ADMIN_NOMBRE`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Administrador que crea el seed |
 
 ## Cargar datos (seed)
@@ -81,7 +83,8 @@ backend/
   controllers/     lógica de cada endpoint (express-async-handler)
   routes/          rutas de users, guisos, carrito y pedidos
   middleware/      protect + soloAdmin (JWT) y errorMiddleware
-frontend/          la tienda (HTML, CSS y JS sin build)
+frontend/          HTML, CSS y JS sin build: inicio (index.html), tienda/ (la de la demo),
+                   proyecto/ (qué hace Redis en cada paso), 404.html
 docs/contrato.md   claves de Redis y endpoints
 ```
 
@@ -92,12 +95,13 @@ docs/contrato.md   claves de Redis y endpoints
 | Hash | `tm:guiso:{id}`, `tm:user:{email}`, `tm:pedido:{id}` | Entidades |
 | Set | `tm:guisos` | Índice para listar el catálogo |
 | Sorted Set | `tm:guisos:vendidos` | Ranking de más vendidos (`ZINCRBY`, `ZRANGE ... REV`) |
-| Hash con TTL | `tm:carrito:{userId}` | Carrito que expira solo a los 30 min (`EXPIRE`, `TTL`) |
+| Hash con TTL | `tm:carrito:{userId}` | Carrito que expira solo a los 30 min o `CARRITO_TTL_SEGUNDOS` (`EXPIRE`, `TTL`) |
 | List | `tm:pedidos:{userId}` | Historial de pedidos (`LPUSH`) |
 | String | `tm:seq:{entidad}` | Contadores de ids (`INCR`) |
 
-El checkout (`POST /api/pedidos`) es una transacción `WATCH` + `MULTI/EXEC`: si el stock
-cambia mientras se arma el pedido, no se aplica nada y responde `409`.
+El checkout (`POST /api/pedidos`) es una transacción `WATCH` + `MULTI/EXEC` sobre el carrito
+y el stock de sus guisos: si algo cambia mientras se arma el pedido, no se aplica nada y
+responde `409`.
 
 ## Probar la API a mano
 

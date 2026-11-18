@@ -6,32 +6,42 @@ Fuente de verdad del trabajo. Entrega: semana del 17–20 nov 2026.
 - ✅ (17-nov) **Crear la base en Redis Cloud** (plan gratis) y poner `REDIS_URL` en `.env`. Sin esto
   nada se puede verificar contra la nube.
 - 🔲 **Fecha y hora exactas** de la exposición.
-- 🔲 Menú y precios reales de TacosMay (`PENDIENTE-CLIENTE`; no bloquea la entrega: el seed
-  usa datos de ejemplo).
+- 🟡 Menú y precios reales: los **nombres** de los 14 guisos ya son los del pizarrón
+  (`docs/negocio/datos.md`, commit `5dd9d4d`); precio, porciones y stock del producto empacado
+  siguen `PENDIENTE-CLIENTE` (no bloquea la entrega: el seed los marca como de ejemplo).
 
 ## Backend
-- 🟡 B1 Esqueleto con la estructura de 2026backA + conexión a Redis por `REDIS_URL`
-- 🟡 B2 Usuarios y JWT (registro, login, `protect`, `soloAdmin`)
-- 🟡 B3 CRUD de guisos + populares
-- 🟡 B4 Carrito con TTL
-- 🟡 B5 Pedidos (checkout transaccional)
-- 🟡 B6 Seed (`npm run seed`) + README + `.env.example`
+- ✅ B1 Esqueleto con la estructura de 2026backA + conexión a Redis por `REDIS_URL`
+- ✅ B2 Usuarios y JWT (registro, login, `protect`, `soloAdmin`)
+- ✅ B3 CRUD de guisos + populares
+- ✅ B4 Carrito con TTL (30 min; `CARRITO_TTL_SEGUNDOS` lo acorta para la demo, `114cfa0`)
+- ✅ B5 Pedidos (checkout transaccional con `WATCH` + `MULTI/EXEC`)
+- ✅ B6 Seed (`npm run seed`, 14 guisos del menú con precios de ejemplo) + README + `.env.example`
 
-🟡 = código escrito y commiteado, **sin verificar contra Redis** (no hay `REDIS_URL`: falta
-que Alejandro cree la base en Redis Cloud). Evidencia B1–B6 (17-nov-2026):
-- **Verificado sin Redis:** `npm test` → `tests 3 · pass 3 · fail 0` (checkout sin stock →
-  409, guiso borrado → 409, total correcto); las 4 rutas cargan; los 27 métodos de
-  node-redis 6.3.1 que se usan existen; sin variables el arranque falla claro:
-  `node backend/server.js` → `Falta JWT_SECRET…` / `Falta REDIS_URL…` (exit 1),
-  `node backend/seed.js` → `Faltan ADMIN_EMAIL y ADMIN_PASSWORD…` (exit 1).
-- **NO verificado:** ningún comando tocó un Redis real (tampoco local: no hay). Falta correr
-  seed, servidor y el flujo completo, sobre todo la transacción `WATCH`/`MULTI`/`EXEC`.
-- **Para verificar** (con `.env` lleno): `npm run seed` dos veces (la 2.ª debe decir que
-  borró claves y dejar los mismos 6 guisos), `npm start`, y los `curl` de «Probar la API a
-  mano» del `README.md`; pedir más de 3 del guiso 6 debe dar `409`.
-- Respuestas a los supuestos del frontend: `expira_en_segundos` es `0` con carrito vacío;
-  `creado` es fecha ISO; `DELETE /carrito` responde igual que `GET /carrito`; el seed crea
-  el admin. Los ids (`id`, `guisoId`) son **texto** (`"1"`), no número.
+Código: `f84ba98`; después, `114cfa0` (TTL configurable), `5dd9d4d` (14 guisos), `b6fac4e`
+(Render), `c6aebf0` (página 404 para lo que no es `/api`). Desplegado en
+<https://tacosmay.onrender.com> con la misma base.
+
+**Evidencia, 18-nov-2026 contra Redis Cloud (`….db.redis.io`), servidor local de corta vida:**
+- `npm test` → `tests 3 · pass 3 · fail 0` (checkout sin stock → 409, guiso borrado → 409,
+  total correcto).
+- Seed dos veces: `98 claves borradas, 1 admin y 14 guisos del menú (precios de ejemplo)` y
+  luego `18 claves borradas, 1 admin … y 14 guisos` (idempotente: 14 guisos + índice + admin +
+  2 contadores). Las 98 eran de ensayos: 22 cuentas `@tacosmay.test` y 35 pedidos.
+- Recorrido por HTTP (script fuera del repo): **32 de 32 en verde**. Landing, `/tienda/` y 404
+  servidos; 14 guisos con números como números; `GET /guisos/:id` y 404; registro 201 como
+  `cliente`, email repetido 400, login malo 401, `me` sin password, sin token 401, cliente en
+  ruta de admin 403; login del admin del seed; CRUD de guisos con 400 por dato inválido y 404
+  al borrar dos veces; carrito vacío con `expira_en_segundos: 0`, `PUT` con `TTL 1800 s`, 409
+  por stock («No hay stock suficiente de Mole con pollo (quedan 3)»), 404 por guiso
+  inexistente; pedido 201 (stock 3 → 1, ranking «Mole con pollo 2», carrito borrado), 400 con
+  carrito vacío, `GET /pedidos` con 1.
+- **`WATCH` probado con concurrencia real:** dos clientes con 3 moles cada uno y stock 3 hacen
+  el checkout a la vez → `201 y 409`, stock final 0 (nunca negativo), mensaje «El stock cambió
+  mientras comprabas, intenta de nuevo» (el `EXEC` cancelado por `WatchError`).
+- Render: `GET https://tacosmay.onrender.com/api/guisos` → 200 con 14 guisos.
+- Quedó en la base lo del recorrido: 2 cuentas `prueba-…@tacosmay.test`, sus pedidos y el mole
+  con 5 vendidos en el ranking (stock devuelto a 3). `npm run seed` lo limpia.
 
 ## Frontend
 - ✅ F1 Catálogo + populares
@@ -542,6 +552,14 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Guisos en lista y la bolsa con compartimentos (17-nov-2026):** la vista de guisos es una lista por secciones (miniatura, nombre a su ficha, precio, porciones, «quedan N» y «+») con la bolsa al vacío a un lado: un compartimento por guiso, seis por bolsa (el séptimo abre otra), que se llena, se sella y se etiqueta cuando la API confirma; la miniatura vuela del renglón al compartimento y se revierte si la API rechaza. La bolsa trae total, cuenta regresiva, «Confirmar pedido» y «Ver carrito» (la vista del carrito se queda para la demo). Al confirmar, la bolsa entra en una caja que sube a un avión (2.4 s, se salta). En celular, barra fija abajo que se despliega. Coreografía en `docs/diseno/empacado.md`. Pruebas: `tienda/bolsa.test.mjs` nueva; `app.test` y `pintadas.test` al día. Sin ver en pantalla.
 
+- **18-nov-2026, en `git log` y sin entrada propia aquí** (evidencia en los commits y en
+  `docs/calidad/`): anillo del TTL del carrito, barra de existencias y respuesta inmediata
+  (`85e5eb5`); página para el profesor en `/proyecto/` con qué hace Redis en cada paso
+  (`f24d5f6`); escena de confirmar pedido con caja y avión y sus arreglos en celular
+  (`0ea98af` … `0392dd3`); inicio para presentar a la familia (`0ac920b`, `d1d5bf1`, con
+  contenido de muestra según la excepción de `CLAUDE.md`); pasada de sistema de diseño
+  (`b877f65`, `eabfb82`, `7c7277e`). `domicilio/` es fuera de la rúbrica (ver «Después»).
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
@@ -558,12 +576,15 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
     contra la nube y los cuatro supuestos del frontend se cumplen.
   - **Falta:** verlo en un navegador (clics reales, cuenta regresiva, 375 px). Eso lo ve Alejandro.
   - Quedaron en la base un usuario `prueba…@tacosmay.test` y el pedido 1; `npm run seed` los limpia.
+  - **18-nov:** repetido por backend con el seed de 14 guisos: 32 de 32, más la prueba de
+    concurrencia de `WATCH` (ver «Backend»). Sigue faltando solo lo de navegador.
 - 🟡 C2 PDF de diseño y justificación: `docs/TacosMay-Diseno-y-Justificacion.pdf` (12 páginas, las 5 secciones + referencias APA; fuente en `docs/pdf/documento.html`, se regenera imprimiendo a PDF con Edge). Falta que Alejandro lo lea y lo haga suyo.
 - 🟡 C3 Guion de demo (4 min) y preguntas probables de la defensa: `docs/guion-demo.md`. Falta ensayarlo con cronómetro, confirmar cómo se ven las claves en la consola de Redis Cloud.
 
 ## Cambios al contrato
 _(propuestas de backend/frontend; coordinación las aplica en `docs/contrato.md`)_
-- **Backend, detalles que el contrato no fija** (no cambian rutas ni claves):
+- **Backend, detalles que el contrato no fija** (no cambian rutas ni claves) — ✅ aplicados en
+  `docs/contrato.md` el 18-nov, junto con el `WATCH` sobre el carrito y la página 404:
   - El JWT lleva `{id, email}` porque el usuario se guarda por email (`tm:user:{email}`) y
     así `protect` lo encuentra sin un índice extra. El email se guarda en minúsculas.
   - Códigos además de los del contrato: `400` dato faltante/inválido o email repetido,
@@ -579,8 +600,30 @@ _(propuestas de backend/frontend; coordinación las aplica en `docs/contrato.md`
   - El alta de admin la hace un usuario con `rol: admin`: el seed (B6) necesita crear uno,
     porque `POST /users` solo da `cliente`.
 
+## Antes de exponer
+Revisión de `docs/rubrica.md` punto por punto (18-nov). Cubierto: un paradigma (Clave-Valor,
+Redis Cloud); driver oficial `redis`; CRUD completo + TTL + estructuras compuestas (Sorted Set,
+List, Set); credenciales solo por variables (`.env` nunca entró al historial: `git log --all
+-- .env` vacío); README con requerimientos, instalación y ejecución; seed; PDF con las 5
+secciones (`4.4 Políticas de persistencia` incluida) y su catálogo coincide con el código
+(`duplicate()`, `watch`, `hIncrBy`, `zIncrBy`, `lPush`, `scanIterator`). Huecos:
+- 🔲 **El repo es privado** (`gh repo view` → `PRIVATE`). Para entregar el código: hacerlo
+  público, invitar al profesor o subir un zip. Decide Alejandro.
+- 🔲 **«No se acepta localhost»:** la demo del guion corre en `localhost:5000` (la base sí está
+  en la nube). Decirlo en la primera frase y mostrar la consola de Redis Cloud o el `….db.redis.io`
+  de `Redis conectado`, para que nadie lo lea como base local. Respaldo: Render.
+- 🔲 **Correr `npm run seed` justo antes** (paso 2 del guion): hoy la base tiene lo del recorrido
+  y cualquiera que compre en Render mueve las existencias.
+- 🔲 **Persistencia en la defensa:** el plan gratis no persiste en disco; la demo prueba que
+  los datos sobreviven al reinicio de la *app*, no de Redis. Tener lista la respuesta 9 del guion.
+- 🔲 Si se usa `CARRITO_TTL_SEGUNDOS=20` en la demo, decir que el valor real es 30 min (el PDF
+  no menciona la variable).
+- 🔲 Fecha y hora de la exposición; leer el PDF (C2) y ensayar el guion con cronómetro (C3).
+
 ## Después (fuera de la entrega)
 - Pagos, cotización real de envío por código postal, lotes con fecha de caducidad,
   panel de pedidos para la cocina, marca y diseño propios.
+- Tacos a domicilio en Cabo (`frontend/domicilio/`, prototipo con reparto simulado) y el sistema
+  de pedidos del estudio con Los Tacos May como primer cliente (`docs/plan/`, `93e67c7`).
 
 - **Coordinación, 17-nov tras la mudanza (commit `a37ef55`):** el flujo completo por HTTP se volvió a correr contra Redis Cloud con la tienda en `/tienda/`: 40 de 40 en verde (landing, sus archivos y la tienda se sirven; API intacta). En la landing no hay teléfonos, precios ni cifras escritos a mano; 9 marcas `PENDIENTE-CLIENTE`. Sigue sin verse en pantalla.
