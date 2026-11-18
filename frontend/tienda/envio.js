@@ -19,13 +19,13 @@ function bolsaSvg(colores) {
   const n = Math.max(1, Math.min(MAX_COMP, colores.length));
   const filas = Math.ceil(n / 2);
   const alto = 26 + filas * 26;
-  const y0 = 132 - alto; // la base de la bolsa queda a la misma altura con 1 o con 8
+  const y0 = 104 - alto; // la base de la bolsa, un poco arriba del borde de la caja (116), con 1 o con 8 guisos
   const celdas = Array.from({ length: n }, (_, i) => {
     const x = 120 + (i % 2) * 41;
     const y = y0 + 20 + Math.floor(i / 2) * 26;
     return `<rect x="${x}" y="${y}" width="39" height="22" rx="3" fill="${colores[i] ?? '#d9dcdd'}" stroke="#141210" stroke-width="1.5"/>`;
   }).join('');
-  return `<g class="bolsa"><rect x="112" y="${y0}" width="96" height="${alto}" rx="8" fill="#f7f4ee" stroke="#141210" stroke-width="2"/>`
+  return `<g class="bolsa" data-cae="${122 - y0}"><rect x="112" y="${y0}" width="96" height="${alto}" rx="8" fill="#f7f4ee" stroke="#141210" stroke-width="2"/>`
     + `<rect class="sello" x="112" y="${y0}" width="96" height="10" rx="4" fill="#141210"/>${celdas}</g>`;
 }
 
@@ -59,7 +59,7 @@ export function enviar(colores = []) {
       </svg>
     </div>
     <div class="envio-final" hidden>
-      <p class="envio-dato">Listo, ya está en la barra</p>
+      <p class="envio-dato">Ya quedó registrado</p>
       <h2 id="envio-titulo">Pedido <span class="envio-numero">#</span> confirmado</h2>
       <p class="envio-total"></p>
       <div class="envio-acciones">
@@ -162,7 +162,7 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
     .from($('.sello'), { scaleX: 0, transformOrigin: '0% 50%', duration: 0.3, ease: 'power2.inOut' }, 0.4)
     // toma impulso y cae dentro de la caja (por detrás del frente: no aparece ni desaparece nada)
     .to(bolsa, { y: -6, duration: 0.12, ease: 'power2.out' }, 0.75)
-    .to(bolsa, { y: 104, duration: 0.32, ease: 'power2.in' }, 0.87)
+    .to(bolsa, { y: Number(bolsa.dataset?.cae ?? bolsa.getAttribute?.('data-cae')) || 104, duration: 0.32, ease: 'power2.in' }, 0.87) // hasta quedar entera tras el frente
     .to(caja, { scaleY: 0.95, transformOrigin: '50% 100%', duration: 0.08, ease: 'power2.out' }, 1.17)
     .to(caja, { scaleY: 1, duration: 0.2, ease: CURVA }, 1.25)
     // se cierran las tapas, una y otra
@@ -179,6 +179,6 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
     .to($('.envio-vel'), { opacity: 1, scaleX: 1, duration: 0.16, ease: CURVA }, 2.36)
     .to($('.envio-vel'), { opacity: 0, x: 120, duration: 0.3, ease: 'power2.in' }, 2.52)
     // el final, que se queda: el piso se va y entra «Pedido #N confirmado» en su lugar
-    .to(el.querySelector('.envio-escena svg'), { opacity: 0, duration: 0.25, ease: 'power2.out' }, 2.62)
-    .fromTo($('.envio-final'), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: CURVA, onStart: () => { $('.envio-final').hidden = false; } }, 2.7);
+    .to(el.querySelector('.envio-escena svg'), { opacity: 0, duration: 0.2, ease: 'power2.out' }, 2.66)
+    .fromTo($('.envio-final'), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: CURVA, onStart: () => { $('.envio-final').hidden = false; } }, 2.8);
 }
