@@ -23,6 +23,7 @@ let current = '';    // vista pintada (puede diferir del hash si un guard rediri
 let rendered = null; // hash ya pintado, para no repintar en el hashchange de go()
 let renderId = 0;
 let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
+let motivoAcceso = ''; // por qué se llegó a entrar (p. ej. desde el carrito): se dice en la pantalla, no en un aviso flotante
 let nuevo = null;        // el pedido recién confirmado: llega resaltado a «Mis pedidos»
 let guardado = null;     // el guiso que se acaba de guardar en administración
 let borrando = null;     // el guiso cuyo renglón está preguntando «¿Eliminar?»
@@ -511,6 +512,7 @@ function acceso(esRegistro) {
     <div class="acceso">
       <form class="form" data-submit="${id}" novalidate>
         <h1>${esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}</h1>
+        ${motivoAcceso ? `<p class="motivo" role="status">${esc(motivoAcceso)}</p>` : ''}
         ${esRegistro ? field(id, 'nombre', 'Nombre', '', 'autocomplete="name"') : ''}
         ${field(id, 'email', 'Correo', '', 'type="email" autocomplete="email"')}
         ${field(id, 'password', 'Contraseña', '', `type="password" autocomplete="${esRegistro ? 'new' : 'current'}-password"`)}
@@ -785,12 +787,12 @@ async function render() {
   const id = ++renderId;
   let r = route();
   if (!user() && (r === 'carrito' || r === 'pedidos' || r === 'cuenta')) {
-    if (r !== 'cuenta') { notice('Inicia sesión para continuar.', 'error'); desde = r; } // al entrar, se sigue hacia allá
+    if (r !== 'cuenta') { motivoAcceso = r === 'carrito' ? 'Inicia sesión para ver tu carrito.' : 'Inicia sesión para ver tus pedidos.'; desde = r; } // al entrar, se sigue hacia allá
     r = 'entrar';
   }
   if (user() && (r === 'entrar' || r === 'registro')) r = 'cuenta';
   if (r === 'admin' && !isAdmin()) r = 'catalogo';
-  if (r !== 'entrar' && r !== 'registro') desde = r === 'guiso' ? `guiso/${encodeURIComponent(param)}` : r;
+  if (r !== 'entrar' && r !== 'registro') { desde = r === 'guiso' ? `guiso/${encodeURIComponent(param)}` : r; motivoAcceso = ''; }
   document.title = `${TITULOS[r]} — Los Tacos May`;
   const changed = r !== current;
   const deUnPaso = directo;

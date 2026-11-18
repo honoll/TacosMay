@@ -102,6 +102,13 @@ assert.match(mala.elements.password.despues, /no coinciden/);
 assert.equal(location.hash, '#entrar');
 assert.equal(porId.aviso.hidden, true, 'el error de acceso no sale en la franja de avisos, sino junto al campo');
 
+// Ir al carrito sin sesión: el porqué se dice en la pantalla de entrar, no en un aviso flotante sobre el pie
+await ir('carrito');
+assert.match(vista().innerHTML, /<p class="motivo" role="status">Inicia sesión para ver tu carrito\.<\/p>/, 'el motivo, bajo el título');
+assert.equal(porId.aviso.hidden, true, 'y sin aviso flotante');
+await ir('catalogo');
+assert.doesNotMatch(vista().innerHTML, /class="motivo"/);
+
 // Correo repetido al crear cuenta: error junto al correo
 await ir('registro');
 assert.match(vista().innerHTML, /Crear cuenta/);
