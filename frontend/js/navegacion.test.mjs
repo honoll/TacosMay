@@ -75,7 +75,7 @@ const PARTES = {
 // La tienda de juguete: cuenta cuántas veces corre y cuántas veces la despiertan estando a la vista.
 const MODULO_TIENDA = `data:text/javascript,globalThis.cargasTienda=(globalThis.cargasTienda||0)+1;globalThis.orden.push('tienda pinta');addEventListener('tm:pagina',(e)=>{if(location.pathname!=='/tienda/')return;globalThis.despiertaTienda=(globalThis.despiertaTienda||0)+1;e.detail.esperar(new Promise((r)=>setTimeout(()=>{globalThis.orden.push('tienda al día');r()},globalThis.tardaTienda||5)))})`;
 globalThis.orden = orden;
-const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css'];
+const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css', '/domicilio/domicilio.css'];
 const MARCA = { '/': 'en-inicio', '/tienda/': 'en-tienda' };
 
 function montar(ruta) {
@@ -160,7 +160,7 @@ async function atras() {
   await espera();
 }
 // Las hojas, tal como estaban: mismas, en el mismo orden, sin media ni href cambiados.
-const hojasIntactas = () => links.length === 3 && links.every((l, i) => l.href === HOJAS[i] && l.attrs.href === HOJAS[i] && l.media === '');
+const hojasIntactas = () => links.length === HOJAS.length && links.every((l, i) => l.href === HOJAS[i] && l.attrs.href === HOJAS[i] && l.media === '');
 const marca = () => [...raiz.classList].join(' ');
 const ids = () => html.filter((n) => !n.fijo && n.id !== 'anuncio').map((n) => n.id || n.tagName.toLowerCase());
 

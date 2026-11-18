@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es-MX" class="en-domicilio">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Los Tacos May — Tacos a domicilio (prueba)</title>
+  <link rel="icon" type="image/svg+xml" href="/marca/logo/icono.svg">
+  <link rel="preload" href="/fuentes/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-condensed-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/barlow-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/kalam-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fuentes/kalam-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="speculationrules">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/marca/*"}}]}, "eagerness": "moderate"}]}</script>
+  <!-- Las mismas hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
+       recargar (js/paginas.js) nunca se enciende ni se apaga una hoja. Cada hoja de página tiene sus
+       reglas acotadas a su página con :where(.en-inicio), :where(.en-tienda) o :where(.en-domicilio). -->
+  <link rel="stylesheet" href="/barra.css">
+  <link rel="stylesheet" href="/landing.css">
+  <link rel="stylesheet" href="/tienda/styles.css">
+  <link rel="stylesheet" href="/domicilio/domicilio.css">
+</head>
+<body>
+  <a class="saltar" href="#domicilio">Saltar al contenido</a>
+  <header class="cabecera caja">
+    <a class="logo" href="/" aria-label="Los Tacos May, inicio"><img src="/marca/logo/compacta.svg" alt="" width="480" height="186"></a>
+    <div class="cabecera-enlaces">
+      <nav class="nav-principal" id="nav-principal" aria-label="Principal">
+        <a href="/">Inicio</a>
+        <a href="/tienda/#catalogo">Guisos</a>
+      </nav>
+      <nav class="nav-cuenta" id="nav" aria-label="Tu cuenta">
+        <a href="/tienda/#entrar">Entrar</a>
+      </nav>
+    </div>
+    <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4h3l2.2 10.6a1.6 1.6 0 0 0 1.6 1.3h9.6a1.6 1.6 0 0 0 1.6-1.2L22 7H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.8"/><circle cx="18" cy="20" r="1.8"/></svg><span class="sr">Carrito, </span><b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
+  </header>
+  <script>
+    /* Antes del primer cuadro: la cuenta y el carrito como estaban en la página anterior (los guarda
+       js/cabecera.js), para que la cabecera no cambie al llegar. Luego el JS los confirma con la API. */
+    try {
+      var c = JSON.parse(sessionStorage.getItem('tm_cabecera'));
+      if (c && localStorage.getItem('tm_sesion')) {
+        document.getElementById('nav').innerHTML = c.nav;
+        document.getElementById('nav-carrito-n').textContent = c.n;
+        var s = Math.ceil((c.fin - Date.now()) / 1000);
+        if (s > 0) document.querySelector('.carrito [data-countdown]').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+      }
+    } catch (e) {}
+  </script>
+
+  <!-- Tacos preparados a domicilio en Cabo San Lucas. Versión de prueba: todo pasa en el navegador
+       (domicilio.js, flujo.js) y el reparto es simulado (reparto.js → reparto-simulado.js).
+       docs/diseno/domicilio.md -->
+  <main id="domicilio" class="caja" tabindex="-1">
+    <p class="aviso-prueba" role="note"><strong>Versión de prueba:</strong> no se cobra ni se envía nada.</p>
+
+    <div class="dom-cabeza">
+      <h1>Tacos a domicilio</h1>
+      <p class="entrada">Tacos preparados en la barra del centro y llevados a tu puerta el mismo día, <strong>solo en Cabo San Lucas</strong>. Es otra cosa que el guiso empacado: ese va al vacío y se envía a todo el país. <a href="/tienda/#catalogo">Ver el guiso empacado</a>.</p>
+    </div>
+
+    <ol class="pasos-dom" aria-label="Pasos del pedido">
+      <li data-paso="pedido"><span>1</span> Tus tacos</li>
+      <li data-paso="destino"><span>2</span> A dónde</li>
+      <li data-paso="confirmar"><span>3</span> Confirmar</li>
+      <li data-paso="seguimiento"><span>4</span> Seguimiento</li>
+    </ol>
+
+    <p class="cerrado nota-dom" hidden>Ahorita la cocina está cerrada. La barra del centro cierra a las 4 a. m.; la hora de apertura está por confirmar. Puedes ver el menú, pero no pedir.</p>
+
+    <div class="dom-rejilla">
+      <div class="dom-pasos">
+        <!-- 1 · Armar el pedido -->
+        <section id="paso-pedido" data-paso="pedido" aria-labelledby="t-pedido">
+          <h2 id="t-pedido">Tus tacos</h2>
+          <p class="precios-ejemplo">Los del pizarrón de la barra. <strong>Precios de ejemplo</strong>, por confirmar.</p>
+          <ul class="tacos"></ul>
+        </section>
+
+        <!-- 2 · A dónde -->
+        <section id="paso-destino" data-paso="destino" aria-labelledby="t-destino" hidden>
+          <h2 id="t-destino">A dónde te los llevamos</h2>
+          <form id="form-destino" class="form-dom" novalidate>
+            <label for="d-calle">Calle y número</label>
+            <input id="d-calle" name="calle" required autocomplete="address-line1" maxlength="120">
+            <label for="d-colonia">Colonia</label>
+            <select id="d-colonia" name="colonia" required></select>
+            <div class="otra-colonia" hidden>
+              <label for="d-otra">¿Cuál colonia?</label>
+              <input id="d-otra" name="otra" required disabled maxlength="80">
+            </div>
+            <label for="d-referencias">Referencias <span class="opcional">(opcional)</span></label>
+            <input id="d-referencias" name="referencias" maxlength="160" placeholder="Portón, color de la casa, entre qué calles">
+            <label for="d-nombre">Quién recibe</label>
+            <input id="d-nombre" name="nombre" required autocomplete="name" maxlength="80">
+            <label for="d-telefono">Teléfono</label>
+            <input id="d-telefono" name="telefono" type="tel" required inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{10}" maxlength="10" aria-describedby="d-telefono-ayuda">
+            <p class="ayuda" id="d-telefono-ayuda">10 dígitos, para que el repartidor te avise al llegar.</p>
+            <div class="problema" tabindex="-1" role="alert" hidden>
+              <p class="texto"></p>
+              <a class="btn sec chico a-empacado" href="/tienda/#catalogo">Ver el guiso empacado</a>
+            </div>
+            <div class="acciones">
+              <button type="submit" class="primario">Cotizar el envío</button>
+              <button type="button" data-ir="pedido">Volver a tus tacos</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 3 · Confirmar -->
+        <section id="paso-confirmar" data-paso="confirmar" aria-labelledby="t-confirmar" hidden>
+          <h2 id="t-confirmar">Confirma tu pedido</h2>
+          <div class="resumen-pedido"></div>
+          <fieldset class="pago">
+            <legend>Cómo pagas</legend>
+            <label><input type="radio" name="pago" value="al_recibir" checked> Al recibir, al repartidor</label>
+            <label class="por-conectar"><input type="radio" name="pago" value="en_linea" disabled> En línea <span>por conectar</span></label>
+          </fieldset>
+          <div class="acciones">
+            <button type="button" class="primario" id="confirmar">Pedir mis tacos</button>
+            <button type="button" data-ir="destino">Cambiar la dirección</button>
+          </div>
+        </section>
+
+        <!-- 4 · Seguimiento (avanza solo; tiempos cortos de demostración) -->
+        <section id="paso-seguimiento" data-paso="seguimiento" aria-labelledby="t-seguimiento" hidden>
+          <h2 id="t-seguimiento">Sigue tu pedido</h2>
+          <div class="escena" aria-hidden="true">
+            <svg data-escena="recibido" viewBox="0 0 64 48"><circle cx="32" cy="24" r="18" fill="#e6f4e8" stroke="currentColor" stroke-width="3"/><path d="M23 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg data-escena="preparando" viewBox="0 0 64 48" hidden><g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path class="vapor-linea" d="M24 18c-2-3 2-5 0-8"/><path class="vapor-linea" d="M32 18c-2-3 2-5 0-8"/><path class="vapor-linea" d="M40 18c-2-3 2-5 0-8"/></g><rect x="8" y="24" width="48" height="5" rx="2.5" fill="currentColor"/><path d="M12 31h40l-2.4 9.5A3 3 0 0 1 46.7 43H17.3a3 3 0 0 1-2.9-2.5z" fill="#d9dcdd" stroke="currentColor" stroke-width="2.5"/><path d="M20 36a6 6 0 0 1 12 0zM32 36a6 6 0 0 1 12 0z" fill="#c8161f"/></svg>
+            <svg data-escena="asignado" viewBox="0 0 64 48" hidden><rect x="16" y="16" width="32" height="28" rx="3" fill="#d9dcdd" stroke="currentColor" stroke-width="3"/><path class="solapa" d="M16 16h32l-4-8H20z" fill="currentColor"/><rect x="26" y="26" width="12" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
+            <svg data-escena="en_camino" viewBox="0 0 96 48" hidden><path d="M4 44h88" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6"/><g class="moto"><circle cx="30" cy="36" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="62" cy="36" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M30 36h16l7-11h6l3 11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M57 25l-2-6h-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><rect x="24" y="16" width="16" height="13" rx="2" fill="#d9dcdd" stroke="currentColor" stroke-width="2.5"/><circle cx="48" cy="12" r="4" fill="currentColor"/><path d="M45 17h6l2 8h-8z" fill="currentColor"/></g></svg>
+            <svg data-escena="entregado" viewBox="0 0 64 48" hidden><path d="M32 4a12 12 0 0 1 12 12c0 9-12 24-12 24S20 25 20 16A12 12 0 0 1 32 4z" fill="#d9dcdd" stroke="currentColor" stroke-width="3"/><g class="palomita"><circle cx="44" cy="34" r="9" fill="#e6f4e8" stroke="currentColor" stroke-width="2.5"/><path d="M39.5 34.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+          </div>
+          <p class="estado-texto" role="status" aria-live="polite"></p>
+          <ol class="linea">
+            <li>Recibido</li>
+            <li>Preparando</li>
+            <li>Repartidor asignado</li>
+            <li>En camino</li>
+            <li>Entregado</li>
+          </ol>
+          <p class="repartidor" hidden><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3 21.5a9 7.5 0 0 1 18 0z"/></svg> Repartidor de prueba, en moto. En un pedido real aquí sale quién lo lleva.</p>
+          <div class="resumen-pedido"></div>
+          <div class="acciones">
+            <button type="button" class="primario" id="repetir">Repetir la demostración</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- La cuenta: tacos + envío = total. El envío lo pone el servicio de reparto al cotizar. -->
+      <aside class="cuenta-dom" aria-labelledby="t-cuenta">
+        <h2 id="t-cuenta">Tu cuenta</h2>
+        <p class="vacio-dom">Todavía no llevas tacos. Agrégalos con el botón <span aria-hidden="true">+</span><span class="sr">«uno más»</span>.</p>
+        <dl>
+          <dt>Tacos <span class="c-piezas">0 tacos</span></dt><dd class="c-tacos">$0.00</dd>
+          <dt>Envío</dt><dd class="c-envio">se cotiza con tu dirección</dd>
+          <dt class="total">Total</dt><dd class="total c-total">$0.00</dd>
+        </dl>
+        <button type="button" class="primario" id="continuar" data-ir="destino" disabled>Seguir: a dónde</button>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="pie">
+    <div class="caja pie-rejilla">
+      <div>
+        <img class="logo-pie" src="/marca/logo/principal-blanco.svg" alt="Los Tacos May" width="480" height="214" loading="lazy">
+        <address><a href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener">José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a></address>
+      </div>
+      <nav aria-label="Pie de página">
+        <a href="/">Inicio</a>
+        <a href="/tienda/#catalogo">Guisos</a>
+        <a href="/#como">Cómo funciona</a>
+        <a href="/#taqueria">La taquería</a>
+        <a href="/tienda/#carrito">Carrito</a>
+        <a href="/tienda/#entrar">Entrar</a>
+        <a href="/tienda/#ayuda">Envíos y preguntas</a>
+        <a href="/domicilio/">Tacos a domicilio</a>
+      </nav>
+      <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
+      <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
+    </div>
+  </footer>
+  <!-- GSAP 3.15.1, guardado en el proyecto (licencia estándar sin costo: https://gsap.com/standard-license). -->
+  <script src="/vendor/gsap.min.js"></script>
+  <script type="module" src="/js/paginas.js"></script>
+  <script type="module" src="/domicilio/domicilio.js"></script>
+</body>
+</html>

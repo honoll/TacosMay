@@ -1,8 +1,8 @@
 import { transicion } from './api.js';
 
-// Entre la landing y la tienda sin recargar. Al tocar un enlace a la otra página, la pide con fetch y
+// Entre la landing, la tienda y los tacos a domicilio sin recargar. Al tocar un enlace a la otra página, la pide con fetch y
 // cambia solo lo que es de cada página: todo el <body> menos la cabecera, su script en línea, el pie y
-// los scripts de módulo, y la marca de la página en <html> (en-inicio, en-tienda). La cabecera, el pie y
+// los scripts de módulo, y la marca de la página en <html> (en-inicio, en-tienda, en-domicilio). La cabecera, el pie y
 // las hojas de estilo no se tocan: las tres páginas cargan las mismas hojas, con las reglas de cada una
 // acotadas a su marca. Encender y apagar hojas al navegar dejaba la cabecera sin estilo en Safari; la
 // documentación de swup recomienda lo mismo: las mismas hojas en todo el sitio.
@@ -11,7 +11,7 @@ import { transicion } from './api.js';
 // Si algo falla (red, respuesta rara), navegación normal. Pestaña nueva, teclas modificadoras, enlaces
 // externos, descargas y cambios de # dentro de la misma página: los atiende el navegador como siempre.
 
-export const PAGINAS = ['/', '/tienda/'];
+export const PAGINAS = ['/', '/tienda/', '/domicilio/'];
 const fijo = (el) => el.matches('header.cabecera, header.cabecera + script, footer.pie, script[src], #anuncio, #preparando');
 
 const guardadas = new Map(); // ruta → lo de esa página, ya puesto alguna vez

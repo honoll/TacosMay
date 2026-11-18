@@ -1,11 +1,11 @@
 // La navegación es un solo sistema: node frontend/js/nav.test.mjs
-// La cabecera y el pie están escritos en tres páginas (no hay build); aquí se comprueba que sean
+// La cabecera y el pie están escritos en cuatro páginas (no hay build); aquí se comprueba que sean
 // idénticos, que lleven al inicio y a la tienda, y que no enlacen el material interno de /marca/.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const raiz = new URL('../', import.meta.url);
-const paginas = ['index.html', 'tienda/index.html', '404.html'];
+const paginas = ['index.html', 'tienda/index.html', '404.html', 'domicilio/index.html'];
 const bloque = (html, ini, fin) => {
   const a = html.indexOf(ini);
   const b = html.indexOf(fin, a);
@@ -29,6 +29,8 @@ for (const [nombre, bloques] of [['cabecera', cabeceras], ['pie', pies]]) {
 // el pie) y el carrito es un ícono con su número, su reloj y su nombre para lector («Carrito, 3 guisos»).
 assert.ok(!cabeceras[0].includes('href="/#como"') && !cabeceras[0].includes('href="/#taqueria"'), 'la cabecera no lleva «Cómo funciona» ni «La taquería»');
 assert.ok(pies[0].includes('href="/#como"') && pies[0].includes('href="/#taqueria"'), 'siguen en el pie');
+// Tacos a domicilio (prueba): en el pie, no en la navegación principal.
+assert.ok(pies[0].includes('href="/domicilio/"') && !cabeceras[0].includes('/domicilio/'), 'domicilio va en el pie y no en la cabecera');
 assert.match(cabeceras[0], /id="nav-carrito"[^>]*><svg class="picto"[^>]*aria-hidden="true">[\s\S]*?<\/svg><span class="sr">Carrito, <\/span><b id="nav-carrito-n">0<\/b><span class="sr"> guisos<\/span>/, 'el carrito: ícono, número y nombre para lector');
 // W2: con sesión, «Pedidos» con su caja y la cuenta con el ícono de persona; el nombre completo, para lector.
 // En celular la cuenta es solo el ícono y «Salir» queda en «Tu cuenta», para que la fila quepa a 375 px.
@@ -42,4 +44,4 @@ const barra = readFileSync(new URL('barra.css', raiz), 'utf8');
 const celular = barra.slice(barra.indexOf('@media (max-width: 899px)'));
 assert.ok(/\.cabecera nav a\.persona \.nombre \{ display: none; \}/.test(celular) && /\.cabecera nav \.salir \{ display: none; \}/.test(celular), 'en celular: solo el ícono de la cuenta y sin «Salir»');
 assert.match(barra, /\.cabecera nav a\.persona \{ min-width: 44px;/, 'el ícono de la cuenta mide al menos 44 px');
-console.log('nav.test: OK (cabecera y pie iguales en 3 páginas, carrito con ícono, cuenta que cabe en celular)');
+console.log('nav.test: OK (cabecera y pie iguales en 4 páginas, carrito con ícono, cuenta que cabe en celular)');

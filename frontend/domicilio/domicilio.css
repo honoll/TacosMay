@@ -1,0 +1,109 @@
+/* Tacos a domicilio (versión de prueba). La cabecera, el pie, los botones .btn/.primario y la charola vienen
+   de ../barra.css; aquí, solo lo de esta página, acotado con :where(.en-domicilio) (la clase de <html>),
+   porque esta hoja se carga en todas las páginas (js/paginas.js). docs/diseno/domicilio.md */
+:root:where(.en-domicilio) { --alerta: #a8321c; --bien: #14532d; }
+
+:where(.en-domicilio) main { min-height: 62vh; padding-block: 16px 64px; }
+:where(.en-domicilio) main:focus, :where(.en-domicilio) [tabindex="-1"]:focus { outline: none; }
+:where(.en-domicilio) h1 { font: 800 clamp(2rem, 7vw, 3rem)/.92 var(--angosta); text-transform: uppercase; margin: 12px 0 12px; }
+:where(.en-domicilio) h2 { font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; margin: 8px 0 12px; }
+:where(.en-domicilio) h3 { font-size: 1.05rem; margin: 0; }
+:where(.en-domicilio) main ul, :where(.en-domicilio) main ol { list-style: none; margin: 0; padding: 0; }
+:where(.en-domicilio) main p { max-width: 60em; }
+:where(.en-domicilio) main a { color: var(--negro); }
+
+/* Botones y campos de esta página (los de la tienda están acotados a la tienda). */
+:where(.en-domicilio) main button, :where(.en-domicilio) main input, :where(.en-domicilio) main select { font: inherit; min-height: 44px; border-radius: 4px; }
+:where(.en-domicilio) main button:not(.primario) {
+  padding: 0 16px; border: 2px solid var(--negro); background: var(--crema); color: var(--negro);
+  font: 600 1rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+}
+:where(.en-domicilio) main button:disabled { opacity: .5; cursor: not-allowed; }
+:where(.en-domicilio) main button.enviando { cursor: progress; }
+:where(.en-domicilio) .acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+
+/* El aviso de prueba: visible siempre, arriba. */
+:where(.en-domicilio) .aviso-prueba { margin: 4px 0 8px; padding: 10px 14px; border: 2px dashed var(--negro); border-radius: 6px; background: #fff4c7; font-weight: 600; }
+:where(.en-domicilio) .entrada { margin: 0 0 16px; }
+:where(.en-domicilio) .nota-dom { padding: 12px 14px; border-left: 6px solid var(--alerta); background: #fde8e6; color: #7a1410; font-weight: 600; }
+
+/* Los cuatro pasos, como migas: el actual en negro. */
+:where(.en-domicilio) .pasos-dom { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 20px; padding: 10px 0; border-block: 2px solid var(--negro); font: 600 1rem/1.2 var(--angosta); text-transform: uppercase; letter-spacing: .05em; color: var(--gris); }
+:where(.en-domicilio) .pasos-dom li { display: flex; align-items: center; gap: 6px; }
+:where(.en-domicilio) .pasos-dom span { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border: 2px solid currentColor; border-radius: 50%; }
+:where(.en-domicilio) .pasos-dom [aria-current="step"] { color: var(--negro); }
+:where(.en-domicilio) .pasos-dom [aria-current="step"] span { background: var(--negro); border-color: var(--negro); color: var(--crema); }
+
+/* Paso y cuenta: una columna en celular; la cuenta a un lado y fija desde 900 px. */
+:where(.en-domicilio) .dom-rejilla { display: grid; gap: 24px; }
+@media (min-width: 900px) {
+  :where(.en-domicilio) .dom-rejilla { grid-template-columns: minmax(0, 720px) minmax(300px, 380px); align-items: start; }
+  :where(.en-domicilio) .cuenta-dom { position: sticky; top: calc(var(--alto-cabecera, 96px) + 16px); }
+}
+
+/* 1 · La lista de tacos: foto, nombre y precio, y los botones − n +. */
+:where(.en-domicilio) .precios-ejemplo { margin: 0 0 12px; color: var(--gris); }
+:where(.en-domicilio) .tacos { display: grid; gap: 8px; }
+:where(.en-domicilio) .taco { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px; border: 2px solid var(--marco); border-radius: 10px; background: #fff; }
+:where(.en-domicilio) .taco.lleva { border-color: var(--negro); }
+:where(.en-domicilio) .taco > .charola.mini { position: relative; width: 64px; height: 64px; border: 0; outline: 0; border-radius: 8px; }
+:where(.en-domicilio) .taco > .charola.mini .guiso { position: absolute; inset: 0; aspect-ratio: auto; }
+:where(.en-domicilio) .taco > .charola.mini :is(.num, .vapor) { display: none; }
+:where(.en-domicilio) .taco > .charola.mini .guiso:not(:has(img))::after { display: none; }
+:where(.en-domicilio) .taco .meta { margin: 2px 0 0; color: var(--gris); }
+:where(.en-domicilio) .taco .meta b { color: var(--negro); }
+:where(.en-domicilio) .cuantos { display: flex; align-items: center; gap: 4px; }
+:where(.en-domicilio) .cuantos button { display: grid; place-items: center; width: 44px; padding: 0; border-radius: 50%; }
+:where(.en-domicilio) .cuantos button[data-cambio="1"] { background: var(--negro); color: var(--crema); }
+:where(.en-domicilio) .cuantos .signo { width: 20px; height: 20px; }
+:where(.en-domicilio) .cuantos output { display: inline-block; min-width: 2ch; text-align: center; font: 800 1.4rem/1 var(--angosta); font-variant-numeric: tabular-nums; }
+
+/* 2 · El formulario de la dirección. */
+:where(.en-domicilio) .form-dom { display: grid; gap: 6px; max-width: 520px; }
+:where(.en-domicilio) .form-dom label { margin-top: 8px; font-weight: 600; }
+:where(.en-domicilio) .form-dom :is(input, select) { width: 100%; padding: 0 12px; border: 2px solid var(--gris); background: #fff; color: var(--negro); }
+:where(.en-domicilio) .form-dom :is(input, select):hover { border-color: var(--negro); }
+:where(.en-domicilio) .form-dom :is(input, select):focus { border-color: var(--negro); outline: 3px solid var(--foco); outline-offset: 2px; }
+:where(.en-domicilio) .form-dom input:user-invalid { border-color: var(--alerta); }
+:where(.en-domicilio) .otra-colonia { display: grid; gap: 6px; }
+:where(.en-domicilio) .opcional, :where(.en-domicilio) .ayuda { color: var(--gris); font-weight: 400; }
+:where(.en-domicilio) .ayuda { margin: 0; font-size: .95rem; }
+:where(.en-domicilio) .problema { margin-top: 12px; padding: 12px 14px; border-left: 6px solid var(--alerta); background: #fde8e6; color: #7a1410; }
+:where(.en-domicilio) .problema .texto { margin: 0; font-weight: 600; }
+:where(.en-domicilio) .problema .btn { margin-top: 10px; }
+
+/* 3 · Confirmar: el desglose y cómo se paga. */
+:where(.en-domicilio) .resumen-pedido ul { display: grid; gap: 4px; margin-bottom: 12px; }
+:where(.en-domicilio) .resumen-pedido li { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 4px; border-bottom: 1px dashed var(--marco); }
+:where(.en-domicilio) .a-donde { display: flex; gap: 8px; margin: 0 0 12px; }
+:where(.en-domicilio) .a-donde span { overflow-wrap: anywhere; }
+:where(.en-domicilio) .pago { display: grid; gap: 8px; margin: 12px 0 0; padding: 12px 14px; border: 2px solid var(--negro); border-radius: 8px; }
+:where(.en-domicilio) .pago legend { padding: 0 6px; font: 800 1.2rem/1 var(--angosta); text-transform: uppercase; }
+:where(.en-domicilio) .pago label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+:where(.en-domicilio) .pago input { width: 22px; height: 22px; min-height: 0; accent-color: var(--negro); }
+:where(.en-domicilio) .por-conectar { color: var(--gris); }
+:where(.en-domicilio) .por-conectar span { padding: 2px 8px; border: 1.5px solid currentColor; border-radius: 99px; font-size: .9rem; }
+
+/* 4 · Seguimiento: la escena del paso, el texto y la línea de pasos. */
+:where(.en-domicilio) .escena { display: grid; place-items: center; height: 140px; margin-bottom: 8px; border-radius: 12px; background: #fff; color: var(--negro); overflow: hidden; }
+:where(.en-domicilio) .escena svg { width: auto; height: 120px; max-width: 100%; }
+:where(.en-domicilio) .estado-texto { margin: 0 0 12px; font-weight: 600; font-size: 1.15rem; }
+:where(.en-domicilio) .linea { display: grid; gap: 0; margin-bottom: 12px; counter-reset: paso; }
+:where(.en-domicilio) .linea li { position: relative; padding: 6px 0 6px 34px; color: var(--gris); }
+:where(.en-domicilio) .linea li::before { content: ""; position: absolute; left: 6px; top: 50%; width: 14px; height: 14px; border: 2.5px solid currentColor; border-radius: 50%; background: var(--crema); transform: translateY(-50%); }
+:where(.en-domicilio) .linea li:not(:last-child)::after { content: ""; position: absolute; left: 13px; top: calc(50% + 9px); height: calc(100% - 18px); border-left: 2.5px solid var(--marco); }
+:where(.en-domicilio) .linea li.hecho { color: var(--negro); }
+:where(.en-domicilio) .linea li.hecho::before { background: var(--negro); border-color: var(--negro); }
+:where(.en-domicilio) .linea li.ahora { color: var(--negro); font-weight: 700; }
+:where(.en-domicilio) .linea li.ahora::before { background: var(--rojo-may); border-color: var(--negro); }
+:where(.en-domicilio) .repartidor { display: flex; align-items: center; gap: 8px; color: var(--gris); }
+
+/* La cuenta: tacos + envío = total. */
+:where(.en-domicilio) .cuenta-dom { padding: 16px; border: 2px solid var(--negro); border-radius: 10px; background: #fff; }
+:where(.en-domicilio) .cuenta-dom h2 { margin-top: 0; }
+:where(.en-domicilio) .vacio-dom { margin: 0 0 12px; color: var(--gris); }
+:where(.en-domicilio) .cuenta-dom dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin: 0 0 16px; }
+:where(.en-domicilio) .cuenta-dom dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+:where(.en-domicilio) .cuenta-dom dt span { color: var(--gris); }
+:where(.en-domicilio) .cuenta-dom .total { padding-top: 8px; border-top: 2px solid var(--negro); font-weight: 800; font-size: 1.2rem; }
+:where(.en-domicilio) .cuenta-dom .primario { width: 100%; }

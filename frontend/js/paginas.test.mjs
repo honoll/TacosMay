@@ -8,11 +8,11 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const leer = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
-const paginas = ['index.html', 'tienda/index.html', '404.html'];
+const paginas = ['index.html', 'tienda/index.html', '404.html', 'domicilio/index.html'];
 const html = Object.fromEntries(paginas.map((p) => [p, leer(p)]));
 const enLinea = (h) => [...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
 
-// ---------- Lo mismo en las tres páginas ----------
+// ---------- Lo mismo en todas las páginas ----------
 const cabecera = (h) => enLinea(h)[0];
 for (const p of paginas) {
   const h = html[p];
@@ -28,11 +28,11 @@ assert.ok(html['index.html'].includes('<link rel="prefetch" href="/tienda/">'), 
 
 // Las mismas hojas, en el mismo orden, en las tres páginas: al navegar sin recargar no se enciende ni se
 // apaga ninguna (en Safari eso dejaba la cabecera sin estilo). Y cada página marca en <html> cuál es.
-const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css'];
-const MARCA = { 'index.html': 'en-inicio', 'tienda/index.html': 'en-tienda', '404.html': 'en-inicio' };
+const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css', '/domicilio/domicilio.css'];
+const MARCA = { 'index.html': 'en-inicio', 'tienda/index.html': 'en-tienda', '404.html': 'en-inicio', 'domicilio/index.html': 'en-domicilio' };
 for (const p of paginas) {
   const enlazadas = [...html[p].matchAll(/<link rel="stylesheet" href="([^"]+)"[^>]*>/g)].map((m) => m[0]);
-  assert.deepEqual(enlazadas, HOJAS.map((h) => `<link rel="stylesheet" href="${h}">`), `${p}: enlaza exactamente las tres hojas, en orden, sin media ni carga diferida`);
+  assert.deepEqual(enlazadas, HOJAS.map((h) => `<link rel="stylesheet" href="${h}">`), `${p}: enlaza exactamente las mismas hojas, en orden, sin media ni carga diferida`);
   assert.match(html[p], new RegExp(`<html lang="es-MX" class="${MARCA[p]}">`), `${p}: <html> marcado ${MARCA[p]}`);
   assert.ok(!/rel="prefetch" href="[^"]+\.css"/.test(html[p]), `${p}: sin prefetch de hojas (ya están todas)`);
 }
@@ -71,11 +71,12 @@ const partirLista = (sel) => {
   return [...partes, sel.slice(ini).trim()];
 };
 const sinAcotar = {};
-for (const [hoja, clase] of [['landing.css', 'en-inicio'], ['tienda/styles.css', 'en-tienda']]) {
+const DE_PAGINA = [['landing.css', 'en-inicio'], ['tienda/styles.css', 'en-tienda'], ['domicilio/domicilio.css', 'en-domicilio']];
+for (const [hoja, clase] of DE_PAGINA) {
   for (const { sel, cuerpo } of reglas(leer(hoja))) {
     for (const s of partirLista(sel)) {
       if (!s.includes(`:where(.${clase})`)) (sinAcotar[s] ??= {})[hoja] = cuerpo;
-      assert.ok(!s.includes(`:where(.${clase === 'en-inicio' ? 'en-tienda' : 'en-inicio'})`), `${hoja}: «${s}» acotado a la otra página`);
+      for (const [, otra] of DE_PAGINA) if (otra !== clase) assert.ok(!s.includes(`:where(.${otra})`), `${hoja}: «${s}» acotado a otra página`);
     }
   }
 }
@@ -85,14 +86,14 @@ assert.deepEqual(choques, [], 'un selector sin acotar en las dos hojas de págin
 assert.ok(html['tienda/index.html'].includes('<link rel="prefetch" href="/">'), 'la tienda deja lista la landing');
 
 const css = leer('barra.css');
-// Llaves parejas en las tres hojas: una llave suelta hace que el navegador ignore la regla que sigue.
-for (const h of ['barra.css', 'landing.css', 'tienda/styles.css']) {
+// Llaves parejas en todas las hojas: una llave suelta hace que el navegador ignore la regla que sigue.
+for (const h of ['barra.css', 'landing.css', 'tienda/styles.css', 'domicilio/domicilio.css']) {
   const t = leer(h).replace(/\/\*[\s\S]*?\*\//g, '');
   assert.equal((t.match(/\{/g) || []).length, (t.match(/\}/g) || []).length, `${h}: llaves desparejas`);
 }
 assert.match(css, /html \{ background: var\(--crema\)/, 'el lienzo es crema, nunca blanco');
 assert.equal((css.match(/font-display: fallback/g) || []).length, 6, 'las seis fuentes, en la hoja que siempre se carga y sin brinco');
-for (const h of ['landing.css', 'tienda/styles.css']) assert.ok(!leer(h).includes('@font-face'), `${h}: no declara fuentes (van en barra.css, que tienen todas las páginas)`);
+for (const h of ['landing.css', 'tienda/styles.css', 'domicilio/domicilio.css']) assert.ok(!leer(h).includes('@font-face'), `${h}: no declara fuentes (van en barra.css, que tienen todas las páginas)`);
 assert.match(css, /\.cabecera \{[^}]*view-transition-name: cabecera;/, 'la cabecera tiene nombre propio en la transición');
 assert.match(css, /\.cabecera \{ position: sticky; top: 0;/, 'la cabecera se queda arriba al bajar');
 const sinMovimiento = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: no-preference)'));

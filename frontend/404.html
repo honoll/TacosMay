@@ -13,12 +13,13 @@
   <link rel="preload" href="/fuentes/kalam-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fuentes/kalam-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <script type="speculationrules">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/marca/*"}}]}, "eagerness": "moderate"}]}</script>
-  <!-- Las mismas tres hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
+  <!-- Las mismas hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
        recargar (js/paginas.js) nunca se enciende ni se apaga una hoja. Cada hoja de página tiene sus
-       reglas acotadas a su página con :where(.en-inicio) o :where(.en-tienda), la clase de <html>. -->
+       reglas acotadas a su página con :where(.en-inicio), :where(.en-tienda) o :where(.en-domicilio), la clase de <html>. -->
   <link rel="stylesheet" href="/barra.css">
   <link rel="stylesheet" href="/landing.css">
   <link rel="stylesheet" href="/tienda/styles.css">
+  <link rel="stylesheet" href="/domicilio/domicilio.css">
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -76,6 +77,7 @@
         <a href="/tienda/#carrito">Carrito</a>
         <a href="/tienda/#entrar">Entrar</a>
         <a href="/tienda/#ayuda">Envíos y preguntas</a>
+        <a href="/domicilio/">Tacos a domicilio</a>
       </nav>
       <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
       <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
