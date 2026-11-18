@@ -85,6 +85,12 @@ const choques = Object.entries(sinAcotar).filter(([, h]) => Object.keys(h).lengt
 assert.deepEqual(choques, [], 'un selector sin acotar en las dos hojas de página, con reglas distintas');
 assert.ok(html['tienda/index.html'].includes('<link rel="prefetch" href="/">'), 'la tienda deja lista la landing');
 
+// Cada foto que js/barra.js da por puesta existe en sus dos tamaños (si no, la charola sale rota).
+const { FOTOS } = await import('./barra.js');
+const { existsSync } = await import('node:fs');
+for (const s of FOTOS) for (const f of [`${s}.webp`, `${s}-1024.webp`]) assert.ok(existsSync(new URL(`../media/guisos/${f}`, import.meta.url)), `falta media/guisos/${f}`);
+assert.equal(FOTOS.size, 13, 'trece guisos con foto; corazón de vaca enamorada sigue sin imagen');
+
 const css = leer('barra.css');
 // Llaves parejas en todas las hojas: una llave suelta hace que el navegador ignore la regla que sigue.
 for (const h of ['barra.css', 'landing.css', 'tienda/styles.css', 'domicilio/domicilio.css']) {

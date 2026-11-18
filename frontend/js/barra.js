@@ -60,6 +60,8 @@ export const picto = (nombre) => `<svg class="picto" viewBox="0 0 24 24" fill="c
 export const FOTOS = new Set([
   'chorizo-con-huevo', 'salpicon', 'nopalitos', 'mole-con-pollo', 'bistek-con-papa',
   'chicharron-en-salsa', 'rajas-con-queso-y-crema', 'carne-en-salsa-roja', 'tinga-de-res',
+  'barbacoa', 'cabeza', 'lengua', 'barbacoa-de-borrego',
+  // Corazón de vaca enamorada (01): sin imagen todavía, PENDIENTE-CLIENTE.
 ]);
 
 const SIZES = '(min-width: 1600px) 17vw, (min-width: 1280px) 20vw, (min-width: 700px) 25vw, 50vw';
