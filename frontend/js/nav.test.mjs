@@ -44,6 +44,6 @@ assert.match(conSesion, /<span class="nombre">Maximiliano…<\/span>/, 'y a la v
 assert.match(cuenta(null), />Entrar<\/a>$/, 'sin sesión, «Entrar»');
 const barra = readFileSync(new URL('barra.css', raiz), 'utf8');
 const celular = barra.slice(barra.indexOf('@media (max-width: 899px)'));
-assert.ok(/\.cabecera nav a\.persona \.nombre \{ display: none; \}/.test(celular) && /\.cabecera nav \.salir \{ display: none; \}/.test(celular), 'en celular: solo el ícono de la cuenta y sin «Salir»');
+assert.ok(/\.cabecera nav a\.persona \.nombre \{ display: none; \}/.test(celular) && /\.cabecera nav button\.salir \{ display: none; \}/.test(celular), 'en celular: solo el ícono de la cuenta y sin «Salir»');
 assert.match(barra, /\.cabecera nav a\.persona \{ min-width: 44px;/, 'el ícono de la cuenta mide al menos 44 px');
 console.log('nav.test: OK (cabecera y pie iguales en 5 páginas, carrito con ícono, cuenta que cabe en celular)');

@@ -111,8 +111,9 @@
 :where(.en-inicio) .taqueria-texto p { max-width: 36em; }
 :where(.en-inicio) .taqueria-texto p + p { margin-top: 12px; }
 /* Rayas, no cajas: las cifras, las personas y la cita usan el mismo filo negro. */
-:where(.en-inicio) .cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 18px; border-block: 2px solid var(--negro); }
-:where(.en-inicio) .cifras b { display: block; font: 800 clamp(2.4rem, 9vw, 4.5rem)/.9 var(--angosta); text-transform: uppercase; white-space: nowrap; }
+:where(.en-inicio) .cifras { container-type: inline-size; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 18px; border-block: 2px solid var(--negro); }
+/* 12.5cqi: que «4 a. m.» quepa en su tercio también entre 900 y 1300, donde la columna de texto es angosta */
+:where(.en-inicio) .cifras b { display: block; font: 800 clamp(2.4rem, min(9vw, 12.5cqi), 4.5rem)/.9 var(--angosta); text-transform: uppercase; white-space: nowrap; }
 :where(.en-inicio) .cifras span { display: block; margin-top: 6px; color: var(--gris); font-size: var(--t-nota); line-height: 1.35; }
 :where(.en-inicio) .barra-gente h3 { font: 800 var(--t-sub)/1 var(--angosta); text-transform: uppercase; }
 :where(.en-inicio) .gente { display: grid; margin-top: 12px; }
@@ -213,7 +214,7 @@
 /* ---------- Página de «no encontrado» ---------- */
 
 :where(.en-inicio) main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
-:where(.en-inicio) .perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); }
+:where(.en-inicio) .perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); line-height: .92; } /* con .84 la cola de la «Q» tocaba el renglón de abajo */
 
 /* ---------- Proyecto escolar (proyecto/index.html): qué hace Redis en cada paso ---------- */
 :where(.en-inicio) .proyecto { padding-block: clamp(28px, 6vw, 72px) clamp(40px, 8vw, 96px); }
