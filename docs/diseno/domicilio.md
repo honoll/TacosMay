@@ -67,6 +67,64 @@ habría que pedir cotización. No confundir con «Jüsto», el súper en línea 
 | Cuenta de la plataforma | Invitado o la cuenta de la tienda | Sin cambio |
 | Buscador del menú | — | No adoptado: son catorce tacos en tres secciones |
 
+## Lo que ofrece la tienda (Justo) y qué tiene el prototipo
+
+Alejandro quiere que el prototipo llegue a ser un programa completo como el que ofrece Justo. **No se
+copia su código** (es de Justo y su página depende de sus servidores): se reproduce el funcionamiento con
+código nuestro. Fuente: **Visto** en la tienda de Orinoco el 18-nov-2026; **Deducido** = del lado del
+restaurante, inferido de lo que la tienda muestra (no se vio su panel, que pide cuenta de restaurante).
+
+Estado: **Tiene** (funciona en el prototipo), **Parcial**, **Falta**, **Simulado** (funciona con datos o
+servicios de prueba).
+
+### De cara al cliente
+
+| Función | Fuente | Prototipo |
+|---|---|---|
+| Menú por categorías con foto, descripción y precio | Visto | Tiene (secciones del pizarrón; fotos de las charolas; precios de ejemplo) |
+| Saltar a una categoría desde la barra de categorías | Visto | Tiene (chips de sección, fijos al bajar) |
+| Buscar en el menú | Visto | Falta (14 tacos; tendría sentido con más productos) |
+| «+» directo y contador en la tarjeta | Visto | Tiene |
+| Detalle del producto con dirección propia (enlace a cada platillo) | Visto | Parcial: diálogo sin dirección propia |
+| Grupos de modificadores: opcional u obligatorio, tope, «completo», opciones con costo | Visto | Tiene el mecanismo; los grupos reales, `PENDIENTE-CLIENTE` |
+| Instrucciones especiales por producto | Visto | Tiene («Nota para la cocina») |
+| Carrito: editar, quitar, cantidad, subtotal | Visto | Tiene («Tu orden») |
+| Elegir entrega o recoger en cualquier momento, con chip arriba | Visto | Tiene |
+| Dirección con autocompletar, compartir ubicación, pin en mapa, detalles (depto.) | Visto | Parcial: calle, colonia y referencias; mapa y ubicación, por conectar (servicio de mapas) |
+| Cobertura: si llega o no a la dirección | Visto (la aceptó) | Simulado (zonas de ejemplo) |
+| Lista de locales con buscador; local más cercano | Visto | Parcial: una barra; buscador y distancia cuando haya más locales |
+| Horario por local, teléfono, días | Visto | Falta: `PENDIENTE-CLIENTE` |
+| Tiempo estimado según el modo | Visto | Simulado |
+| Aviso «cerrado hasta las …» y no dejar seguir | Visto | Tiene el aviso y el candado; la hora real, `PENDIENTE-CLIENTE` |
+| Cuenta del cliente (de la plataforma) o invitado | Visto (el enlace a entrar) | Parcial: invitado, o la cuenta de la tienda (solo se lee) |
+| Datos de contacto, propina, pago, confirmación, seguimiento | No visto (cerrado) | Tiene contacto, propina, número y seguimiento; pago al recibir; en línea, por conectar |
+| Programar pedido para más tarde | No visto | Falta (por conectar; necesita horarios reales) |
+| Historial y repetir pedido | No visto (pide cuenta) | Tiene (en este navegador) |
+| Términos y aviso de privacidad | Visto (enlaces; la página sale vacía) | Falta: `PENDIENTE-CLIENTE` |
+| Página propia con dominio de la marca (`pido.…`) | Visto | Tiene (`/domicilio/` en el mismo sitio) |
+| Medición de visitas y campañas (Facebook, PostHog) | Visto (scripts) | No aplica en la prueba |
+
+### Del lado del restaurante (deducido)
+
+| Función | Por qué se deduce | Prototipo |
+|---|---|---|
+| Horario por local y apertura/cierre automáticos | «Cerrados hasta las 13:00» y «Continuar» apagado | Parcial: un interruptor de demostración (`?demo=cerrado`); sin horario semanal |
+| Pausar productos o marcarlos agotados | Los menús de estas plataformas ocultan o apagan lo que no hay | Falta (la tienda de empacados sí tiene existencias; domicilio no) |
+| Editar menú, precios, fotos y modificadores | Todo el menú sale de su servidor | Falta: el menú está en `menu.js` |
+| Zonas de entrega y costo de envío | Acepta o no una dirección y da otro tiempo | Simulado (`reparto-simulado.js`) |
+| Varios locales con su menú y su horario | Lista de diez locales, cada uno con su horario | Falta: una barra (`PENDIENTE-CLIENTE`) |
+| Recibir pedidos y cambiar su estado (recibido, preparando, listo, en camino, entregado) | El cliente recibe un número y un seguimiento | Simulado: los estados avanzan solos; no hay pantalla de cocina |
+| Repartidores propios o de un servicio externo | Delivery con tiempo propio | Simulado; la interfaz ya sigue a Uber Direct |
+| Cobro en línea y conciliación | Pago en la plataforma (no visto) | Falta (por conectar) |
+| Cuentas de clientes y su historial | Inicio de sesión con cuenta Justo | Falta del lado del servidor |
+| Reportes de ventas | Propio de estas plataformas | Falta |
+| Promociones y cupones | No se vio | Falta |
+
+Lo que más acercaría el prototipo a «un programa completo»: un **panel de la barra** (pedidos entrantes
+con sus estados, pausar tacos, horario), el **menú con modificadores editable** en vez de fijo en el
+código, y **guardar los pedidos en el servidor**. Las tres cosas tocan backend, que esta prueba no toca:
+irían como proyecto aparte, después de la entrega del examen.
+
 ## Flujo de referencia: Toks
 
 Alejandro pidió copiar el **flujo** de pedido de Toks (el orden de pasos y decisiones), no su aspecto: la
