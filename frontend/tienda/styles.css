@@ -429,9 +429,12 @@
 :where(.en-tienda) .comps > :nth-child(6) { left: 51.215%; top: 69.485%; right: 4.167%; bottom: 3.433%; }
 :where(.en-tienda) .comps > :nth-child(6) .comp-plastico { background-image: url("/media/bolsa/camara-6.webp"); }
 :where(.en-tienda) .comp { overflow: hidden; }
-:where(.en-tienda) .comp-guiso { position: absolute; inset: 0; background: var(--c) var(--foto, none) center / cover; }
+/* La porción va al centro de la cámara, con plástico vacío alrededor: a ese tamaño la comida se ve
+   proporcionada a la bolsa (de orilla a orilla se veía gigante). La orilla se difumina, como prensada. */
+:where(.en-tienda) .comp-guiso, :where(.en-tienda) .comp-plastico { position: absolute; inset: 9% 10% 23%; border-radius: 30% / 34%; -webkit-mask-image: radial-gradient(closest-side, #000 78%, transparent 100%); mask-image: radial-gradient(closest-side, #000 78%, transparent 100%); }
+:where(.en-tienda) .comp-guiso { background: var(--c) var(--foto, none) center / cover; }
 :where(.en-tienda) .comp:not([style*="--foto"]) .comp-guiso { background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / .1) 3px 4px); }
-:where(.en-tienda) .comp-plastico { position: absolute; inset: 0; opacity: .9; mix-blend-mode: hard-light; background: center / 100% 100% no-repeat; }
+:where(.en-tienda) .comp-plastico { opacity: .9; mix-blend-mode: hard-light; background: center / 100% 100% no-repeat; }
 /* El láser de sellado: solo se ve mientras sella. */
 :where(.en-tienda) .comp-banda { position: absolute; left: 0; right: 0; top: 0; z-index: 2; height: 3px; background: #c8161f; box-shadow: 0 0 8px #c8161f; opacity: 0; }
 :where(.en-tienda) .comp-etq { position: absolute; left: 6%; right: 6%; bottom: 7%; z-index: 2; display: block; padding: 4px 8px; border-radius: 10px; background: var(--negro); color: #fff; font: 700 .74rem/1.15 var(--angosta); letter-spacing: .03em; text-align: center; text-transform: uppercase; }
