@@ -213,33 +213,30 @@ det.addEventListener('click', (e) => {
   if (detN !== antes) brinca(det.querySelector('.det-n'), detN - antes);
   if (b.disabled) det.querySelector(`[data-det="${-b.dataset.det}"]`).focus();
 });
-// Sin lo obligatorio no se agrega: el diálogo no se cierra y dice qué falta.
+// «Agregar» se atiende al enviar el formulario, antes de que el diálogo se cierre (el evento «close» llega
+// tarde o, en una pestaña oculta, no llega). Sin lo obligatorio no se agrega: no se cierra y dice qué falta.
 det.querySelector('form').addEventListener('submit', (e) => {
-  if (e.submitter?.value !== 'agregar') return;
-  const faltan = ajustar(detSel).faltan;
-  if (!faltan.length) return;
-  e.preventDefault();
-  const aviso = det.querySelector('.det-faltan');
-  aviso.textContent = `Falta elegir: ${grupos().filter((g) => faltan.includes(g.id)).map((g) => g.nombre.toLowerCase()).join(', ')}.`;
-  aviso.hidden = false;
-  aviso.focus();
+  if (e.submitter?.value !== 'agregar' || !detId) return;
+  const r = f.poner(detId, detN, det.querySelector('#det-nota').value, detSel);
+  if (r.faltan) {
+    e.preventDefault();
+    const aviso = det.querySelector('.det-faltan');
+    aviso.textContent = `Falta elegir: ${grupos().filter((g) => r.faltan.includes(g.id)).map((g) => g.nombre.toLowerCase()).join(', ')}.`;
+    aviso.hidden = false;
+    aviso.focus();
+    return;
+  }
+  pintar();
+  const lugar = main.querySelector(`[data-control="${detId}"]`);
+  if (lugar && f.estado.vista === 'menu') {
+    animador()?.from(lugar.firstElementChild, { scale: 0.6, opacity: 0, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
+    requestAnimationFrame(() => lugar.querySelector('[data-mas], button')?.focus()); // después de que el diálogo devuelva el foco
+  }
 });
 // Un número que cambia entra desde el lado hacia donde va: de arriba si sube, de abajo si baja.
 function brinca(el, hacia) {
   animador()?.fromTo(el, { y: hacia > 0 ? -8 : 8, opacity: 0.2 }, { y: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
 }
-det.addEventListener('close', () => {
-  if (det.returnValue === 'agregar' && detId) {
-    f.poner(detId, detN, det.querySelector('#det-nota').value, detSel);
-    pintar();
-    const lugar = main.querySelector(`[data-control="${detId}"]`);
-    if (lugar && f.estado.vista === 'menu') {
-      animador()?.from(lugar.firstElementChild, { scale: 0.6, opacity: 0, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
-      lugar.querySelector('[data-mas], button')?.focus();
-    }
-  }
-  det.returnValue = '';
-});
 
 // ---------- 3 · Tu orden: propina ----------
 $('.propina-opciones').innerHTML = PROPINAS.map((p) => `<label><input type="radio" name="propina" value="${p}"> <span class="p-texto"></span></label>`).join('');
