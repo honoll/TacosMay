@@ -295,4 +295,17 @@ assert.equal(capaDe().querySelector('.envio-final').hidden, false, 'sin GSAP (no
 escena.cancel();
 globalThis.gsap = g;
 
-console.log('bolsa.test: OK (llenar, sumar, otra bolsa, quitar, vuelo y error, celular, envío con número y salidas, movimiento reducido)');
+// ---------- Celular: «Confirmar pedido» siempre a la vista con la bolsa desplegada ----------
+// El DOM de juguete no hace layout; se comprueban las reglas que lo garantizan (en el iPhone se rompió: la fila del
+// cuerpo crecía con la bolsa y el pie quedaba bajo la pantalla). Medido en Chrome: docs/calidad/carrito-celular.md.
+const { readFileSync } = await import('node:fs');
+const hoja = readFileSync(new URL('./styles.css', import.meta.url), 'utf8');
+const celular = hoja.slice(hoja.indexOf('@media (max-width: 899px)', hoja.indexOf('.bolsa-lado { position: fixed') - 400));
+const regla = (sel) => celular.match(new RegExp(`${sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\{([^}]*)\\}`))?.[1] ?? '';
+assert.match(regla(':where(.en-tienda) .bolsa-lado'), /grid-template-rows: auto minmax\(0, 1fr\)/, 'la fila del cuerpo no crece más que la pantalla');
+assert.match(regla(':where(.en-tienda) .bolsa-lado.abierta .bolsa-cuerpo'), /flex-direction: column;[^]*min-height: 0/, 'el cuerpo es una columna que cabe');
+assert.match(regla(':where(.en-tienda) .bolsa-cuerpo > :is(.bolsas, .bolsa-vacia)'), /min-height: 0;[^]*overflow-y: auto/, 'las bolsas se desplazan');
+assert.match(regla(':where(.en-tienda) .bolsa-cuerpo > .bolsa-cuentas'), /flex: none;[^]*env\(safe-area-inset-bottom\)/, 'el total y «Confirmar pedido», fijos al pie y sobre el área segura');
+assert.match(hoja, /\[data-vista="carrito"\] > \.acciones \{ position: sticky; bottom: 0;[^}]*env\(safe-area-inset-bottom\)/, 'en #carrito, la barra de confirmar pegada abajo y sobre el área segura');
+
+console.log('bolsa.test: OK (llenar, sumar, otra bolsa, quitar, vuelo y error, celular, envío con número y salidas, movimiento reducido, confirmar a la vista en celular)');
