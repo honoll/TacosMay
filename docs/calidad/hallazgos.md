@@ -3,6 +3,27 @@
 Registro de lo encontrado al ejecutar [plan-de-revision.md](plan-de-revision.md). Estado:
 🔴 abierto · 🟡 corregido, falta volver a verlo · ✅ corregido y visto.
 
+## Vuelta 6 — 17-nov-2026: guisos en lista, bolsa por compartimentos, envío y textos
+
+Recorrido con cuenta de prueba a 1440 × 900; pruebas automáticas en verde (API contra Redis
+y las nueve del frontend). Cuenta de prueba y su pedido, borrados.
+
+**Funciona y se vio en escritorio:** la lista por secciones con botón «+»; al agregar, el
+renglón pasa a menos y más y el guiso ocupa su compartimento en la bolsa, con foto, etiqueta
+y cantidad; un segundo guiso llena el siguiente; total, cuenta regresiva y «Confirmar pedido»
+en el panel; al confirmar aparece la caja con el botón «Saltar» y se llega a «Mis pedidos»
+con el pedido resaltado. Cabecera con el carrito en ícono, número y reloj.
+
+| # | Dónde | Gravedad | Hallazgo | Estado |
+|---|---|---|---|---|
+| Y1 | Animación de envío, escritorio | Menor | La caja se ve chica, al centro de una pantalla casi vacía; a 1440 px podría ocupar más y verse mejor | 🔴 |
+| Y2 | Todo el sitio | Menor | El contenido arranca con opacidad 0 y depende de la animación de entrada para verse; si la animación no corre (pestaña en segundo plano) queda invisible hasta que corre. Conviene que el estado base sea visible | 🔴 |
+
+**No verificado:** el avión (no alcancé a capturarlo), las vistas a tamaño celular y la barra
+fija de la bolsa en celular: el panel del navegador de coordinación estaba oculto y ahí las
+animaciones no avanzan, así que las capturas de celular no son concluyentes. Tampoco: quitar
+un guiso de la bolsa, más guisos que compartimentos, error de existencia que revierte.
+
 ## Vuelta 5 — 17-nov-2026: entre la landing y la tienda sin recargar
 
 Revisión del enrutador (`frontend/js/paginas.js`) a 1440: ida y vuelta tres veces, «atrás» y
