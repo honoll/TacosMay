@@ -61,8 +61,15 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
   :where(.en-domicilio) .pasos-dom [aria-current="step"] .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* Fuera de «Entrega», la explicación de arriba sobra: el menú (el primer paso) se ve sin bajar. */
   :where(.en-domicilio) main:not([data-vista="modo"]) .entrada { display: none; }
-  :where(.en-domicilio) .aviso-prueba { padding: 6px 12px; font-size: .95rem; }
-  :where(.en-domicilio) .dom-cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 12px; margin-bottom: 8px; }
+  :where(.en-domicilio) main { padding-top: 8px; }
+  :where(.en-domicilio) .aviso-prueba { margin-bottom: 4px; padding: 6px 12px; font-size: .9rem; }
+  :where(.en-domicilio) .dom-cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 8px; margin-bottom: 4px; }
+  :where(.en-domicilio) main:not([data-vista="modo"]) h1 { margin: 4px 0; font-size: 1.6rem; }
+  :where(.en-domicilio) .dom-cabeza .enlace-boton { font-size: .9rem; }
+  :where(.en-domicilio) .pasos-dom { margin-bottom: 10px !important; padding-block: 6px !important; }
+  :where(.en-domicilio) :is(main, dialog) button.entrega-chip { margin-bottom: 10px; }
+  :where(.en-domicilio) .precios-ejemplo { margin-bottom: 4px; font-size: .95rem; }
+  :where(.en-domicilio) .seccion h3 { margin-top: 12px; }
   :where(.en-domicilio) .dom-cabeza .entrada { flex-basis: 100%; }
   /* El título «Menú» repite el paso de arriba: se queda para lector y para el foco, no a la vista. */
   :where(.en-domicilio) #t-menu { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
