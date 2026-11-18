@@ -35,7 +35,8 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
     const envio = s.modo === 'domicilio' ? s.cotizacion?.envio_centavos ?? null : 0;
     const propina = Math.round(subtotal * s.propina_pct / 100);
     // Cuota de servicio: concepto por definir con la taquería (PENDIENTE-CLIENTE); no suma.
-    return { piezas, subtotal, envio, cuota: null, propina, total: subtotal + (envio ?? 0) + propina };
+    // Sin tacos no hay nada que cobrar: el envío se ve, pero no suma.
+    return { piezas, subtotal, envio, cuota: null, propina, total: piezas ? subtotal + (envio ?? 0) + propina : 0 };
   }
 
   return {

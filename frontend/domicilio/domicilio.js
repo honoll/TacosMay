@@ -171,7 +171,7 @@ $('#form-pagar').addEventListener('submit', async (e) => {
 // ---------- 5 · Seguimiento ----------
 $('#cancelar').addEventListener('click', async () => {
   const r = await f.cancelar();
-  $('.aviso-cancelar').textContent = r.ok ? 'Pedido cancelado. No se cobró nada.' : NO_CANCELA[r.motivo] ?? '';
+  $('.aviso-cancelar').textContent = r.ok ? '' : NO_CANCELA[r.motivo] ?? ''; // si se canceló, lo dice el estado
   seguir();
 });
 $('#recogido').addEventListener('click', async () => { await f.recogido(); seguir(); });
@@ -376,7 +376,7 @@ function escena(paso) {
   tl.fromTo(el, { scale: 0.85, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: 'back.out(2)' });
   if (paso === 'preparando') tl.fromTo(el.querySelectorAll('.vapor-linea'), { y: 6, autoAlpha: 0 }, { y: -6, autoAlpha: 1, duration: 0.8, stagger: 0.15, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 0.2);
   if (paso === 'asignado') tl.fromTo(el.querySelector('.solapa'), { scaleY: -1 }, { scaleY: 1, transformOrigin: '50% 100%', duration: 0.4, ease: 'power2.inOut' }, 0.25);
-  if (paso === 'en_camino') tl.fromTo(el.querySelector('.moto'), { x: -40 }, { x: 60, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, 0.1);
+  if (paso === 'en_camino') tl.fromTo(el.querySelector('.moto'), { x: -16 }, { x: 16, duration: 1.4, ease: 'power1.inOut', repeat: -1, yoyo: true }, 0.1);
   if (paso === 'entregado') tl.fromTo(el.querySelector('.palomita'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(3)' }, 0.2);
 }
 

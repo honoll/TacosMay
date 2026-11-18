@@ -46,6 +46,7 @@ assert.ok(r.ok && r.envio_centavos === 3000 && r.vence === ahora + sim.VIGENCIA,
 assert.equal(f.estado.sucursal, 'centro', 'la barra del centro lo prepara');
 f.ir('menu');
 assert.equal(f.estado.vista, 'menu');
+assert.equal(f.cuentas().total, 0, 'sin tacos el total es cero aunque ya haya envío');
 
 // ---------- 2 · Detalle del taco: cantidad y nota para la cocina ----------
 f.poner(carne, 2, '  Sin cebolla  ');
