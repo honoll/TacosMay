@@ -42,6 +42,12 @@ Reglas entre chats:
   Es criterio de la rúbrica (25 %).
 - **Datos del negocio reales o marcados.** El menú, precios y marca reales están
   `PENDIENTE-CLIENTE`; el seed usa datos de ejemplo y lo dice.
+  **Excepción (Alejandro, 18-nov-2026):** el inicio es la versión que se le presenta a la
+  familia, así que puede llevar contenido de muestra inventado (cocineros, instalaciones,
+  tiempos, preguntas frecuentes). Lo real se queda real, nada inventado se atribuye a
+  familiares reales, y todo lo inventado se lista en `docs/negocio/contenido-de-muestra.md`
+  y se marca con `data-muestra` para sustituirlo. La excepción no cubre la tienda, el
+  backend ni el sistema de pedidos.
 - Docs y commits en español; identificadores en inglés salvo datos de negocio
   (`guisos`, `precio_centavos`). Commits convencionales, **sin firma de IA**. Push al terminar.
 - «Listo» = lo corriste contra Redis en la nube y pegas la salida. Si no pudiste, dilo.
