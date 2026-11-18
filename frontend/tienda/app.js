@@ -672,7 +672,7 @@ const ACTIONS = {
     // Con el pedido, la escena termina en «Pedido #N confirmado» y la persona elige: sus pedidos o seguir comprando.
     const escena = enviar(cart.items.map((it) => guisoDe(it.guiso.nombre).color));
     let p;
-    try { p = await api('/pedidos', { method: 'POST', body: {} }); // con cuerpo: Safari en datos móviles puede atorar un POST vacío } catch (err) { escena.cancel(); throw err; }
+    try { p = await api('/pedidos', { method: 'POST', body: {} }); } catch (err) { escena.cancel(); throw err; }
     escena.confirmar(p, money(p.total_centavos));
     const destino = await escena.listo;
     // Después, la vista elegida de un solo paso: la bolsa no se vacía a la vista y no hay fundido.
