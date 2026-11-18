@@ -84,3 +84,13 @@ Corrige lo que se había supuesto por el nombre al generar las imágenes.
 
 De los demás guisos sigue sin confirmarse cómo son (`PENDIENTE-CLIENTE`), incluido qué
 lleva el «Corazón de vaca enamorada».
+
+## A quién se le vende por envío (dicho por Alejandro, 17-nov-2026)
+
+Quien pida con envío a otra parte de México **puede no conocer el local en persona**. Parte
+de la publicidad será justo esa: pedir comida de un local que está en una parte de México
+y recibirla en otra.
+
+Lo que esto corrige: `docs/diseno/plataforma.md` suponía como primer público a «quien ya
+conoce la barra» (marcado ahí como hipótesis). Los textos no pueden dar por hecho que el
+lector conoce la taquería, a May ni Cabo San Lucas.
