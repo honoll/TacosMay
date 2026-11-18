@@ -42,7 +42,7 @@ const HUECAS = '<li class="charola hueca" aria-hidden="true"><div class="guiso">
 
 // Cada charola lleva a su ficha en la tienda; las que más salen traen además el botón.
 const guiso = (g, boton = false) => charola(g.nombre, `
-    <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} en existencia` : 'Se acabó por hoy'}${g.vendidos > 0 ? ` · ${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}` : ''}</p>
+    <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `quedan ${esc(g.stock)}` : 'Se acabó por hoy'}${g.vendidos > 0 ? ` · ${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}` : ''}</p>
     <p class="precio">${money(g.precio_centavos)}</p>${boton && g.stock > 0 ? `
     <a class="btn chico" href="${ficha(g)}">Pedir<span class="sr"> ${esc(g.nombre)}</span></a>` : ''}`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: ficha(g) });
 

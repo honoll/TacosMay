@@ -25,7 +25,7 @@ const fila = (f) => `
     <td>${esc(f.actual)}</td>
     <td class="n">${f.n}</td>
     <td>${esc(f.problema) || '—'}</td>
-    <td><b class="tipo">${esc(f.tipo)}</b> ${esc(f.propuesta)}</td>
+    <td><b class="tipo">${esc(f.tipo)}</b> ${esc(f.propuesta)}${f.aplicado ? ` <b class="aplicado">✅ Aplicado${f.aplicado === 'Sí' ? '' : `: ${esc(f.aplicado)}`}</b>` : ''}</td>
     <td>${vista(f)}</td>
   </tr>`;
 
@@ -44,7 +44,7 @@ const marca = (m) => `
     <h3>${esc(m.tema)}</h3>
     <p><b>Hoy:</b> ${esc(m.hoy)}</p>
     <ol>${m.alts.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
-    <p class="rec"><b>Recomiendo:</b> ${esc(m.rec)}</p>
+    <p class="rec"><b>Recomiendo:</b> ${esc(m.rec)}${m.aplicado ? ` <b class="aplicado">✅ ${esc(m.aplicado)}</b>` : ''}</p>
   </article>`;
 
 const { total, cuenta, diez } = RESUMEN;
@@ -69,6 +69,7 @@ document.body.insertAdjacentHTML('beforeend', `
         <li><b>${cuenta['Quitar'] ?? 0}</b> se quitan</li>
       </ul>
       <h3>Los diez cambios que más mejoran el sitio</h3>
+      <p class="nota"><b class="aplicado">✅ Aplicados los diez el 17-nov-2026.</b> Lo demás sigue como propuesta.</p>
       <ol class="diez">${diez.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
     </section>
 

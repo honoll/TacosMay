@@ -49,6 +49,7 @@ export const SECCIONES = [
     "tipo": "Quitar",
     "propuesta": "Quitarlo de la cabecera: queda en el héroe («Cómo funciona») y en el pie.",
     "picto": null,
+    "aplicado": "Sí",
     "n": 13
    },
    {
@@ -58,6 +59,7 @@ export const SECCIONES = [
     "tipo": "Quitar",
     "propuesta": "Quitarlo de la cabecera; queda en el pie. Con estos dos fuera, la cabecera cabe a 375 px sin deslizar.",
     "picto": null,
+    "aplicado": "Sí",
     "n": 11
    },
    {
@@ -121,6 +123,7 @@ export const SECCIONES = [
     "tipo": "Ícono solo",
     "propuesta": "Ícono de carrito + el número + el reloj. Nombre accesible: «Carrito, 3 guisos». Objetivo táctil de 44 px.",
     "picto": "Carrito",
+    "aplicado": "Sí",
     "n": 7
    },
    {
@@ -292,6 +295,7 @@ export const SECCIONES = [
     "tipo": "Alternativas",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Con la alternativa 1.",
     "n": 61
    },
    {
@@ -370,6 +374,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "«4 porciones · quedan 12». Lo vendido, solo como etiqueta en esta fila.",
     "picto": null,
+    "aplicado": "En parte: «quedan 12»; lo vendido sigue en la charola.",
     "n": 43
    },
    {
@@ -412,6 +417,7 @@ export const SECCIONES = [
     "tipo": "Alternativas",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Quedó «Sale de la barra».",
     "n": 13
    },
    {
@@ -421,6 +427,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 72
    },
    {
@@ -439,6 +446,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 67
    },
    {
@@ -466,6 +474,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 75
    },
    {
@@ -499,6 +508,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "«Precios y existencias, en vivo.»",
     "picto": null,
+    "aplicado": "Sí",
     "n": 81
    },
    {
@@ -526,6 +536,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Pedir guisos».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 18
    },
    {
@@ -613,6 +624,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 166
    },
    {
@@ -622,6 +634,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "Ver «Textos de marca».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 139
    },
    {
@@ -742,6 +755,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Pedir guisos».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 14
    }
   ]
@@ -811,6 +825,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "«4 porciones · quedan 5».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 27
    },
    {
@@ -889,6 +904,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "«4 porciones · quedan 5».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 27
    },
    {
@@ -1048,6 +1064,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Ese correo ya tiene cuenta. Entra con él.» (se traduce en la tienda, como el 401).",
     "picto": null,
+    "aplicado": "Se traduce en la tienda (js/api.js), sin tocar el backend.",
     "n": 28
    },
    {
@@ -1141,6 +1158,7 @@ export const SECCIONES = [
     "tipo": "Más corto",
     "propuesta": "«Cada cambio renueva el tiempo; en cero, se vacía solo.» Decide Alejandro: si quiere que la demo lo diga en pantalla, se queda como está hasta después del examen.",
     "picto": null,
+    "aplicado": "Sin las siglas; la cuenta regresiva se queda.",
     "n": 82
    },
    {
@@ -1222,6 +1240,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Solo quedan 5.» junto a la cantidad (se traduce en la tienda).",
     "picto": null,
+    "aplicado": "Quedó «Solo quedan 5 de <guiso>.» (con el nombre, porque también sale como aviso general); se traduce en js/api.js.",
     "n": 45
    },
    {
@@ -1231,6 +1250,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Tu carrito se vació por inactividad. Vuelve a agregar tus guisos.» (misma decisión de la demo que arriba).",
     "picto": null,
+    "aplicado": "Sí",
     "n": 57
    },
    {
@@ -1342,6 +1362,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«Existencias».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 5
    },
    {
@@ -1378,6 +1399,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«$200 · 4 porciones · quedan 5».",
     "picto": null,
+    "aplicado": "Sí",
     "n": 28
    },
    {
@@ -1525,6 +1547,7 @@ export const SECCIONES = [
     "tipo": "Reescribir",
     "propuesta": "«No pudimos conectar. Revisa tu internet y dale otra vez.»",
     "picto": null,
+    "aplicado": "Sí",
     "n": 36
    },
    {
@@ -1614,7 +1637,8 @@ export const MARCA = [
    "Dejarlo solo en el héroe; el cierre usa otra frase de la plataforma.",
    "Dejarlo en las tres (como está)."
   ],
-  "rec": "La 1. Repetirlo al principio y al final es un recurso conocido (abre y cierra); la tercera vez, en el paso 1, ya no remata nada y le quita fuerza."
+  "rec": "La 1. Repetirlo al principio y al final es un recurso conocido (abre y cierra); la tercera vez, en el paso 1, ya no remata nada y le quita fuerza.",
+  "aplicado": "Aplicado el 17-nov-2026, con la 1."
  },
  {
   "tema": "La bajada del héroe",
@@ -1624,7 +1648,8 @@ export const MARCA = [
    "«El guiso de la barra, ahora en bolsa. Tú nomás calientas.» (57)",
    "«Guiso de taquería, empacado al vacío. Rompes, calientas y comes.» (64)"
   ],
-  "rec": "La 1: se queda con la promesa en tres verbos y cambia lo único que sobraba."
+  "rec": "La 1: se queda con la promesa en tres verbos y cambia lo único que sobraba.",
+  "aplicado": "Aplicado el 17-nov-2026, con la 1."
  },
  {
   "tema": "Los títulos de sección",
@@ -1644,7 +1669,8 @@ export const MARCA = [
    "1 «Hecho en la taquería» · El mismo guiso que se sirve en la barra. (42) / 2 y 3 como la 1.",
    "Títulos solos en tres verbos, como la etiqueta de la bolsa: «Rompe.» «Calienta.» «Taquea.», con el paso de la barra como bajada de la sección."
   ],
-  "rec": "La 1: cada tarjeta queda en un título y una línea de menos de 50 caracteres, y el paso 1 deja de repetir el titular."
+  "rec": "La 1: cada tarjeta queda en un título y una línea de menos de 50 caracteres, y el paso 1 deja de repetir el titular.",
+  "aplicado": "Aplicado el 17-nov-2026, con la 1."
  },
  {
   "tema": "«El envío, sin cuentos»: las dos líneas",
@@ -1654,7 +1680,8 @@ export const MARCA = [
    "Una sola línea: «Va congelado: el vacío saca el aire y el frío lo cuida. Lo demás, cuando esté seguro.» (85)",
    "Dejarlas como están (son francas, solo largas)."
   ],
-  "rec": "La 1: conserva el porqué del congelado (es lo que da confianza) y la promesa de no prometer, con la mitad de texto."
+  "rec": "La 1: conserva el porqué del congelado (es lo que da confianza) y la promesa de no prometer, con la mitad de texto.",
+  "aplicado": "Aplicado el 17-nov-2026, con la 1."
  },
  {
   "tema": "Los tres datos de la taquería",

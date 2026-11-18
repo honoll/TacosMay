@@ -67,7 +67,7 @@ function tick() {
     // Redis redondea el TTL: un segundo de margen para no consultar antes de que borre la clave.
     setTimeout(() => run(async () => {
       await loadCart();
-      if (!cart.items.length) notice('Tu carrito expiró por inactividad y Redis lo borró (TTL).', 'error');
+      if (!cart.items.length) notice('Tu carrito se vació por inactividad. Vuelve a agregar tus guisos.', 'error');
       if (current === 'carrito') await render();
     }), 1000);
   }
@@ -155,7 +155,7 @@ const cuerpoDe = (g, mostrarDescripcion) => `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
-    <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
+    <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
     <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`;
 const firma = (texto) => [...texto].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7).toString(36);
 const fichaDe = (g) => `#guiso/${encodeURIComponent(g.id)}`;
@@ -295,7 +295,7 @@ const VIEWS = {
         <div class="ficha-datos">
           <h1>${esc(g.nombre)}</h1>
           <p class="precio">${money(g.precio_centavos)}</p>
-          <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
+          <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
           ${g.descripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
           <div class="control" data-control="${esc(g.id)}">${control(g)}</div>
         </div>
@@ -345,7 +345,7 @@ const VIEWS = {
       ${VOLVER}
       <h1>Tu carrito</h1>
       <p class="expira">Tu carrito expira en <strong data-countdown></strong>
-        <small>Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL). <a href="#ayuda">Envíos y preguntas</a></small></p>
+        <small>Cada cambio renueva el tiempo; en cero, se vacía solo. <a href="#ayuda">Envíos y preguntas</a></small></p>
       <ul class="lista">${cart.items.map(({ guiso: g, cantidad }) => `
         <li style="view-transition-name: fila-${String(g.id).replace(/\W/g, '')}">
           <div class="crece"><strong>${esc(g.nombre)}</strong><br>${money(g.precio_centavos)} c/u</div>
@@ -406,7 +406,7 @@ const VIEWS = {
         ${field('g', 'descripcion', 'Descripción', g.descripcion)}
         ${field('g', 'precio', 'Precio (pesos)', editing ? g.precio_centavos / 100 : '', 'type="number" min="0" step="0.01" inputmode="decimal"')}
         ${field('g', 'porciones', 'Porciones', g.porciones, int(1))}
-        ${field('g', 'stock', 'Stock', g.stock, int(0))}
+        ${field('g', 'stock', 'Existencias', g.stock, int(0))}
         <div class="acciones">
           <button class="primario">${editing ? 'Guardar cambios' : 'Agregar guiso'}</button>
           ${editing ? '<button type="button" data-click="cancelEdit">Cancelar</button>' : ''}
@@ -416,7 +416,7 @@ const VIEWS = {
       <ul class="lista">${guisos.map((x) => `
         <li${String(x.id) === String(guardado) ? ' class="guardado"' : ''}>
           <div class="crece"><strong>${esc(x.nombre)}</strong>${String(x.id) === String(guardado) ? ' <span class="palomita">✓ Guardado</span>' : ''}<br>
-            ${money(x.precio_centavos)} · ${esc(x.porciones)} porciones · stock ${esc(x.stock)}</div>
+            ${money(x.precio_centavos)} · ${esc(x.porciones)} porciones · quedan ${esc(x.stock)}</div>
           ${String(x.id) === String(borrando) ? `
           <span class="confirma">¿Eliminar?</span>
           <button type="button" id="del-si" data-click="del" data-id="${esc(x.id)}">Sí, eliminar<span class="sr"> ${esc(x.nombre)}</span></button>

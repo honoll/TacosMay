@@ -25,4 +25,9 @@ for (const [nombre, bloques] of [['cabecera', cabeceras], ['pie', pies]]) {
   // Rutas absolutas: el mismo bloque tiene que servir desde /, /tienda/ y cualquier dirección que no exista.
   assert.ok(!/(?:href|src)="(?!\/|https?:|#)/.test(bloques[0]), `la ${nombre} tiene una ruta relativa`);
 }
-console.log('nav.test: OK (cabecera y pie iguales en 3 páginas)');
+// Textos aprobados (docs/diseno/textos.md): la cabecera ya no lleva «Cómo funciona» ni «La taquería» (siguen en
+// el pie) y el carrito es un ícono con su número, su reloj y su nombre para lector («Carrito, 3 guisos»).
+assert.ok(!cabeceras[0].includes('href="/#como"') && !cabeceras[0].includes('href="/#taqueria"'), 'la cabecera no lleva «Cómo funciona» ni «La taquería»');
+assert.ok(pies[0].includes('href="/#como"') && pies[0].includes('href="/#taqueria"'), 'siguen en el pie');
+assert.match(cabeceras[0], /id="nav-carrito"[^>]*><svg class="picto"[^>]*aria-hidden="true">[\s\S]*?<\/svg><span class="sr">Carrito, <\/span><b id="nav-carrito-n">0<\/b><span class="sr"> guisos<\/span>/, 'el carrito: ícono, número y nombre para lector');
+console.log('nav.test: OK (cabecera y pie iguales en 3 páginas, carrito con ícono)');

@@ -25,7 +25,7 @@ assert.equal(esc('<b a="1">&\'</b>'), '&lt;b a=&quot;1&quot;&gt;&amp;&#39;&lt;/b
 // Sin sesión: ruta relativa bajo /api, sin Authorization; un 401 es login fallido y habla el backend.
 respond(401, { message: 'Credenciales incorrectas' });
 await assert.rejects(api('/users/login', { method: 'POST', body: { email: 'a', password: 'b' } }),
-  (err) => err.message === 'Credenciales incorrectas' && err.status === 401 && !err.vencida); // un login fallido no es sesión vencida
+  (err) => err.message === 'El correo o la contraseña no coinciden.' && err.status === 401 && !err.vencida); // un login fallido no es sesión vencida
 assert.equal(last.url, '/api/users/login');
 assert.equal(last.headers.Authorization, undefined);
 assert.equal(last.body, '{"email":"a","password":"b"}');
@@ -48,7 +48,14 @@ assert.equal(session.get(), null);
 
 // Servidor caído.
 globalThis.fetch = async () => { throw new TypeError('fetch failed'); };
-await assert.rejects(api('/guisos'), { message: /No se pudo conectar/ });
+await assert.rejects(api('/guisos'), { message: /No pudimos conectar\. Revisa tu internet/ }, 'el error de red dice qué hacer');
+
+// Los mensajes del servidor, en la voz del sitio; uno desconocido pasa tal cual.
+const { enVoz } = await import('./api.js');
+assert.equal(enVoz('Ese email ya está registrado'), 'Ese correo ya tiene cuenta. Entra con él.');
+assert.equal(enVoz('No hay stock suficiente de Mole con pollo (quedan 1)'), 'Solo queda 1 de Mole con pollo.');
+assert.equal(enVoz('No hay stock suficiente de Tinga de res (quedan 4)'), 'Solo quedan 4 de Tinga de res.');
+assert.equal(enVoz('Algo que no conocemos'), 'Algo que no conocemos');
 
 // Transición de vista saltada (pestaña oculta, otra en curso): el cambio se hace igual y no queda
 // ningún rechazo sin atrapar (Node terminaría con error).

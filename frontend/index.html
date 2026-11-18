@@ -46,14 +46,12 @@
       <nav class="nav-principal" id="nav-principal" aria-label="Principal">
         <a href="/">Inicio</a>
         <a href="/tienda/#catalogo">Guisos</a>
-        <a href="/#como">Cómo funciona</a>
-        <a href="/#taqueria">La taquería</a>
       </nav>
       <nav class="nav-cuenta" id="nav" aria-label="Tu cuenta">
         <a href="/tienda/#entrar">Entrar</a>
       </nav>
     </div>
-    <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito">Carrito <b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
+    <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4h3l2.2 10.6a1.6 1.6 0 0 0 1.6 1.3h9.6a1.6 1.6 0 0 0 1.6-1.2L22 7H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.8"/><circle cx="18" cy="20" r="1.8"/></svg><span class="sr">Carrito, </span><b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
   </header>
   <script>
     /* Antes del primer cuadro: la cuenta y el carrito como estaban en la página anterior (los guarda
@@ -76,7 +74,7 @@
     <section class="heroe">
       <div class="caja">
         <h1 class="rot">Ya está hecho.</h1>
-        <p class="entrada">Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes.</p>
+        <p class="entrada">Los guisos de la taquería, en bolsa. Rompes, calientas y comes.</p>
         <div class="acciones">
           <a class="btn" href="/tienda/">Pedir guisos</a>
           <a class="enl" href="#como">Cómo funciona</a>
@@ -128,8 +126,8 @@
             <li class="charola paso" style="--c:#A8321C;--t:#FFFFFF">
               <div class="guiso"><img src="/media/guisos/carne-en-salsa-roja.webp" srcset="/media/guisos/carne-en-salsa-roja.webp 720w, /media/guisos/carne-en-salsa-roja-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">1</span></div>
               <div class="datos">
-                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg>Ya está hecho</h3>
-                <p>El guiso sale de la barra de la taquería, donde se sirve todos los días.</p>
+                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg>Sale de la barra</h3>
+                <p>Se guisa y se sirve en la taquería todos los días.</p>
               </div>
             </li>
             <!-- La imagen trae la etiqueta en blanco; .etq-bolsa pone encima solo el nombre del guiso, que es lo que se lee a ese tamaño (landing.css).
@@ -139,7 +137,7 @@
                 <span class="etq-bolsa" aria-hidden="true"><strong>Carne en salsa roja</strong></span></div>
               <div class="datos">
                 <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h8l7 7v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M16.5 1l6.5 6.5-2.1 1.3-5.7-5.7z"/></svg>Rompe la bolsa</h3>
-                <p>Va empacado al vacío, por porciones. Lo único que queda es abrirla.</p>
+                <p>Al vacío, por porciones. Nomás ábrela.</p>
               </div>
             </li>
             <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
@@ -147,7 +145,7 @@
               <div class="guiso"><img src="/media/guisos/taco.webp" srcset="/media/guisos/taco.webp 720w, /media/guisos/taco-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">3</span></div>
               <div class="datos">
                 <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Calienta y taquea</h3>
-                <p>A la sartén o a la olla, como recalientas cualquier guiso, y a la tortilla.</p>
+                <p>En sartén u olla, como cualquier guiso.</p>
                 <!-- PENDIENTE-CLIENTE: instrucciones exactas de calentado por guiso (método, tiempo) y qué hacer si llega descongelado -->
               </div>
             </li>
@@ -161,7 +159,7 @@
     <section class="guisos" id="guisos" aria-labelledby="guisos-titulo">
       <div class="caja">
         <h2 class="rot" id="guisos-titulo">Todas las charolas</h2>
-        <p class="entrada">Precios y existencias se leen de la base de datos cada vez que abres esta página.</p>
+        <p class="entrada">Precios y existencias, en vivo.</p>
         <ul class="barra" id="menu"></ul>
         <div class="estado" id="menu-estado" role="status">
           <span class="cargando" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -169,7 +167,7 @@
         </div>
         <noscript><p class="estado">El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda.</p></noscript>
         <div class="acciones">
-          <a class="btn" href="/tienda/">Pedir en la tienda</a>
+          <a class="btn" href="/tienda/">Pedir guisos</a>
           <button class="btn sec" id="menu-reintentar" type="button" hidden>Volver a intentar</button>
         </div>
       </div>
@@ -188,8 +186,8 @@
             <li><span>Cuánto cuesta</span><i></i><span>Por confirmar</span></li>
             <li><span>En cuántos días</span><i></i><span>Por confirmar</span></li>
           </ul>
-          <p>El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso va congelado y así se queda hasta que tú rompes la bolsa.</p>
-          <p>Lo que dice «por confirmar» todavía no lo publicamos. Preferimos no prometerlo antes de tenerlo seguro; cuando lo esté, va a aparecer aquí.</p>
+          <p>El vacío saca el aire; lo que cuida al guiso es el frío. Por eso va congelado hasta que rompes la bolsa.</p>
+          <p>Lo que dice «por confirmar» no lo prometemos hasta tenerlo seguro.</p>
           <p class="fuente">Sobre vacío y congelación: guías de inocuidad de
             <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe" rel="noopener">USDA-FSIS</a> y de la
             <a href="https://assets.publishing.service.gov.uk/media/69aea81a671a8a924c83ee87/the-safety-and-shelf-life-of-vacuum-and-modified-atmosphere-packed-chilled-foods-with-respect-to-non-proteolytic-clostridium-botulinum_1.pdf" rel="noopener">FSA del Reino Unido</a>.</p>
@@ -240,7 +238,7 @@
       <div class="caja">
         <h2 class="rot" id="cierre-titulo">Ya está hecho.</h2>
         <p class="entrada">Tú nomás escoge.</p>
-        <div class="acciones"><a class="btn claro" href="/tienda/">Ir a la tienda</a></div>
+        <div class="acciones"><a class="btn claro" href="/tienda/">Pedir guisos</a></div>
       </div>
     </section>
   </main>

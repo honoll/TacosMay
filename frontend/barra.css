@@ -70,6 +70,9 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 /* Dónde estás: la franja de cuatro colores bajo el enlace de la vista o sección actual. */
 .cabecera nav a[aria-current] { background: linear-gradient(90deg, #a8321c 0 25%, #8a9440 0 50%, #f2b33d 0 75%, #35603a 0) bottom / 100% 4px no-repeat; }
 /* El contador va en su propia ficha y la cuenta regresiva separada por una raya. */
+/* El carrito es un ícono con su número y su reloj; su nombre («Carrito, 3 guisos») va para lector. */
+.carrito { min-width: 44px; justify-content: center; }
+.carrito .picto { width: 22px; height: 22px; flex: none; }
 .carrito b { display: inline-grid; place-items: center; min-width: 1.6em; height: 1.6em; padding: 0 .3em; border-radius: 99px; background: var(--crema); color: var(--negro); font-variant-numeric: tabular-nums; }
 .carrito [data-countdown]:not(:empty) { padding-left: 8px; border-left: 2px solid rgb(255 255 255 / .5); }
 .carrito[aria-current] { outline: 3px solid var(--negro); outline-offset: 2px; }

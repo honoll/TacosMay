@@ -51,7 +51,7 @@ globalThis.fetch = async (url, { method = 'GET', body } = {}) => {
   if (url.startsWith('/api/guisos/') && url !== '/api/guisos/populares') return ok({ message: 'Guiso no encontrado' }, 404);
   if (url === '/api/guisos/populares') return ok([{ ...GUISOS[0], vendidos: 3 }]);
   if (url === '/api/carrito') return ok(carritoVacio ? { items: [], total_centavos: 0, expira_en_segundos: 0 } : CARRITO);
-  if (url.startsWith('/api/carrito/items/')) return JSON.parse(body).cantidad > 5 ? ok({ message: 'Solo quedan 5 de Carne en salsa roja' }, 409) : ok(CARRITO);
+  if (url.startsWith('/api/carrito/items/')) return JSON.parse(body).cantidad > 5 ? ok({ message: 'No hay stock suficiente de Carne en salsa roja (quedan 5)' }, 409) : ok(CARRITO);
   if (url === '/api/pedidos') return ok([PEDIDO]);
   if (url === '/api/users/login') return JSON.parse(body).password === 'buena' ? ok(USUARIO) : ok({ message: 'Credenciales incorrectas' }, 401);
   if (url === '/api/users') return ok({ message: 'Ese email ya está registrado' }, 400);
@@ -107,7 +107,7 @@ await ir('registro');
 assert.match(vista().innerHTML, /Crear cuenta/);
 const repetido = formulario('registro', [campo('nombre', 'P'), campo('email', 'p@x.mx'), campo('password', 'x')]);
 await enviar(repetido);
-assert.match(repetido.elements.email.despues, /ya está registrado/);
+assert.match(repetido.elements.email.despues, /Ese correo ya tiene cuenta\. Entra con él\./, 'el mensaje del servidor llega en la voz del sitio');
 
 // Entrar bien: se regresa a donde estaba (el catálogo, porque quería agregar)
 await enviar(formulario('login', [campo('email', 'p@x.mx'), campo('password', 'buena')]));
@@ -189,7 +189,7 @@ await ir('carrito');
 porId['cant-1'] = nodo({ id: 'cant-1' });
 const cambio = async (el) => { vista().h.change({ target: { closest: (s) => (s === '[data-change]' ? el : null) }, preventDefault() {} }); await espera(); };
 await cambio(nodo({ value: '9', dataset: { change: 'qty', id: '1' } }));
-assert.match(porId['cant-1'].despues, /Solo quedan 5/, 'el 409 va junto a la cantidad de ese guiso');
+assert.match(porId['cant-1'].despues, /Solo quedan 5 de Carne en salsa roja\./, 'el 409 va junto a la cantidad de ese guiso, en la voz del sitio');
 assert.equal(porId.aviso.hidden, true, 'y no como aviso general');
 n = llamadas.length;
 await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'remove', id: '1', nombre: 'Carne en salsa roja' } }));

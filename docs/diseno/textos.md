@@ -24,6 +24,9 @@ habla alguien y no «la empresa», dice lo que hay y lo que falta, **un guiño c
 
 ### Los diez cambios que más mejoran el sitio
 
+**✅ Aplicados los diez el 17-nov-2026** (Alejandro: «Sí, aplícalos»). Lo demás de este documento sigue
+como propuesta. En las tablas, cada texto cambiado dice «✅ Aplicado».
+
 1. Quitar «Ya está hecho» del paso 1 de «Cómo funciona»: hoy la frase sale tres veces y la tercera la gasta.
 2. El carrito de la cabecera como ícono con su número y su reloj, y fuera de la cabecera «Cómo funciona» y «La taquería» (quedan en el pie): la cabecera cabe en celular sin deslizar (resuelve W2 de raíz).
 3. Un solo botón principal: «Pedir guisos» en el héroe, en «Todas las charolas» y en el cierre (hoy son tres textos distintos para lo mismo).
@@ -60,15 +63,15 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 | Navegación, nombre accesible | Principal | 9 | — | **Igual**. Lo usa el lector de pantalla para saltar entre zonas. |
 | Enlace | Inicio | 6 | — | **Igual**. El logotipo ya lleva al inicio, pero no todos lo saben. |
 | Enlace | Guisos | 6 | — | **Igual**. Corto y es lo que se vende. |
-| Enlace | Cómo funciona | 13 | En celular la fila de enlaces no cabe y se desliza (W2) | **Quitar**. Quitarlo de la cabecera: queda en el héroe («Cómo funciona») y en el pie. |
-| Enlace | La taquería | 11 | Igual que el anterior: alarga la fila en celular | **Quitar**. Quitarlo de la cabecera; queda en el pie. Con estos dos fuera, la cabecera cabe a 375 px sin deslizar. |
+| Enlace | Cómo funciona | 13 | En celular la fila de enlaces no cabe y se desliza (W2) | **Quitar**. Quitarlo de la cabecera: queda en el héroe («Cómo funciona») y en el pie. **✅ Aplicado** |
+| Enlace | La taquería | 11 | Igual que el anterior: alarga la fila en celular | **Quitar**. Quitarlo de la cabecera; queda en el pie. Con estos dos fuera, la cabecera cabe a 375 px sin deslizar. **✅ Aplicado** |
 | Zona de cuenta, nombre accesible | Tu cuenta | 9 | — | **Igual** |
 | Enlace, sin sesión | Entrar | 6 | — | **Ícono + etiqueta**. Persona + «Entrar». |
 | Enlace, con sesión | Mis pedidos | 11 | Alarga la fila en celular | **Ícono + etiqueta**. Caja + «Pedidos». |
 | Enlace, administrador | Admin | 5 | — | **Igual**. Solo lo ve quien administra; corto. |
 | Enlace, con sesión | (nombre de la persona) | 22 | Un nombre largo empuja la fila | **Ícono + etiqueta**. Persona + el nombre, recortado a 12 caracteres con «…» (el completo, en su nombre accesible). |
 | Botón, con sesión | Salir | 5 | — | **Igual**. Corto y claro. El ícono de «salir» no es universal: va con texto. |
-| Botón del carrito | Carrito | 7 | Es la palabra más repetida del sitio y ocupa lugar en celular | **Ícono solo**. Ícono de carrito + el número + el reloj. Nombre accesible: «Carrito, 3 guisos». Objetivo táctil de 44 px. |
+| Botón del carrito | Carrito | 7 | Es la palabra más repetida del sitio y ocupa lugar en celular | **Ícono solo**. Ícono de carrito + el número + el reloj. Nombre accesible: «Carrito, 3 guisos». Objetivo táctil de 44 px. **✅ Aplicado** |
 | Botón del carrito, para lector | … guisos | 8 | — | **Igual**. Completa el nombre accesible («Carrito 3 guisos»). |
 | Enlace para teclado (landing y «no encontrado») | Saltar al contenido | 19 | Falta en la tienda | **Igual**. Igual, y agregarlo también a la tienda. |
 
@@ -100,7 +103,7 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 | Dónde | Texto actual | Car. | Problema | Propuesta |
 |---|---|---|---|---|
 | Titular | Ya está hecho. | 14 | Se repite en el cierre y en el paso 1 de «Cómo funciona»: tres veces | **Alternativas**. Ver «Textos de marca». |
-| Bajada | Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes. | 61 | Repite el nombre que está justo arriba en el logotipo | **Alternativas**. Ver «Textos de marca». |
+| Bajada | Guisos de Los Tacos May, en bolsa. Rompes, calientas y comes. | 61 | Repite el nombre que está justo arriba en el logotipo | **Alternativas**. Ver «Textos de marca». **✅ Aplicado** (Con la alternativa 1.) |
 | Botón principal | Pedir guisos | 12 | — | **Igual**. Directo. Propongo que sea el único texto del botón principal en todo el sitio. |
 | Enlace | Cómo funciona | 13 | — | **Igual** |
 | Fila que gira, nombre accesible | Guisos de la barra | 18 | — | **Igual** |
@@ -113,7 +116,7 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 |---|---|---|---|---|
 | Título | Lo que más sale | 15 | — | **Igual**. Así se habla en la barra. |
 | Bajada | El orden lo ponen los pedidos de la tienda, contados en vivo. | 61 | Explica la técnica; larga | **Más corto**. «Por pedidos, en vivo.» (para la exposición, el «en vivo» es la prueba de Redis). |
-| Dato de la charola | 4 porciones · 12 en existencia · 3 vendidos | 43 | Tres renglones en una charola de celular | **Más corto**. «4 porciones · quedan 12». Lo vendido, solo como etiqueta en esta fila. |
+| Dato de la charola | 4 porciones · 12 en existencia · 3 vendidos | 43 | Tres renglones en una charola de celular | **Más corto**. «4 porciones · quedan 12». Lo vendido, solo como etiqueta en esta fila. **✅ Aplicado** (En parte: «quedan 12»; lo vendido sigue en la charola.) |
 | Botón de la charola | Pedir (nombre del guiso) | 24 | — | **Igual** |
 | Sin existencia | Se acabó por hoy | 16 | — | **Igual**. Voz de la barra. |
 
@@ -122,13 +125,13 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 | Dónde | Texto actual | Car. | Problema | Propuesta |
 |---|---|---|---|---|
 | Título | Cómo funciona | 13 | — | **Igual**. Coincide con el enlace que lleva aquí. |
-| Paso 1, título | Ya está hecho | 13 | Tercera vez que sale la frase | **Alternativas**. Ver «Textos de marca». |
-| Paso 1, texto | El guiso sale de la barra de la taquería, donde se sirve todos los días. | 72 | Largo para una tarjeta | **Más corto**. Ver «Textos de marca». |
+| Paso 1, título | Ya está hecho | 13 | Tercera vez que sale la frase | **Alternativas**. Ver «Textos de marca». **✅ Aplicado** (Quedó «Sale de la barra».) |
+| Paso 1, texto | El guiso sale de la barra de la taquería, donde se sirve todos los días. | 72 | Largo para una tarjeta | **Más corto**. Ver «Textos de marca». **✅ Aplicado** |
 | Paso 2, título | Rompe la bolsa | 14 | — | **Igual** |
-| Paso 2, texto | Va empacado al vacío, por porciones. Lo único que queda es abrirla. | 67 | — | **Más corto**. Ver «Textos de marca». |
+| Paso 2, texto | Va empacado al vacío, por porciones. Lo único que queda es abrirla. | 67 | — | **Más corto**. Ver «Textos de marca». **✅ Aplicado** |
 | Paso 2, etiqueta de la bolsa | (nombre del guiso) | 18 | — | **Igual**. Nombre del guiso: no se cambia. |
 | Paso 3, título | Calienta y taquea | 17 | — | **Igual** |
-| Paso 3, texto | A la sartén o a la olla, como recalientas cualquier guiso, y a la tortilla. | 75 | — | **Más corto**. Ver «Textos de marca». |
+| Paso 3, texto | A la sartén o a la olla, como recalientas cualquier guiso, y a la tortilla. | 75 | — | **Más corto**. Ver «Textos de marca». **✅ Aplicado** |
 | Número del paso | 1 · 2 · 3 | 9 | — | **Igual** |
 
 ### Landing · todas las charolas
@@ -136,10 +139,10 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 | Dónde | Texto actual | Car. | Problema | Propuesta |
 |---|---|---|---|---|
 | Título | Todas las charolas | 18 | — | **Igual**. La metáfora de la barra. |
-| Bajada | Precios y existencias se leen de la base de datos cada vez que abres esta página. | 81 | Habla de la base de datos al cliente; larga | **Más corto**. «Precios y existencias, en vivo.» |
+| Bajada | Precios y existencias se leen de la base de datos cada vez que abres esta página. | 81 | Habla de la base de datos al cliente; larga | **Más corto**. «Precios y existencias, en vivo.» **✅ Aplicado** |
 | Cargando | Leyendo el menú… | 16 | — | **Igual** |
 | Sin JavaScript | El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda. | 85 | — | **Igual**. Solo lo ve quien no tiene JavaScript; dice qué hacer. |
-| Botón | Pedir en la tienda | 18 | Tercer texto distinto para lo mismo («Pedir guisos», «Ir a la tienda») | **Reescribir**. «Pedir guisos». |
+| Botón | Pedir en la tienda | 18 | Tercer texto distinto para lo mismo («Pedir guisos», «Ir a la tienda») | **Reescribir**. «Pedir guisos». **✅ Aplicado** |
 | Botón, si falla | Volver a intentar | 17 | — | **Igual** |
 | Error | No pudimos leer el menú. Dale otra vez, o entra a la tienda. | 60 | — | **Igual**. Dice qué pasó y qué hacer, con la voz. |
 | Vacío | Todavía no hay guisos en el menú. | 33 | — | **Igual** |
@@ -155,8 +158,8 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 | Ticket | A dónde llega · Por confirmar | 29 | — | **Ícono + etiqueta**. Lugar + «Por confirmar». |
 | Ticket | Cuánto cuesta · Por confirmar | 29 | — | **Ícono + etiqueta**. Precio + «Por confirmar». |
 | Ticket | En cuántos días · Por confirmar | 31 | — | **Ícono + etiqueta**. Reloj + «Por confirmar». |
-| Párrafo | El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso va congelado y así se queda hasta que tú rompes la bolsa. | 166 | Largo | **Más corto**. Ver «Textos de marca». |
-| Párrafo | Lo que dice «por confirmar» todavía no lo publicamos. Preferimos no prometerlo antes de tenerlo seguro; cuando lo esté, va a aparecer aquí. | 139 | Largo | **Más corto**. Ver «Textos de marca». |
+| Párrafo | El vacío le saca el aire a la bolsa, pero no conserva por sí solo: lo que cuida al guiso es el frío. Por eso va congelado y así se queda hasta que tú rompes la bolsa. | 166 | Largo | **Más corto**. Ver «Textos de marca». **✅ Aplicado** |
+| Párrafo | Lo que dice «por confirmar» todavía no lo publicamos. Preferimos no prometerlo antes de tenerlo seguro; cuando lo esté, va a aparecer aquí. | 139 | Largo | **Más corto**. Ver «Textos de marca». **✅ Aplicado** |
 | Fuentes | Sobre vacío y congelación: guías de inocuidad de USDA-FSIS y de la FSA del Reino Unido. | 87 | — | **Igual**. Son las fuentes reales; respaldan lo que se dice. |
 
 ### Landing · la taquería y el pizarrón
@@ -178,7 +181,7 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 |---|---|---|---|---|
 | Título | Ya está hecho. | 14 | Repite el titular (a propósito, como remate) | **Alternativas**. Ver «Textos de marca». |
 | Bajada | Tú nomás escoge. | 16 | — | **Igual**. Corta, de tú y es el único guiño de la sección. |
-| Botón | Ir a la tienda | 14 | Distinto del botón principal | **Reescribir**. «Pedir guisos». |
+| Botón | Ir a la tienda | 14 | Distinto del botón principal | **Reescribir**. «Pedir guisos». **✅ Aplicado** |
 
 ### Tienda · catálogo y tarjeta
 
@@ -190,7 +193,7 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 | Vacío | Todavía no hay guisos en el catálogo. | 37 | — | **Igual** |
 | Tarjeta, etiqueta | 3 vendidos | 10 | — | **Igual** |
 | Tarjeta, descripción | (la del guiso) | 14 | — | **Igual**. Solo sale si es propia de ese guiso. |
-| Tarjeta, dato | 4 porciones · 5 disponibles | 27 | «disponibles» aquí, «en existencia» en la landing, «stock» en administración: tres palabras para lo mismo | **Más corto**. «4 porciones · quedan 5». |
+| Tarjeta, dato | 4 porciones · 5 disponibles | 27 | «disponibles» aquí, «en existencia» en la landing, «stock» en administración: tres palabras para lo mismo | **Más corto**. «4 porciones · quedan 5». **✅ Aplicado** |
 | Tarjeta, botón | Agregar (nombre del guiso al carrito) | 37 | — | **Igual**. El verbo exacto; el nombre completo lo oye el lector. |
 | Selector de cantidad | − · número · + | 14 | — | **Igual**. Ya son íconos universales con nombre accesible («Quitar uno», «Agregar uno»). |
 | Selector, nombre accesible | (guiso) en tu carrito | 21 | — | **Igual** |
@@ -203,7 +206,7 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 | Dónde | Texto actual | Car. | Problema | Propuesta |
 |---|---|---|---|---|
 | Regreso (en todas las vistas) | ← Seguir comprando | 18 | Se repite en cada vista | **Ícono + etiqueta**. Atrás + «Guisos». |
-| Dato | 4 porciones · 5 disponibles | 27 | Igual que en la tarjeta | **Más corto**. «4 porciones · quedan 5». |
+| Dato | 4 porciones · 5 disponibles | 27 | Igual que en la tarjeta | **Más corto**. «4 porciones · quedan 5». **✅ Aplicado** |
 | Bloque | Cómo se calienta · A la sartén o a la olla, como recalientas cualquier guiso. | 77 | Instrucción general hasta tener la de cada guiso (PENDIENTE-CLIENTE) | **Igual**. Ya lleva su pictograma (Calienta) con etiqueta. |
 | Bloque | Cómo se conserva · Va empacado al vacío y congelado. Guárdalo en el congelador hasta que lo vayas a usar. | 105 | Largo | **Más corto**. «Al vacío y congelado. Guárdalo en el congelador hasta usarlo.» |
 | Enlace | Envíos y preguntas | 18 | — | **Más corto**. «Preguntas». |
@@ -225,7 +228,7 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 | Error de campo | Escribe un correo válido, como nombre@ejemplo.com. | 50 | — | **Igual**. Dice qué hacer con un ejemplo. |
 | Errores de número | Escribe un número. · Escribe un número entero. · Usa máximo dos decimales. · Revisa este campo. | 95 | — | **Igual** |
 | Error al entrar | El correo o la contraseña no coinciden. | 39 | — | **Igual**. No dice cuál de los dos (es lo seguro). |
-| Error al crear (viene del servidor) | Ese email ya está registrado | 28 | Dice «email» y el resto del sitio dice «correo»; no dice qué hacer | **Reescribir**. «Ese correo ya tiene cuenta. Entra con él.» (se traduce en la tienda, como el 401). |
+| Error al crear (viene del servidor) | Ese email ya está registrado | 28 | Dice «email» y el resto del sitio dice «correo»; no dice qué hacer | **Reescribir**. «Ese correo ya tiene cuenta. Entra con él.» (se traduce en la tienda, como el 401). **✅ Aplicado** (Se traduce en la tienda (js/api.js), sin tocar el backend.) |
 | Aviso al entrar | Hola, (nombre). | 15 | — | **Igual**. De tú y corto. |
 | Aviso | Inicia sesión para continuar. | 29 | — | **Igual** |
 
@@ -244,7 +247,7 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 |---|---|---|---|---|
 | Título | Tu carrito | 10 | — | **Igual** |
 | Tiempo | Tu carrito expira en 14:59 | 26 | — | **Ícono + etiqueta**. Reloj + «Expira en 14:59» (como en el panel). |
-| Nota del tiempo | Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL). | 82 | «Redis» y «TTL» son jerga para el cliente; para la exposición sí sirven | **Más corto**. «Cada cambio renueva el tiempo; en cero, se vacía solo.» Decide Alejandro: si quiere que la demo lo diga en pantalla, se queda como está hasta después del examen. |
+| Nota del tiempo | Cada cambio renueva el tiempo. Si llega a cero, Redis borra el carrito solo (TTL). | 82 | «Redis» y «TTL» son jerga para el cliente; para la exposición sí sirven | **Más corto**. «Cada cambio renueva el tiempo; en cero, se vacía solo.» Decide Alejandro: si quiere que la demo lo diga en pantalla, se queda como está hasta después del examen. **✅ Aplicado** (Sin las siglas; la cuenta regresiva se queda.) |
 | Renglón | (guiso) · $200 c/u | 18 | — | **Igual** |
 | Renglón, etiqueta | Cantidad (de guiso) | 19 | — | **Igual** |
 | Renglón, botón | Quitar (guiso) | 14 | — | **Ícono + etiqueta**. Bote + «Quitar» (el bote no es universal fuera de una computadora: va con texto). |
@@ -253,8 +256,8 @@ El ticket ya es franco: dice qué falta. Lo largo son los dos párrafos.
 | Vacío | Tu carrito está vacío · Las charolas, no. Escoge tus guisos y aquí los juntamos. | 80 | Dos frases donde basta una | **Alternativas**. Ver «Textos de marca». |
 | Aviso al quitar | Quitaste (guiso). · Deshacer | 28 | — | **Igual**. Corto y con salida. |
 | Aviso al confirmar | Pedido #7 confirmado por $400. | 30 | — | **Igual** |
-| Error, sin existencia (servidor) | No hay stock suficiente de (guiso) (quedan 5) | 45 | «stock»; ya va junto a la cantidad, así que repite el nombre | **Reescribir**. «Solo quedan 5.» junto a la cantidad (se traduce en la tienda). |
-| Aviso, carrito vencido | Tu carrito expiró por inactividad y Redis lo borró (TTL). | 57 | Jerga; no dice qué hacer | **Reescribir**. «Tu carrito se vació por inactividad. Vuelve a agregar tus guisos.» (misma decisión de la demo que arriba). |
+| Error, sin existencia (servidor) | No hay stock suficiente de (guiso) (quedan 5) | 45 | «stock»; ya va junto a la cantidad, así que repite el nombre | **Reescribir**. «Solo quedan 5.» junto a la cantidad (se traduce en la tienda). **✅ Aplicado** (Quedó «Solo quedan 5 de <guiso>.» (con el nombre, porque también sale como aviso general); se traduce en js/api.js.) |
+| Aviso, carrito vencido | Tu carrito expiró por inactividad y Redis lo borró (TTL). | 57 | Jerga; no dice qué hacer | **Reescribir**. «Tu carrito se vació por inactividad. Vuelve a agregar tus guisos.» (misma decisión de la demo que arriba). **✅ Aplicado** |
 | Panel, título y cerrar | Tu carrito · ✕ (Cerrar el carrito) | 34 | — | **Igual**. El ✕ ya es ícono universal con nombre accesible. |
 | Panel, tiempo | Expira en 14:59 | 15 | — | **Ícono + etiqueta**. Reloj + «Expira en 14:59». |
 | Panel, vacío | Tu carrito está vacío. Las charolas, no. | 40 | — | **Igual**. Una frase y un guiño: así debería quedar también la vista del carrito. |
@@ -277,11 +280,11 @@ Solo la ve quien administra. Lo que importa es que sea claro y use las mismas pa
 |---|---|---|---|---|
 | Título | Administrar guisos | 18 | — | **Igual** |
 | Formulario, título | Nuevo guiso · Editar «(guiso)» | 30 | — | **Igual** |
-| Etiqueta | Stock | 5 | Anglicismo; el resto del sitio dirá «quedan» | **Reescribir**. «Existencias». |
+| Etiqueta | Stock | 5 | Anglicismo; el resto del sitio dirá «quedan» | **Reescribir**. «Existencias». **✅ Aplicado** |
 | Etiquetas | Nombre · Descripción · Precio (pesos) · Porciones | 49 | — | **Igual** |
 | Botones | Agregar guiso · Guardar cambios · Cancelar | 42 | — | **Igual** |
 | Lista, título | Guisos en el catálogo | 21 | — | **Igual** |
-| Renglón | $200 · 4 porciones · stock 5 | 28 | — | **Reescribir**. «$200 · 4 porciones · quedan 5». |
+| Renglón | $200 · 4 porciones · stock 5 | 28 | — | **Reescribir**. «$200 · 4 porciones · quedan 5». **✅ Aplicado** |
 | Renglón, botón | Editar (guiso) | 14 | — | **Ícono + etiqueta**. Lápiz + «Editar». |
 | Renglón, botón | Eliminar (guiso) | 16 | — | **Ícono + etiqueta**. Bote + «Eliminar». |
 | Confirmación | ¿Eliminar? · Sí, eliminar · No | 30 | — | **Igual** |
@@ -306,7 +309,7 @@ Solo la ve quien administra. Lo que importa es que sea claro y use las mismas pa
 
 | Dónde | Texto actual | Car. | Problema | Propuesta |
 |---|---|---|---|---|
-| Error de red | No se pudo conectar con el servidor. | 36 | No dice qué hacer | **Reescribir**. «No pudimos conectar. Revisa tu internet y dale otra vez.» |
+| Error de red | No se pudo conectar con el servidor. | 36 | No dice qué hacer | **Reescribir**. «No pudimos conectar. Revisa tu internet y dale otra vez.» **✅ Aplicado** |
 | Sesión vencida | Tu sesión venció. Inicia sesión de nuevo. | 41 | — | **Igual** |
 | Cerrar un aviso | ✕ (Cerrar el aviso) | 19 | — | **Igual**. Ícono universal con nombre accesible. |
 | Errores 401 del servidor | Acceso no autorizado, … | 23 | — | **Igual**. No llegan a la pantalla: la tienda los convierte en «Tu sesión venció». |
@@ -337,7 +340,7 @@ La bolsa lleva el número de charola y el nombre del guiso; no tiene más texto.
 2. Dejarlo solo en el héroe; el cierre usa otra frase de la plataforma.
 3. Dejarlo en las tres (como está).
 
-**Recomiendo:** La 1. Repetirlo al principio y al final es un recurso conocido (abre y cierra); la tercera vez, en el paso 1, ya no remata nada y le quita fuerza.
+**Recomiendo:** La 1. Repetirlo al principio y al final es un recurso conocido (abre y cierra); la tercera vez, en el paso 1, ya no remata nada y le quita fuerza. **✅ Aplicado el 17-nov-2026, con la 1.**
 
 ### La bajada del héroe
 
@@ -347,7 +350,7 @@ La bolsa lleva el número de charola y el nombre del guiso; no tiene más texto.
 2. «El guiso de la barra, ahora en bolsa. Tú nomás calientas.» (57)
 3. «Guiso de taquería, empacado al vacío. Rompes, calientas y comes.» (64)
 
-**Recomiendo:** La 1: se queda con la promesa en tres verbos y cambia lo único que sobraba.
+**Recomiendo:** La 1: se queda con la promesa en tres verbos y cambia lo único que sobraba. **✅ Aplicado el 17-nov-2026, con la 1.**
 
 ### Los títulos de sección
 
@@ -367,7 +370,7 @@ La bolsa lleva el número de charola y el nombre del guiso; no tiene más texto.
 2. 1 «Hecho en la taquería» · El mismo guiso que se sirve en la barra. (42) / 2 y 3 como la 1.
 3. Títulos solos en tres verbos, como la etiqueta de la bolsa: «Rompe.» «Calienta.» «Taquea.», con el paso de la barra como bajada de la sección.
 
-**Recomiendo:** La 1: cada tarjeta queda en un título y una línea de menos de 50 caracteres, y el paso 1 deja de repetir el titular.
+**Recomiendo:** La 1: cada tarjeta queda en un título y una línea de menos de 50 caracteres, y el paso 1 deja de repetir el titular. **✅ Aplicado el 17-nov-2026, con la 1.**
 
 ### «El envío, sin cuentos»: las dos líneas
 
@@ -377,7 +380,7 @@ La bolsa lleva el número de charola y el nombre del guiso; no tiene más texto.
 2. Una sola línea: «Va congelado: el vacío saca el aire y el frío lo cuida. Lo demás, cuando esté seguro.» (85)
 3. Dejarlas como están (son francas, solo largas).
 
-**Recomiendo:** La 1: conserva el porqué del congelado (es lo que da confianza) y la promesa de no prometer, con la mitad de texto.
+**Recomiendo:** La 1: conserva el porqué del congelado (es lo que da confianza) y la promesa de no prometer, con la mitad de texto. **✅ Aplicado el 17-nov-2026, con la 1.**
 
 ### Los tres datos de la taquería
 

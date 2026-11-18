@@ -15,6 +15,19 @@ export const session = {
 
 const fail = (message, status) => Object.assign(new Error(message), { status });
 
+// Los mensajes del servidor, en la voz del sitio (el backend no se toca: sus pruebas los cubren). Si llega
+// uno que no está aquí, se muestra tal cual.
+const VOZ = [
+  [/^Credenciales incorrectas$/, () => 'El correo o la contraseña no coinciden.'],
+  [/^Ese email ya está registrado$/, () => 'Ese correo ya tiene cuenta. Entra con él.'],
+  [/^No hay stock suficiente de (.+) \(quedan (\d+)\)$/, (g, n) => `Solo ${n === '1' ? 'queda 1' : `quedan ${n}`} de ${g}.`],
+  [/^El guiso especificado no existe$/, () => 'Ese guiso ya no está en la barra.'],
+];
+export const enVoz = (m) => {
+  for (const [patron, voz] of VOZ) { const r = String(m).match(patron); if (r) return voz(...r.slice(1)); }
+  return m;
+};
+
 // El único fetch del frontend. Devuelve el JSON o lanza Error con el `message` del backend.
 export async function api(path, { method = 'GET', body } = {}) {
   const token = session.get()?.token;
@@ -26,7 +39,7 @@ export async function api(path, { method = 'GET', body } = {}) {
   try {
     res = await fetch('/api' + path, { method, headers, body: body && JSON.stringify(body) });
   } catch {
-    throw fail('No se pudo conectar con el servidor.', 0);
+    throw fail('No pudimos conectar. Revisa tu internet y dale otra vez.', 0);
   }
   const data = await res.json().catch(() => null);
   if (res.ok) return data;
@@ -35,7 +48,7 @@ export async function api(path, { method = 'GET', body } = {}) {
     session.set(null);
     throw Object.assign(fail('Tu sesión venció. Inicia sesión de nuevo.', 401), { vencida: true });
   }
-  throw fail(data?.message || `Error ${res.status}`, res.status);
+  throw fail(enVoz(data?.message || `Error ${res.status}`), res.status);
 }
 
 const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
