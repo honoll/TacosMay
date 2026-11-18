@@ -3,17 +3,22 @@
 // llenan una vez al cargar con iniciarCabecera(). Sin JavaScript queda lo que trae el HTML:
 // «Entrar» y «Carrito (0)».
 import { api, session, esc } from './api.js';
+import { picto } from './barra.js';
 
 // Cuántas piezas lleva un carrito (la respuesta de GET /carrito).
 export const piezas = (carrito) => carrito.items.reduce((s, i) => s + i.cantidad, 0);
 
 // Los enlaces de cuenta. base: '' dentro de la tienda, que navega por #; '/tienda/' desde cualquier otra página.
+// «Pedidos» con su caja y la cuenta con el ícono de persona y el nombre recortado; el nombre completo va en
+// su nombre accesible. En celular la cuenta es solo el ícono y «Salir» queda en «Tu cuenta» (barra.css):
+// así la cabecera con sesión cabe a 375 px sin deslizarse (hallazgo W2).
+const recortado = (t) => (t.length > 12 ? `${t.slice(0, 11)}…` : t);
 export function cuenta(u, { base = '/tienda/', actual = '', admin = false } = {}) {
-  const a = (r, texto) => `<a href="${base}#${r}"${r === actual ? ' aria-current="page"' : ''}>${texto}</a>`;
+  const a = (r, texto, extra = '') => `<a href="${base}#${r}"${extra}${r === actual ? ' aria-current="page"' : ''}>${texto}</a>`;
   return [
-    u ? a('pedidos', 'Mis pedidos') : '',
+    u ? a('pedidos', `${picto('Caja')}Pedidos`) : '',
     admin ? a('admin', 'Admin') : '',
-    u ? a('cuenta', esc(u.nombre)) : a('entrar', 'Entrar'),
+    u ? a('cuenta', `${picto('Persona')}<span class="nombre">${esc(recortado(u.nombre))}</span>`, ` class="persona" aria-label="Tu cuenta: ${esc(u.nombre)}"`) : a('entrar', 'Entrar'),
     u ? '<button type="button" class="salir" data-click="logout">Salir</button>' : '',
   ].join('');
 }

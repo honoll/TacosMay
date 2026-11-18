@@ -61,10 +61,18 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 /* En celular la fila se desliza: el borde derecho se desvanece para que se note que sigue, y un
    margen al final deja ver completo el último enlace. */
 @media (max-width: 899px) {
+  /* Con sesión: la cuenta, solo el ícono (su nombre accesible lleva el nombre), y «Salir» en «Tu cuenta». */
+  .cabecera nav a.persona .nombre { display: none; }
+  .cabecera nav a.persona .picto { margin-right: 0; }
+  .cabecera nav .salir { display: none; }
+  .cabecera-enlaces, .cabecera nav { gap: 16px; }
+  .nav-cuenta { padding-left: 16px; }
   .cabecera-enlaces { padding-right: 56px; mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
 }
 .cabecera nav { display: flex; flex: none; gap: 20px; }
 .nav-cuenta { padding-left: 20px; border-left: 2px solid var(--negro); }
+.cabecera nav a .picto { width: 20px; height: 20px; flex: none; margin-right: 6px; }
+.cabecera nav a.persona { min-width: 44px; justify-content: center; }
 .cabecera nav :is(a, .salir) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
 .cabecera nav :is(a, .salir):hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 /* Dónde estás: la franja de cuatro colores bajo el enlace de la vista o sección actual. */

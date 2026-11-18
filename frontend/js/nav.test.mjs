@@ -30,4 +30,16 @@ for (const [nombre, bloques] of [['cabecera', cabeceras], ['pie', pies]]) {
 assert.ok(!cabeceras[0].includes('href="/#como"') && !cabeceras[0].includes('href="/#taqueria"'), 'la cabecera no lleva «Cómo funciona» ni «La taquería»');
 assert.ok(pies[0].includes('href="/#como"') && pies[0].includes('href="/#taqueria"'), 'siguen en el pie');
 assert.match(cabeceras[0], /id="nav-carrito"[^>]*><svg class="picto"[^>]*aria-hidden="true">[\s\S]*?<\/svg><span class="sr">Carrito, <\/span><b id="nav-carrito-n">0<\/b><span class="sr"> guisos<\/span>/, 'el carrito: ícono, número y nombre para lector');
-console.log('nav.test: OK (cabecera y pie iguales en 3 páginas, carrito con ícono)');
+// W2: con sesión, «Pedidos» con su caja y la cuenta con el ícono de persona; el nombre completo, para lector.
+// En celular la cuenta es solo el ícono y «Salir» queda en «Tu cuenta», para que la fila quepa a 375 px.
+const { cuenta } = await import('./cabecera.js');
+const conSesion = cuenta({ nombre: 'Maximiliano Hernández' });
+assert.match(conSesion, /<svg class="picto"[^>]*aria-hidden="true">[\s\S]*?<\/svg>Pedidos<\/a>/, '«Pedidos» con su caja');
+assert.match(conSesion, /class="persona" aria-label="Tu cuenta: Maximiliano Hernández">/, 'la cuenta lleva el nombre completo para lector');
+assert.match(conSesion, /<span class="nombre">Maximiliano…<\/span>/, 'y a la vista, recortado a 12 caracteres');
+assert.match(cuenta(null), />Entrar<\/a>$/, 'sin sesión, «Entrar»');
+const barra = readFileSync(new URL('barra.css', raiz), 'utf8');
+const celular = barra.slice(barra.indexOf('@media (max-width: 899px)'));
+assert.ok(/\.cabecera nav a\.persona \.nombre \{ display: none; \}/.test(celular) && /\.cabecera nav \.salir \{ display: none; \}/.test(celular), 'en celular: solo el ícono de la cuenta y sin «Salir»');
+assert.match(barra, /\.cabecera nav a\.persona \{ min-width: 44px;/, 'el ícono de la cuenta mide al menos 44 px');
+console.log('nav.test: OK (cabecera y pie iguales en 3 páginas, carrito con ícono, cuenta que cabe en celular)');

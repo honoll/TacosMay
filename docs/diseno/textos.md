@@ -28,7 +28,7 @@ habla alguien y no «la empresa», dice lo que hay y lo que falta, **un guiño c
 como propuesta. En las tablas, cada texto cambiado dice «✅ Aplicado».
 
 1. Quitar «Ya está hecho» del paso 1 de «Cómo funciona»: hoy la frase sale tres veces y la tercera la gasta.
-2. El carrito de la cabecera como ícono con su número y su reloj, y fuera de la cabecera «Cómo funciona» y «La taquería» (quedan en el pie): la cabecera cabe en celular sin deslizar (resuelve W2 de raíz).
+2. El carrito de la cabecera como ícono con su número y su reloj, y fuera de la cabecera «Cómo funciona» y «La taquería» (quedan en el pie). Solo con esto la cabecera con sesión todavía no cabía a 375 px; con «Pedidos» e ícono de persona (aprobados después) sí cabe (W2).
 3. Un solo botón principal: «Pedir guisos» en el héroe, en «Todas las charolas» y en el cierre (hoy son tres textos distintos para lo mismo).
 4. Una sola palabra para la existencia: «quedan 5» en tarjeta, ficha y administración (hoy «disponibles», «en existencia» y «stock»).
 5. Los dos párrafos del envío, de 305 caracteres a 170, conservando el porqué del congelado y el «no prometemos».
@@ -67,9 +67,9 @@ Son los mismos textos en la landing, la tienda y «no encontrado».
 | Enlace | La taquería | 11 | Igual que el anterior: alarga la fila en celular | **Quitar**. Quitarlo de la cabecera; queda en el pie. Con estos dos fuera, la cabecera cabe a 375 px sin deslizar. **✅ Aplicado** |
 | Zona de cuenta, nombre accesible | Tu cuenta | 9 | — | **Igual** |
 | Enlace, sin sesión | Entrar | 6 | — | **Ícono + etiqueta**. Persona + «Entrar». |
-| Enlace, con sesión | Mis pedidos | 11 | Alarga la fila en celular | **Ícono + etiqueta**. Caja + «Pedidos». |
+| Enlace, con sesión | Mis pedidos | 11 | Alarga la fila en celular | **Ícono + etiqueta**. Caja + «Pedidos». **✅ Aplicado** (Aprobado después, para W2.) |
 | Enlace, administrador | Admin | 5 | — | **Igual**. Solo lo ve quien administra; corto. |
-| Enlace, con sesión | (nombre de la persona) | 22 | Un nombre largo empuja la fila | **Ícono + etiqueta**. Persona + el nombre, recortado a 12 caracteres con «…» (el completo, en su nombre accesible). |
+| Enlace, con sesión | (nombre de la persona) | 22 | Un nombre largo empuja la fila | **Ícono + etiqueta**. Persona + el nombre, recortado a 12 caracteres con «…» (el completo, en su nombre accesible). **✅ Aplicado** (Aprobado después, para W2. En celular, solo el ícono (el nombre completo va para lector) y «Salir» queda en «Tu cuenta».) |
 | Botón, con sesión | Salir | 5 | — | **Igual**. Corto y claro. El ícono de «salir» no es universal: va con texto. |
 | Botón del carrito | Carrito | 7 | Es la palabra más repetida del sitio y ocupa lugar en celular | **Ícono solo**. Ícono de carrito + el número + el reloj. Nombre accesible: «Carrito, 3 guisos». Objetivo táctil de 44 px. **✅ Aplicado** |
 | Botón del carrito, para lector | … guisos | 8 | — | **Igual**. Completa el nombre accesible («Carrito 3 guisos»). |

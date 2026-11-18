@@ -48,6 +48,7 @@ export const PICTOS = {
   Congelado: `<path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7" ${T}/>`,
   Caja: '<path d="M12 2l9 4.5-9 4.5-9-4.5z"/><path d="M2.5 8.5l8.5 4.3V22l-8.5-4.3zM21.5 8.5L13 12.8V22l8.5-4.3z"/>',
   Lugar: '<path fill-rule="evenodd" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>',
+  Persona: '<circle cx="12" cy="7.5" r="4.5"/><path d="M3 21.5a9 7.5 0 0 1 18 0z"/>',
   Listo: '<path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 export const picto = (nombre) => `<svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${PICTOS[nombre]}</svg>`;

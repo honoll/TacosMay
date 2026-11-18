@@ -1,6 +1,6 @@
 // Inventario de textos con propuesta: la misma tabla que docs/diseno/textos.md, generada de la misma fuente.
 // NUEVOS: pictogramas que faltan, en la retícula del sistema (24, margen 2).
-export const RESUMEN = {"total": 164, "cuenta": {"Igual": 102, "Quitar": 3, "Ícono + etiqueta": 16, "Ícono solo": 2, "Más corto": 22, "Alternativas": 10, "Reescribir": 9}, "diez": ["Quitar «Ya está hecho» del paso 1 de «Cómo funciona»: hoy la frase sale tres veces y la tercera la gasta.", "El carrito de la cabecera como ícono con su número y su reloj, y fuera de la cabecera «Cómo funciona» y «La taquería» (quedan en el pie): la cabecera cabe en celular sin deslizar (resuelve W2 de raíz).", "Un solo botón principal: «Pedir guisos» en el héroe, en «Todas las charolas» y en el cierre (hoy son tres textos distintos para lo mismo).", "Una sola palabra para la existencia: «quedan 5» en tarjeta, ficha y administración (hoy «disponibles», «en existencia» y «stock»).", "Los dos párrafos del envío, de 305 caracteres a 170, conservando el porqué del congelado y el «no prometemos».", "Los tres pasos de «Cómo funciona», cada uno en un título y una línea de menos de 50 caracteres.", "El error de red dice qué hacer: «No pudimos conectar. Revisa tu internet y dale otra vez.»", "Sin «Redis», «TTL» ni «base de datos» frente al cliente (carrito vencido, nota del reloj, bajadas de la landing); para la exposición, decisión de Alejandro.", "La bajada del héroe sin repetir el nombre del logotipo: «Los guisos de la taquería, en bolsa. Rompes, calientas y comes.»", "Los mensajes del servidor en la voz del sitio: «Ese correo ya tiene cuenta. Entra con él.» y «Solo quedan 5.»"]};
+export const RESUMEN = {"total": 164, "cuenta": {"Igual": 102, "Quitar": 3, "Ícono + etiqueta": 16, "Ícono solo": 2, "Más corto": 22, "Alternativas": 10, "Reescribir": 9}, "diez": ["Quitar «Ya está hecho» del paso 1 de «Cómo funciona»: hoy la frase sale tres veces y la tercera la gasta.", "El carrito de la cabecera como ícono con su número y su reloj, y fuera de la cabecera «Cómo funciona» y «La taquería» (quedan en el pie). Solo con esto la cabecera con sesión todavía no cabía a 375 px; con «Pedidos» e ícono de persona (aprobados después) sí cabe (W2).", "Un solo botón principal: «Pedir guisos» en el héroe, en «Todas las charolas» y en el cierre (hoy son tres textos distintos para lo mismo).", "Una sola palabra para la existencia: «quedan 5» en tarjeta, ficha y administración (hoy «disponibles», «en existencia» y «stock»).", "Los dos párrafos del envío, de 305 caracteres a 170, conservando el porqué del congelado y el «no prometemos».", "Los tres pasos de «Cómo funciona», cada uno en un título y una línea de menos de 50 caracteres.", "El error de red dice qué hacer: «No pudimos conectar. Revisa tu internet y dale otra vez.»", "Sin «Redis», «TTL» ni «base de datos» frente al cliente (carrito vencido, nota del reloj, bajadas de la landing); para la exposición, decisión de Alejandro.", "La bajada del héroe sin repetir el nombre del logotipo: «Los guisos de la taquería, en bolsa. Rompes, calientas y comes.»", "Los mensajes del servidor en la voz del sitio: «Ese correo ya tiene cuenta. Entra con él.» y «Solo quedan 5.»"]};
 export const SECCIONES = [
  {
   "titulo": "Cabecera (igual en las tres páginas)",
@@ -87,6 +87,7 @@ export const SECCIONES = [
     "tipo": "Ícono + etiqueta",
     "propuesta": "Caja + «Pedidos».",
     "picto": "Caja",
+    "aplicado": "Aprobado después, para W2.",
     "n": 11
    },
    {
@@ -105,6 +106,7 @@ export const SECCIONES = [
     "tipo": "Ícono + etiqueta",
     "propuesta": "Persona + el nombre, recortado a 12 caracteres con «…» (el completo, en su nombre accesible).",
     "picto": "Persona",
+    "aplicado": "Aprobado después, para W2. En celular, solo el ícono (el nombre completo va para lector) y «Salir» queda en «Tu cuenta».",
     "n": 22
    },
    {
