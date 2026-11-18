@@ -489,7 +489,7 @@
 /* Celular: la bolsa es una barra fija abajo que se despliega; la lista deja espacio para ella. */
 @media (max-width: 899px) {
   :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { padding-bottom: 96px; }
-  :where(.en-tienda) .bolsa-lado { position: fixed; inset: auto 0 0; z-index: 3; display: grid; max-height: 78dvh; border-top: 3px solid var(--negro); background: var(--crema); }
+  :where(.en-tienda) .bolsa-lado { position: fixed; inset: auto 0 0; z-index: 3; display: grid; grid-template-rows: auto minmax(0, 1fr); max-height: 78dvh; /* sin el minmax la fila crece con la bolsa y «Confirmar pedido» queda bajo la pantalla */ border-top: 3px solid var(--negro); background: var(--crema); }
   :where(.en-tienda) .bolsa-barra { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 64px; padding: 8px 16px; border: 0; border-radius: 0; background: var(--crema); color: var(--negro); font: 600 1rem/1.2 var(--fuente); letter-spacing: 0; text-transform: none; text-align: left; }
   :where(.en-tienda) .bolsa-mini { display: flex; gap: 3px; }
   :where(.en-tienda) .bolsa-mini i { width: 14px; height: 22px; border: 1.5px solid rgb(20 18 16 / .55); border-radius: 3px; background: var(--c); }
