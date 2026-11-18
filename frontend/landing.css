@@ -19,24 +19,6 @@
 
 :where(.en-inicio) main > .heroe { padding-block: clamp(16px, 3vw, 40px) clamp(40px, 7vw, 88px); }
 :where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom: 18px; }
-/* La barra que gira (js/carrusel.js): de borde a borde de la pantalla, una charola y media en celular y
-   tres y algo en escritorio, para que se note que hay más. La altura no cambia al llegar los datos. */
-:where(.en-inicio) .carrusel { margin: clamp(28px, 5vw, 56px) calc(-1 * var(--margen)) 0; }
-:where(.en-inicio) .carrusel-fila { display: flex; gap: clamp(12px, 2vw, 32px); padding: 0 var(--margen) 8px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
-:where(.en-inicio) .carrusel-fila::-webkit-scrollbar { display: none; }
-:where(.en-inicio) .carrusel-fila > .charola { flex: 0 0 clamp(200px, 58vw, 340px); }
-:where(.en-inicio) .carrusel-fila img { -webkit-user-drag: none; user-select: none; }
-:where(.en-inicio) .carrusel-fila:focus-visible { outline-offset: -3px; }
-:where(.en-inicio) .carrusel.quieto .carrusel-fila { scroll-snap-type: x proximity; scroll-padding-inline: var(--margen); cursor: auto; }
-:where(.en-inicio) .carrusel.quieto .carrusel-fila > .charola { scroll-snap-align: start; }
-:where(.en-inicio) .carrusel-pausa { display: flex; width: fit-content; margin: 12px var(--margen) 0 auto; }
-:where(.en-inicio) .carrusel-pausa[hidden] { display: none; }
-:where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.1rem, 4.4vw, 1.5rem); }
-
-@media (min-width: 700px) {
-  :where(.en-inicio) .carrusel-fila > .charola { flex-basis: clamp(240px, 27vw, 420px); }
-}
-
 /* ---------- El héroe (docs/diseno/referencias/heroe-claude-design-*.html) ----------
    A la izquierda: antetítulo, titular en dos renglones con el punto en rojo May, entrada y botones.
    A la derecha: tres círculos lisos con los colores por guiso del sistema y cinco ollas con aro de acero,
@@ -47,7 +29,10 @@
 :where(.en-inicio) .heroe .caja { display: flex; flex-direction: column; }
 :where(.en-inicio) .heroe-texto { display: flex; flex-direction: column; gap: 18px; }
 :where(.en-inicio) .heroe-texto > * { margin: 0; }
-:where(.en-inicio) .heroe .antetitulo { font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
+:where(.en-inicio) .antetitulo { margin: 0; font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
+/* Pausa del giro de las ollas: abajo del héroe, a la derecha. */
+:where(.en-inicio) .giro-pausa { display: flex; width: fit-content; margin: 16px 0 0 auto; }
+:where(.en-inicio) .giro-pausa[hidden] { display: none; }
 :where(.en-inicio) .heroe h1.rot { font-size: clamp(72px, 26.6vw, 104px); line-height: .86; letter-spacing: -.01em; }
 :where(.en-inicio) .heroe h1 .punto { color: var(--rojo-may); }
 :where(.en-inicio) .heroe .entrada { max-width: 26ch; font-size: 19px; line-height: 1.4; }
@@ -80,13 +65,11 @@
   :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; }
   :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; gap: 28px; padding: 48px 32px 48px 0; }
   :where(.en-inicio) .heroe .antetitulo { font-size: 18px; }
+  :where(.en-inicio) .giro-pausa { grid-column: 2; grid-row: 2; margin-top: 12px; }
   :where(.en-inicio) .heroe h1.rot { font-size: clamp(88px, 11vw, 176px); }
   :where(.en-inicio) .heroe .entrada { max-width: 30ch; font-size: clamp(19px, 1.6vw, 22px); }
   :where(.en-inicio) .heroe .acciones { gap: 16px 28px; }
   :where(.en-inicio) .ollas { --k: calc(100cqw / 800); grid-column: 2; grid-row: 1; order: 0; width: auto; aspect-ratio: 800 / 680; margin: 0 calc(-1 * var(--margen)) 0 0; }
-  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 2; }
-  :where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
-  :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
   :where(.en-inicio) .m1 { --r: -180; --t: -220; --s: 760; }
   :where(.en-inicio) .m2 { --r: 250; --t: 300; --s: 470; }
   :where(.en-inicio) .m3 { --r: -90; --t: 470; --s: 300; }
@@ -98,39 +81,95 @@
   :where(.en-inicio) .ollas .toca { display: block; position: absolute; right: calc(64 * var(--k)); bottom: calc(28 * var(--k)); margin: 0; padding: 8px 14px; border-radius: 5px; background: var(--negro); color: var(--crema); font: 700 17px/1.2 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 }
 
-/* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
+/* ---------- Lo que más sale: los guisos, por segunda y última vez en el inicio ---------- */
 
-:where(.en-inicio) .como { background: var(--acero); }
-:where(.en-inicio) .pasos { display: grid; gap: 16px; margin-top: 24px; }
-:where(.en-inicio) .paso .datos { gap: 8px; padding: 14px 16px 18px; }
-:where(.en-inicio) .paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
-:where(.en-inicio) .paso .picto { width: 1.1em; height: 1.1em; flex: none; }
-
-/* Sobre la etiqueta en blanco de la foto de la bolsa va solo el nombre del guiso: a ese tamaño (unos
-   85 px de ancho en celular) es lo único que se lee. La posición sale de medir el original (2048 px):
-   la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3, con un margen adentro. */
-:where(.en-inicio) .paso .guiso { container-type: inline-size; }
-:where(.en-inicio) .etq-bolsa { position: absolute; left: 38.6%; top: 40%; width: 23.8%; height: 21.3%; display: grid; place-items: center; border-top: 1cqw solid #a8321c; color: var(--negro); text-align: center; }
-:where(.en-inicio) .etq-bolsa strong { font: 800 3.5cqw/.95 var(--angosta); text-transform: uppercase; }
-
-@media (min-width: 860px) {
-  :where(.en-inicio) .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-}
-
-/* ---------- Escena 3: las charolas, en vivo ---------- */
-
-:where(.en-inicio) .guisos h2 + .entrada, :where(.en-inicio) .salen h2 + .entrada { margin-bottom: 24px; }
-:where(.en-inicio) main > .salen { padding-block: 0 clamp(32px, 5vw, 64px); }
+:where(.en-inicio) main > .salen { padding-block: clamp(32px, 6vw, 72px); border-top: 2px solid var(--negro); }
+:where(.en-inicio) .salen-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px; margin-bottom: 20px; }
+:where(.en-inicio) .salen-cabeza h2 { margin: 0; }
+:where(.en-inicio) .salen-cabeza .entrada { flex: 1 1 16em; }
 :where(.en-inicio) .salen .btn { position: relative; margin-top: 6px; } /* por encima de la zona de toque de la charola */
-:where(.en-inicio) .guisos .barra + h2 { margin-top: clamp(40px, 6vw, 72px); }
-:where(.en-inicio) .estado { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 14px 18px; border-left: 6px solid var(--negro); background: var(--acero); font-weight: 600; }
-
+:where(.en-inicio) .barra.top > :first-child:nth-last-child(3) { grid-column: 1 / -1; } /* tres en celular: una grande y dos */
 @media (min-width: 700px) {
-  /* Las que más salen: siempre cuatro, del mismo tamaño, en una fila completa. */
-  :where(.en-inicio) .barra.top { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  :where(.en-inicio) .barra.top { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  :where(.en-inicio) .barra.top > :first-child:nth-last-child(3) { grid-column: auto; }
+  :where(.en-inicio) .barra.top:has(> :nth-child(4)) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* ---------- Escena 4: el envío, en papel de ticket ---------- */
+/* ---------- May y la taquería: el titular grande, tres cifras, la foto y quiénes están en la barra ---------- */
+
+:where(.en-inicio) .taqueria .caja { display: grid; gap: clamp(24px, 4vw, 48px); }
+:where(.en-inicio) .taqueria-abre { display: grid; gap: 14px; }
+:where(.en-inicio) .taqueria h2.rot { max-width: 15ch; margin: 0; font-size: clamp(2.4rem, 8vw, 5.4rem); line-height: .9; }
+:where(.en-inicio) .taqueria-texto p { max-width: 38em; font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+:where(.en-inicio) .taqueria-texto p + p { margin-top: 12px; }
+:where(.en-inicio) .cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 18px; border-block: 3px solid var(--negro); }
+:where(.en-inicio) .cifras b { display: block; font: 800 clamp(2.2rem, 9vw, 5.2rem)/.9 var(--angosta); text-transform: uppercase; white-space: nowrap; }
+:where(.en-inicio) .cifras span { display: block; margin-top: 6px; color: var(--gris); font-size: .95rem; line-height: 1.3; }
+:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) { margin: 0; }
+:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border: 6px solid var(--marco); border-radius: 12px; outline: 1.5px solid var(--acero-osc); outline-offset: -1.5px; }
+:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) figcaption, :where(.en-inicio) .muestra-nota { margin-top: 6px; color: var(--gris); font-size: .85rem; font-style: italic; }
+:where(.en-inicio) .barra-gente h3 { font: 800 1.8rem/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .gente { display: grid; gap: 12px; margin-top: 14px; }
+:where(.en-inicio) .gente li { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: start; gap: 2px 14px; padding: 14px; border: 2px solid var(--negro); border-radius: 10px; background: #fff; }
+:where(.en-inicio) .gente .inicial { grid-row: span 2; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--c); color: var(--t, #fff); font: 800 1.8rem/1 var(--angosta); }
+:where(.en-inicio) .gente b { font: 800 1.4rem/1.1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .cita { margin: 24px 0 0; padding-left: 18px; border-left: 6px solid var(--rojo-may); }
+:where(.en-inicio) .cita p { font: 800 clamp(1.7rem, 5vw, 3rem)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .cita footer { margin-top: 8px; color: var(--gris); }
+:where(.en-inicio) .cocina { max-width: 46em; margin-top: 18px; }
+@media (min-width: 900px) {
+  :where(.en-inicio) .taqueria .caja { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  :where(.en-inicio) .taqueria-abre { grid-column: 1; }
+  :where(.en-inicio) .cifras { grid-column: 1; }
+  :where(.en-inicio) .foto-barra { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  /* Quiénes están en la barra: la foto a un lado y las tarjetas, la cita y la cocina al otro. */
+  :where(.en-inicio) .barra-gente { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); column-gap: clamp(32px, 5vw, 80px); align-content: start; }
+  :where(.en-inicio) .barra-gente > :not(.foto-gente) { grid-column: 2; }
+  :where(.en-inicio) .foto-gente { grid-column: 1; grid-row: 1 / span 6; align-self: start; position: sticky; top: calc(var(--alto-cabecera, 82px) + 24px); }
+}
+
+/* ---------- De la olla a tu casa: el proceso, con su línea punteada (vertical en celular, horizontal en ancho) ---------- */
+
+:where(.en-inicio) .proceso { background: var(--acero); }
+:where(.en-inicio) .proceso .entrada { margin-top: 6px; }
+:where(.en-inicio) .foto-proceso { margin-top: 20px; max-width: 520px; }
+:where(.en-inicio) .pasos { display: grid; margin-top: 28px; counter-reset: paso; }
+:where(.en-inicio) .pasos li { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 2px 16px; padding-bottom: 26px; counter-increment: paso; }
+:where(.en-inicio) .pasos li:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 60px; bottom: 4px; border-left: 3px dashed var(--negro); transform-origin: top; }
+:where(.en-inicio) .pasos .picto { grid-row: span 2; width: 56px; height: 56px; padding: 12px; border: 3px solid var(--negro); border-radius: 50%; background: var(--crema); }
+:where(.en-inicio) .pasos li:last-child .picto { background: var(--rojo-may); color: #fff; border-color: var(--rojo-may); }
+:where(.en-inicio) .pasos b { font: 800 1.5rem/1.05 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .pasos b::before { content: counter(paso) ". "; color: var(--gris); }
+@media (min-width: 900px) {
+  :where(.en-inicio) .proceso .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); column-gap: 48px; align-items: end; }
+  :where(.en-inicio) .proceso :is(h2, .entrada) { grid-column: 1; }
+  :where(.en-inicio) .foto-proceso { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+  :where(.en-inicio) .pasos { grid-column: 1 / -1; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; }
+  :where(.en-inicio) .pasos li { grid-template-columns: 1fr; gap: 10px; padding-bottom: 0; }
+  :where(.en-inicio) .pasos li:not(:last-child)::after { left: 72px; right: -12px; top: 30px; bottom: auto; border-left: 0; border-top: 3px dashed var(--negro); transform-origin: left; }
+  :where(.en-inicio) .pasos .picto { grid-row: auto; width: 64px; height: 64px; padding: 14px; }
+  :where(.en-inicio) .pasos b { font-size: 1.6rem; }
+}
+
+/* ---------- Cómo calentarlo: tres tarjetas sobre negro, el tiempo en grande ---------- */
+
+:where(.en-inicio) main > .calentar { --foco: var(--crema); background: var(--negro); color: var(--crema); }
+:where(.en-inicio) .calentar-cabeza { display: grid; gap: 8px; }
+:where(.en-inicio) .calentar-cabeza .entrada { color: #d9d4ca; }
+:where(.en-inicio) .metodos { display: grid; gap: 16px; margin-top: 28px; }
+:where(.en-inicio) .metodos li { display: grid; gap: 8px; padding: 20px; border: 2px solid #4a4540; border-radius: 12px; background: #1f1c19; }
+:where(.en-inicio) .tiempo { font: 600 1.1rem/1 var(--angosta); text-transform: uppercase; letter-spacing: .06em; color: #d9d4ca; }
+:where(.en-inicio) .tiempo b { font: 800 clamp(3rem, 10vw, 4.6rem)/.9 var(--angosta); letter-spacing: 0; color: #f2b33d; }
+:where(.en-inicio) .metodos h3 { display: flex; align-items: center; gap: 10px; font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .metodos .picto { width: 1.1em; height: 1.1em; flex: none; }
+:where(.en-inicio) .metodos p { color: #e6e1d7; }
+:where(.en-inicio) .calentar .muestra-nota { color: #b9b3a8; }
+@media (min-width: 800px) {
+  :where(.en-inicio) .calentar-cabeza { grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: 40px; }
+  :where(.en-inicio) .metodos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+}
+
+/* ---------- El envío, en papel de ticket ---------- */
 
 :where(.en-inicio) .envio { background: var(--acero); }
 :where(.en-inicio) .papel { max-width: 640px; margin-inline: auto; padding: clamp(20px, 4vw, 36px); border-bottom: 3px dashed var(--negro); background: var(--crema); }
@@ -150,23 +189,33 @@
   :where(.en-inicio) .papel > p { grid-column: 2; max-width: 34em; }
 }
 
-/* ---------- Escena 5: May y la taquería ---------- */
+/* ---------- Preguntas: el título a un lado y las respuestas que se abren ---------- */
 
-:where(.en-inicio) .taqueria-rejilla { display: grid; gap: 40px; }
-:where(.en-inicio) .logo-grande { display: block; width: min(100%, 440px); height: auto; margin-bottom: 24px; }
-:where(.en-inicio) .hechos { display: grid; gap: 14px; margin-bottom: 24px; }
-:where(.en-inicio) .hechos li { padding-left: 16px; border-left: 6px solid var(--negro); }
-:where(.en-inicio) .hechos strong { display: block; font: 800 clamp(1.6rem, 5vw, 2.2rem)/.95 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .preguntas-rejilla { display: grid; gap: 20px; }
+:where(.en-inicio) .faq details { border-bottom: 2px solid var(--negro); }
+:where(.en-inicio) .faq details:first-child { border-top: 2px solid var(--negro); }
+:where(.en-inicio) .faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding-block: 12px; font: 800 1.35rem/1.15 var(--angosta); text-transform: uppercase; cursor: pointer; list-style: none; }
+:where(.en-inicio) .faq summary::-webkit-details-marker { display: none; }
+:where(.en-inicio) .faq summary::after { content: "+"; flex: none; font-size: 2rem; line-height: 1; }
+:where(.en-inicio) .faq details[open] summary::after { transform: rotate(45deg); }
+:where(.en-inicio) .faq p { max-width: 42em; padding-bottom: 18px; }
+@media (min-width: 900px) {
+  :where(.en-inicio) .preguntas-rejilla { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  :where(.en-inicio) .preguntas h2 { position: sticky; top: calc(var(--alto-cabecera, 82px) + 24px); }
+}
 
-/* El pizarrón del menú, con su código de tres plumones: negro titula, rojo nombra, azul separa. */
-:where(.en-inicio) .pizarron { width: min(100%, 520px); margin-inline: auto; padding: 24px; border: 5px solid #b89a63; border-radius: 28px; background: #fffdf7; font-family: "Kalam", "Comic Sans MS", cursive; }
-:where(.en-inicio) .pizarron h3 { margin-bottom: 10px; text-align: center; color: #1b1b1b; font-size: 1.3rem; }
-:where(.en-inicio) .pizarron ul { padding-block: 10px; border-top: 3px solid #1f4fa3; color: #c4202a; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
-:where(.en-inicio) .pizarron .nota { padding-top: 12px; border-top: 3px solid #1f4fa3; color: #1b1b1b; font: 400 .95rem/1.5 var(--fuente); }
-:where(.en-inicio) .pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 600; }
+/* ---------- Pásale a la barra: la dirección en grande y la prueba de tacos a domicilio ---------- */
 
-@media (min-width: 860px) {
-  :where(.en-inicio) .taqueria-rejilla { grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
+:where(.en-inicio) .visitanos { border-top: 2px solid var(--negro); }
+:where(.en-inicio) .visitanos-rejilla { display: grid; gap: 32px; }
+:where(.en-inicio) .direccion { display: flex; gap: 12px; margin-block: 18px 12px; font: 800 clamp(1.5rem, 4.4vw, 2.6rem)/1.05 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .horario { display: flex; gap: 12px; font-size: 1.15rem; font-weight: 600; }
+:where(.en-inicio) .horario small { display: block; color: var(--gris); font-weight: 400; font-size: .95rem; }
+:where(.en-inicio) :is(.direccion, .horario) .picto { width: 1.1em; height: 1.1em; flex: none; margin-top: .05em; }
+:where(.en-inicio) .domicilio-aviso { display: grid; gap: 10px; justify-items: start; padding: clamp(20px, 3vw, 32px); border: 3px solid var(--negro); border-radius: 14px; background: #fff; box-shadow: 6px 6px 0 var(--negro); }
+:where(.en-inicio) .domicilio-aviso h3 { font: 800 clamp(1.8rem, 4vw, 2.6rem)/1 var(--angosta); text-transform: uppercase; }
+@media (min-width: 900px) {
+  :where(.en-inicio) .visitanos-rejilla { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; }
 }
 
 /* ---------- Escena 6: cierre ---------- */
@@ -222,8 +271,8 @@
   :where(.en-inicio) .o3 { --i: 2; }
   :where(.en-inicio) .o4 { --i: 3; }
   :where(.en-inicio) .o5 { --i: 4; }
-  /* El guiso gira muy lento dentro de su aro (80 a 120 s por vuelta, sentidos alternos), solo mientras la barra
-     de charolas gira y el héroe se ve (js/ollas.js pone .gira); su botón «Pausar» lo detiene también. */
+  /* El guiso gira muy lento dentro de su aro (80 a 120 s por vuelta, sentidos alternos) mientras el héroe se ve
+     (js/ollas.js pone .gira); el botón «Pausar» del héroe lo detiene. */
   :where(.en-inicio) .olla img { animation: gira 120s linear infinite; animation-play-state: paused; }
   :where(.en-inicio) .o2 img { animation-duration: 90s; animation-direction: reverse; }
   :where(.en-inicio) .o3 img { animation-duration: 100s; }
@@ -236,15 +285,24 @@
   @keyframes gira { to { transform: rotate(360deg); } }
 }
 
-/* Escena 2 anclada: el scroll pasa de un estado al siguiente. Solo en pantallas anchas y altas;
-   en celular las tres charolas van apiladas, todas a la vista. */
-@media (prefers-reduced-motion: no-preference) and (min-width: 860px) and (min-height: 620px) {
-  .js:where(.en-inicio) main > .como { height: 240vh; padding-block: 0; }
-  .js:where(.en-inicio) .como-fija { position: sticky; top: 0; display: grid; align-content: center; height: 100vh; height: 100svh; }
-  /* El paso activo va a tamaño completo y con filo negro; los otros se achican, pero siguen a color. */
-  .js:where(.en-inicio) .paso { transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s; }
-  .js:where(.en-inicio) .como[data-step] .paso { transform: scale(.9); }
-  .js:where(.en-inicio) .como[data-step="1"] .paso:nth-child(1),
-  .js:where(.en-inicio) .como[data-step="2"] .paso:nth-child(2),
-  .js:where(.en-inicio) .como[data-step="3"] .paso:nth-child(3) { transform: none; box-shadow: 0 0 0 4px var(--negro); }
+/* Cada sección entra una sola vez al llegar a pantalla, cada una a su manera (js/landing.js pone .entra y, al
+   terminar, .ya: al volver por el enrutador, que reinserta los nodos, no se repite). Antes de llegar, lo que va a
+   entrar espera invisible; sin JavaScript o con movimiento reducido se ve todo quieto. */
+@media (prefers-reduced-motion: no-preference) {
+  .js:where(.en-inicio) main > section:not(.heroe):not(.entra) :is(h2, .entrada, .taqueria-texto, .cifras li, .foto-barra, .foto-proceso, .foto-gente, .gente li, .cita, .pasos li, .metodos li, .papel, .faq details, .direccion, .horario, .domicilio-aviso) { opacity: 0; }
+  .js:where(.en-inicio) main > section.entra:not(.ya) :is(h2, .entrada, .taqueria-texto, .gente li, .cita, .metodos li, .papel, .faq details, .direccion, .horario) { animation: sube .6s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 90ms); }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .cifras li { animation: crece .6s var(--entra) backwards; animation-delay: calc(150ms + var(--i, 0) * 110ms); }
+  .js:where(.en-inicio) main > section.entra:not(.ya) :is(.foto-barra, .foto-proceso, .foto-gente) { animation: desde-lado .8s var(--entra) backwards; animation-delay: 200ms; }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .domicilio-aviso { animation: desde-lado .7s var(--entra) backwards; animation-delay: 240ms; }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li { animation: desde-izq .5s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 160ms); }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li::after { animation: traza .5s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 160ms + 220ms); }
+  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(2) { --i: 1; }
+  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(3) { --i: 2; }
+  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(4) { --i: 3; }
+  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(5) { --i: 4; }
+  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(n + 6) { --i: 5; }
+  :where(.en-inicio) .faq summary::after { transition: transform var(--t-chico) var(--entra); }
+  @keyframes desde-lado { from { opacity: 0; transform: translateX(32px); } }
+  @keyframes desde-izq { from { opacity: 0; transform: translateX(-20px); } }
+  @keyframes traza { from { transform: scale(0); } }
 }

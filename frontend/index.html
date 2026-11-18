@@ -29,7 +29,6 @@
   <link rel="modulepreload" href="/tienda/app.js">
   <link rel="modulepreload" href="/tienda/empaque.js">
   <link rel="modulepreload" href="/js/datos.js">
-  <link rel="modulepreload" href="/js/carrusel.js">
   <!-- Las mismas hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
        recargar (js/paginas.js) nunca se enciende ni se apaga una hoja. Cada hoja de página tiene sus
        reglas acotadas a su página con :where(.en-inicio), :where(.en-tienda) o :where(.en-domicilio), la clase de <html>. -->
@@ -100,113 +99,116 @@
           <p class="toca" aria-hidden="true">Toca una olla para ver el guiso</p>
         </div>
 
-        <!-- La barra que gira (js/carrusel.js): con datos, todos los guisos con foto, cada uno a su ficha;
-             sin datos o sin JavaScript, estas tres, en una fila que se desliza a mano. -->
-        <div class="carrusel" id="carrusel">
-        <ul class="carrusel-fila" tabindex="0" aria-label="Guisos de la barra">
-          <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-          <li class="charola" style="--c:#F2B33D;--t:#141210">
-            <div class="guiso"><img src="/media/guisos/chorizo-con-huevo.webp" srcset="/media/guisos/chorizo-con-huevo.webp 720w, /media/guisos/chorizo-con-huevo-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540" fetchpriority="high"><span class="num">02</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h3>Chorizo con huevo</h3></div>
-          </li>
-          <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-          <li class="charola" style="--c:#35603A;--t:#FFFFFF">
-            <div class="guiso"><img src="/media/guisos/rajas-con-queso-y-crema.webp" srcset="/media/guisos/rajas-con-queso-y-crema.webp 720w, /media/guisos/rajas-con-queso-y-crema-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540"><span class="num">08</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h3>Rajas con queso y crema</h3></div>
-          </li>
-          <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-          <li class="charola" style="--c:#A8321C;--t:#FFFFFF">
-            <div class="guiso"><img src="/media/guisos/carne-en-salsa-roja.webp" srcset="/media/guisos/carne-en-salsa-roja.webp 720w, /media/guisos/carne-en-salsa-roja-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540"><span class="num">09</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h3>Carne en salsa roja</h3></div>
-          </li>
-        </ul>
-        <button class="btn sec chico carrusel-pausa" type="button" hidden>Pausar<span class="sr"> las charolas que giran</span></button>
-        </div>
+        <!-- El guiso gira despacio dentro de su olla; esto lo detiene (nada se mueve solo sin poder pararlo). -->
+        <button class="btn sec chico giro-pausa" type="button" hidden>Pausar<span class="sr"> el giro de las ollas</span></button>
       </div>
     </section>
 
-    <!-- Lo que más sale, con precio y botón, justo después del héroe: quien ya sabe qué quiere no baja más.
-         Sale en vivo de GET /guisos/populares; sin pedidos todavía, la sección no aparece. -->
-    <section class="salen" id="populares-bloque" aria-labelledby="populares-titulo" hidden>
+    <!-- Los guisos aparecen dos veces en el inicio y ya: las ollas de arriba y esta sección. Lo demás de la página es
+         información (la taquería, el proceso, cómo calentarlo, el envío, preguntas y dónde estamos).
+         En vivo de la API (Redis): con pedidos, el ranking (Sorted Set); sin pedidos todavía, los tres que más piden
+         en la barra (dicho por Alejandro, docs/negocio/datos.md). -->
+    <section class="salen" id="populares-bloque" aria-labelledby="populares-titulo">
       <div class="caja">
-        <h2 class="rot" id="populares-titulo">Lo que más sale</h2>
-        <p class="entrada">El orden lo ponen los pedidos de la tienda, contados en vivo.</p>
+        <div class="salen-cabeza">
+          <h2 class="rot" id="populares-titulo">Lo que más sale</h2>
+          <p class="entrada" id="populares-nota">Los que más piden en la barra.</p>
+          <a class="enl" href="/tienda/">Ver todos los guisos</a>
+        </div>
         <ol class="barra top" id="populares"></ol>
       </div>
     </section>
 
-    <!-- Escena 2 · llega preguntándose «¿y cómo se come?» → sale sabiendo: rompo, caliento y ya.
-         Los tres estados del producto: en la charola, en la bolsa, en el taco. -->
-    <section class="como" id="como" aria-labelledby="como-titulo">
-      <div class="como-fija">
-        <div class="caja">
-          <h2 class="rot" id="como-titulo">Cómo funciona</h2>
-          <ol class="pasos">
-            <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-            <li class="charola paso" style="--c:#A8321C;--t:#FFFFFF">
-              <div class="guiso"><img src="/media/guisos/carne-en-salsa-roja.webp" srcset="/media/guisos/carne-en-salsa-roja.webp 720w, /media/guisos/carne-en-salsa-roja-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">1</span></div>
-              <div class="datos">
-                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg>Sale de la barra</h3>
-                <p>Se guisa y se sirve en la taquería todos los días.</p>
-              </div>
-            </li>
-            <!-- La imagen trae la etiqueta en blanco; .etq-bolsa pone encima solo el nombre del guiso, que es lo que se lee a ese tamaño (landing.css).
-                 PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-            <li class="charola paso" style="--c:#D9DCDD;--t:#141210">
-              <div class="guiso"><img src="/media/guisos/bolsa.webp" srcset="/media/guisos/bolsa.webp 720w, /media/guisos/bolsa-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">2</span>
-                <span class="etq-bolsa" aria-hidden="true"><strong>Carne en salsa roja</strong></span></div>
-              <div class="datos">
-                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h8l7 7v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M16.5 1l6.5 6.5-2.1 1.3-5.7-5.7z"/></svg>Rompe la bolsa</h3>
-                <p>Al vacío, por porciones. Nomás ábrela.</p>
-              </div>
-            </li>
-            <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
-            <li class="charola paso" style="--c:#A8321C;--t:#FFFFFF">
-              <div class="guiso"><img src="/media/guisos/taco.webp" srcset="/media/guisos/taco.webp 720w, /media/guisos/taco-1024.webp 1024w" sizes="(min-width: 860px) 31vw, 100vw" alt="" width="720" height="540" loading="lazy"><span class="num">3</span></div>
-              <div class="datos">
-                <h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Calienta y taquea</h3>
-                <p>En sartén u olla, como cualquier guiso.</p>
-                <!-- PENDIENTE-CLIENTE: instrucciones exactas de calentado por guiso (método, tiempo) y qué hacer si llega descongelado -->
-              </div>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <!-- Escena 3 · llega con «¿qué guisos hay?» → sale con uno elegido. Todo sale en vivo de la API (Redis);
-         el color, el número y la foto de cada charola los pone js/barra.js, buscados por el nombre del guiso. -->
-    <section class="guisos" id="guisos" aria-labelledby="guisos-titulo">
+    <!-- May y la taquería. Real: May (apodo del papá de Alejandro), unos 22 años, barra a baño maría, menos de diez
+         minutos, gente que trabaja, centro de Cabo, hasta las 4 a. m., el cactus del letrero (docs/negocio/datos.md).
+         De muestra (data-muestra, docs/negocio/contenido-de-muestra.md): quiénes están en la barra y la cocina. -->
+    <section class="taqueria" id="taqueria" aria-labelledby="taqueria-titulo">
       <div class="caja">
-        <h2 class="rot" id="guisos-titulo">Todas las charolas</h2>
-        <p class="entrada">Precios y existencias, en vivo.</p>
-        <ul class="barra" id="menu"></ul>
-        <div class="estado" id="menu-estado" role="status">
-          <span class="cargando" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span id="menu-texto">Leyendo el menú…</span>
+        <div class="taqueria-abre">
+          <p class="antetitulo">May y la taquería</p>
+          <h2 class="rot" id="taqueria-titulo">Una barra en el centro de Cabo, desde hace unos 22 años.</h2>
+          <div class="taqueria-texto">
+            <p>May es el papá de la familia: así le dicen todos los que lo conocen, y así se quedó la taquería. Empezó en el centro de Cabo San Lucas hace unos 22 años y ahí sigue, con el cactus en el letrero.</p>
+            <p>La idea no ha cambiado: los guisos ya están hechos y calientes a baño maría, para la gente que va a trabajar o que sale de trabajar. Llegas, escoges, comes y te vas.</p>
+          </div>
         </div>
-        <noscript><p class="estado">El menú se consulta en vivo y necesita JavaScript. También puedes verlo en la tienda.</p></noscript>
-        <div class="acciones">
-          <a class="btn" href="/tienda/">Pedir guisos</a>
-          <button class="btn sec" id="menu-reintentar" type="button" hidden>Volver a intentar</button>
+        <ul class="cifras">
+          <li><b>22</b><span>años, poco más o poco menos, en Cabo San Lucas</span></li>
+          <li><b>&lt;10</b><span>minutos para entrar, comer y salir</span></li>
+          <li><b>4 a.&nbsp;m.</b><span>la barra del centro cierra de madrugada</span></li>
+        </ul>
+        <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt), sustituir por foto real de la barra -->
+        <figure class="foto-barra" data-muestra>
+          <img src="/media/ambiente/banio-maria.webp" srcset="/media/ambiente/banio-maria.webp 720w, /media/ambiente/banio-maria-1024.webp 1024w" sizes="(min-width: 900px) 40vw, 92vw" alt="Barra de guisos a baño maría, con la cocina atrás" width="720" height="540" loading="lazy" decoding="async">
+          <figcaption>Imagen de muestra, generada; la barra real va aquí cuando haya foto.</figcaption>
+        </figure>
+        <div class="barra-gente" data-muestra>
+          <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt); la persona no es nadie real -->
+          <figure class="foto-gente">
+            <img src="/media/ambiente/sirviendo.webp" srcset="/media/ambiente/sirviendo.webp 720w, /media/ambiente/sirviendo-1024.webp 1024w" sizes="(min-width: 900px) 40vw, 92vw" alt="Un cocinero de mandil sirve guiso en tortillas desde una olla de la barra" width="720" height="540" loading="lazy" decoding="async">
+            <figcaption>Imagen de muestra, generada.</figcaption>
+          </figure>
+          <h3>En la barra</h3>
+          <p class="muestra-nota">Contenido de muestra: nombres y datos por confirmar con la familia.</p>
+          <ul class="gente">
+            <li style="--c:#A8321C"><span class="inicial" aria-hidden="true">C</span><b>Chayo</b><span>Lleva el mole y la carne en salsa roja. Llega antes que nadie para que a las primeras horas ya esté todo caliente.</span></li>
+            <li style="--c:#35603A"><span class="inicial" aria-hidden="true">T</span><b>Toño</b><span>Está en la plancha y en las tortillas. Dice que un taco se sirve en lo que tardas en pedir el refresco.</span></li>
+            <li style="--c:#F2B33D"><span class="inicial" aria-hidden="true">L</span><b>Lupita</b><span>Atiende la barra de noche, hasta el cierre. Conoce a los de la madrugada por su guiso de siempre.</span></li>
+          </ul>
+          <blockquote class="cita"><p>«Aquí nadie espera: el guiso ya está.»</p><footer>Chayo, en la barra</footer></blockquote>
+          <p class="cocina">La cocina de atrás: dos estufas de seis quemadores, ollas de peltre y de aluminio y un baño maría de ocho ollas en la barra. Nada de lujo: lo que hace falta para guisar todos los días.</p>
         </div>
       </div>
     </section>
 
-    <!-- Escena 4 · llega dudando «¿y sí llega bien?» → sale sabiendo qué hay y qué falta confirmar -->
+    <!-- De la olla a tu casa: el proceso de empacado (así va a funcionar). Antes era «Cómo funciona»; conserva #como. -->
+    <section class="proceso" id="como" aria-labelledby="como-titulo">
+      <div class="caja">
+        <h2 class="rot" id="como-titulo">De la olla a tu casa</h2>
+        <p class="entrada">El mismo guiso de la barra, en bolsa. Así se hace:</p>
+        <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt), sustituir por foto real del empacado -->
+        <figure class="foto-proceso" data-muestra>
+          <img src="/media/ambiente/sellado.webp" srcset="/media/ambiente/sellado.webp 720w, /media/ambiente/sellado-1024.webp 1024w" sizes="(min-width: 900px) 34vw, 92vw" alt="Manos con guantes sostienen una porción de guiso sellada al vacío, junto a la selladora" width="720" height="540" loading="lazy" decoding="async">
+          <figcaption>Imagen de muestra, generada.</figcaption>
+        </figure>
+        <ol class="pasos">
+          <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg><b>Se guisa en la taquería</b><span>En las mismas ollas y con las mismas manos que la barra.</span></li>
+          <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="8" cy="16.5" r="5.5"/><rect x="12.6" y="1.5" width="3" height="13" rx="1.5" transform="rotate(38 14.1 8)"/></svg><b>Se porciona</b><span>Una bolsa por porción, para que abras solo lo que vas a comer.</span></li>
+          <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 2h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm2 5v12h10V7z"/><rect x="8.5" y="10" width="7" height="6" rx="3"/></svg><b>Se sella al vacío</b><span>Sin aire, el guiso no se reseca ni agarra otros olores.</span></li>
+          <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Se congela y se envía</b><span>Lo que lo cuida es el frío, hasta que llega a tu congelador.</span></li>
+          <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Rompes, calientas y comes</b><span>Ya está hecho: nomás le das calor.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Cómo calentarlo. Los tiempos son de muestra (data-muestra). -->
+    <section class="calentar" id="calentar" aria-labelledby="calentar-titulo">
+      <div class="caja">
+        <div class="calentar-cabeza">
+          <h2 class="rot" id="calentar-titulo">Cómo calentarlo</h2>
+          <p class="entrada">Tres formas, según lo que tengas a la mano. Si está congelado, puedes calentarlo así, sin descongelar.</p>
+        </div>
+        <ol class="metodos" data-muestra>
+          <li><span class="tiempo"><b>8–10</b> min</span><h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Baño maría</h3><p>La bolsa cerrada, en una olla con agua que hierva despacio. Como en la barra.</p></li>
+          <li><span class="tiempo"><b>5–7</b> min</span><h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Sartén</h3><p>Rompe la bolsa, vacía el guiso y muévelo a fuego medio hasta que suelte el hervor.</p></li>
+          <li><span class="tiempo"><b>2–3</b> min</span><h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14z"/><path d="M11 7h2v4.6l3.3 2-1 1.7L11 12.7z"/></svg>Microondas</h3><p>Pásalo a un recipiente, tápalo y revuelve a la mitad. La bolsa no entra al microondas.</p></li>
+        </ol>
+        <p class="muestra-nota" data-muestra>Tiempos de muestra, por confirmar con la cocina.</p>
+      </div>
+    </section>
+
+    <!-- El envío: lo que se sabe y lo que falta. Igual que la tienda: todavía no se hacen envíos. -->
     <section class="envio" id="envio" aria-labelledby="envio-titulo">
       <div class="caja">
         <div class="papel">
           <h2 class="rot" id="envio-titulo">El envío, sin cuentos</h2>
-          <!-- PENDIENTE-CLIENTE: confirmar que el formato de venta es congelado (recomendación de docs/investigacion/viabilidad.md);
-               cobertura, costo, tiempos y días de despacho; ciudad de origen; vida útil declarada -->
+          <!-- PENDIENTE-CLIENTE: cobertura, costo, tiempos y días de despacho; ciudad de origen -->
           <ul class="ticket">
             <li><span>Formato</span><i></i><span>Al vacío, congelado</span></li>
             <li><span>A dónde llega</span><i></i><span>Por confirmar</span></li>
             <li><span>Cuánto cuesta</span><i></i><span>Por confirmar</span></li>
             <li><span>En cuántos días</span><i></i><span>Por confirmar</span></li>
           </ul>
-          <p>El vacío saca el aire; lo que cuida al guiso es el frío. Por eso va congelado hasta que rompes la bolsa.</p>
           <p>Lo que dice «por confirmar» no lo prometemos hasta tenerlo seguro.</p>
           <p class="fuente">Sobre vacío y congelación: guías de inocuidad de
             <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe" rel="noopener">USDA-FSIS</a> y de la
@@ -215,46 +217,41 @@
       </div>
     </section>
 
-    <!-- Escena 5 · llega viendo «un producto» → sale sabiendo que detrás hay una persona y una taquería.
-         No lleva imagen generada del local: pasaría por el real. Cuando haya fotos reales, entran aquí. -->
-    <section class="taqueria" id="taqueria" aria-labelledby="taqueria-titulo">
-      <div class="caja taqueria-rejilla">
-        <div>
-          <h2 class="sr" id="taqueria-titulo">May y la taquería</h2>
-          <img class="logo-grande" src="/marca/logo/principal.svg" alt="Los Tacos May" width="480" height="214" loading="lazy">
-          <ul class="hechos">
-            <li><strong>May es una persona</strong>Así le dicen al dueño desde siempre.</li>
-            <li><strong>Unos 22 años en Cabo San Lucas</strong>La taquería empezó ahí y ahí sigue.</li>
-            <li><strong>Menos de 10 minutos</strong>Los guisos ya están hechos y calientes: entras, comes y te vas.</li>
-          </ul>
-          <!-- PENDIENTE-CLIENTE: año exacto de inicio, de dónde es la familia, cómo quieren contar quién es May,
-               horario completo, las demás taquerías y fotos reales del local -->
-          <address>
-            <a class="enl" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>José María Morelos S/N, Local 3, Centro, 23450 Cabo San Lucas, B.C.S.</a>
-          </address>
-        </div>
-
-        <!-- Nombres tal como están en el pizarrón de la taquería (docs/negocio/datos.md), con su código de tres plumones.
-             Sin precios: los del pizarrón son del taco en el local y la foto tiene meses.
-             PENDIENTE-CLIENTE: confirmar «Corazón de vaca enamorada» y la carta vigente -->
-        <div class="pizarron" role="group" aria-labelledby="pizarron-titulo">
-          <h3 id="pizarron-titulo">En el pizarrón de la taquería</h3>
-          <ul>
-            <li>Corazón de vaca enamorada</li><li>Chorizo con huevo</li><li>Salpicón</li><li>Nopalitos</li>
-            <li>Mole con pollo</li><li>Bistek con papa</li><li>Chicharrón en salsa</li><li>Rajas con queso y crema</li>
-          </ul>
-          <ul>
-            <li>Carne en salsa roja</li><li>Tinga de res</li><li>Barbacoa</li><li>Cabeza</li>
-          </ul>
-          <ul><li>Lengua</li></ul>
-          <ul><li>Barbacoa de borrego</li></ul>
-          <p class="nota">Esto es lo que se sirve en la taquería. Lo que ya puedes pedir empacado está en <a href="#guisos">las charolas en vivo</a>.</p>
-          <p class="nota">¿En Cabo San Lucas? Estamos probando <a href="/domicilio/">tacos a domicilio</a>, preparados y llevados el mismo día (versión de prueba).</p>
+    <!-- Preguntas frecuentes. Las respuestas marcadas data-muestra son de muestra. -->
+    <section class="preguntas" id="preguntas" aria-labelledby="preguntas-titulo">
+      <div class="caja preguntas-rejilla">
+        <h2 class="rot" id="preguntas-titulo">Preguntas que nos hacen</h2>
+        <div class="faq">
+          <details data-muestra><summary>¿Cuánto dura?</summary><p>Congelado, hasta seis meses. Ya descongelado, en el refri, cómetelo en tres o cuatro días. Una vez abierta la bolsa, como cualquier guiso de casa.</p></details>
+          <details><summary>¿Cómo llega?</summary><p>Al vacío y congelado, una bolsa por porción. Qué caja y qué refrigerante lleva el envío está por confirmarse.</p></details>
+          <details><summary>¿A dónde envían?</summary><p>Todavía no hacemos envíos: a dónde llega, cuánto cuesta y en cuántos días se está definiendo. Cuando esté seguro, aparece aquí y en la tienda.</p></details>
+          <details data-muestra><summary>¿Y si llega mal?</summary><p>Si la bolsa llega rota o descongelada, mándanos una foto el mismo día y te reponemos el guiso o te devolvemos lo que pagaste.</p></details>
+          <details data-muestra><summary>¿Lleva conservadores?</summary><p>No. Lo que lo cuida es el vacío y el frío; por eso va congelado hasta que lo calientas.</p></details>
+          <details><summary>¿Es lo mismo que en la taquería?</summary><p>Sí: los mismos guisos de la barra, de la misma cocina. Lo único distinto es que te llega en bolsa.</p></details>
         </div>
       </div>
     </section>
 
-    <!-- Escena 6 · llega convencido → sale hacia la tienda -->
+    <!-- Dónde está la taquería: dirección real, cierre conocido (4 a. m.) y tacos a domicilio (prueba). -->
+    <section class="visitanos" id="visitanos" aria-labelledby="visitanos-titulo">
+      <div class="caja visitanos-rejilla">
+        <div>
+          <h2 class="rot" id="visitanos-titulo">Pásale a la barra</h2>
+          <address class="direccion"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg><span>José María Morelos S/N, Local 3<br>Centro, 23450 Cabo San Lucas, B.C.S.</span></address>
+          <p class="horario"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14z"/><path d="M11 7h2v4.6l3.3 2-1 1.7L11 12.7z"/></svg><span>Cierra a las 4 a.&nbsp;m. <small>La hora de apertura, por confirmar.</small></span></p>
+          <!-- PENDIENTE-CLIENTE: horario completo, teléfono y las demás taquerías de la familia -->
+          <div class="acciones"><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Tacos+May%2C+Jos%C3%A9+Mar%C3%ADa+Morelos%2C+Centro%2C+Cabo+San+Lucas" rel="noopener">Cómo llegar</a></div>
+        </div>
+        <div class="domicilio-aviso">
+          <p class="antetitulo">En Cabo San Lucas</p>
+          <h3>Tacos a domicilio</h3>
+          <p>Estamos probando llevar los tacos de la barra a tu casa el mismo día, o que pases por ellos. Es una versión de prueba: todavía no se cobra ni se envía nada.</p>
+          <a class="enl" href="/domicilio/">Ver la prueba</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cierre -->
     <section class="cierre" aria-labelledby="cierre-titulo">
       <div class="caja">
         <h2 class="rot" id="cierre-titulo">Ya está hecho.</h2>

@@ -1,2 +1,8 @@
 Aqui deja Alejandro los archivos tal como salen de Gemini, con los nombres de docs/diseno/materiales.md.
 La pagina no enlaza nada de esta carpeta: de aqui se optimizan hacia frontend/media/.
+
+Imagenes de ambiente GENERADAS CON IA (18-nov-2026, herramientas/generar-imagen.ps1), contenido de muestra
+del inicio (docs/negocio/contenido-de-muestra.md). Sustituir por fotos reales antes de publicar o vender:
+- A1-banio-maria.jpg  -> media/ambiente/banio-maria.webp y -1024.webp  (la barra a bano maria, de noche)
+- A2-sellado.jpg      -> media/ambiente/sellado.webp y -1024.webp      (manos sellando una porcion al vacio)
+- A3-sirviendo.jpg    -> media/ambiente/sirviendo.webp y -1024.webp    (cocinero sirviendo; no es nadie real)
