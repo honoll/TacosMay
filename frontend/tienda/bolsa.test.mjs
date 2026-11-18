@@ -95,6 +95,21 @@ const b = bolsa(raiz);
 const comps = () => cont.querySelectorAll('.comp').filter((c) => !c.cl().includes('sale'));
 const huecos = () => cont.querySelectorAll('.hueco');
 
+// ---------- El total brinca y «Confirmar pedido» hace un pulso cuando sube ----------
+{
+  const r = raizBolsa();
+  const cuentas = new E('div'); cuentas.className = 'bolsa-cuentas';
+  const total = new E('p'); total.className = 'total';
+  const confirmar = new E('button'); confirmar.className = 'primario'; confirmar.attrs['data-click'] = 'checkout';
+  cuentas.append(total, confirmar); r.raiz.appendChild(cuentas);
+  r.raiz.querySelector = ((q) => (sel) => (sel === '.bolsa-cuentas .total' ? total : sel === '.bolsa-cuentas [data-click="checkout"]' ? confirmar : q.call(r.raiz, sel)))(r.raiz.querySelector);
+  const bb = bolsa(r.raiz);
+  bb.pintar([], 0);
+  assert.ok(!total.cl().includes('salta'), 'al abrir no brinca nada');
+  bb.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
+  assert.ok(total.cl().includes('salta') && confirmar.cl().includes('pulso'), 'sube el total: brinca y «Confirmar pedido» pulsa');
+}
+
 // ---------- Llenar: el primer guiso abre su compartimento y se llena ----------
 b.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
 assert.equal(POR_BOLSA, 6);
@@ -128,6 +143,9 @@ assert.equal(comps().length, 7);
 assert.equal(cont.children.length, 2, 'el séptimo guiso abre otra bolsa');
 assert.equal(cont.children[1].querySelectorAll('.comp').length, 1);
 assert.equal(cont.children[1].querySelectorAll('.hueco').length, 5);
+assert.equal(cont.children[0].querySelector('.bolsa-num').textContent, 'Bolsa 1 de 2 · llena', 'la primera bolsa dice que está llena');
+assert.equal(cont.children[1].querySelector('.bolsa-num').textContent, 'Bolsa 2 de 2');
+assert.equal(cont.children[0].querySelector('.bolsa-num').hidden, false);
 assert.deepEqual(comps().map((c) => c.dataset.clave), ['1', '2', '3', '4', '5', '6', '7'], 'en el orden en que entraron');
 
 // ---------- Quitar: se vacía su compartimento y los demás se recorren ----------
@@ -149,7 +167,7 @@ mini.className = 'charola mini';
 let vuelo = b.volar(mini, '1');
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 1, 'la miniatura vuela');
 b.pintar([{ guiso: GUISOS[0], cantidad: 1 }], 20000);
-assert.equal(comps()[0].style.vars['--espera'], '450ms', 'el compartimento se llena cuando aterriza el guiso');
+assert.equal(comps()[0].style.vars['--espera'], '260ms', 'el compartimento se llena cuando aterriza el guiso');
 await espera(20);
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 0, 'al aterrizar, la miniatura se retira');
 vuelo = b.volar(mini, '2');

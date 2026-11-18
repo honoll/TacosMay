@@ -21,31 +21,35 @@ seco; agregar un guiso nunca detiene la compra.
 | Cada renglón: miniatura de su charola (color, número y foto), nombre (enlace a su ficha), precio, porciones, «quedan N» y, a la derecha, «+» | Los textos son los del inventario (`textos.md`): «quedan N», nombre accesible «Agregar <guiso>» |
 | Con el guiso ya en la bolsa, el «+» se vuelve «− cantidad +» como hoy | Misma lógica y mismas llamadas |
 | **La bolsa es el carrito, en resumen**, y **convive** con la vista `#carrito` | La demo del examen abre el carrito y señala su cuenta regresiva (`docs/guion-demo.md`). La bolsa trae el total, la cuenta regresiva, «Confirmar pedido» y «Ver carrito»; la vista completa sigue para cambiar cantidades, quitar y vaciar |
-| **Seis compartimentos por bolsa** (dos columnas, tres filas). El séptimo guiso abre **otra bolsa** debajo | Seis se leen de un vistazo sin achicar la etiqueta. Otra bolsa es más honesto que una que crece sin forma |
+| **Seis compartimentos por bolsa** (dos columnas, tres filas). El séptimo guiso abre **otra bolsa** debajo, y cada una dice «Bolsa 1 de 2 · llena» | Seis se leen de un vistazo sin achicar la etiqueta. Otra bolsa es más honesto que una que crece sin forma |
 | Un compartimento por **guiso distinto**; más unidades del mismo cambian su etiqueta («× 3») | Como el empaque real: un guiso por compartimento |
 | Quitar un guiso (cantidad a cero) **vacía su compartimento** y los demás se recorren | La bolsa siempre dice lo que hay |
 | El botón del carrito de la cabecera, en la lista: en escritorio lleva a la bolsa; en celular la abre | En la lista la bolsa ya está a la vista; el panel lateral se queda para la ficha |
 | La ficha de un guiso conserva el empacado de hoy (la bolsa vuela al carrito de la cabecera) | Ahí no hay bolsa a la vista |
+| «Confirmar pedido» en el rojo de la marca y el láser de sellado en rojo | Así viene en la referencia que eligió Alejandro. Es una excepción a «el rojo, solo en el logotipo» (`sistema.md`); si se queda, hay que escribirla ahí como regla |
 | **Sin GSAP**: CSS para los pasos y la API de animaciones del navegador para el vuelo | Ninguno de los pasos pide más; una dependencia sería peso sin razón |
 | El avión es una imagen de «va en camino», **sin texto que prometa** | Cobertura, costo y tiempos siguen por confirmar (`PENDIENTE-CLIENTE`) |
 
 ## Coreografía
 
-### Agregar un guiso nuevo (≈ 1.2 s, no detiene nada)
+### Agregar un guiso nuevo (≈ 550 ms, no detiene nada)
+
+Rehecho el 17-nov-2026 con las referencias que eligió Alejandro (una bolsa multicámara con la foto
+del guiso prensada bajo el plástico y una pastilla negra con número, nombre y cantidad).
 
 | Paso | Empieza | Dura | Qué se ve | Qué explica |
 |---|---|---|---|---|
-| Vuela | 0.00 s | 0.45 s | La miniatura de la charola sale del renglón y vuela al siguiente compartimento libre | Ese guiso va a la bolsa |
-| Cae | 0.45 s | 0.20 s | El guiso (su color y su foto) cae en el compartimento | Se llena |
-| Vacío | 0.65 s | 0.20 s | El compartimento se encoge un poco y el plástico se pega | Al vacío |
-| Sella | 0.85 s | 0.20 s | Pasa la barra de calor y queda la banda sellada | Sellado |
-| Etiqueta | 1.05 s | 0.15 s | Cae la etiqueta con el número de charola, el nombre y «× 1» | Qué es y cuántos |
+| Toque | 0 ms | 80 ms | El «+» se hunde y suelta un anillo | Se tocó |
+| Vuela | 0 ms | 260 ms | La foto del guiso vuela en arco a su cámara y llega de su tamaño | Ese guiso va a la bolsa |
+| Al vacío | 260 ms | 150 ms | La foto se acomoda en la cámara, prensada bajo el plástico | Se empaca |
+| Sella | 260 ms | 200 ms | Un láser rojo barre el borde de arriba de la cámara | Sellado |
+| Etiqueta | 410 ms | 100 ms | Entra desde abajo la pastilla negra «09 · Carne en salsa roja × 1» | Qué es y cuántos |
+| Total | 510 ms | 250 ms | El total brinca y «Confirmar pedido» hace un pulso | Cambió lo que pagas |
 
-La llamada a la API sale al tocar «+», en paralelo con el vuelo. El compartimento se llena cuando
-la API confirma: si contesta antes de que aterrice el vuelo, espera al aterrizaje; si tarda más,
-empieza al llegar la respuesta. Se puede seguir tocando «+» en otros renglones mientras tanto:
-cada vuelo y cada compartimento llevan su propia animación, y nunca hay más de tres vuelos a la
-vez (del cuarto en adelante, sin vuelo).
+La llamada a la API sale al tocar «+», en paralelo con el vuelo. La cámara se llena cuando la API
+confirma: si contesta antes de que aterrice el vuelo, espera al aterrizaje; si tarda más, empieza al
+llegar la respuesta. Se puede seguir tocando «+» en otros renglones mientras tanto: cada vuelo y
+cada cámara llevan su propia animación, y nunca hay más de tres vuelos a la vez.
 
 ### Sumar otra unidad del mismo guiso (≈ 0.75 s)
 Vuela al compartimento de ese guiso (0.45 s); al confirmar la API, la cantidad de la etiqueta

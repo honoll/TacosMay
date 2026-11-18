@@ -384,52 +384,66 @@
 :where(.en-tienda) .ayuda p { margin: 0; }
 
 /* ---------- Guisos en lista, con la bolsa a un lado (docs/diseno/empacado.md) ---------- */
+/* Según la referencia que eligió Alejandro: cada guiso en su tarjeta, el texto a la izquierda con su «+» al
+   pie y la foto a la derecha; la bolsa, plástico translúcido con cámaras y la foto prensada en cada una. */
 :where(.en-tienda) .lista-guisos > h2 { margin-top: 28px; }
-:where(.en-tienda) .renglones { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 12px; border: 2px solid var(--marco); border-radius: 12px; background: #fff; }
-@media (min-width: 700px) {
-  :where(.en-tienda) .renglones { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
-}
-:where(.en-tienda) .renglon > .charola.mini { border-width: 3px; border-radius: 8px; }
-:where(.en-tienda) .renglon > .charola.mini .num { font-size: .85rem; }
-:where(.en-tienda) .renglon > .charola.mini .vapor { display: none; }
-:where(.en-tienda) .renglon .datos { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; }
-:where(.en-tienda) .renglon .datos > :not(.control) { grid-column: 1; margin: 0; }
-:where(.en-tienda) .renglon h3 { font: 800 1.15rem/1.1 var(--angosta); text-transform: uppercase; }
-:where(.en-tienda) .renglon .tag { justify-self: start; }
-:where(.en-tienda) .renglon .control { position: relative; z-index: 1; grid-column: 2; grid-row: 1 / span 4; margin: 0; padding: 0; }
-:where(.en-tienda) .renglon .mas { width: 48px; min-height: 48px; padding: 0; justify-content: center; font: 800 1.7rem/1 var(--angosta); }
+:where(.en-tienda) .renglones { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(104px, 38%, 176px); min-height: 128px; overflow: hidden; border: 2px solid var(--negro); border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgb(20 18 16 / .12); }
+:where(.en-tienda) .renglon > .charola.mini { grid-column: 2; grid-row: 1; border: 0; outline: 0; border-radius: 0; }
+:where(.en-tienda) .renglon > .charola.mini .guiso { height: 100%; aspect-ratio: auto; }
+:where(.en-tienda) .renglon > .charola.mini :is(.num, .vapor) { display: none; }
+:where(.en-tienda) .renglon .datos { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 14px; }
+:where(.en-tienda) .renglon .datos > * { margin: 0; }
+:where(.en-tienda) .renglon h3 { font: 800 1.2rem/1.05 var(--angosta); text-transform: uppercase; }
+:where(.en-tienda) .renglon .control { position: relative; z-index: 1; align-self: flex-end; margin-top: auto; padding-top: 6px; }
+:where(.en-tienda) .renglon .mas { position: relative; width: 44px; height: 44px; min-height: 44px; padding: 0; justify-content: center; border: 2px solid var(--negro); border-radius: 50%; background: var(--crema); color: var(--negro); font: 800 1.6rem/1 var(--angosta); }
+:where(.en-tienda) .renglon .mas:is(:hover, :focus-visible) { background: var(--negro); color: var(--crema); }
 :where(.en-tienda) .renglon .cantidad { width: 124px; }
-/* Todo el renglón lleva a la ficha; el control queda por encima. */
+/* Toda la tarjeta lleva a la ficha; el control queda por encima. */
 :where(.en-tienda) .renglon .a-ficha::after { inset: 0; aspect-ratio: auto; }
 :where(.en-tienda) .renglon.agotado > .charola { filter: grayscale(1); opacity: .7; }
 :where(.en-tienda) .renglones[aria-busy] .datos p { height: 1.1em; border-radius: 4px; background: var(--acero); }
 :where(.en-tienda) .renglones[aria-busy] .datos p + p { width: 55%; }
+@media (min-width: 700px) {
+  :where(.en-tienda) .renglones { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+}
 
-/* La bolsa: plástico transparente, sello de calor arriba, compartimentos de dos en dos. */
+/* La bolsa: marco sellado con gofrado, riel con muescas arriba y cámaras de 2 × 3. */
 :where(.en-tienda) .bolsa-cuerpo h2 { margin: 0 0 12px; }
 :where(.en-tienda) .bolsa-cuerpo h2:focus { outline: none; }
-:where(.en-tienda) .bolsa { position: relative; padding: 16px 10px 10px; border: 2px solid rgb(20 18 16 / .55); border-radius: 12px 12px 22px 22px; background: linear-gradient(160deg, rgb(255 255 255 / .85), rgb(255 255 255 / .5)), var(--acero); }
-:where(.en-tienda) .bolsa::before { content: ""; position: absolute; inset: 0 0 auto; height: 9px; border-radius: 10px 10px 0 0; background: repeating-linear-gradient(90deg, rgb(20 18 16 / .45) 0 2px, transparent 2px 5px); }
-:where(.en-tienda) .bolsa + .bolsa { margin-top: 12px; }
-:where(.en-tienda) .comps { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; padding: 0; list-style: none; }
-:where(.en-tienda) .comp, :where(.en-tienda) .hueco { position: relative; min-height: 96px; border-radius: 10px; }
-:where(.en-tienda) .hueco { border: 2px dashed rgb(20 18 16 / .28); }
-:where(.en-tienda) .comp { overflow: hidden; border: 2px solid rgb(20 18 16 / .55); background: rgb(255 255 255 / .6); }
-:where(.en-tienda) .comp-guiso { position: absolute; inset: 14px 14px 32px; border-radius: 40%; background: var(--c) var(--foto, none) center / cover; }
-:where(.en-tienda) .comp-banda { position: absolute; inset: 0 0 auto; height: 8px; background: repeating-linear-gradient(0deg, rgb(20 18 16 / .55) 0 1.5px, transparent 1.5px 4px); }
-:where(.en-tienda) .comp-etq { position: absolute; left: 5px; right: 5px; bottom: 5px; display: flex; align-items: center; gap: 4px; overflow: hidden; border: 1.5px solid var(--negro); border-radius: 3px; background: var(--crema); color: var(--negro); font: 800 .8rem/1.15 var(--angosta); text-transform: uppercase; }
-:where(.en-tienda) .comp-etq b { padding: 2px 4px; background: var(--c); color: var(--t); }
-:where(.en-tienda) .comp-nombre { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-:where(.en-tienda) .comp-cant { padding-right: 4px; white-space: nowrap; }
+:where(.en-tienda) .bolsa { position: relative; padding: 34px 12px 12px; border: 10px solid transparent; border-radius: 10px; background: linear-gradient(rgb(217 220 221 / .25), rgb(217 220 221 / .25)) padding-box, linear-gradient(var(--crema), var(--crema)) padding-box, repeating-linear-gradient(90deg, rgb(20 18 16 / .14) 0 2px, transparent 2px 5px) border-box, linear-gradient(#ecebe8, #ecebe8) border-box; box-shadow: 0 0 0 1.5px rgb(20 18 16 / .35), 0 10px 24px rgb(20 18 16 / .1); }
+:where(.en-tienda) .bolsa::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 8px; border-block: 1.5px solid rgb(20 18 16 / .25); }
+:where(.en-tienda) .bolsa::after { content: ""; position: absolute; left: -11px; right: -11px; top: 4px; height: 14px; background: linear-gradient(to bottom right, var(--crema) 50%, transparent 50%) left top / 9px 7px no-repeat, linear-gradient(to top right, var(--crema) 50%, transparent 50%) left bottom / 9px 7px no-repeat, linear-gradient(to bottom left, var(--crema) 50%, transparent 50%) right top / 9px 7px no-repeat, linear-gradient(to top left, var(--crema) 50%, transparent 50%) right bottom / 9px 7px no-repeat; }
+:where(.en-tienda) .bolsa + .bolsa { margin-top: 14px; }
+:where(.en-tienda) .bolsa-num { position: absolute; top: 18px; right: 12px; margin: 0; font: 700 .72rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; color: var(--gris); }
+:where(.en-tienda) .comps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; padding: 0; list-style: none; }
+:where(.en-tienda) .comp, :where(.en-tienda) .hueco { position: relative; aspect-ratio: 5 / 4; border-radius: 12px; background: radial-gradient(120% 90% at 30% 20%, #fff 0%, #f3f3f1 55%, #e5e6e6 100%); box-shadow: inset 0 2px 6px rgb(0 0 0 / .06), inset 0 -8px 16px rgb(255 255 255 / .8), 0 0 0 1px rgb(20 18 16 / .1); }
+:where(.en-tienda) .comp { overflow: hidden; }
+/* Llena: la foto del guiso (o su color) prensada bajo el plástico brillante. */
+:where(.en-tienda) .comp-guiso { position: absolute; inset: 0; border-radius: 12px; background: var(--c) var(--foto, none) center / cover; }
+:where(.en-tienda) .comp:not([style*="--foto"]) .comp-guiso { background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / .1) 3px 4px); }
+:where(.en-tienda) .comp::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 12px; pointer-events: none; box-shadow: inset 0 0 12px rgb(255 255 255 / .7), inset 2px 2px 4px rgb(0 0 0 / .2); background: linear-gradient(135deg, rgb(255 255 255 / .45) 0%, rgb(255 255 255 / .05) 40%, transparent 60%, rgb(255 255 255 / .25) 100%); }
+/* El láser de sellado: solo se ve mientras sella. */
+:where(.en-tienda) .comp-banda { position: absolute; left: 0; right: 0; top: 0; z-index: 2; height: 3px; background: #c8161f; box-shadow: 0 0 8px #c8161f; opacity: 0; transform-origin: left; }
+:where(.en-tienda) .comp-etq { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 2; display: flex; justify-content: center; gap: 4px; overflow: hidden; padding: 4px 8px; border-radius: 999px; background: var(--negro); color: #fff; font: 700 .78rem/1.2 var(--angosta); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+:where(.en-tienda) .comp-etq b { font-weight: 700; }
+:where(.en-tienda) .comp-etq b::after { content: " ·"; }
+:where(.en-tienda) .comp-nombre { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+:where(.en-tienda) .comp-cant { flex: none; }
 :where(.en-tienda) .bolsa-vacia { margin: 12px 0 0; }
 :where(.en-tienda) .bolsa-lado:not(.vacia) .bolsa-vacia, :where(.en-tienda) .bolsa-lado.vacia .bolsa-cuentas { display: none; }
-:where(.en-tienda) .bolsa-cuentas .expira { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; }
-:where(.en-tienda) .bolsa-cuentas .expira .picto { width: 22px; height: 22px; }
-:where(.en-tienda) .bolsa-cuentas .total { text-align: left; }
-:where(.en-tienda) .bolsa-cuentas .acciones > * { flex: 1; justify-content: center; text-align: center; }
+/* Debajo de la bolsa: el reloj y el total a la izquierda, «Confirmar pedido» a la derecha. */
+:where(.en-tienda) .bolsa-cuentas { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "expira confirmar" "total confirmar" "ver ver"; gap: 4px 16px; align-items: center; margin-top: 18px; }
+:where(.en-tienda) .bolsa-cuentas .acciones { display: contents; }
+:where(.en-tienda) .bolsa-cuentas .expira { grid-area: expira; display: flex; align-items: center; gap: 6px; margin: 0; font: 600 .95rem/1.2 var(--angosta); letter-spacing: .06em; text-transform: uppercase; }
+:where(.en-tienda) .bolsa-cuentas .expira .picto { order: 2; width: 18px; height: 18px; }
+:where(.en-tienda) .bolsa-cuentas .total { grid-area: total; margin: 0; font: 800 clamp(1.6rem, 3vw, 2.1rem)/1 var(--angosta); text-transform: uppercase; text-align: left; }
+:where(.en-tienda) .bolsa-cuentas .total strong { display: inline-block; font: inherit; }
+:where(.en-tienda) .bolsa-cuentas [data-click="checkout"] { grid-area: confirmar; min-height: 56px; padding: 0 18px; border: 0; border-radius: 12px; background: #c8161f; color: #fff; font: 800 1.15rem/1 var(--angosta); letter-spacing: .04em; text-transform: uppercase; }
+:where(.en-tienda) .bolsa-cuentas [data-click="checkout"]:is(:hover, :focus-visible) { background: #a8121a; color: #fff; }
+:where(.en-tienda) .bolsa-cuentas .btn.sec { grid-area: ver; justify-content: center; margin-top: 10px; }
 :where(.en-tienda) .bolsa-barra { display: none; }
-:where(.en-tienda) .vuela { position: fixed; z-index: 5; margin: 0; pointer-events: none; }
+:where(.en-tienda) .vuela { position: fixed; z-index: 5; margin: 0; pointer-events: none; border-radius: 12px; background: center / cover no-repeat; box-shadow: 0 8px 20px rgb(20 18 16 / .25); }
 
 @media (min-width: 900px) {
   :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); column-gap: clamp(24px, 4vw, 56px); align-items: start; }
@@ -466,21 +480,24 @@
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Llenar: cae, vacío, sella, etiqueta. --espera: lo que falta para que aterrice el guiso que vuela. */
-  :where(.en-tienda) .comp.llena .comp-guiso { animation: comp-cae .2s var(--entra) var(--espera, 0ms) backwards, comp-pega .2s ease calc(var(--espera, 0ms) + .2s) backwards; }
-  :where(.en-tienda) .comp.llena { animation: comp-vacio .2s ease calc(var(--espera, 0ms) + .2s) backwards; }
-  :where(.en-tienda) .comp.llena .comp-banda { animation: comp-sella .2s linear calc(var(--espera, 0ms) + .4s) backwards; }
-  :where(.en-tienda) .comp.llena .comp-etq { animation: comp-etq .15s cubic-bezier(.2, 1.5, .4, 1) calc(var(--espera, 0ms) + .6s) backwards; }
-  /* Sumar: la cantidad rueda y la banda de calor pasa otra vez. */
+  /* Agregar (≈ 550 ms): toque con anillo; vuelo en arco (en bolsa.js); la foto se acomoda prensada, el
+     láser sella arriba, entra la etiqueta y el total brinca. --espera: lo que falta para que aterrice. */
+  :where(.en-tienda) .renglon .mas:active { transform: scale(.9); }
+  :where(.en-tienda) .renglon .mas.toque::after { content: ""; position: absolute; inset: -2px; border: 2px solid var(--negro); border-radius: 50%; animation: anillo .3s var(--sale) forwards; }
+  @keyframes anillo { to { transform: scale(1.7); opacity: 0; } }
+  :where(.en-tienda) .comp.llena .comp-guiso { animation: comp-succion .15s cubic-bezier(.22, 1, .36, 1) var(--espera, 0ms) backwards; }
+  :where(.en-tienda) .comp:is(.llena, .suma) .comp-banda { animation: comp-laser .2s linear var(--espera, 0ms); }
+  :where(.en-tienda) .comp.llena .comp-etq { animation: comp-etq .1s var(--entra) calc(var(--espera, 0ms) + .15s) backwards; }
   :where(.en-tienda) .comp.suma .n { display: inline-block; animation: rueda-sube var(--t-chico) var(--entra) var(--espera, 0ms) backwards; }
-  :where(.en-tienda) .comp.suma .comp-banda { animation: comp-sella .3s linear var(--espera, 0ms) backwards; }
   :where(.en-tienda) .comp.sale { animation: comp-sale .25s var(--sale) forwards; }
-  @keyframes comp-cae { from { transform: translateY(-130%); opacity: 0; } }
-  @keyframes comp-pega { from { border-radius: 40%; transform: scale(1.12); } to { border-radius: 22%; } }
-  @keyframes comp-vacio { 50% { transform: scale(.95); } }
-  @keyframes comp-sella { from { transform: scaleX(0); transform-origin: left; } }
-  @keyframes comp-etq { from { transform: translateY(-16px) rotate(-6deg) scale(1.2); opacity: 0; } }
-  @keyframes comp-sale { to { transform: scale(.9); opacity: 0; } }
+  :where(.en-tienda) .bolsa-cuentas .total.salta strong { animation: salto .25s var(--entra) var(--espera-cuenta, 0ms); }
+  :where(.en-tienda) .bolsa-cuentas .pulso { animation: pulso-btn .25s var(--entra) var(--espera-cuenta, 0ms); }
+  @keyframes comp-succion { from { transform: scale(1.04); opacity: 0; } }
+  @keyframes comp-laser { 0% { opacity: 1; transform: scaleX(0); } 75% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
+  @keyframes comp-etq { from { transform: translateY(8px); opacity: 0; } }
+  @keyframes comp-sale { to { transform: scale(.92); opacity: 0; } }
+  @keyframes salto { 40% { transform: translateY(-5px); } }
+  @keyframes pulso-btn { 50% { transform: scale(1.03); } }
 
   /* Enviar: entra la caja, la bolsa entra, se cierra, cinta y etiqueta, al avión, despega (≈ 2.4 s). */
   /* Uno después de otro, sin encimarse (≈ 2.65 s): entra la caja; la bolsa baja y se oculta dentro; tapas,

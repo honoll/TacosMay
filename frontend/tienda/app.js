@@ -161,8 +161,8 @@ const firma = (texto) => [...texto].reduce((h, c) => (Math.imul(h, 31) + c.charC
 const fichaDe = (g) => `#guiso/${encodeURIComponent(g.id)}`;
 // Renglón de la lista de guisos: miniatura de su charola, nombre (a su ficha), precio, porciones, lo que
 // queda y, a la derecha, el «+». Lo de la derecha de la miniatura se pone al día en su lugar (firma).
-const cuerpoRenglon = (g, mostrarDescripcion) => `
-    <h3><a class="a-ficha" href="${fichaDe(g)}">${esc(g.nombre)}</a></h3>
+const cuerpoRenglon = (g, mostrarDescripcion, n = guisoDe(g.nombre).n) => `
+    <h3><a class="a-ficha" href="${fichaDe(g)}">${n ? `${esc(n)} · ` : ''}${esc(g.nombre)}</a></h3>
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="meta"><b>${money(g.precio_centavos)}</b> · ${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
@@ -559,6 +559,7 @@ const ACTIONS = {
     // En la lista, la miniatura vuela a su compartimento de la bolsa; en la ficha, la bolsa vuela al carrito
     // (la primera vez con el empacado completo; después, solo volando).
     const fila = el.closest?.('.renglon');
+    if (fila) { el.classList.remove('toque'); void el.offsetWidth; el.classList.add('toque'); }
     const pack = fila && bolsaUI?.conectada ? bolsaUI.volar(fila.querySelector('.charola'), id) : empacar(el, actual > 0);
     try { await setQty(id, actual + 1); } catch (err) { pack.cancel(); throw err; }
     pintarControles(id, 'sube');
