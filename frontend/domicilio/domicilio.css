@@ -11,7 +11,12 @@ html:where(.en-domicilio) { scroll-padding: calc(var(--alto-cabecera, 106px) + 1
 /* En html y en body: Safari de iOS no siempre respeta el de body solo. */
 html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 :where(.en-domicilio) main { min-height: 62dvh; padding-block: 16px 64px; }
-:where(.en-domicilio) :is(main, dialog) :is(button, a, label, input, select, textarea) { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+/* Las tarjetas que se tocan responden al instante, como las charolas de la tienda (barra.css). */
+@media (prefers-reduced-motion: no-preference) {
+  :where(.en-domicilio) :is(.modo, .taco, .sucursal) { transition: transform var(--t-chico) var(--entra), box-shadow var(--t-chico) var(--entra), border-color var(--t-gesto); }
+  :where(.en-domicilio) .modo:active { transform: translateY(1px); transition-duration: var(--t-gesto); }
+  @media (hover: hover) { :where(.en-domicilio) .modo:not(:has(input:checked)):hover { transform: translateY(-3px); box-shadow: 0 5px 0 var(--negro); } }
+}
 :where(.en-domicilio) main:focus, :where(.en-domicilio) [tabindex="-1"]:focus { outline: none; }
 :where(.en-domicilio) h1 { font: 800 clamp(2rem, 7vw, 3rem)/.92 var(--angosta); text-transform: uppercase; margin: 12px 0 12px; }
 :where(.en-domicilio) h2 { font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; margin: 8px 0 12px; }

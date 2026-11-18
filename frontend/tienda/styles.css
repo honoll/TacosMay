@@ -121,6 +121,25 @@
 :where(.en-tienda) [data-countdown] { display: inline-block; border-radius: 4px; font-variant-numeric: tabular-nums; font-weight: 700; }
 :where(.en-tienda) [data-countdown].pronto { color: #855400; }
 :where(.en-tienda) [data-countdown].urgente { color: var(--alerta); }
+/* El anillo: la parte del TTL que le queda al carrito (app.js pone --resta, de 0 a 1). Se vacía segundo a
+   segundo en línea recta; con movimiento reducido, salta de un valor al otro. */
+:where(.en-tienda) .anillo { width: 2.2rem; height: 2.2rem; flex: none; vertical-align: -.55em; transform: rotate(-90deg); }
+:where(.en-tienda) .anillo circle { fill: none; stroke-width: 4.5; }
+:where(.en-tienda) .anillo .pista { stroke: var(--acero); }
+:where(.en-tienda) .anillo .avance { stroke: var(--negro); stroke-dasharray: 100; stroke-dashoffset: calc(100 - 100 * var(--resta, 0)); }
+:where(.en-tienda) .anillo.pronto .avance { stroke: #855400; }
+:where(.en-tienda) .anillo.urgente .avance { stroke: var(--alerta); }
+:where(.en-tienda) .bolsa-cuentas .anillo { width: 1.4rem; height: 1.4rem; }
+/* Las existencias: una barra frente al guiso que más tiene; con pocas, de alerta. */
+:where(.en-tienda) .existencias { width: min(100%, 160px); height: 6px; margin: 2px 0 0; overflow: hidden; border-radius: 99px; background: var(--acero); }
+:where(.en-tienda) .existencias i { display: block; height: 100%; border-radius: inherit; background: var(--negro); transform-origin: left; transform: scaleX(var(--lleno, 0)); }
+:where(.en-tienda) .existencias.pocas i { background: var(--alerta); }
+@media (prefers-reduced-motion: no-preference) {
+  :where(.en-tienda) .anillo[data-listo] .avance { transition: stroke-dashoffset 1s linear, stroke var(--t-chico) var(--entra); }
+  /* Al entrar la lista o la ficha (no al ponerse al día en su lugar), la barra se vacía hasta lo que queda. */
+  :where(.en-tienda) :is(.renglones.entra > :not(.al-dia), .ficha) .existencias i { animation: vaciarse .4s .2s var(--entra) backwards; }
+  @keyframes vaciarse { from { transform: scaleX(1); } }
+}
 :where(.en-tienda) .total strong { display: inline-block; }
 
 /* ---------- Pantalla ancha: cada vista compuesta en dos columnas ---------- */

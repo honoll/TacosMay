@@ -40,6 +40,8 @@
 html { background: var(--crema); color-scheme: light; }
 body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.0625rem/1.5 var(--fuente); }
 :focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
+/* Al tocar, sin la espera del doble toque ni el destello gris de Safari: la respuesta la da cada botón. */
+:is(a, button, label, summary, input, select, textarea) { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* Aquí y no en landing.css: esta hoja nunca se apaga al cambiar de página, así el enlace no se asoma. */
 .saltar { position: absolute; left: 16px; top: -100px; z-index: 2; padding: 12px 16px; background: var(--negro); color: var(--crema); }
@@ -226,6 +228,13 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   @keyframes subir { from { transform: translateY(8px); opacity: 0; } }
 
   :is(.btn, button.primario):active { transform: translateY(2px); }
+
+  /* Una charola que lleva a su ficha responde al instante: se levanta al pasar el cursor y se hunde al tocarla. */
+  .charola:has(.a-ficha) { transition: transform var(--t-chico) var(--entra), box-shadow var(--t-chico) var(--entra); }
+  .charola:has(.a-ficha):active { transform: translateY(1px); box-shadow: none; transition-duration: var(--t-gesto); }
+  @media (hover: hover) {
+    .charola:has(.a-ficha):hover { transform: translateY(-4px); box-shadow: 0 6px 0 var(--negro); }
+  }
 
   .cargando i { animation: llenar .9s infinite; }
   .cargando i:nth-child(2) { animation-delay: .15s; }

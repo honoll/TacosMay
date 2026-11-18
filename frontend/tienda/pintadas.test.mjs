@@ -103,6 +103,7 @@ await espera(60);
 assert.equal(pintadas.length, 1, `con datos guardados: una sola pintada (fueron ${pintadas.length})`);
 assert.doesNotMatch(pintadas[0], /hueca/, 'sin esqueleto');
 assert.equal(llamadas.filter((u) => u === '/api/guisos').length, 2, 'y los vuelve a pedir por detrás (una vez al llegar)');
+assert.match(tarjetaDe('2')[0].querySelector('.datos').innerHTML, /class="existencias pocas"[^>]*><i style="--lleno:0\.600">/, 'barra de existencias: 3 frente a 5, de alerta');
 
 // ---------- 3 · Cambia el carrito: se pone al día en su tarjeta, sin repintar ni rehacer fotos ----------
 store.tm_sesion = JSON.stringify({ id: 'u1', nombre: 'Prueba', rol: 'cliente', token: 't' });
@@ -124,6 +125,8 @@ assert.equal(pintadas.length, 1, 'un cambio de existencia tampoco repinta <main>
 const [tinga] = tarjetaDe('3');
 assert.match(tinga.className, /agotado/, 'el renglón del guiso agotado se apaga');
 assert.match(tinga.querySelector('.datos').innerHTML, /Se acabó por hoy/);
+assert.doesNotMatch(tinga.querySelector('.datos').innerHTML, /existencias/, 'agotado, sin barra');
+assert.match(tinga.className, /al-dia/, 'puesto al día en su lugar: su barra no vuelve a entrar');
 for (const li of tarjetaDe('2')) assert.equal(li.escrituras, 0, 'y las demás siguen sin tocarse');
 
 // ---------- 5 · Entre vistas de la tienda: una pintada por cambio ----------

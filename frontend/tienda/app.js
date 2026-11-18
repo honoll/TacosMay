@@ -34,8 +34,16 @@ const isAdmin = () => user()?.rol === 'admin';
 
 // ---------- Carrito y cuenta regresiva (el TTL de Redis, a la vista) ----------
 
+// El anillo del reloj: la parte del TTL que le queda al carrito. Lleno = el TTL más largo visto (cada cambio
+// lo renueva completo). shortcut: al entrar sin cambiar nada, el lleno es lo que quedaba; si la API diera el
+// TTL completo se usaría ese.
+let ttlLleno = 1;
+const resta = () => (deadline ? Math.min(1, Math.max(0, (deadline - Date.now()) / 1000) / ttlLleno).toFixed(4) : '0');
+const anillo = () => `<svg class="anillo" data-anillo style="--resta:${resta()}" viewBox="0 0 36 36" aria-hidden="true"><circle class="pista" cx="18" cy="18" r="15.915"/><circle class="avance" cx="18" cy="18" r="15.915"/></svg>`;
+
 function setCart(c) {
   cart = { ...EMPTY, ...c };
+  ttlLleno = Math.max(ttlLleno, cart.expira_en_segundos || 0);
   deadline = cart.items.length && cart.expira_en_segundos > 0
     ? Date.now() + cart.expira_en_segundos * 1000 : 0;
   renderNav();
@@ -63,6 +71,13 @@ function tick() {
     el.classList.toggle('pronto', deadline > 0 && left <= 300 && left > 60);
     el.classList.toggle('urgente', deadline > 0 && left <= 60);
   });
+  for (const a of document.querySelectorAll('[data-anillo]')) {
+    a.style.setProperty('--resta', resta());
+    a.classList.toggle('pronto', deadline > 0 && left <= 300 && left > 60);
+    a.classList.toggle('urgente', deadline > 0 && left <= 60);
+    // La transición se enciende después del primer valor: al pintarse no barre desde lleno.
+    if (!a.dataset.listo) requestAnimationFrame(() => requestAnimationFrame(() => { a.dataset.listo = '1'; }));
+  }
   if (deadline && left === 0) {
     deadline = 0;
     // Redis redondea el TTL: un segundo de margen para no consultar antes de que borre la clave.
@@ -100,7 +115,7 @@ function pintarPanel() {
         <button type="button" data-cierra aria-label="Cerrar el carrito">✕</button>
       </header>
       ${cart.items.length ? `
-        <p class="expira">Expira en <strong data-countdown></strong></p>
+        <p class="expira">${anillo()} Expira en <strong data-countdown></strong></p>
         <ul class="panel-lista">${cart.items.map(({ guiso: g, cantidad }) => `
           <li><span>${esc(cantidad)} × ${esc(g.nombre)}</span><strong>${money(g.precio_centavos * cantidad)}</strong></li>`).join('')}</ul>
         <p class="total">Total: <strong>${money(cart.total_centavos)}</strong></p>` : '<p>Tu carrito está vacío. Las charolas, no.</p>'}
@@ -152,11 +167,19 @@ function control(g, cambio = '', lista = false) {
 // Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
 // La descripción solo se muestra si dice algo propio de ese guiso (conDescripcion lo decide).
 // Cada tarjeta lleva su clave (el guiso) y la firma de lo que muestra: si la firma no cambió, no se toca.
+// Cuánto queda de un guiso frente al que más tiene del listado (las existencias de Redis, a la vista).
+// Sin listado no hay con qué comparar: no se pinta. Con pocas (5 o menos) se pinta de alerta.
+function existencias(g) {
+  const tope = Math.max(0, ...guisos.map((x) => Number(x.stock) || 0));
+  if (!tope || !(g.stock > 0)) return '';
+  return `<p class="existencias${g.stock <= 5 ? ' pocas' : ''}" aria-hidden="true"><i style="--lleno:${(Math.min(g.stock, tope) / tope).toFixed(3)}"></i></p>`;
+}
 const cuerpoDe = (g, mostrarDescripcion) => `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
     <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
+    ${existencias(g)}
     <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`;
 const firma = (texto) => [...texto].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7).toString(36);
 const fichaDe = (g) => `#guiso/${encodeURIComponent(g.id)}`;
@@ -167,6 +190,7 @@ const cuerpoRenglon = (g, mostrarDescripcion, n = guisoDe(g.nombre).n) => `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="meta"><b>${money(g.precio_centavos)}</b> · ${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
+    ${existencias(g)}
     <div class="control" data-control="${esc(g.id)}">${control(g, '', true)}</div>`;
 const renglon = (g, mostrarDescripcion, cargar) => {
   const cuerpo = cuerpoRenglon(g, mostrarDescripcion);
@@ -277,7 +301,7 @@ const VIEWS = {
         const li = tarjetas[i];
         const cuerpo = cuerpoRenglon(g, mostrar(g));
         if (!li || li.dataset.firma === firma(cuerpo)) return;
-        li.className = `renglon${g.stock > 0 ? '' : ' agotado'}`;
+        li.className = `renglon al-dia${g.stock > 0 ? '' : ' agotado'}`; // al-dia: su barra de existencias no vuelve a entrar
         li.dataset.firma = firma(cuerpo);
         li.querySelector('.datos').innerHTML = cuerpo;
       });
@@ -315,6 +339,7 @@ const VIEWS = {
           <h1>${esc(g.nombre)}</h1>
           <p class="precio">${money(g.precio_centavos)}</p>
           <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
+          ${existencias(g)}
           ${g.descripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
           <div class="control" data-control="${esc(g.id)}">${control(g)}</div>
         </div>
@@ -363,7 +388,7 @@ const VIEWS = {
     return `
       ${VOLVER}
       <h1>Tu carrito</h1>
-      <p class="expira">Tu carrito expira en <strong data-countdown></strong>
+      <p class="expira">${anillo()} Tu carrito expira en <strong data-countdown></strong>
         <small>Cada cambio renueva el tiempo; en cero, se vacía solo. <a href="#ayuda">Envíos y preguntas</a></small></p>
       <ul class="lista">${cart.items.map(({ guiso: g, cantidad }) => `
         <li style="view-transition-name: fila-${String(g.id).replace(/\W/g, '')}">
