@@ -2,9 +2,7 @@
    logotipo, botones, charola) está en barra.css; aquí, solo las escenas de esta página.
    Guion: docs/diseno/guion-landing.md. Contrastes: F6 en docs/plan/tickets.md. */
 
-/* Kalam (SIL OFL): solo para el pizarrón del menú, que se escribe con tres plumones. */
-@font-face { font-family: "Kalam"; src: url("fuentes/kalam-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "Kalam"; src: url("fuentes/kalam-700-latin.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+/* Kalam (SIL OFL), la del pizarrón, se declara en barra.css con las demás: así está lista en cualquier página. */
 
 :where(.en-inicio) h1, :where(.en-inicio) h2, :where(.en-inicio) h3, :where(.en-inicio) p, :where(.en-inicio) ol, :where(.en-inicio) ul, :where(.en-inicio) address { margin: 0; }
 :where(.en-inicio) ol, :where(.en-inicio) ul { padding: 0; list-style: none; }

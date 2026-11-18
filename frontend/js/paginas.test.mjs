@@ -18,7 +18,7 @@ for (const p of paginas) {
   const h = html[p];
   assert.match(h, /<\/header>\n {2}<script>/, `${p}: el script de la cabecera va justo debajo de ella, antes del primer cuadro`);
   assert.equal(cabecera(h), cabecera(html['index.html']), `${p}: el script de la cabecera es el mismo que en la landing`);
-  for (const f of ['barlow-condensed-800', 'barlow-condensed-600', 'barlow-400', 'barlow-600']) {
+  for (const f of ['barlow-condensed-800', 'barlow-condensed-600', 'barlow-400', 'barlow-600', 'kalam-400', 'kalam-700']) {
     assert.ok(h.includes(`href="/fuentes/${f}-latin.woff2" as="font"`), `${p}: precarga ${f}`);
   }
   assert.ok(h.indexOf('rel="preload"') < h.indexOf('rel="stylesheet"'), `${p}: las fuentes se piden antes que la hoja de estilos`);
@@ -86,7 +86,8 @@ assert.ok(html['tienda/index.html'].includes('<link rel="prefetch" href="/">'), 
 
 const css = leer('barra.css');
 assert.match(css, /html \{ background: var\(--crema\)/, 'el lienzo es crema, nunca blanco');
-assert.equal((css.match(/font-display: fallback/g) || []).length, 4, 'las cuatro fuentes sin brinco de tipografía');
+assert.equal((css.match(/font-display: fallback/g) || []).length, 6, 'las seis fuentes, en la hoja que siempre se carga y sin brinco');
+for (const h of ['landing.css', 'tienda/styles.css']) assert.ok(!leer(h).includes('@font-face'), `${h}: no declara fuentes (van en barra.css, que tienen todas las páginas)`);
 assert.match(css, /\.cabecera \{ view-transition-name: cabecera;/, 'la cabecera tiene nombre propio en la transición');
 const sinMovimiento = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: no-preference)'));
 assert.ok(sinMovimiento.includes('@view-transition { navigation: auto; }'), 'la transición entre páginas solo con movimiento permitido');

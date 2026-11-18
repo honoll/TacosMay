@@ -32,6 +32,16 @@ document.body.append(anuncio);
 // El salto entre páginas lo maneja esto, no el navegador (si no, al volver brincaría la página vieja).
 history.scrollRestoration = 'manual';
 
+// Las fuentes del sitio, listas antes de cambiar el contenido: en Safari lo nuevo salía un instante con la
+// letra de respaldo. Están todas declaradas en barra.css y precargadas, así que casi siempre ya están; el
+// tope evita que una red mala detenga la navegación (entonces entra la de respaldo y cambia al llegar).
+const TOPE_FUENTES = 600;
+function fuentesListas() {
+  if (!document.fonts) return Promise.resolve();
+  const todas = Promise.all([...document.fonts].map((f) => f.load().catch(() => {})));
+  return Promise.race([todas, new Promise((r) => { setTimeout(r, TOPE_FUENTES); })]);
+}
+
 function pedir(ruta) {
   if (!pedidas.has(ruta)) {
     pedidas.set(ruta, fetch(ruta).then((r) => {
@@ -85,6 +95,7 @@ export async function ir(url, { empuja = true } = {}) {
   let pag;
   try {
     pag = guardadas.get(ruta) || await leer(ruta);
+    await fuentesListas();
   } catch {
     location.assign(url.href); // respaldo: navegación normal
     return;

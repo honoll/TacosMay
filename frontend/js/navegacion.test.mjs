@@ -50,6 +50,10 @@ let pedidosRed = [];
 let redFalla = false;
 let transiciones = 0;
 let movimiento = false;
+// Las fuentes: paginas.js las pide todas antes de cambiar. Una puede no llegar nunca (red mala).
+let fuentesPedidas = 0;
+let fuenteAtorada = false;
+const fuente = () => ({ load: () => { fuentesPedidas++; return fuenteAtorada ? new Promise(() => {}) : Promise.resolve(); } });
 
 const PARTES = {
   '/': () => {
@@ -81,6 +85,7 @@ Object.assign(globalThis, {
   document: {
     get title() { return this._t ?? ''; }, set title(v) { this._t = v; },
     get documentElement() { return raiz; },
+    fonts: [fuente(), fuente(), fuente()],
     head: { querySelectorAll: () => links, append() { throw new Error('paginas.js no debe agregar hojas'); } },
     body: { get children() { return [...html]; }, append(n) { n.dueno = html; html.push(n); } },
     querySelector(sel) {
@@ -182,6 +187,7 @@ const escuchas = () => JSON.stringify([Object.keys(ventana).map((k) => [k, venta
 
 assert.equal(await clic('/tienda/#carrito'), true, 'el clic a la otra página lo atiende paginas.js');
 assert.equal(asignado, null, 'sin recargar');
+assert.ok(fuentesPedidas >= 3, 'antes de cambiar, se piden las fuentes');
 assert.equal(location.href, `${ORIGEN}/tienda/#carrito`, 'la dirección es la de la tienda, con su #');
 assert.deepEqual(ids(), ['aviso', 'vista', 'esqueleto', 'script', 'panel-carrito'], 'lo de la tienda, en su lugar');
 assert.equal(html.find((n) => n.tagName === 'HEADER'), cabecera, 'la cabecera es la misma, sin tocar');
@@ -229,6 +235,16 @@ anclado = null;
 await clic('/#como');
 assert.equal(location.href, `${ORIGEN}/#como`);
 assert.equal(anclado, 'como', 'llega y se desplaza a la sección');
+
+// ---------- Una fuente que no llega no detiene la navegación ----------
+fuenteAtorada = true;
+await clic('/tienda/#carrito');
+assert.equal(location.pathname, '/', 'mientras espera las fuentes, todavía no cambia');
+await new Promise((r) => setTimeout(r, 700));
+assert.equal(location.pathname, '/tienda/', 'pasado el tope, cambia igual');
+assert.deepEqual(ids(), ['aviso', 'vista', 'esqueleto', 'script', 'panel-carrito']);
+fuenteAtorada = false;
+await clic('/');
 
 // ---------- Lo que no le toca a paginas.js ----------
 assert.equal(await clic('/#taqueria'), false, 'un # de la misma página lo atiende el navegador');

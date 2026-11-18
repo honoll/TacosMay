@@ -6,6 +6,9 @@
 @font-face { font-family: "Barlow Condensed"; src: url("fuentes/barlow-condensed-800-latin.woff2") format("woff2"); font-weight: 800; font-display: fallback; }
 @font-face { font-family: "Barlow"; src: url("fuentes/barlow-400-latin.woff2") format("woff2"); font-weight: 400; font-display: fallback; }
 @font-face { font-family: "Barlow"; src: url("fuentes/barlow-600-latin.woff2") format("woff2"); font-weight: 600; font-display: fallback; }
+/* Kalam (SIL OFL): solo para el pizarrón del menú de la landing, que se escribe con tres plumones. */
+@font-face { font-family: "Kalam"; src: url("fuentes/kalam-400-latin.woff2") format("woff2"); font-weight: 400; font-display: fallback; }
+@font-face { font-family: "Kalam"; src: url("fuentes/kalam-700-latin.woff2") format("woff2"); font-weight: 700; font-display: fallback; }
 
 :root {
   --acero: #d9dcdd;
