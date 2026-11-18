@@ -190,6 +190,7 @@ function pintarControles(id, cambio) {
 const BOLSA = document.getElementById('bolsa-molde').innerHTML;
 const ESQUELETO = document.getElementById('esqueleto').innerHTML + BOLSA;
 let bolsaUI = null; // la bolsa de la lista de guisos, mientras está a la vista
+let directo = false; // la próxima vista se pinta sin fundido (después de la escena del pedido)
 const moverse = () => globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ?? false;
 const TARDA = 200;
 const YA_PINTADO = Symbol('ya pintado'); // la vista se puso al día en su lugar: no hay nada que repintar
@@ -622,6 +623,10 @@ const ACTIONS = {
     let p;
     try { p = await api('/pedidos', { method: 'POST' }); } catch (err) { escena?.cancel(); throw err; }
     await escena?.listo;
+    // Después de la escena, «Mis pedidos» de un solo paso: la bolsa no se vacía a la vista y no hay fundido.
+    // Lo único que se mueve es el resaltado del pedido nuevo.
+    bolsaUI = null;
+    directo = true;
     setCart(EMPTY);
     notice(`Pedido #${p.id} confirmado por ${money(p.total_centavos)}.`);
     nuevo = p.id;
@@ -740,6 +745,8 @@ async function render() {
   if (r !== 'entrar' && r !== 'registro') desde = r === 'guiso' ? `guiso/${encodeURIComponent(param)}` : r;
   document.title = `${TITULOS[r]} — Los Tacos May`;
   const changed = r !== current;
+  const deUnPaso = directo;
+  directo = false;
   if (changed) borrando = null;
   current = r;
   renderNav();
@@ -768,7 +775,7 @@ async function render() {
     };
     // Entre vistas, un fundido corto del navegador; sin soporte, cambia sin animar. Solo al cambiar de
     // vista: los repintados de la misma (carrito) ya traen su propia transición.
-    if (!changed) return pintar();
+    if (!changed || deUnPaso) return pintar();
     // Hacia la ficha, la charola que se tocó se convierte en la de la ficha (mismo nombre de transición).
     if (r === 'guiso') view.querySelector(`[data-control="${CSS.escape(param)}"]`)?.closest('.charola')?.style.setProperty('view-transition-name', 'charola-ficha');
     await transicion(pintar);

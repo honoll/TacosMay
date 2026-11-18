@@ -49,7 +49,9 @@ vez (del cuarto en adelante, sin vuelo).
 
 ### Sumar otra unidad del mismo guiso (≈ 0.75 s)
 Vuela al compartimento de ese guiso (0.45 s); al confirmar la API, la cantidad de la etiqueta
-rueda («× 2») y la banda de calor pasa otra vez (0.30 s).
+rueda («× 2») y la banda de calor pasa otra vez (0.30 s). Tocar «+» varias veces seguidas no
+encima nada: un solo vuelo por guiso a la vez, y si su compartimento todavía se está llenando,
+solo cambia el número.
 
 ### Quitar (cantidad a cero) (0.25 s)
 El compartimento se vacía (el guiso se desvanece y la etiqueta cae) y los que siguen se recorren.
@@ -58,16 +60,23 @@ El compartimento se vacía (el guiso se desvanece y la etiqueta cae) y los que s
 El guiso que volaba se sacude y se desvanece (0.30 s); no se abre compartimento; sale el aviso con
 el mensaje (qué pasó y qué hacer), como hoy.
 
-### Confirmar el pedido (≈ 2.4 s, se salta con un toque o con Escape)
+### Confirmar el pedido (≈ 2.65 s, se salta con un toque o con Escape)
+
+Uno después de otro: ninguna pieza se encima con otra (corregido el 17-nov-2026: antes el avión
+llegaba encima de la caja y la bolsa se quedaba a la vista).
 
 | Paso | Empieza | Dura | Qué se ve |
 |---|---|---|---|
-| Entra la caja | 0.00 s | 0.25 s | Una caja abierta aparece en el centro de la pantalla |
-| La bolsa entra | 0.25 s | 0.40 s | La bolsa sellada, con los colores de sus compartimentos, baja y entra en la caja |
+| Entra la caja | 0.00 s | 0.25 s | Una caja abierta aparece a la derecha de la escena |
+| La bolsa entra | 0.25 s | 0.40 s | La bolsa sellada, con los colores de sus compartimentos, baja y se oculta en la caja |
 | Se cierra | 0.65 s | 0.30 s | Las dos tapas se doblan |
 | Cinta y etiqueta | 0.95 s | 0.30 s | Pasa la cinta y se pega la etiqueta con el sello de la marca |
-| Al avión | 1.25 s | 0.40 s | La caja se encoge hacia el avión, que llega desde la izquierda |
-| Despega | 1.65 s | 0.75 s | El avión sube en diagonal y sale de la pantalla |
+| Llega el avión | 1.25 s | 0.30 s | El avión entra desde la izquierda y se detiene a un lado de la caja, sin tocarla |
+| Al avión | 1.55 s | 0.40 s | La caja se encoge hacia el avión y desaparece en él |
+| Despega | 1.95 s | 0.70 s | El avión sube en diagonal y sale de la pantalla |
+
+Al terminar, «Mis pedidos» aparece de un solo paso: sin fundido entre vistas y sin que la bolsa se
+vacíe a la vista. Lo único que se mueve ahí es el resaltado del pedido nuevo.
 
 La llamada `POST /pedidos` sale al tocar «Confirmar pedido», en paralelo. Si la API rechaza (el
 409 de existencias de la demo), la escena se retira y sale el error. Al terminar (o al saltarla)
@@ -80,6 +89,10 @@ Sin vuelo, sin pasos y sin escena de envío: el compartimento aparece ya sellado
 cambia y, al confirmar, se llega directo a «Mis pedidos».
 
 ## Disposición
+
+**La lista:** cada guiso en su tarjeta (miniatura, nombre, datos y el «+» junto a ellos), en una
+columna en celular y en dos cuando caben (desde 700 px de ancho), para que el «+» no quede lejos
+del guiso.
 
 **Escritorio (≥ 900 px):** dos columnas. A la izquierda la lista; a la derecha la bolsa, fija
 mientras se desplaza la lista (`position: sticky`), con su título «Tu carrito», los

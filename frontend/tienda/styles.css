@@ -248,7 +248,7 @@
 @media (prefers-reduced-motion: no-preference) {
   :where(.en-tienda) .pedidos .nuevo { animation: llega-pedido 1.2s var(--sale); }
   @keyframes llega-pedido { from { background: #f2b33d; } }
-  :where(.en-tienda) .pedidos details[open] > :not(summary) { animation: abre var(--t-chico) var(--entra); }
+  :where(.en-tienda) .pedidos li:not(.nuevo) details[open] > :not(summary) { animation: abre var(--t-chico) var(--entra); }
   @keyframes abre { from { opacity: 0; transform: translateY(-6px); } }
 }
 :where(.en-tienda) .otro, :where(.en-tienda) .vacio { display: grid; justify-items: center; gap: 12px; padding: clamp(24px, 5vw, 56px); border-radius: 12px; background: var(--acero); text-align: center; }
@@ -385,8 +385,11 @@
 
 /* ---------- Guisos en lista, con la bolsa a un lado (docs/diseno/empacado.md) ---------- */
 :where(.en-tienda) .lista-guisos > h2 { margin-top: 28px; }
-:where(.en-tienda) .renglones { display: grid; margin: 0; padding: 0; list-style: none; }
-:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 0; border-bottom: 2px dashed var(--marco); }
+:where(.en-tienda) .renglones { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 12px; border: 2px solid var(--marco); border-radius: 12px; background: #fff; }
+@media (min-width: 700px) {
+  :where(.en-tienda) .renglones { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+}
 :where(.en-tienda) .renglon > .charola.mini { border-width: 3px; border-radius: 8px; }
 :where(.en-tienda) .renglon > .charola.mini .num { font-size: .85rem; }
 :where(.en-tienda) .renglon > .charola.mini .vapor { display: none; }
@@ -396,7 +399,7 @@
 :where(.en-tienda) .renglon .tag { justify-self: start; }
 :where(.en-tienda) .renglon .control { position: relative; z-index: 1; grid-column: 2; grid-row: 1 / span 4; margin: 0; padding: 0; }
 :where(.en-tienda) .renglon .mas { width: 48px; min-height: 48px; padding: 0; justify-content: center; font: 800 1.7rem/1 var(--angosta); }
-:where(.en-tienda) .renglon .cantidad { width: 140px; }
+:where(.en-tienda) .renglon .cantidad { width: 124px; }
 /* Todo el renglón lleva a la ficha; el control queda por encima. */
 :where(.en-tienda) .renglon .a-ficha::after { inset: 0; aspect-ratio: auto; }
 :where(.en-tienda) .renglon.agotado > .charola { filter: grayscale(1); opacity: .7; }
@@ -452,14 +455,14 @@
 /* ---------- La escena del envío (tienda/envio.js) ---------- */
 :where(.en-tienda) .envio { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center; background: rgb(247 244 238 / .95); }
 :where(.en-tienda) .envio-escena { position: relative; width: min(340px, 86vw); aspect-ratio: 3 / 2; }
-:where(.en-tienda) .envio-caja { position: absolute; left: 28%; bottom: 6%; width: 44%; overflow: visible; }
+:where(.en-tienda) .envio-caja { position: absolute; left: 46%; bottom: 6%; width: 44%; overflow: visible; }
 :where(.en-tienda) .envio-caja .tapa, :where(.en-tienda) .envio-caja .cinta, :where(.en-tienda) .envio-caja .etiqueta { transform-box: fill-box; }
 :where(.en-tienda) .envio-caja .tapa { transform-origin: bottom; }
 :where(.en-tienda) .envio-caja .cinta { transform-origin: top; transform: scaleY(0); }
 :where(.en-tienda) .envio-caja .etiqueta { opacity: 0; }
-:where(.en-tienda) .envio-bolsa { position: absolute; left: 37%; top: -6%; width: 26%; aspect-ratio: 3 / 4; display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 3px; padding: 8px 4px 4px; border: 2px solid rgb(20 18 16 / .55); border-radius: 6px 6px 12px 12px; background: rgb(255 255 255 / .8); }
+:where(.en-tienda) .envio-bolsa { position: absolute; left: 55%; top: -6%; width: 26%; aspect-ratio: 3 / 4; display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 3px; padding: 8px 4px 4px; border: 2px solid rgb(20 18 16 / .55); border-radius: 6px 6px 12px 12px; background: rgb(255 255 255 / .8); }
 :where(.en-tienda) .envio-bolsa i { aspect-ratio: 1; border-radius: 4px; background: var(--c); }
-:where(.en-tienda) .envio-avion { position: absolute; left: 50%; bottom: 0; width: 22%; color: var(--negro); opacity: 0; transform: translateX(-260%) rotate(90deg); }
+:where(.en-tienda) .envio-avion { position: absolute; left: 6%; bottom: 8%; width: 24%; color: var(--negro); opacity: 0; transform: translateX(-160%) rotate(90deg); }
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -480,18 +483,20 @@
   @keyframes comp-sale { to { transform: scale(.9); opacity: 0; } }
 
   /* Enviar: entra la caja, la bolsa entra, se cierra, cinta y etiqueta, al avión, despega (≈ 2.4 s). */
-  :where(.en-tienda) .envio-caja { animation: env-caja .25s var(--entra) backwards, env-al-avion .4s var(--sale) 1.25s forwards; }
+  /* Uno después de otro, sin encimarse (≈ 2.65 s): entra la caja; la bolsa baja y se oculta dentro; tapas,
+     cinta y etiqueta; el avión llega a un lado; la caja se encoge hacia él; despega. */
+  :where(.en-tienda) .envio-caja { animation: env-caja .25s var(--entra) backwards, env-al-avion .4s var(--sale) 1.55s forwards; }
   :where(.en-tienda) .envio-bolsa { animation: env-bolsa .4s cubic-bezier(.5, 0, .9, .5) .25s forwards; }
   :where(.en-tienda) .envio-caja .tapa { animation: env-tapa .3s var(--entra) .65s forwards; }
   :where(.en-tienda) .envio-caja .cinta { animation: env-cinta .15s linear .95s forwards; }
   :where(.en-tienda) .envio-caja .etiqueta { animation: env-etiqueta .15s cubic-bezier(.2, 1.5, .4, 1) 1.1s forwards; }
-  :where(.en-tienda) .envio-avion { animation: env-avion .4s var(--entra) 1s forwards, env-despega .75s cubic-bezier(.5, 0, .9, .5) 1.65s forwards; }
+  :where(.en-tienda) .envio-avion { animation: env-avion .3s var(--entra) 1.25s forwards, env-despega .7s cubic-bezier(.5, 0, .9, .5) 1.95s forwards; }
   @keyframes env-caja { from { transform: scale(.8); opacity: 0; } }
-  @keyframes env-bolsa { to { transform: translateY(95%) scale(.8); } }
+  @keyframes env-bolsa { 75% { transform: translateY(80%) scale(.8); opacity: 1; } to { transform: translateY(95%) scale(.8); opacity: 0; } }
   @keyframes env-tapa { to { transform: scaleY(.12); } }
   @keyframes env-cinta { to { transform: scaleY(1); } }
   @keyframes env-etiqueta { from { transform: scale(1.4); opacity: 0; } to { opacity: 1; } }
-  @keyframes env-al-avion { to { transform: translate(0, 22%) scale(.12); opacity: 0; } }
-  @keyframes env-avion { to { transform: translateX(-50%) rotate(90deg); opacity: 1; } }
-  @keyframes env-despega { from { transform: translateX(-50%) rotate(90deg); opacity: 1; } to { transform: translate(260%, -320%) rotate(70deg); opacity: 0; } }
+  @keyframes env-al-avion { to { transform: translate(-114%, 16%) scale(.15); opacity: 0; } }
+  @keyframes env-avion { to { transform: rotate(90deg); opacity: 1; } }
+  @keyframes env-despega { from { transform: rotate(90deg); opacity: 1; } to { transform: translate(320%, -300%) rotate(70deg); opacity: 0; } }
 }

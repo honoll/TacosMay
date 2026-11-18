@@ -17,6 +17,7 @@ export function bolsa(raiz) {
   const comps = new Map();    // id del guiso → su compartimento
   const orden = [];           // ids, en el orden en que entraron a la bolsa
   const llegadas = new Map(); // id → cuándo aterriza su vuelo (para que el llenado espere al guiso)
+  const volando = new Set();  // guisos con un vuelo en el aire: tocar «+» otra vez no lanza otro
   let vuelos = 0;
 
   const ahora = () => performance.now();
@@ -36,8 +37,12 @@ export function bolsa(raiz) {
   }
 
   // Un paso del compartimento (llena, suma, sale). Espera a que aterrice el guiso que viene volando.
+  // Si el compartimento todavía se está llenando, sumar solo cambia el número: no reinicia la animación.
+  const DURA = { llena: 800, suma: 350 };
   function paso(li, clase) {
+    if (clase === 'suma' && ahora() < Number(li.dataset.hasta || 0)) return;
     const espera = Math.max(0, (llegadas.get(li.dataset.clave) ?? 0) - ahora());
+    li.dataset.hasta = String(ahora() + espera + DURA[clase]);
     li.style.setProperty('--espera', `${Math.round(espera)}ms`);
     li.classList.remove('llena', 'suma');
     void li.offsetWidth;
@@ -119,7 +124,7 @@ export function bolsa(raiz) {
   // La miniatura de la charola vuela del renglón a la bolsa. Devuelve cancel() para cuando la API rechaza:
   // el guiso se sacude y se desvanece donde vaya.
   function volar(miniatura, id) {
-    if (!moverse() || !miniatura || vuelos >= MAX_VUELOS) return { cancel() {} };
+    if (!moverse() || !miniatura || vuelos >= MAX_VUELOS || volando.has(String(id))) return { cancel() {} };
     const a = miniatura.getBoundingClientRect();
     const b = destino(id).getBoundingClientRect();
     const clon = miniatura.cloneNode(true);
@@ -130,10 +135,11 @@ export function bolsa(raiz) {
     const k = Math.min(1, (b.width * 0.7) / a.width);
     const fin = `translate(${b.left + b.width / 2 - (a.left + a.width / 2)}px, ${b.top + b.height / 2 - (a.top + a.height / 2)}px) scale(${k})`;
     vuelos++;
+    volando.add(String(id));
     llegadas.set(String(id), ahora() + VUELO);
     const anim = clon.animate([{ transform: 'none' }, { transform: fin }], { duration: VUELO, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' });
     let quitado = false;
-    const quitar = () => { if (quitado) return; quitado = true; vuelos--; clon.remove(); };
+    const quitar = () => { if (quitado) return; quitado = true; vuelos--; volando.delete(String(id)); clon.remove(); };
     anim.finished.then(quitar, quitar);
     return {
       cancel() {

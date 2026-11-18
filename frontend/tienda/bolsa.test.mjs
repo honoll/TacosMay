@@ -108,7 +108,13 @@ assert.equal(raiz.querySelector('.bolsa-n').textContent, '1 guiso');
 assert.equal(raiz.querySelectorAll('.bolsa-total')[0].textContent, '$200.00');
 assert.equal(raiz.cl().includes('vacia'), false);
 
+// ---------- Sumar a medio llenado: solo cambia el número, la animación no se reinicia ----------
+b.pintar([{ guiso: GUISOS[0], cantidad: 2 }], 40000);
+assert.ok(carne.cl().includes('llena') && !carne.cl().includes('suma'), 'tocar «+» seguido no encima animaciones');
+assert.equal(carne.querySelector('.n').textContent, '2');
+
 // ---------- Sumar: más del mismo guiso cambia su cantidad, sin abrir otro ----------
+reloj += 1000; // ya terminó de llenarse
 b.pintar([{ guiso: GUISOS[0], cantidad: 3 }], 60000);
 assert.equal(comps().length, 1, 'no abre otro compartimento');
 assert.equal(comps()[0], carne, 'es el mismo: no se rehace ni repite su llenado');
@@ -147,6 +153,8 @@ assert.equal(comps()[0].style.vars['--espera'], '450ms', 'el compartimento se ll
 await espera(20);
 assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 0, 'al aterrizar, la miniatura se retira');
 vuelo = b.volar(mini, '2');
+b.volar(mini, '2');
+assert.equal(cuerpo.children.filter((c) => c.cl().includes('vuela')).length, 1, 'un solo vuelo por guiso a la vez');
 const antes = animaciones.length;
 vuelo.cancel();
 assert.ok(animaciones.length > antes && JSON.stringify(animaciones.at(-1)).includes('translateX(6px)'), 'la API rechazó: el guiso se sacude y se desvanece');
