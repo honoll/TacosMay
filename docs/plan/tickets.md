@@ -524,6 +524,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Segundo tiempo · vista 7 Landing y ayuda (17-nov-2026):** «Lo que más sale» sube a después del héroe con precio y botón a la ficha; todas las charolas enlazan a su ficha; titular que entra por renglón; charolas huecas mientras responde la API; franja de colores bajo el enlace de la sección actual; vista «Envíos y preguntas» (`#ayuda`) enlazada desde el pie, el carrito y la ficha, solo con lo que es cierto hoy. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
 
+- **Segundo tiempo · vista 8 Transiciones (17-nov-2026):** Fundido de 150 ms entre vistas de la tienda con `startViewTransition` (la charola tocada se convierte en la de la ficha) y entre páginas con `@view-transition`; sin soporte o con movimiento reducido, el cambio es inmediato. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

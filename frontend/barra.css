@@ -205,3 +205,11 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   .cargando i:nth-child(3) { animation-delay: .3s; }
   @keyframes llenar { 0%, 100% { background: transparent; } 40%, 70% { background: var(--negro); } }
 }
+
+/* ---------- Transiciones ---------- */
+/* Entre vistas de la tienda (startViewTransition) y entre páginas del sitio: un fundido de 150 ms.
+   Es una mejora: donde el navegador no la tiene, o con movimiento reducido, el cambio es inmediato. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 150ms; }
+}

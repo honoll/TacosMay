@@ -641,13 +641,21 @@ async function render() {
     try { html = await VIEWS[r](); } finally { clearTimeout(tarda); }
     if (id !== renderId) return; // ya hay un render más nuevo
     const focusId = document.activeElement?.id;
-    view.innerHTML = html;
-    view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
-    tick();
-    // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.
-    // Sin desplazar: enfocar <main> escondía la cabecera (y el logotipo) al cargar.
-    ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.({ preventScroll: true });
-    if (changed) scrollTo(0, 0);
+    const pintar = () => {
+      view.innerHTML = html;
+      view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
+      tick();
+      // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.
+      // Sin desplazar: enfocar <main> escondía la cabecera (y el logotipo) al cargar.
+      ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.({ preventScroll: true });
+      if (changed) scrollTo(0, 0);
+    };
+    // Entre vistas, un fundido corto del navegador; sin soporte, cambia sin animar. Solo al cambiar de
+    // vista: los repintados de la misma (carrito) ya traen su propia transición.
+    if (!changed || !document.startViewTransition) return pintar();
+    // Hacia la ficha, la charola que se tocó se convierte en la de la ficha (mismo nombre de transición).
+    if (r === 'guiso') view.querySelector(`[data-control="${CSS.escape(param)}"]`)?.closest('.charola')?.style.setProperty('view-transition-name', 'charola-ficha');
+    await document.startViewTransition(pintar).updateCallbackDone;
   });
 }
 

@@ -132,3 +132,4 @@ Investigación y chocan con la marca.
 | 5 Mis pedidos | Hecho, sin ver en pantalla (17-nov-2026) |
 | 6 Administración | Hecho, sin ver en pantalla (17-nov-2026) |
 | 7 Landing y ayuda | Hecho, sin ver en pantalla (17-nov-2026) |
+| 8 Transiciones | Hecho, sin ver en pantalla (17-nov-2026) |
