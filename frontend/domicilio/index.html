@@ -63,18 +63,22 @@
     </div>
 
     <ol class="pasos-dom" aria-label="Pasos del pedido">
-      <li data-vista="modo"><span class="n">1</span> <span class="t">Cómo lo quieres</span></li>
-      <li data-vista="menu"><span class="n">2</span> <span class="t">Menú</span></li>
-      <li data-vista="orden"><span class="n">3</span> <span class="t">Tu orden</span></li>
+      <li data-vista="menu"><span class="n">1</span> <span class="t">Menú</span></li>
+      <li data-vista="orden"><span class="n">2</span> <span class="t">Tu orden</span></li>
+      <li data-vista="modo"><span class="n">3</span> <span class="t">Entrega</span></li>
       <li data-vista="pagar"><span class="n">4</span> <span class="t">Pagar</span></li>
       <li data-vista="seguimiento"><span class="n">5</span> <span class="t">Seguimiento</span></li>
     </ol>
+
+    <!-- Cómo y dónde, siempre a la vista (como en el flujo de referencia): se puede cambiar en cualquier momento
+         antes de pagar. El tiempo es el de la cotización de prueba. -->
+    <button type="button" class="entrega-chip" data-ir="modo"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg> <span class="chip-donde">¿A domicilio o en la barra?</span> <span class="chip-eta"></span></button>
 
     <p class="cerrado nota-dom" hidden>Ahorita la cocina está cerrada. La barra del centro cierra a las 4 a. m.; la hora de apertura está por confirmar. Puedes ver el menú, pero no pedir.</p>
 
     <div class="dom-rejilla">
       <div class="dom-vistas">
-        <!-- 1 · Cómo lo quieres: a domicilio (dirección y cobertura) o recoger (qué barra) -->
+        <!-- 3 · Entrega: a domicilio (dirección y cobertura) o recoger (qué barra). Se pide antes de pagar. -->
         <section id="vista-modo" data-vista="modo" aria-labelledby="t-modo">
           <h2 id="t-modo">¿Cómo quieres tus tacos?</h2>
           <fieldset class="modos">
@@ -115,10 +119,10 @@
             </div>
           </div>
 
-          <div class="acciones"><button type="button" class="primario" data-ir="menu" id="a-menu" disabled>Ver el menú</button></div>
+          <div class="acciones"><button type="button" class="primario" data-ir="pagar" id="a-menu" disabled>Continuar a pagar</button></div>
         </section>
 
-        <!-- 2 · Menú por secciones; «Agregar» abre el detalle del taco -->
+        <!-- 1 · Menú por secciones: «+» agrega uno; el nombre abre el detalle del taco (opciones, nota, cantidad) -->
         <section id="vista-menu" data-vista="menu" aria-labelledby="t-menu" hidden>
           <h2 id="t-menu">Menú</h2>
           <p class="precios-ejemplo">Los del pizarrón de la barra. <strong>Precios de ejemplo</strong>, por confirmar.</p>
@@ -126,7 +130,7 @@
           <div class="menu-secciones"></div>
         </section>
 
-        <!-- 3 · Tu orden: editable, con cómo se entrega y la propina -->
+        <!-- 2 · Tu orden: editable, con cómo se entrega y la propina -->
         <section id="vista-orden" data-vista="orden" aria-labelledby="t-orden" hidden>
           <h2 id="t-orden">Tu orden</h2>
           <p class="orden-vacia" hidden>Tu orden está vacía.</p>
@@ -230,10 +234,8 @@
       <div class="det-foto"></div>
       <h2 id="det-nombre"></h2>
       <p class="det-precio"></p>
-      <fieldset class="complementos" disabled>
-        <legend>Salsas y complementos</legend>
-        <p>Por confirmar con la taquería.</p>
-      </fieldset>
+      <div class="det-grupos"></div>
+      <p class="det-faltan problema" tabindex="-1" role="alert" hidden></p>
       <label for="det-nota">Nota para la cocina <span class="opcional">(opcional)</span></label>
       <textarea id="det-nota" name="nota" rows="2" maxlength="140" placeholder="Por ejemplo: sin cebolla"></textarea>
       <div class="det-pie">

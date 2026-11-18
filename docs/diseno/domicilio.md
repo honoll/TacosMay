@@ -15,6 +15,58 @@ Hay dos productos distintos, y la página lo dice:
 **Entradas:** el pie de todas las páginas («Tacos a domicilio») y una nota discreta bajo el pizarrón de
 la landing. No está en la navegación principal.
 
+## Flujo de referencia: Orinoco
+
+Referencia principal desde el 18-nov-2026: es una taquería como la nuestra. Alejandro pidió copiar su
+sistema de pedido (entrega, recoger, orden). Se copia **cómo funciona**; sus textos, fotos, logotipo,
+nombres de productos, precios y código no se usan.
+
+**Cómo se vio (18-nov-2026, de madrugada):** en <https://pido.taqueriaorinoco.com/pedir> como visitante,
+en el navegador. Para probar la entrega se escribió un **lugar público** de la Ciudad de México (no una
+dirección personal). Se eligió una sucursal para recoger y se agregó un taco al carrito. **No** se creó
+cuenta, no se escribieron datos personales, no se aceptaron términos y no se envió ningún pedido. Las
+sucursales estaban cerradas a esa hora: el botón «Continuar» del carrito estaba apagado, así que **de ahí
+en adelante no se vio nada**.
+
+**En qué está montada:** en **Justo** (`getjusto.com`), una plataforma chilena de tienda propia para
+restaurantes: el pie dice «Powered by» con su enlace, y los archivos y fotos salen de `webcdn.getjusto.com`
+y `tofuu.getjusto.com`. La cuenta del cliente es una cuenta Justo («¿Ya tienes una cuenta Justo? Inicia
+sesión»). Es un servicio que la familia podría contratar tal cual en vez de construirlo; su precio para
+México no se encontró (una nota de Forbes habla de 7 a 12 % de comisión en Chile, sin fecha reciente):
+habría que pedir cotización. No confundir con «Jüsto», el súper en línea que salió de México.
+
+| # | Paso en Orinoco | Qué decide el cliente | Qué ve | Fuente |
+|---|---|---|---|---|
+| 1 | Se llega **directo al menú** | Nada todavía | Cabecera con «¿Dónde quieres pedir?» (chip) y el carrito con su total; las categorías en una fila (con buscador); una foto grande; las tarjetas | Visto |
+| 2 | «¿Cómo quieres tu pedido?» (diálogo, desde el chip o al querer seguir) | Delivery o Pickup (pestañas) | Delivery: «Compartir ubicación» o buscar dirección con autocompletar; enlace para entrar con cuenta Justo. Pickup: buscador y lista de locales con nombre y dirección | Visto |
+| 3 | Confirmar la dirección (delivery) | Ajustar el pin | Dirección, «Detalles de entrega (depto., casa)» opcional, mapa con pin, «Usar dirección» u «otra dirección» | Visto |
+| 4 | Cabecera ya elegida | — | «[Local], para retirar» o la dirección, y un **tiempo estimado** (30 min recoger, 45 min a domicilio en la prueba). Con el local cerrado, una franja «cerrados hasta las …» | Visto |
+| 5 | Menú por categorías | Qué platillo | Secciones (tacos, costras, especiales, complementos, postres, bebidas); cada tarjeta: foto, nombre, descripción corta, precio y un **«+» que agrega sin abrir nada**; el «+» se vuelve **bote · n · +** | Visto |
+| 6 | Detalle del platillo (diálogo con dirección propia) | Opciones, nota, cantidad | **Grupos de modificadores**: cada uno dice «Opcional» u obligatorio, «Selecciona hasta N», «n seleccionados · Sin seleccionar / Completo»; cada opción con su contador; al tope, las demás se apagan. «Instrucciones especiales», − 1 + y «Agregar $» | Visto (no se encontró un grupo obligatorio; los complementos solo traen instrucciones) |
+| 7 | Carrito (panel lateral) | Editar, quitar, cambiar entrega | «Tu carrito (n)», tiempo estimado, la entrega con su selector, renglones con bote/− n + y «Editar», subtotal, aviso si está cerrado y «Continuar» | Visto. Sin envío ni propina a la vista en el carrito |
+| 8 | Sin entrega elegida | — | Aviso «ingresa una dirección o selecciona un local para continuar» | Visto |
+| 9 | Ubicaciones | — | Cada local con dirección, teléfono, días y horario; buscar el más cercano por dirección | Visto |
+| 10 | Datos, pago, propina, confirmación, seguimiento | — | — | **No visto** (cerrado; y los términos de su sitio salen vacíos) |
+
+## Orinoco frente al prototipo
+
+| Lo de Orinoco | En el prototipo | Estado |
+|---|---|---|
+| Menú primero, sin elegir antes la entrega | Se llega al menú; se llena la orden sin haber elegido | **Adoptado** |
+| Chip de entrega arriba con tiempo estimado | Chip «¿A domicilio o en la barra?» → «A domicilio · colonia ≈ 25 min» o «Recoger en la barra del centro ≈ 15 min» (tiempos de prueba); se toca para cambiar | **Adoptado** |
+| La entrega se pide al querer seguir | «Ir a pagar» sin entrega lleva a «Entrega»; ya elegida, «Continuar a pagar» | **Adoptado** (pasos: menú → tu orden → entrega → pagar → seguimiento) |
+| «+» que agrega sin abrir; se vuelve bote · n · + | Igual en cada taco del menú; el nombre abre el detalle | **Adoptado** |
+| Grupos de modificadores con tope, obligatorio u opcional y «Completo» | Lógica completa en `menu.js` (`ajustar`) y `flujo.js`; el detalle los pinta con casillas, dice cuántas lleva y apaga las demás al tope; sin lo obligatorio no agrega y dice qué falta; una opción con costo suma al taco | **Adoptado el mecanismo**; los grupos reales (qué lleva cada taco, salsas, extras) son `PENDIENTE-CLIENTE`: hoy el detalle muestra «Quitar ingredientes» y «Salsas» como «por confirmar» |
+| Instrucciones especiales | «Nota para la cocina» | Ya existía |
+| Carrito con renglones editables y «Editar» | «Tu orden» | Ya existía |
+| Delivery / Pickup con lista de locales y buscador | «A domicilio / Recoger en la barra», una barra | Existe con una barra; las demás y el buscador, cuando haya más locales (`PENDIENTE-CLIENTE`) |
+| Compartir ubicación, mapa con pin | Calle, colonia y referencias | No adoptado: el mapa y la ubicación necesitan un servicio de mapas (por conectar) |
+| Tiempo estimado por modo | Del simulado (25 min a domicilio, 15 recoger) | Adoptado con tiempos de prueba; los reales, `PENDIENTE-CLIENTE` |
+| Franja «cerrado hasta las …» | Aviso de cerrado («apertura por confirmar») | Existe; la hora de apertura es `PENDIENTE-CLIENTE` |
+| Horarios y teléfono por local | — | `PENDIENTE-CLIENTE` |
+| Cuenta de la plataforma | Invitado o la cuenta de la tienda | Sin cambio |
+| Buscador del menú | — | No adoptado: son catorce tacos en tres secciones |
+
 ## Flujo de referencia: Toks
 
 Alejandro pidió copiar el **flujo** de pedido de Toks (el orden de pasos y decisiones), no su aspecto: la
@@ -81,13 +133,17 @@ está cerrada al pagar (la visita fue de noche: todas decían «Cerrado» y aun 
 
 ## El flujo como quedó
 
-1. **Cómo lo quieres.** A domicilio: dirección y «Ver si llegamos» (cotiza el envío y dice qué barra lo
+Desde Orinoco (18-nov): el menú va primero y la entrega se pide antes de pagar; arriba, un chip dice cómo
+y dónde, con su tiempo de prueba, y se toca para cambiarlo.
+
+1. **Menú.** Los catorce nombres del pizarrón en tres secciones (tacos de $40, $45 y $60, **precios de
+   ejemplo**). «+» agrega uno y se vuelve bote · n · +; el nombre abre el **detalle del taco**: grupos de
+   opciones (hoy «por confirmar»), nota para la cocina y cantidad.
+2. **Tu orden.** Renglones editables, cómo se entrega (con «Cambiar») y propina. «Ir a pagar» lleva antes
+   a «Entrega» si falta.
+3. **Entrega.** A domicilio: dirección y «Ver si llegamos» (cotiza el envío y dice qué barra lo
    prepara). Recoger: la barra del centro con su dirección real. Fuera de cobertura, cerrado o error: lo
    dice con franqueza y ofrece recoger o el guiso empacado.
-2. **Menú.** Los catorce nombres del pizarrón en tres secciones (tacos de $40, $45 y $60, **precios de
-   ejemplo**). «Agregar» abre el **detalle del taco**: cantidad, nota para la cocina y el lugar para
-   salsas y complementos «por confirmar».
-3. **Tu orden.** Renglones editables, cómo se entrega (con «Cambiar») y propina.
 4. **Pagar.** Tus datos (invitado o cuenta de la tienda), para cuándo (lo antes posible; programar,
    por conectar), cómo pagas («al recibir»; en línea, por conectar) y la revisión con el desglose. Si la
    cotización venció se vuelve a pedir; si el envío cambió, se avisa antes de pedir.

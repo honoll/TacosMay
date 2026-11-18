@@ -7,7 +7,7 @@ import { money, esc, session } from '../js/api.js';
 import { charola, picto } from '../js/barra.js';
 import { iniciarCabecera, medirCabecera } from '../js/cabecera.js';
 import { toques } from '../js/toques.js';
-import { SECCIONES, guiso, MAX_POR_GUISO } from './menu.js';
+import { SECCIONES, guiso, grupos, ajustar, MAX_POR_GUISO } from './menu.js';
 import { SUCURSALES, sucursal, abierta, demostrarCerrada } from './sucursales.js';
 import * as reparto from './reparto.js';
 import { flujo, PROPINAS } from './flujo.js';
@@ -24,7 +24,7 @@ const animador = () => (globalThis.matchMedia?.('(prefers-reduced-motion: no-pre
 // Los tiempos de barra.css (--t-gesto, --t-chico, --t-grande) y una sola curva, la de --entra: arranca rápido y frena.
 const T = { gesto: 0.12, chico: 0.18, grande: 0.24 };
 const CURVA = 'power3.out';
-const VISTAS = ['modo', 'menu', 'orden', 'pagar', 'seguimiento'];
+const VISTAS = ['menu', 'orden', 'modo', 'pagar', 'seguimiento']; // el orden del flujo de referencia
 const celular = () => globalThis.matchMedia?.('(max-width: 599px)').matches;
 const activa = () => main.isConnected && location.pathname.startsWith('/domicilio/');
 
@@ -36,6 +36,7 @@ reparto.demostrar({ falla: demo === 'falla' });
 const f = flujo(reparto);
 const hora = (ms) => new Date(ms).toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit' });
 const MAS = '<svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
+const BASURA = '<svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const MENOS = '<svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
 
 // ---------- Lo que se pinta una vez ----------
@@ -55,10 +56,10 @@ $('.menu-secciones').innerHTML = SECCIONES.map((x) => `
       <li class="taco" data-id="${g.id}">
         ${charola(g.nombre, '', { tag: 'div', cls: 'mini', titulo: false })}
         <div class="taco-datos">
-          <h4>${esc(g.nombre)}</h4>
-          <p class="meta"><b>${money(g.precio_centavos)}</b> el taco <span class="lleva-n"></span></p>
+          <h4><button type="button" class="a-detalle" data-detalle="${g.id}">${esc(g.nombre)}<span class="sr">: opciones y nota</span></button></h4>
+          <p class="meta"><b>${money(g.precio_centavos)}</b> el taco</p>
         </div>
-        <button type="button" class="agregar" data-detalle="${g.id}" aria-label="Agregar ${esc(g.nombre)}">Agregar</button>
+        <div class="control-taco" data-control="${g.id}"></div>
       </li>`).join('')}
     </ul>
   </section>`).join('');
@@ -84,7 +85,18 @@ $('#form-destino').addEventListener('submit', async (e) => {
 main.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.dataset.sucursal) { f.elegirSucursal(b.dataset.sucursal); pintar(); if (f.listoParaMenu()) irA('menu'); else $('.problema').focus(); }
+  if (b.dataset.sucursal) { f.elegirSucursal(b.dataset.sucursal); pintar(); if (f.entregaLista()) $('#a-menu').focus(); else $('.problema').focus(); }
+  else if (b.dataset.mas || b.dataset.menos) {
+    // En el menú, «+» agrega uno sin abrir nada (como en el flujo de referencia); si el taco tiene opciones
+    // obligatorias, abre su detalle para elegirlas.
+    const id = b.dataset.mas || b.dataset.menos;
+    const r = f.cambiar(id, b.dataset.mas ? 1 : -1);
+    if (r?.faltan) { abrirDetalle(id); return; }
+    pintar();
+    const lugar = $(`[data-control="${id}"]`);
+    (lugar.querySelector(b.dataset.mas ? '[data-mas]' : '[data-menos]') ?? lugar.querySelector('button'))?.focus();
+    if (b.dataset.mas && (f.estado.cantidades[id] ?? 0) === 1) animador()?.from(lugar.firstElementChild, { scale: 0.6, opacity: 0, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
+  }
   else if (b.dataset.modo) { f.elegirModo(b.dataset.modo); pintar(); $('input[name="modo"][value="recoger"]').focus(); }
   else if (b.dataset.ir) irA(b.dataset.ir);
   else if (b.dataset.detalle) abrirDetalle(b.dataset.detalle);
@@ -127,32 +139,71 @@ async function ocupado(boton, trabajo) {
   try { return await trabajo(); } finally { boton.disabled = false; boton.classList.remove('enviando'); }
 }
 
-// ---------- 2 · Detalle del taco (cantidad, nota, complementos por confirmar) ----------
+// ---------- Detalle del taco: opciones por grupo, nota y cantidad (como en el flujo de referencia) ----------
+// Cada grupo dice si es obligatorio u opcional, hasta cuántas se eligen y cuántas lleva; al llegar al tope
+// queda «completo» y las demás se apagan. Sin grupos (PENDIENTE-CLIENTE) se ve dónde irán y por qué no están.
 const det = dialogo('detalle');
 let detId = null;
 let detN = 1;
+let detSel = {};
+const PENDIENTES = [
+  ['Quitar ingredientes', 'Qué lleva cada taco está por confirmar con la taquería.'],
+  ['Salsas', 'Cuáles hay y cuántas van con cada taco está por confirmar con la taquería.'],
+];
 function abrirDetalle(id) {
   const g = guiso(id);
   if (!g || f.enCurso()) return;
   detId = id;
   const yaLleva = f.estado.cantidades[id] ?? 0;
   detN = yaLleva || 1;
+  detSel = structuredClone(f.estado.opciones?.[id] ?? {});
   det.querySelector('.det-foto').innerHTML = charola(g.nombre, '', { tag: 'div', titulo: false, cargar: 'eager' });
   det.querySelector('#det-nombre').textContent = g.nombre;
   det.querySelector('.det-precio').textContent = `${money(g.precio_centavos)} el taco (precio de ejemplo)`;
   det.querySelector('#det-nota').value = f.estado.notas[id] ?? '';
   det.querySelector('.det-agregar').dataset.editar = yaLleva ? '1' : '';
+  det.querySelector('.det-faltan').hidden = true;
+  const gs = grupos();
+  det.querySelector('.det-grupos').innerHTML = gs.length
+    ? gs.map((gr) => `
+      <fieldset class="grupo" data-grupo="${esc(gr.id)}">
+        <legend>${esc(gr.nombre)} <span class="etiqueta">${gr.min ? 'Obligatorio' : 'Opcional'}</span></legend>
+        <p class="grupo-estado" aria-live="polite"></p>
+        ${gr.opciones.map((o) => `<label><input type="${gr.max === 1 ? 'radio' : 'checkbox'}" name="g-${esc(gr.id)}" value="${esc(o.id)}"> ${esc(o.nombre)}${o.precio_centavos ? ` <span class="nota-suave">+ ${money(o.precio_centavos)}</span>` : ''}</label>`).join('')}
+      </fieldset>`).join('')
+    : PENDIENTES.map(([t, p]) => `<fieldset class="grupo" disabled><legend>${t} <span class="etiqueta">Por confirmar</span></legend><p>${p}</p></fieldset>`).join('');
   pintarDetalle();
   abrir(det);
 }
 function pintarDetalle() {
   const g = guiso(detId);
+  const a = ajustar(detSel);
+  detSel = a.opciones;
+  let extra = 0;
+  for (const gr of grupos()) {
+    const fs = det.querySelector(`[data-grupo="${CSS.escape(gr.id)}"]`);
+    const elegidas = detSel[gr.id] ?? [];
+    const lleno = a.completos.includes(gr.id);
+    for (const i of fs.querySelectorAll('input')) {
+      i.checked = elegidas.includes(i.value);
+      i.disabled = gr.max > 1 && lleno && !i.checked; // al tope, las demás se apagan
+    }
+    fs.querySelector('.grupo-estado').textContent = `Elige ${gr.min ? `${gr.min === gr.max ? '' : `de ${gr.min} `}` : 'hasta '}${gr.max} · ${elegidas.length ? `${elegidas.length} ${elegidas.length === 1 ? 'elegida' : 'elegidas'}` : 'ninguna'}${lleno ? ' · Completo' : ''}`;
+    extra += gr.opciones.filter((o) => elegidas.includes(o.id)).reduce((s, o) => s + (o.precio_centavos ?? 0), 0);
+  }
   det.querySelector('.det-n').textContent = String(detN);
   det.querySelector('[data-det="-1"]').disabled = detN <= 1;
   det.querySelector('[data-det="1"]').disabled = detN >= MAX_POR_GUISO;
   const editar = det.querySelector('.det-agregar').dataset.editar;
-  det.querySelector('.det-agregar').textContent = `${editar ? 'Guardar' : 'Agregar'} · ${money(detN * g.precio_centavos)}`;
+  det.querySelector('.det-agregar').textContent = `${editar ? 'Guardar' : 'Agregar'} · ${money(detN * (g.precio_centavos + extra))}`;
 }
+det.addEventListener('change', (e) => {
+  const fs = e.target.closest('[data-grupo]');
+  if (!fs) return;
+  detSel = { ...detSel, [fs.dataset.grupo]: [...fs.querySelectorAll('input:checked')].map((i) => i.value) };
+  det.querySelector('.det-faltan').hidden = true;
+  pintarDetalle();
+});
 det.addEventListener('click', (e) => {
   const b = e.target.closest('[data-det]');
   if (!b) return;
@@ -162,18 +213,29 @@ det.addEventListener('click', (e) => {
   if (detN !== antes) brinca(det.querySelector('.det-n'), detN - antes);
   if (b.disabled) det.querySelector(`[data-det="${-b.dataset.det}"]`).focus();
 });
+// Sin lo obligatorio no se agrega: el diálogo no se cierra y dice qué falta.
+det.querySelector('form').addEventListener('submit', (e) => {
+  if (e.submitter?.value !== 'agregar') return;
+  const faltan = ajustar(detSel).faltan;
+  if (!faltan.length) return;
+  e.preventDefault();
+  const aviso = det.querySelector('.det-faltan');
+  aviso.textContent = `Falta elegir: ${grupos().filter((g) => faltan.includes(g.id)).map((g) => g.nombre.toLowerCase()).join(', ')}.`;
+  aviso.hidden = false;
+  aviso.focus();
+});
 // Un número que cambia entra desde el lado hacia donde va: de arriba si sube, de abajo si baja.
 function brinca(el, hacia) {
   animador()?.fromTo(el, { y: hacia > 0 ? -8 : 8, opacity: 0.2 }, { y: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
 }
 det.addEventListener('close', () => {
   if (det.returnValue === 'agregar' && detId) {
-    f.poner(detId, detN, det.querySelector('#det-nota').value);
+    f.poner(detId, detN, det.querySelector('#det-nota').value, detSel);
     pintar();
-    const li = main.querySelector(`.taco[data-id="${detId}"]`);
-    if (li && f.estado.vista === 'menu') {
-      animador()?.fromTo(li.querySelector('.lleva-n'), { x: -6, opacity: 0 }, { x: 0, opacity: 1, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
-      li.querySelector('.agregar').focus();
+    const lugar = main.querySelector(`[data-control="${detId}"]`);
+    if (lugar && f.estado.vista === 'menu') {
+      animador()?.from(lugar.firstElementChild, { scale: 0.6, opacity: 0, duration: T.chico, ease: CURVA, clearProps: 'transform,opacity' });
+      lugar.querySelector('[data-mas], button')?.focus();
     }
   }
   det.returnValue = '';
@@ -224,7 +286,7 @@ function abrirHistorial() {
 hist.addEventListener('click', async (e) => {
   const b = e.target.closest('button');
   if (b?.dataset.repetir) { f.repetir(b.dataset.repetir); hist.close(); pintar(); enfocar(`#vista-${f.estado.vista} h2`); }
-  if (b?.id === 'reiniciar') { await f.reiniciar(); hist.close(); for (const form of main.querySelectorAll('form')) form.reset(); pintar(); enfocar('#vista-modo h2'); }
+  if (b?.id === 'reiniciar') { await f.reiniciar(); hist.close(); for (const form of main.querySelectorAll('form')) form.reset(); pintar(); enfocar(`#vista-${f.estado.vista} h2`); }
 });
 
 // ---------- Textos ----------
@@ -278,17 +340,34 @@ function pintar(resultado = null) {
   prob.querySelector('.texto').textContent = enModo ? MOTIVOS[s.problema] ?? '' : '';
   prob.querySelector('.a-empacado').hidden = s.problema !== 'fuera_de_cobertura';
   prob.querySelector('.a-recoger').hidden = s.problema !== 'fuera_de_cobertura';
-  $('#a-menu').disabled = !f.listoParaMenu();
+  // Con la entrega lista se sigue: a pagar si ya hay tacos; si no, al menú.
+  const am = $('#a-menu');
+  am.disabled = !f.entregaLista();
+  [am.dataset.ir, am.textContent] = p.piezas ? ['pagar', 'Continuar a pagar'] : ['menu', 'Ver el menú'];
 
-  // 2 · Menú: cuántos lleva cada taco
+  // Cómo y dónde, arriba: se toca para cambiarlo. El tiempo es el de prueba (cotización o la barra).
+  const chip = $('.entrega-chip');
+  chip.hidden = enCurso || s.vista === 'seguimiento' || s.vista === 'modo';
+  const sucChip = sucursal(s.sucursal);
+  const [donde, eta] = s.modo === 'domicilio' && s.cotizacion ? [`A domicilio · ${s.destino.colonia}`, s.cotizacion.minutos]
+    : s.modo === 'recoger' && sucChip ? [`Recoger en la ${sucChip.nombre.toLowerCase()}`, 15]
+      : ['¿A domicilio o en la barra?', null];
+  chip.querySelector('.chip-donde').textContent = donde;
+  chip.querySelector('.chip-eta').textContent = eta ? `≈ ${eta} min` : 'Elegir';
+  chip.setAttribute('aria-label', `${donde}${eta ? `, unos ${eta} minutos (tiempo de prueba)` : ''}. Cambiar la entrega`);
+
+  // 1 · Menú: «+» o «− n +» en cada taco (se rehace solo el control que cambió)
   for (const li of $$('.taco')) {
-    const k = s.cantidades[li.dataset.id] ?? 0;
+    const id = li.dataset.id;
+    const k = s.cantidades[id] ?? 0;
     li.classList.toggle('lleva', k > 0);
-    li.querySelector('.lleva-n').textContent = k ? `· ${k} en tu orden` : '';
-    const b = li.querySelector('.agregar');
-    b.textContent = k ? 'Cambiar' : 'Agregar';
-    b.setAttribute('aria-label', `${k ? 'Cambiar' : 'Agregar'} ${guiso(li.dataset.id).nombre}`);
-    b.disabled = enCurso;
+    const lugar = li.querySelector('.control-taco');
+    const nombre = esc(guiso(id).nombre);
+    const html = enCurso ? '' : k
+      ? `<div class="cuantos" role="group" aria-label="${nombre} en tu orden"><button type="button" data-menos="${id}" aria-label="${k === 1 ? 'Quitar' : 'Uno menos de'} ${nombre}">${k === 1 ? BASURA : MENOS}</button><output>${k}</output><button type="button" data-mas="${id}" aria-label="Uno más de ${nombre}" ${k >= MAX_POR_GUISO ? 'disabled' : ''}>${MAS}</button></div>`
+      : `<button type="button" class="mas-uno" data-mas="${id}" aria-label="Agregar ${nombre}">${MAS}</button>`;
+    if (lugar.dataset.puesto !== html) { lugar.innerHTML = html; lugar.dataset.puesto = html; }
+    li.querySelector('.a-detalle').disabled = enCurso;
   }
 
   // 3 · Tu orden
@@ -325,7 +404,7 @@ function pintar(resultado = null) {
   const items = hecho ? s.pedido.items : p.items;
   const cc = hecho ? s.pedido.cuentas : c;
   const resumen = `
-    <ul>${items.map((i) => `<li><span>${esc(i.cantidad)} × ${esc(i.nombre)}${i.nota ? ` <small>(${esc(i.nota)})</small>` : ''}</span><span>${money(i.cantidad * i.precio_centavos)}</span></li>`).join('')}</ul>
+    <ul>${items.map((i) => `<li><span>${esc(i.cantidad)} × ${esc(i.nombre)}${i.opciones?.length ? ` <small>· ${esc(i.opciones.join(', '))}</small>` : ''}${i.nota ? ` <small>(${esc(i.nota)})</small>` : ''}</span><span>${money(i.cantidad * i.precio_centavos)}</span></li>`).join('')}</ul>
     <p class="a-donde">${picto('Lugar')} <span>${esc(entrega)}</span></p>
     <dl class="desglose"><dt>Tacos</dt><dd>${money(cc.subtotal)}</dd>${s.modo === 'domicilio' ? `<dt>Envío</dt><dd>${cc.envio == null ? 'por cotizar' : money(cc.envio)}</dd>` : ''}<dt>Cuota de servicio</dt><dd>por definir</dd><dt>Propina</dt><dd>${money(cc.propina)}</dd><dt class="total">Total</dt><dd class="total">${money(cc.total)}</dd></dl>`;
   if (resumen !== resumenPuesto) { for (const el of $$('.resumen-pedido')) el.innerHTML = resumen; resumenPuesto = resumen; }
@@ -337,7 +416,8 @@ function pintar(resultado = null) {
   $('.c-propina').textContent = money(c.propina);
   ponerTotal(c.total);
   $('.vacio-dom').hidden = c.piezas > 0;
-  const siguiente = { menu: ['orden', 'Ver tu orden'], orden: ['pagar', 'Ir a pagar'] }[s.vista];
+  // Sin entrega elegida, «Ir a pagar» lleva primero a elegirla (como «Continuar» en el flujo de referencia).
+  const siguiente = { menu: ['orden', 'Ver tu orden'], orden: f.entregaLista() ? ['pagar', 'Ir a pagar'] : ['modo', 'Elegir entrega'] }[s.vista];
   const cont = $('#continuar');
   $('.cuenta-dom').hidden = !siguiente;
   if (siguiente) { [cont.dataset.ir, cont.textContent] = siguiente; cont.disabled = !c.piezas; }
@@ -396,7 +476,7 @@ function pintarOrden(items) {
       out.textContent = String(i.cantidad);
       if (gsap && antes) brinca(out, i.cantidad - antes);
     }
-    li.querySelector('.meta').textContent = `${money(i.precio_centavos)} el taco${i.nota ? ` · Nota: ${i.nota}` : ''}`;
+    li.querySelector('.meta').textContent = `${money(i.precio_centavos)} el taco${i.opciones?.length ? ` · ${i.opciones.join(', ')}` : ''}${i.nota ? ` · Nota: ${i.nota}` : ''}`;
     li.querySelector('.linea-total').textContent = money(i.cantidad * i.precio_centavos);
     li.querySelector('[data-cambio="-1"]').disabled = i.cantidad <= 1;
     li.querySelector('[data-cambio="1"]').disabled = i.cantidad >= MAX_POR_GUISO;

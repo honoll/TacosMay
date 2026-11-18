@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const { MENU, SECCIONES, pedidoDe, MAX_POR_GUISO, MAX_NOTA } = await import('./menu.js');
+const { MENU, SECCIONES, pedidoDe, MAX_POR_GUISO, MAX_NOTA, grupos, usarGrupos, ajustar } = await import('./menu.js');
 const sim = await import('./reparto-simulado.js');
 const reparto = await import('./reparto.js');
 const barra = await import('./sucursales.js');
@@ -25,11 +25,34 @@ assert.deepEqual(pedidoDe({}), { items: [], piezas: 0, subtotal_centavos: 0 });
 const carne = MENU.find((g) => g.nombre === 'Carne en salsa roja').id;
 const lengua = MENU.find((g) => g.nombre === 'Lengua').id;
 
-// ---------- 1 · Cómo lo quieres y dónde ----------
+// ---------- 0 · Como en Orinoco: el menú primero; la entrega se pide antes de pagar ----------
 const f = flujo(reparto, almacen, reloj);
+assert.equal(f.estado.vista, 'menu', 'se llega al menú, sin elegir antes cómo');
+f.poner(carne, 1);
+assert.equal(f.pedido().piezas, 1, 'se llena la orden sin haber elegido entrega');
+f.ir('pagar');
+assert.equal(f.estado.vista, 'menu', 'pero sin entrega no se paga');
+f.ir('modo');
 assert.equal(f.estado.vista, 'modo');
-f.ir('menu');
-assert.equal(f.estado.vista, 'modo', 'sin elegir cómo, no hay menú');
+f.quitar(carne);
+
+// ---------- Opciones del taco (grupos con tope y obligatorios), con grupos de prueba ----------
+// Los reales están PENDIENTE-CLIENTE: en la página no hay ninguno.
+assert.deepEqual(grupos(), [], 'sin datos de la taquería, ningún grupo de opciones');
+usarGrupos([
+  { id: 'g1', nombre: 'Grupo de prueba con tope', min: 0, max: 2, opciones: [{ id: 'a', nombre: 'A' }, { id: 'b', nombre: 'B' }, { id: 'c', nombre: 'C', precio_centavos: 500 }] },
+  { id: 'g2', nombre: 'Grupo obligatorio de prueba', min: 1, max: 1, opciones: [{ id: 'x', nombre: 'X' }, { id: 'y', nombre: 'Y' }] },
+]);
+let aj = ajustar({ g1: ['a', 'b', 'c', 'a', 'zz'] });
+assert.deepEqual([aj.opciones.g1, aj.completos, aj.faltan], [['a', 'b'], ['g1'], ['g2']], 'tope del grupo, sin repetir ni inventar opciones; «completo» y lo obligatorio que falta');
+assert.deepEqual(f.poner(lengua, 1, '', { g1: ['a'] }), { ok: false, faltan: ['g2'] }, 'sin la obligatoria no entra');
+assert.deepEqual(f.poner(lengua, 2, '', { g1: ['c'], g2: ['y', 'x'] }), { ok: true });
+let item = f.pedido().items[0];
+assert.deepEqual([item.precio_centavos, item.opciones], [6000 + 500, ['C', 'Y']], 'la opción con costo suma al taco; la orden dice cuáles lleva');
+f.quitar(lengua);
+usarGrupos([]);
+
+// ---------- 1 · Entrega: cómo lo quieres y dónde ----------
 f.elegirModo('domicilio');
 let r = await f.cotizar({ ...CENTRO, colonia: 'Otra colonia' });
 assert.deepEqual([r.ok, f.estado.problema], [false, 'fuera_de_cobertura'], 'fuera de cobertura lo dice');
@@ -109,7 +132,7 @@ assert.equal(flujo(reparto, almacen, reloj).estado.pedido.numero, numero, 'una r
 f.nuevo();
 assert.deepEqual([f.estado.vista, f.pedido().piezas, f.estado.contacto.nombre], ['menu', 0, 'Cliente de prueba'], 'otro pedido conserva dirección y contacto');
 f.elegirModo('recoger');
-assert.equal(f.listoParaMenu(), false, 'al cambiar a recoger hay que elegir barra');
+assert.equal(f.entregaLista(), false, 'al cambiar a recoger hay que elegir barra');
 f.elegirSucursal('centro');
 f.poner(carne, 1);
 f.ir('pagar');
@@ -136,7 +159,7 @@ assert.equal(f.pedidos.length, 3);
 f.repetir(numero);
 assert.deepEqual([f.estado.vista, f.pedido().piezas, f.estado.notas[carne]], ['orden', 3, 'Sin cebolla'], 'repetir arma la misma orden');
 await f.reiniciar();
-assert.deepEqual([f.estado.vista, f.pedidos.length], ['modo', 0], 'reiniciar la demostración borra todo');
+assert.deepEqual([f.estado.vista, f.pedidos.length], ['menu', 0], 'reiniciar la demostración borra todo');
 
 // ---------- La página dice lo que es ----------
 const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
@@ -146,6 +169,9 @@ assert.match(html, /value="en_linea" disabled>[^<]*<span[^>]*>por conectar<\/spa
 assert.match(html, /Cuota de servicio<\/dt><dd[^>]*>por definir<\/dd>/, 'la cuota de servicio, por definir y sin importe');
 assert.ok(!/\d+\s?%|comisi/i.test(html.replace(/href="[^"]*"/g, '')), 'sin cifras de comisión ni comparaciones');
 assert.ok(!html.includes('«uno más»'), 'sin el texto roto de la cuenta vacía');
+assert.deepEqual([...html.matchAll(/<li data-vista="(\w+)">/g)].map((m) => m[1]), ['menu', 'orden', 'modo', 'pagar', 'seguimiento'], 'los pasos en el orden del flujo de referencia: menú primero, la entrega antes de pagar');
+assert.match(html, /class="entrega-chip" data-ir="modo"/, 'cómo y dónde, siempre a la vista y se puede cambiar');
+assert.match(html, /<div class="det-grupos"><\/div>/, 'los grupos de opciones los pone el JS; ninguno escrito a mano');
 for (const svg of html.match(/<svg[\s\S]*?<\/svg>/g)) assert.ok(!/<(circle|path|rect)\b[^>]*[^/]>/.test(svg), `SVG con elementos sin cerrar: ${svg.slice(0, 60)}`);
 
-console.log('domicilio.test: OK (modo y cobertura, menú y detalle, orden, propina, pagar, número, seguimiento, cancelar, recoger, historial)');
+console.log('domicilio.test: OK (menú primero, opciones con tope y obligatorias, modo y cobertura, menú y detalle, orden, propina, pagar, número, seguimiento, cancelar, recoger, historial)');

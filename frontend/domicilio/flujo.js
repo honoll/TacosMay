@@ -1,8 +1,9 @@
-// El pedido de tacos a domicilio, sin pantalla, en el orden del flujo de referencia (Toks; docs/diseno/domicilio.md):
-// cómo lo quieres (a domicilio o recoger) y dónde → menú → tu orden → pagar → confirmación y seguimiento,
-// más el historial de pedidos de prueba. La página (domicilio.js) solo pinta este estado. Se guarda en
+// El pedido de tacos a domicilio, sin pantalla, en el orden del flujo de referencia (Orinoco, y antes Toks;
+// docs/diseno/domicilio.md): menú → tu orden → entrega (a domicilio o recoger, y dónde) → pagar → confirmación
+// y seguimiento, más el historial de pedidos de prueba. El menú se ve y se llena sin haber elegido entrega;
+// la entrega se pide antes de pagar. La página (domicilio.js) solo pinta este estado. Se guarda en
 // localStorage para que una recarga no pierda nada. Habla con el reparto solo por reparto.js.
-import { pedidoDe, guiso, MAX_POR_GUISO, MAX_NOTA } from './menu.js';
+import { pedidoDe, guiso, ajustar, MAX_POR_GUISO, MAX_NOTA } from './menu.js';
 import { abierta, estadoEnBarra, PASOS_BARRA } from './sucursales.js';
 
 const CLAVE = 'tm_domicilio';
@@ -10,8 +11,8 @@ const CLAVE_PEDIDOS = 'tm_domicilio_pedidos';
 const MAX_HISTORIAL = 20;
 export const PROPINAS = [0, 10, 15, 20]; // por ciento del subtotal; la elige el cliente
 const VACIO = () => ({
-  vista: 'modo', modo: null, sucursal: null, destino: null, cotizacion: null, problema: null,
-  cantidades: {}, notas: {}, contacto: { nombre: '', telefono: '', correo: '' },
+  vista: 'menu', modo: null, sucursal: null, destino: null, cotizacion: null, problema: null,
+  cantidades: {}, notas: {}, opciones: {}, contacto: { nombre: '', telefono: '', correo: '' },
   propina_pct: 0, pago: 'al_recibir', horario: 'ahora', pedido: null,
 });
 const leer = (almacen, clave, defecto) => { try { return JSON.parse(almacen?.getItem(clave)) ?? defecto; } catch { return defecto; } };
@@ -23,9 +24,9 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
   const guardar = () => {
     try { almacen?.setItem(CLAVE, JSON.stringify(s)); almacen?.setItem(CLAVE_PEDIDOS, JSON.stringify(pedidos)); } catch { /* sin almacenamiento: sigue en memoria */ }
   };
-  const pedido = () => pedidoDe(s.cantidades, s.notas);
+  const pedido = () => pedidoDe(s.cantidades, s.notas, s.opciones);
   const enCurso = () => Boolean(s.pedido && !final(s.pedido.ultimo));
-  const listoParaMenu = () => (s.modo === 'domicilio' ? Boolean(s.cotizacion) : s.modo === 'recoger' && Boolean(s.sucursal));
+  const entregaLista = () => (s.modo === 'domicilio' ? Boolean(s.cotizacion) : s.modo === 'recoger' && Boolean(s.sucursal));
   const anotar = (cambios) => {
     pedidos = pedidos.map((p) => (p.numero === s.pedido?.numero ? { ...p, ...cambios } : p));
   };
@@ -43,7 +44,7 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
     get estado() { return s; },
     pedido,
     cuentas,
-    listoParaMenu,
+    entregaLista,
     enCurso,
     get pedidos() { return pedidos; },
 
@@ -79,8 +80,7 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
     // ---------- Ir de una vista a otra (con sus candados) ----------
     ir(vista) {
       if (enCurso() && vista !== 'seguimiento') return;
-      if (vista === 'menu' && !listoParaMenu()) return;
-      if (vista === 'pagar' && (!listoParaMenu() || !pedido().piezas)) return;
+        if (vista === 'pagar' && (!entregaLista() || !pedido().piezas)) return;
       if (vista === 'seguimiento' && !s.pedido) return;
       s.vista = vista;
       if (vista !== 'modo') s.problema = null;
@@ -88,15 +88,21 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
     },
 
     // ---------- 2 y 3 · Menú, detalle del taco y tu orden ----------
-    poner(id, cantidad, nota = '') {
-      if (enCurso() || !guiso(id)) return;
+    // opciones: { grupoId: [opcionId] }; se recortan a lo que permite cada grupo (menu.js). Sin las obligatorias
+    // no se pone y dice cuáles faltan.
+    poner(id, cantidad, nota = '', opciones = s.opciones[id]) {
+      if (enCurso() || !guiso(id)) return { ok: false };
       const n = Math.max(0, Math.min(MAX_POR_GUISO, Math.trunc(cantidad) || 0));
+      const a = ajustar(opciones);
+      if (n && a.faltan.length) return { ok: false, faltan: a.faltan };
       s.cantidades = { ...s.cantidades, [id]: n };
-      s.notas = { ...s.notas, [id]: String(nota).trim().slice(0, MAX_NOTA) };
-      if (!n) { delete s.cantidades[id]; delete s.notas[id]; }
+      s.notas = { ...s.notas, [id]: String(nota ?? '').trim().slice(0, MAX_NOTA) };
+      s.opciones = { ...s.opciones, [id]: a.opciones };
+      if (!n) { delete s.cantidades[id]; delete s.notas[id]; delete s.opciones[id]; }
       guardar();
+      return { ok: true };
     },
-    cambiar(id, delta) { this.poner(id, (s.cantidades[id] ?? 0) + delta, s.notas[id]); },
+    cambiar(id, delta) { return this.poner(id, (s.cantidades[id] ?? 0) + delta, s.notas[id]); },
     quitar(id) { this.poner(id, 0); },
     propina(pct) {
       if (!PROPINAS.includes(pct) || enCurso()) return;
@@ -108,7 +114,7 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
     async confirmar({ contacto, pago = 'al_recibir', horario = 'ahora' }) {
       if (pago !== 'al_recibir') throw new Error('El pago en línea está por conectar.');
       if (horario !== 'ahora') throw new Error('Programar la hora está por conectar.');
-      if (!pedido().piezas || !listoParaMenu()) throw new Error('Falta armar el pedido.');
+      if (!pedido().piezas || !entregaLista()) throw new Error('Falta armar el pedido.');
       if (!contacto?.nombre?.trim() || !/^\d{10}$/.test(contacto?.telefono ?? '')) throw new Error('Faltan tu nombre y un teléfono de 10 dígitos.');
       s.contacto = { nombre: contacto.nombre.trim(), telefono: contacto.telefono, correo: (contacto.correo ?? '').trim() };
       s.pago = pago;
@@ -175,15 +181,15 @@ export function flujo(reparto, almacen = globalThis.localStorage, reloj = () => 
       if (enCurso()) return;
       const { modo, sucursal, destino, cotizacion, contacto } = s;
       s = { ...VACIO(), modo, sucursal, destino, cotizacion, contacto };
-      s.vista = listoParaMenu() ? 'menu' : 'modo';
+      s.vista = 'menu';
       guardar();
     },
     repetir(numero) {
       const anterior = pedidos.find((p) => p.numero === numero);
       if (!anterior || enCurso()) return;
       this.nuevo();
-      for (const i of anterior.items) if (guiso(i.id)) this.poner(i.id, i.cantidad, i.nota);
-      s.vista = listoParaMenu() ? 'orden' : 'modo';
+      for (const i of anterior.items) if (guiso(i.id)) this.poner(i.id, i.cantidad, i.nota, i.eleccion);
+      s.vista = 'orden';
       guardar();
     },
     // La entrega de prueba en curso se cancela y todo vuelve al principio (también el historial).

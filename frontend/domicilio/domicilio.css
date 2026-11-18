@@ -204,9 +204,30 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 :where(.en-domicilio) .det-foto .charola .guiso { aspect-ratio: 16 / 9; }
 :where(.en-domicilio) #det-nombre { margin: 10px 0 0; }
 :where(.en-domicilio) .det-precio { margin: 0; color: var(--gris); }
-:where(.en-domicilio) .complementos { margin: 8px 0 0; padding: 10px 14px; border: 2px dashed var(--marco); border-radius: 8px; color: var(--gris); }
-:where(.en-domicilio) .complementos legend { padding: 0 6px; font-weight: 600; color: var(--negro); }
-:where(.en-domicilio) .complementos p { margin: 0; }
+/* Grupos de opciones del taco: tope, obligatorio u opcional y «completo»; sin datos, punteados y apagados. */
+:where(.en-domicilio) .det-grupos { display: grid; gap: 10px; margin-top: 8px; }
+:where(.en-domicilio) .grupo { display: grid; gap: 2px; margin: 0; padding: 10px 14px; border: 2px solid var(--negro); border-radius: 8px; }
+:where(.en-domicilio) .grupo:disabled { border-style: dashed; border-color: var(--marco); color: var(--gris); }
+:where(.en-domicilio) .grupo legend { display: flex; align-items: center; gap: 8px; padding: 0 6px; font: 800 1.1rem/1.1 var(--angosta); text-transform: uppercase; color: var(--negro); }
+:where(.en-domicilio) .grupo legend .etiqueta { font: 600 .8rem/1.4 var(--fuente); text-transform: none; color: var(--gris); }
+:where(.en-domicilio) .grupo p { margin: 0; }
+:where(.en-domicilio) .grupo-estado { color: var(--gris); font-size: .95rem; }
+:where(.en-domicilio) .grupo label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+:where(.en-domicilio) .grupo input { width: 22px; height: 22px; min-height: 0; accent-color: var(--negro); }
+:where(.en-domicilio) .grupo label:has(input:disabled) { color: var(--gris); }
+:where(.en-domicilio) .det-faltan { margin: 8px 0 0; }
+
+/* El chip de entrega, arriba de todo: dónde y en cuánto; se toca para cambiarlo. */
+:where(.en-domicilio) :is(main, dialog) button.entrega-chip { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 44px; margin: 0 0 16px; padding: 0 14px; border: 2px solid var(--negro); border-radius: 99px; background: #fff; font: 600 1rem/1.2 var(--fuente); letter-spacing: 0; text-transform: none; }
+:where(.en-domicilio) .entrega-chip .chip-donde { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:where(.en-domicilio) .entrega-chip .chip-eta { flex: none; padding-left: 8px; border-left: 2px solid var(--marco); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* En el menú: el nombre abre el detalle; «+» agrega uno y se vuelve «− n +». */
+:where(.en-domicilio) .taco h4 { margin: 0; }
+:where(.en-domicilio) :is(main, dialog) button.a-detalle { min-height: 44px; padding: 0; border: 0; background: none; font: 600 1.05rem/1.25 var(--fuente); letter-spacing: 0; text-transform: none; text-align: left; text-decoration: underline; text-decoration-color: var(--marco); text-underline-offset: 4px; }
+:where(.en-domicilio) button.a-detalle:hover { text-decoration-color: currentColor; }
+:where(.en-domicilio) :is(main, dialog) button.mas-uno { display: grid; place-items: center; width: 44px; padding: 0; border-radius: 50%; background: var(--negro); color: var(--crema); }
+:where(.en-domicilio) .mas-uno .signo { width: 22px; height: 22px; }
 :where(.en-domicilio) .det-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 :where(.en-domicilio) .det-agregar { flex: 1 1 180px; }
 :where(.en-domicilio) .detalle-form .cerrar { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 44px; padding: 0 !important; border-radius: 50%; background: var(--crema); }
