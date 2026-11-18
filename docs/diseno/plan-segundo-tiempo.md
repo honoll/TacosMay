@@ -126,4 +126,4 @@ Investigación y chocan con la marca.
 |---|---|
 | 0 Variables | Hecho |
 | 1 Catálogo y tarjeta | Hecho, sin ver en pantalla (17-nov-2026) |
-| 2 a 8 | Pendientes |
+| 2 Ficha de un guiso | Hecho, sin ver en pantalla (17-nov-2026) |

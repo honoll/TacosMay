@@ -14,7 +14,8 @@ let editing = null;  // guiso en edición en el panel admin
 let current = '';    // vista pintada (puede diferir del hash si un guard redirige)
 let rendered = null; // hash ya pintado, para no repintar en el hashchange de go()
 let renderId = 0;
-let desde = 'catalogo'; // última vista que no es de acceso: ahí se regresa después de entrar o registrarse
+let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
+let param = '';         // lo que sigue a la vista en la dirección: #guiso/3 → '3'
 
 const user = () => session.get();
 const isAdmin = () => user()?.rol === 'admin';
@@ -85,7 +86,7 @@ const card = (g, mostrarDescripcion) => charola(g.nombre, `
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
     <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
-    <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+    <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: `#guiso/${encodeURIComponent(g.id)}` });
 
 // Al cambiar el carrito, las charolas del catálogo se ponen al día sin volver a pedir los guisos.
 function pintarControles(id, cambio) {
@@ -138,6 +139,46 @@ const VIEWS = {
       <h1>Guisos de taquería empacados al vacío</h1>
       ${populares.length ? `<h2>Lo que más sale</h2>${fila(populares)}` : ''}
       ${precios.map((p) => `<h2 class="grupo">${precios.length > 1 ? `De ${money(p)}` : 'Todos los guisos'}</h2>${fila(todos.filter((g) => g.precio_centavos === p))}`).join('')}`;
+  },
+
+  // Ficha de un guiso: #guiso/<id>. Lo que se sabe de él (GET /guisos/:id) y lo que vale para todos.
+  async guiso() {
+    let g;
+    let todos;
+    try {
+      [g, todos] = await Promise.all([api(`/guisos/${encodeURIComponent(param)}`), api('/guisos')]);
+    } catch (err) {
+      if (err.status !== 404) throw err;
+      return `${VOLVER}<h1>Guiso</h1>${vacio('Ese guiso ya no está en la barra', 'Puede que se haya retirado del menú.')}`;
+    }
+    guisos = todos;
+    document.title = `${g.nombre} — Los Tacos May`;
+    const otros = todos.filter((x) => String(x.id) !== String(g.id) && x.stock > 0).slice(0, 4);
+    return `
+      ${VOLVER}
+      <div class="ficha${g.stock > 0 ? '' : ' agotada'}">
+        ${charola(g.nombre, '', { tag: 'div', titulo: false })}
+        <div class="ficha-datos">
+          <h1>${esc(g.nombre)}</h1>
+          <p class="precio">${money(g.precio_centavos)}</p>
+          <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
+          ${g.descripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
+          <div class="control" data-control="${esc(g.id)}">${control(g)}</div>
+        </div>
+      </div>
+      <div class="ficha-info">
+        <section>
+          <h2>${picto('Calienta')} Cómo se calienta</h2>
+          <p>A la sartén o a la olla, como recalientas cualquier guiso.</p>
+        </section>
+        <section>
+          <h2>${picto('Congelado')} Cómo se conserva</h2>
+          <p>Va empacado al vacío y congelado. Guárdalo en el congelador hasta que lo vayas a usar.</p>
+        </section>
+      </div>
+      ${otros.length ? `<h2>Otros guisos</h2><ul class="barra">${otros.map(conDescripcion(todos)).join('')}</ul>` : ''}`;
+    // PENDIENTE-CLIENTE: instrucciones exactas de calentado y de conservación por guiso, cuánto dura,
+    // ingredientes y alérgenos (necesitan campos nuevos: docs/diseno/plan-segundo-tiempo.md).
   },
 
   async carrito() {
@@ -438,11 +479,13 @@ async function run(fn) {
 
 const TITULOS = {
   catalogo: 'Guisos', carrito: 'Tu carrito', pedidos: 'Mis pedidos', admin: 'Administrar guisos',
-  cuenta: 'Tu cuenta', entrar: 'Iniciar sesión', registro: 'Crear cuenta',
+  cuenta: 'Tu cuenta', entrar: 'Iniciar sesión', registro: 'Crear cuenta', guiso: 'Guiso',
 };
 
+// La dirección es #vista o #vista/parámetro (la ficha: #guiso/3).
 const route = () => {
-  const r = location.hash.slice(1);
+  const [r, p = ''] = location.hash.slice(1).split('/');
+  param = decodeURIComponent(p);
   return Object.hasOwn(VIEWS, r) ? r : 'catalogo';
 };
 
@@ -473,7 +516,7 @@ async function render() {
   }
   if (user() && (r === 'entrar' || r === 'registro')) r = 'cuenta';
   if (r === 'admin' && !isAdmin()) r = 'catalogo';
-  if (r !== 'entrar' && r !== 'registro') desde = r;
+  if (r !== 'entrar' && r !== 'registro') desde = r === 'guiso' ? `guiso/${encodeURIComponent(param)}` : r;
   document.title = `${TITULOS[r]} — Los Tacos May`;
   const changed = r !== current;
   current = r;

@@ -46,6 +46,8 @@ globalThis.fetch = async (url, { method = 'GET', body } = {}) => {
   cuerpos.push(body);
   const ok = (data, status = 200) => ({ ok: status < 400, status, json: async () => data });
   if (url === '/api/guisos') return ok(GUISOS);
+  if (url === '/api/guisos/1') return ok(GUISOS[0]);
+  if (url.startsWith('/api/guisos/') && url !== '/api/guisos/populares') return ok({ message: 'Guiso no encontrado' }, 404);
   if (url === '/api/guisos/populares') return ok([{ ...GUISOS[0], vendidos: 3 }]);
   if (url === '/api/carrito') return ok(carritoVacio ? { items: [], total_centavos: 0, expira_en_segundos: 0 } : CARRITO);
   if (url.startsWith('/api/carrito/items/')) return ok(CARRITO);
@@ -127,6 +129,16 @@ assert.equal(cuerpos[n], '{"cantidad":3}', 'agregar suma uno a lo que ya iba');
 await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'menos', id: '1', nombre: 'Carne en salsa roja' } }));
 assert.equal(cuerpos[n + 1], '{"cantidad":1}', 'quitar uno resta uno');
 assert.equal(llamadas.length, n + 2, 'cambiar la cantidad no vuelve a pedir el catálogo');
+
+// Ficha de un guiso: su dirección, su control y la salida si no existe
+assert.match(cat, /href="#guiso\/1"/, 'cada charola enlaza a su ficha');
+await ir('guiso/1');
+assert.equal(vista().dataset.vista, 'guiso');
+assert.match(vista().innerHTML, /<h1>Carne en salsa roja<\/h1>[\s\S]*data-control="1"/, 'la ficha lleva el nombre y el mismo control');
+assert.match(document.title, /Carne en salsa roja/);
+await ir('guiso/999');
+assert.match(vista().innerHTML, /class="vacio"[\s\S]*href="#catalogo"/, 'un guiso que no existe ofrece volver a los guisos');
+assert.equal(porId.aviso.hidden, true, 'y no sale como error en la franja');
 
 // ---------- 2 · Cada vista en escritorio: todos sus bloques tienen celda y ninguna se encima ----------
 const VACIAS = new Set(['input', 'img', 'br']);

@@ -141,6 +141,11 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola .datos { display: grid; align-content: start; justify-items: start; gap: 6px; padding: 10px 12px 12px; }
 .charola :is(h2, h3) { margin: 0; font: 800 1.25rem/.95 var(--angosta); text-transform: uppercase; overflow-wrap: anywhere; }
 .charola p { margin: 0; }
+/* El nombre enlaza a la ficha y su zona de toque se extiende sobre toda la foto de la charola. */
+.charola:has(.a-ficha) { position: relative; }
+.a-ficha { color: inherit; text-decoration: none; }
+.a-ficha::after { content: ""; position: absolute; inset: 0 0 auto; aspect-ratio: 4 / 3; }
+.a-ficha:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
 .charola.agotada .guiso { filter: grayscale(1); }
 
 /* Sin foto: una charola tapada, del mismo alto que las que tienen foto para que la fila cierre pareja.

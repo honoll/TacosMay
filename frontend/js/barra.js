@@ -69,13 +69,15 @@ export function guisoDe(nombre) {
   return { slug: s, n: g?.n ?? '', color: g?.color ?? '#D9DCDD', foto: FOTOS.has(s) };
 }
 
-export function charola(nombre, cuerpo = '', { tag = 'article', cls = '' } = {}) {
+// href: a dónde lleva la charola (su ficha); toda la zona del guiso se puede tocar.
+// titulo: false la deja sin nombre debajo (en la ficha el nombre es el título de la vista).
+export function charola(nombre, cuerpo = '', { tag = 'article', cls = '', href = '', titulo = true } = {}) {
   const g = guisoDe(nombre);
   // alt vacío: el nombre del guiso está escrito justo debajo.
   // Dos tamaños: 720 px para la retícula y 1024 px para las charolas grandes de pantalla ancha.
   const img = g.foto ? `<img src="/media/guisos/${g.slug}.webp" srcset="/media/guisos/${g.slug}.webp 720w, /media/guisos/${g.slug}-1024.webp 1024w" sizes="${SIZES}" alt="" width="720" height="540" loading="lazy">` : '';
   return `<${tag} class="charola ${cls}" style="--c:${g.color};--t:${tinta(g.color)}">
     <div class="guiso">${img}${g.n ? `<span class="num">${g.n}</span>` : ''}<span class="vapor" aria-hidden="true">${picto('Vapor')}</span></div>
-    <div class="datos"><h3>${esc(nombre)}</h3>${cuerpo}</div>
+    ${titulo || cuerpo ? `<div class="datos">${titulo ? `<h3>${href ? `<a class="a-ficha" href="${href}">${esc(nombre)}</a>` : esc(nombre)}</h3>` : ''}${cuerpo}</div>` : ''}
   </${tag}>`;
 }

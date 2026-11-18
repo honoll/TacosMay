@@ -8,8 +8,9 @@ const SEGURO = 2600;       // ms; retira la bolsa aunque su animación no llegue
 
 // corto: desde la segunda vez seguida del mismo guiso, la bolsa ya va sellada y solo vuela (medio segundo).
 export function empacar(boton, corto = false) {
-  const charola = boton.closest('.charola');
-  const zona = charola?.querySelector('.guiso');
+  // En el catálogo el botón vive dentro de su charola; en la ficha, a un lado de ella.
+  const zona = boton.closest('.charola, .ficha')?.querySelector('.guiso');
+  const charola = zona?.closest('.charola');
   if (!zona) return { cancel() {} };
   activos.get(charola)?.quitar();
 
