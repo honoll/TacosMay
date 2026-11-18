@@ -37,7 +37,8 @@ export async function api(path, { method = 'GET', body } = {}) {
 
   let res;
   try {
-    res = await fetch('/api' + path, { method, headers, body: body && JSON.stringify(body) });
+    // Con plazo: una petición que no vuelve (pasó en iPhone al confirmar) termina en aviso, no en pantalla trabada.
+    res = await fetch('/api' + path, { method, headers, body: body && JSON.stringify(body), signal: AbortSignal.timeout?.(15000) });
   } catch {
     throw fail('No pudimos conectar. Revisa tu internet y dale otra vez.', 0);
   }
