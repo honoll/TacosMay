@@ -37,47 +37,62 @@
   :where(.en-inicio) .carrusel-fila > .charola { flex-basis: clamp(240px, 27vw, 420px); }
 }
 
-/* ---------- Las ollas del héroe (docs/diseno/referencias/heroe-platos-gemini.png, solo la composición) ----------
-   Guisos vistos desde arriba en su olla redonda con el aro de acero de la charola (no platos de restaurante),
-   de varios tamaños, agrupados y recortados por la orilla de la pantalla, sobre manchas lisas de su color.
-   Cada olla: --x, --y (posición) y --d (diámetro), en % de la caja. La caja se sale hasta la orilla derecha.
-   En celular: franja arriba del titular. Desde 900 px: el lado derecho completo, junto al titular. */
-:where(.en-inicio) .heroe { overflow-x: clip; }
+/* ---------- El héroe (docs/diseno/referencias/heroe-claude-design-*.html) ----------
+   A la izquierda: antetítulo, titular en dos renglones con el punto en rojo May, entrada y botones.
+   A la derecha: tres círculos lisos con los colores por guiso del sistema y cinco ollas con aro de acero,
+   recortadas por la orilla derecha y la de arriba. Todo se mide en unidades de la caja (--k = 1/800 de su
+   ancho en pantalla ancha, 1/390 en celular), así que en anchos intermedios la composición se escala entera
+   y no se encima con el texto. Cada pieza: --r (derecha), --t (arriba), --s (diámetro), --a (aro). */
+:where(.en-inicio) main > .heroe { padding-top: 0; overflow-x: clip; }
 :where(.en-inicio) .heroe .caja { display: flex; flex-direction: column; }
-:where(.en-inicio) .ollas { position: relative; order: -1; aspect-ratio: 2 / 1; margin: 0 calc(-1 * var(--margen)) 8px auto; width: calc(100% + var(--margen)); overflow: hidden; }
-:where(.en-inicio) .mancha { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); border-radius: 58% 42% 50% 50% / 46% 54% 46% 54%; background: var(--c); }
-:where(.en-inicio) .olla { position: absolute; left: var(--x); top: var(--y); width: var(--d); aspect-ratio: 1; border-radius: 50%; }
-:where(.en-inicio) .olla .aro { display: block; width: 100%; height: 100%; overflow: hidden; border: clamp(4px, 1vw, 12px) solid var(--marco); border-radius: 50%; outline: 1.5px solid var(--acero-osc); outline-offset: -1.5px; background: var(--c); box-shadow: 0 clamp(4px, .8vw, 10px) 0 rgb(20 18 16 / .22); }
+:where(.en-inicio) .heroe-texto { display: flex; flex-direction: column; gap: 18px; }
+:where(.en-inicio) .heroe-texto > * { margin: 0; }
+:where(.en-inicio) .heroe .antetitulo { font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
+:where(.en-inicio) .heroe h1.rot { font-size: clamp(72px, 26.6vw, 104px); line-height: .86; letter-spacing: -.01em; }
+:where(.en-inicio) .heroe h1 .punto { color: var(--rojo-may); }
+:where(.en-inicio) .heroe .entrada { max-width: 26ch; font-size: 19px; line-height: 1.4; }
+:where(.en-inicio) .heroe .acciones { margin-top: 0; gap: 12px 22px; }
+:where(.en-inicio) .heroe .btn { box-shadow: 0 5px 0 var(--acero-osc); }
+
+:where(.en-inicio) .ollas { --k: calc(100cqw / 390); position: relative; order: -1; container-type: inline-size; width: min(100% + 2 * var(--margen), 560px); aspect-ratio: 390 / 380; margin: 0 calc(-1 * var(--margen)) 12px auto; overflow: hidden; }
+:where(.en-inicio) :is(.mancha, .olla) { position: absolute; right: calc(var(--r) * var(--k)); top: calc(var(--t) * var(--k)); width: calc(var(--s) * var(--k)); aspect-ratio: 1; border-radius: 50%; }
+:where(.en-inicio) .mancha { background: var(--c); }
+:where(.en-inicio) .olla .aro { display: block; width: 100%; height: 100%; padding: calc(var(--a) * var(--k)); border-radius: 50%; background: var(--acero); box-shadow: 0 0 0 2px var(--acero-osc), 0 calc(var(--s) * var(--k) * .06) calc(var(--s) * var(--k) * .12) rgb(20 18 16 / .32); }
 :where(.en-inicio) .olla img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-:where(.en-inicio) .olla:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
-/* Celular: la franja (2:1). */
-:where(.en-inicio) .m1 { --x: 52%; --y: -18%; --w: 56%; --h: 96%; }
-:where(.en-inicio) .m2 { --x: 8%; --y: 38%; --w: 52%; --h: 78%; }
-:where(.en-inicio) .m3 { --x: 84%; --y: 58%; --w: 26%; --h: 52%; }
-:where(.en-inicio) .o1 { --x: 30%; --y: 6%; --d: 42%; }
-:where(.en-inicio) .o2 { --x: 70%; --y: -14%; --d: 34%; }
-:where(.en-inicio) .o3 { --x: 3%; --y: 18%; --d: 27%; }
-:where(.en-inicio) .o4 { --x: 74%; --y: 50%; --d: 30%; }
-:where(.en-inicio) .o5 { --x: 52%; --y: 64%; --d: 21%; }
+:where(.en-inicio) .olla:focus-visible { outline: 3px solid var(--foco); outline-offset: 4px; }
+:where(.en-inicio) .olla:hover .aro { box-shadow: 0 0 0 3px var(--negro), 0 calc(var(--s) * var(--k) * .06) calc(var(--s) * var(--k) * .12) rgb(20 18 16 / .32); }
+:where(.en-inicio) .ollas .toca { display: none; }
+/* Celular (390 de ancho): cuatro ollas, sin mole. */
+:where(.en-inicio) .m1 { --r: -150; --t: -170; --s: 470; }
+:where(.en-inicio) .m2 { --r: 110; --t: 150; --s: 250; }
+:where(.en-inicio) .m3 { --r: -70; --t: 240; --s: 170; }
+:where(.en-inicio) .o1 { --r: -56; --t: 20; --s: 230; --a: 9; }
+:where(.en-inicio) .o2 { --r: 128; --t: 122; --s: 196; --a: 8; }
+:where(.en-inicio) .o3 { --r: 168; --t: -44; --s: 148; --a: 7; }
+:where(.en-inicio) .o4 { --r: -24; --t: 238; --s: 160; --a: 7; }
+:where(.en-inicio) .o5 { display: none; }
 
 @media (min-width: 900px) {
-  :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 3vw, 64px); align-items: center; }
-  :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; }
-  :where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 8.4vw, 11rem); }
-  /* Un poco más ancho que alto: así la barra de charolas de abajo se asoma sin bajar. */
-  :where(.en-inicio) .ollas { grid-column: 2; grid-row: 1; order: 0; aspect-ratio: 6 / 5; margin: 0 calc(-1 * var(--margen)) 0 0; width: auto; }
-  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 2; margin-top: clamp(20px, 3vw, 48px); }
+  /* Pantalla ancha (800 de ancho): texto a la izquierda, la caja de ollas hasta la orilla derecha. */
+  :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; }
+  :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; gap: 28px; padding: 48px 32px 48px 0; }
+  :where(.en-inicio) .heroe .antetitulo { font-size: 18px; }
+  :where(.en-inicio) .heroe h1.rot { font-size: clamp(88px, 11vw, 176px); }
+  :where(.en-inicio) .heroe .entrada { max-width: 30ch; font-size: clamp(19px, 1.6vw, 22px); }
+  :where(.en-inicio) .heroe .acciones { gap: 16px 28px; }
+  :where(.en-inicio) .ollas { --k: calc(100cqw / 800); grid-column: 2; grid-row: 1; order: 0; width: auto; aspect-ratio: 800 / 680; margin: 0 calc(-1 * var(--margen)) 0 0; }
+  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 2; }
   :where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
   :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
-  /* Pantalla ancha: el cuadro del lado derecho. */
-  :where(.en-inicio) .m1 { --x: 40%; --y: -6%; --w: 64%; --h: 58%; }
-  :where(.en-inicio) .m2 { --x: 4%; --y: 44%; --w: 58%; --h: 56%; }
-  :where(.en-inicio) .m3 { --x: 70%; --y: 70%; --w: 34%; --h: 34%; }
-  :where(.en-inicio) .o1 { --x: 24%; --y: 24%; --d: 48%; }
-  :where(.en-inicio) .o2 { --x: 64%; --y: 2%; --d: 36%; }
-  :where(.en-inicio) .o3 { --x: 2%; --y: 6%; --d: 30%; }
-  :where(.en-inicio) .o4 { --x: 68%; --y: 58%; --d: 34%; }
-  :where(.en-inicio) .o5 { --x: 14%; --y: 70%; --d: 26%; }
+  :where(.en-inicio) .m1 { --r: -180; --t: -220; --s: 760; }
+  :where(.en-inicio) .m2 { --r: 250; --t: 300; --s: 470; }
+  :where(.en-inicio) .m3 { --r: -90; --t: 470; --s: 300; }
+  :where(.en-inicio) .o1 { --r: -70; --t: 40; --s: 400; --a: 14; }
+  :where(.en-inicio) .o2 { --r: 300; --t: 230; --s: 340; --a: 12; }
+  :where(.en-inicio) .o3 { --r: 360; --t: -70; --s: 250; --a: 10; }
+  :where(.en-inicio) .o4 { --r: 30; --t: 430; --s: 280; --a: 10; }
+  :where(.en-inicio) .o5 { display: block; --r: 560; --t: 500; --s: 190; --a: 8; }
+  :where(.en-inicio) .ollas .toca { display: block; position: absolute; right: calc(64 * var(--k)); bottom: calc(28 * var(--k)); margin: 0; padding: 8px 14px; border-radius: 5px; background: var(--negro); color: var(--crema); font: 700 17px/1.2 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 }
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
@@ -189,10 +204,33 @@
 
 @media (prefers-reduced-motion: no-preference) {
   html:where(.en-inicio) { scroll-behavior: smooth; }
-  /* El titular entra por renglón: título, entrada y botones, uno tras otro. */
-  :where(.en-inicio) .heroe :is(h1, .entrada, .acciones) { animation: entrar var(--t-grande) var(--entra) backwards; }
-  :where(.en-inicio) .heroe .entrada { animation-delay: 80ms; }
-  :where(.en-inicio) .heroe .acciones { animation-delay: 160ms; }
+  /* El héroe entra una sola vez: los círculos crecen, las ollas caen con un giro leve, el texto sube.
+     js/ollas.js pone .ya-entro al terminar: al volver por el enrutador (que reinserta los nodos) no se repite. */
+  :where(.en-inicio) .heroe:not(.ya-entro) .heroe-texto > * { animation: sube .6s var(--entra) backwards; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .heroe-texto > :nth-child(2) { animation-delay: 80ms; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .heroe-texto > :nth-child(3) { animation-delay: 160ms; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .heroe-texto > :nth-child(4) { animation-delay: 240ms; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .mancha { animation: crece .9s var(--entra) backwards; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .m2 { animation-delay: 120ms; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .m3 { animation-delay: 200ms; }
+  :where(.en-inicio) .heroe:not(.ya-entro) .aro { animation: cae .8s var(--entra) backwards; animation-delay: calc(150ms + var(--i, 0) * 120ms); }
+  :where(.en-inicio) .heroe:not(.ya-entro) .toca { animation: sube .6s .9s var(--entra) backwards; }
+  :where(.en-inicio) .o2 { --i: 1; }
+  :where(.en-inicio) .o3 { --i: 2; }
+  :where(.en-inicio) .o4 { --i: 3; }
+  :where(.en-inicio) .o5 { --i: 4; }
+  /* El guiso gira muy lento dentro de su aro (80 a 120 s por vuelta, sentidos alternos), solo mientras la barra
+     de charolas gira y el héroe se ve (js/ollas.js pone .gira); su botón «Pausar» lo detiene también. */
+  :where(.en-inicio) .olla img { animation: gira 120s linear infinite; animation-play-state: paused; }
+  :where(.en-inicio) .o2 img { animation-duration: 90s; animation-direction: reverse; }
+  :where(.en-inicio) .o3 img { animation-duration: 100s; }
+  :where(.en-inicio) .o4 img { animation-duration: 110s; animation-direction: reverse; }
+  :where(.en-inicio) .o5 img { animation-duration: 80s; }
+  :where(.en-inicio) .ollas.gira .olla img { animation-play-state: running; }
+  @keyframes sube { from { opacity: 0; transform: translateY(18px); } }
+  @keyframes crece { from { opacity: 0; transform: scale(.4); } }
+  @keyframes cae { from { opacity: 0; transform: translateY(-48px) scale(.86) rotate(-14deg); } }
+  @keyframes gira { to { transform: rotate(360deg); } }
 }
 
 /* Escena 2 anclada: el scroll pasa de un estado al siguiente. Solo en pantallas anchas y altas;

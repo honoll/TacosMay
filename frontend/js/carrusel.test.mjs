@@ -25,6 +25,11 @@ for (const n of nombres) assert.ok(guisoDe(n).foto && ollas.includes(`/media/gui
 assert.equal((ollas.match(/fetchpriority="high"/g) || []).length, 1, 'una sola olla con prioridad');
 assert.equal((ollas.match(/<img(?![^>]*alt="[^"]+")/g) || []).length, 0, 'cada foto con el nombre del guiso (nombre del enlace)');
 const css = leer('landing.css');
+// La entrada del héroe solo mientras no tenga .ya-entro (el enrutador reinserta los nodos y la repetiría),
+// y el giro de las ollas quieto salvo con .gira (que pone js/ollas.js al compás de la barra).
+for (const anim of ['sube', 'crece', 'cae']) assert.match(css, new RegExp(`\\.heroe:not\\(\\.ya-entro\\)[^{]*\\{ animation: ${anim} `), `la entrada «${anim}» no se repite al volver`);
+assert.match(css, /\.olla img \{ animation: gira [^}]*animation-play-state: paused; \}/, 'el guiso no gira hasta que gira la barra');
+assert.match(css, /\.ollas\.gira \.olla img \{ animation-play-state: running; \}/);
 assert.match(css, /\.carrusel-pausa\[hidden\] \{ display: none; \}/, 'el botón oculto no se muestra (display: flex no gana a hidden)');
 assert.doesNotMatch(css, /carrusel[^{]*\{[^}]*animation/, 'el giro no es una animación CSS: lo lleva carrusel.js, que respeta el movimiento reducido');
 
