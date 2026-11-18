@@ -505,11 +505,12 @@
 /* Fondo crema entero (el carrito de atrás no se asoma); el dibujo y el final ocupan el mismo lugar. */
 :where(.en-tienda) .envio { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center; padding: 24px var(--margen) 96px; background: var(--crema); }
 :where(.en-tienda) .envio > :is(.envio-escena, .envio-final, .envio-espera) { grid-area: 1 / 1; }
-:where(.en-tienda) .envio-escena { width: min(520px, 92vw); }
+:where(.en-tienda) .envio-escena { width: min(94vw, 900px, calc((100dvh - 140px) * 4 / 3)); } /* la escena llena: en celular, casi todo el ancho; en escritorio, crece con la altura */
 :where(.en-tienda) .envio-escena svg { display: block; width: 100%; height: auto; overflow: visible; }
 :where(.en-tienda) .envio-final { display: grid; justify-items: center; gap: 12px; text-align: center; }
 :where(.en-tienda) .envio-final h2 { margin: 0; font: 800 var(--t-seccion)/.95 var(--angosta); text-transform: uppercase; }
 :where(.en-tienda) .envio-dato { margin: 0; font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
+:where(.en-tienda) .envio-raya { display: block; width: min(360px, 80vw); height: 3px; border-radius: 2px; background: var(--negro); } /* la estela, vuelta raya */
 :where(.en-tienda) .envio-total { margin: 0; font: 800 1.5rem/1 var(--angosta); font-variant-numeric: tabular-nums; }
 :where(.en-tienda) .envio-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 12px; }
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
