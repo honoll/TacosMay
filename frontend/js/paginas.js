@@ -2,7 +2,10 @@ import { transicion } from './api.js';
 
 // Entre la landing y la tienda sin recargar. Al tocar un enlace a la otra página, la pide con fetch y
 // cambia solo lo que es de cada página: todo el <body> menos la cabecera, su script en línea, el pie y
-// los scripts de módulo. La cabecera y el pie no se tocan.
+// los scripts de módulo, y la marca de la página en <html> (en-inicio, en-tienda). La cabecera, el pie y
+// las hojas de estilo no se tocan: las tres páginas cargan las mismas hojas, con las reglas de cada una
+// acotadas a su marca. Encender y apagar hojas al navegar dejaba la cabecera sin estilo en Safari; la
+// documentación de swup recomienda lo mismo: las mismas hojas en todo el sitio.
 // Lo de cada página se guarda al salir y se vuelve a poner al regresar, con sus escuchas: los scripts de
 // cada página corren una sola vez y, al volver, se ponen al día con el evento «tm:pagina».
 // Si algo falla (red, respuesta rara), navegación normal. Pestaña nueva, teclas modificadoras, enlaces
@@ -18,11 +21,8 @@ let turno = 0;               // si llega otro clic antes de terminar, gana el ú
 
 const cabecera = () => document.querySelector('header.cabecera');
 const pie = () => document.querySelector('footer.pie');
-const hojas = () => [...document.head.querySelectorAll('link[rel="stylesheet"]')];
-// Las hojas vienen con ruta relativa: tras pushState resolverían contra la otra carpeta y
-// dejarían de reconocerse (la tienda quedaba sin barra.css). Se fijan absolutas al arrancar.
-// Solo si de verdad es relativa: reescribir el href de una hoja ya cargada la vuelve a pedir.
-for (const l of hojas()) if (!/^(\/|https?:)/.test(l.getAttribute('href'))) l.setAttribute('href', l.href);
+// La marca de la página en <html>: las hojas acotan sus reglas con :where(.en-inicio) o :where(.en-tienda).
+const marca = (raiz) => [...raiz.classList].find((c) => c.startsWith('en-'));
 
 // Para lector de pantalla: se dice a qué página se llegó.
 const anuncio = Object.assign(document.createElement('p'), { id: 'anuncio', className: 'sr' });
@@ -42,7 +42,7 @@ function pedir(ruta) {
   return pedidas.get(ruta);
 }
 
-// Lo de la página que se ve ahora: los nodos antes y después de la cabecera, y sus hojas de estilo.
+// Lo de la página que se ve ahora: los nodos antes y después de la cabecera.
 function partes(cuerpo, cab) {
   const hijos = [...cuerpo.children];
   const i = hijos.indexOf(cab);
@@ -50,32 +50,24 @@ function partes(cuerpo, cab) {
 }
 const estaPagina = () => ({
   titulo: document.title,
-  css: hojas().filter((l) => l.media !== 'not all').map((l) => l.href),
+  en: marca(document.documentElement),
   js: [],
   ...partes(document.body, cabecera()),
   puesta: true,
 });
 
-// La otra página, la primera vez: de su HTML salen el título, las hojas, los scripts y sus nodos.
+// La otra página, la primera vez: de su HTML salen el título, su marca, los scripts y sus nodos.
 async function leer(ruta) {
   const doc = new DOMParser().parseFromString(await pedir(ruta), 'text/html');
   const base = new URL(ruta, location.href);
   const abs = (el, attr) => new URL(el.getAttribute(attr), base).href;
   return {
     titulo: doc.title,
-    css: [...doc.head.querySelectorAll('link[rel="stylesheet"]')].map((l) => abs(l, 'href')),
+    en: marca(doc.documentElement),
     js: [...doc.body.querySelectorAll('script[type="module"][src]')].map((s) => abs(s, 'src')),
     ...partes(doc.body, doc.querySelector('header.cabecera')),
     puesta: false,
   };
-}
-
-// Una hoja nueva se carga sin aplicarse; se enciende en el mismo cuadro en que cambia el contenido.
-function cargarHoja(href) {
-  const l = Object.assign(document.createElement('link'), { rel: 'stylesheet', href, media: 'not all' });
-  const lista = new Promise((r) => { l.onload = l.onerror = r; });
-  document.head.append(l);
-  return lista;
 }
 
 // Los nodos traídos de otro documento se adoptan aquí (ya con la dirección nueva, para que sus rutas
@@ -93,7 +85,6 @@ export async function ir(url, { empuja = true } = {}) {
   let pag;
   try {
     pag = guardadas.get(ruta) || await leer(ruta);
-    await Promise.all(pag.css.filter((h) => !hojas().some((l) => l.href === h)).map(cargarHoja));
   } catch {
     location.assign(url.href); // respaldo: navegación normal
     return;
@@ -107,12 +98,8 @@ export async function ir(url, { empuja = true } = {}) {
   guardadas.set(actual, estaPagina());
 
   const cambiar = () => {
-    // Solo se toca la hoja que cambia de estado: reescribir `media` en una que ya estaba puesta
-    // (barra.css) hace que Safari la vuelva a procesar y deje la cabecera un momento sin estilo.
-    for (const l of hojas()) {
-      const media = pag.css.includes(l.href) ? 'all' : 'not all';
-      if ((l.media || 'all') !== media) l.media = media;
-    }
+    // Las hojas ya están todas puestas: solo cambia la marca, en el mismo cuadro que el contenido.
+    document.documentElement.classList.replace(marca(document.documentElement), pag.en);
     const { antes, despues } = partes(document.body, cabecera());
     for (const el of [...antes, ...despues]) el.remove();
     if (!pag.puesta) {

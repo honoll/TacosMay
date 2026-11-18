@@ -26,19 +26,22 @@ class El {
   scrollIntoView() { anclado = this.id; }
 }
 const cuerpo = (lista) => { lista.forEach((n) => { n.dueno = lista; }); return lista; };
-// Como en el navegador, link.href se resuelve contra la dirección vigente: tras pushState, una ruta
-// relativa apunta a otra carpeta (así quedó la tienda sin barra.css en la vuelta 5).
-class Hoja extends El {
-  get href() { return new URL(this.attrs.href, url()).href; }
-  set href(v) { this.attrs.href = v; }
-}
-const hoja = (href) => Object.assign(new Hoja('link', { rel: 'stylesheet', href }), { rel: 'stylesheet' });
+// Las hojas del <head>: las tres de siempre. paginas.js no debe tocarlas (ni media, ni href, ni nuevas).
+const hoja = (href) => Object.assign(new El('link', { rel: 'stylesheet', href }), { rel: 'stylesheet', href });
+// La marca de la página en <html>: en-inicio o en-tienda.
+const clases = (lista) => ({
+  lista,
+  get length() { return lista.length; },
+  [Symbol.iterator]() { return lista[Symbol.iterator](); },
+  replace(a, b) { const i = lista.indexOf(a); if (i < 0) return false; lista[i] = b; return true; },
+});
 
 let enfocado = null;
 let anclado = null;
 let asignado = null;
 let html; // los nodos del <body> de la página que se ve
 let links; // las hojas del <head>
+const raiz = { classList: clases([]) }; // <html>
 const ventana = {};
 const docEsc = {};
 const pila = []; // el historial: [{ url, state }]
@@ -60,12 +63,14 @@ const PARTES = {
 };
 // La tienda de juguete: cuenta cuántas veces corre y cuántas veces la despiertan estando a la vista.
 const MODULO_TIENDA = `data:text/javascript,globalThis.cargasTienda=(globalThis.cargasTienda||0)+1;addEventListener('tm:pagina',()=>{if(location.pathname==='/tienda/')globalThis.despiertaTienda=(globalThis.despiertaTienda||0)+1})`;
-const HOJAS = { '/': ['barra.css', 'landing.css'], '/tienda/': ['../barra.css', 'styles.css'] };
+const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css'];
+const MARCA = { '/': 'en-inicio', '/tienda/': 'en-tienda' };
 
 function montar(ruta) {
   html = cuerpo(PARTES[ruta]().nodos);
   document.title = ruta === '/' ? 'Inicio' : 'Tienda';
-  links = HOJAS[ruta].map(hoja); // relativas, como estaban en el HTML: paginas.js no puede depender de eso
+  links = HOJAS.map(hoja);
+  raiz.classList = clases(['js', MARCA[ruta]]); // «js» la pone landing.js: no se debe perder
   pila.length = 0;
   pila.push({ url: ORIGEN + ruta, state: null });
   pos = 0;
@@ -75,7 +80,8 @@ const url = () => new URL(pila[pos].url);
 Object.assign(globalThis, {
   document: {
     get title() { return this._t ?? ''; }, set title(v) { this._t = v; },
-    head: { querySelectorAll: () => links, append(l) { links.push(l); setTimeout(() => l.onload?.(), 1); } },
+    get documentElement() { return raiz; },
+    head: { querySelectorAll: () => links, append() { throw new Error('paginas.js no debe agregar hojas'); } },
     body: { get children() { return [...html]; }, append(n) { n.dueno = html; html.push(n); } },
     querySelector(sel) {
       if (sel === 'header.cabecera') return html.find((n) => n.tagName === 'HEADER');
@@ -85,7 +91,7 @@ Object.assign(globalThis, {
     },
     querySelectorAll: () => [],
     getElementById: (id) => html.find((n) => n.id === id) ?? null,
-    createElement: (tag) => (tag === 'link' ? new Hoja(tag) : new El(tag)),
+    createElement: (tag) => new El(tag),
     importNode: (n) => Object.assign(n, { importado: true }),
     addEventListener: (t, fn) => { (docEsc[t] ??= []).push(fn); },
     startViewTransition(fn) {
@@ -110,7 +116,8 @@ Object.assign(globalThis, {
       const { cab, nodos } = PARTES[ruta]();
       return {
         title: ruta === '/' ? 'Inicio' : 'Tienda',
-        head: { querySelectorAll: () => HOJAS[ruta].map((h) => new El('link', { href: h })) },
+        documentElement: { classList: clases([MARCA[ruta]]) },
+        head: { querySelectorAll: () => HOJAS.map((h) => new El('link', { href: h })) },
         body: { children: nodos, querySelectorAll: () => nodos.filter((n) => n.attrs.type === 'module') },
         querySelector: () => cab,
       };
@@ -139,7 +146,9 @@ async function atras() {
   for (const fn of ventana.popstate) fn();
   await espera();
 }
-const css = () => Object.fromEntries(links.map((l) => [new URL(l.href).pathname, l.media === 'not all' ? 'apagada' : 'puesta']));
+// Las hojas, tal como estaban: mismas, en el mismo orden, sin media ni href cambiados.
+const hojasIntactas = () => links.length === 3 && links.every((l, i) => l.href === HOJAS[i] && l.attrs.href === HOJAS[i] && l.media === '');
+const marca = () => [...raiz.classList].join(' ');
 const ids = () => html.filter((n) => !n.fijo && n.id !== 'anuncio').map((n) => n.id || n.tagName.toLowerCase());
 
 // ---------- Respaldo: si la red falla, navegación normal ----------
@@ -178,7 +187,8 @@ assert.deepEqual(ids(), ['aviso', 'vista', 'esqueleto', 'script', 'panel-carrito
 assert.equal(html.find((n) => n.tagName === 'HEADER'), cabecera, 'la cabecera es la misma, sin tocar');
 assert.equal(html.find((n) => n.tagName === 'FOOTER'), pie, 'el pie también');
 assert.equal(html.indexOf(cabecera), 0, 'el enlace para saltar se fue con la landing');
-assert.deepEqual(css(), { '/barra.css': 'puesta', '/landing.css': 'apagada', '/tienda/styles.css': 'puesta' }, 'las hojas de la landing no pisan a la tienda');
+assert.ok(hojasIntactas(), 'las hojas no se tocan al cambiar de página');
+assert.equal(marca(), 'js en-tienda', '<html> queda marcado como tienda, sin perder sus otras clases');
 assert.equal(document.title, 'Tienda');
 assert.equal(enfocado?.id, 'vista', 'el foco va al contenido nuevo');
 assert.equal(html.find((n) => n.tagName === 'SCRIPT' && !n.fijo).textContent, 'esqueleto()', 'el script en línea de la tienda se rehace para que corra');
@@ -194,7 +204,8 @@ await atras();
 assert.equal(location.pathname, '/');
 assert.deepEqual(ids(), landing, 'atrás: la landing de vuelta');
 assert.ok(html.filter((n) => !n.fijo && n.id !== 'anuncio').every((n, i) => n === nodosLanding[i]), 'con los mismos nodos (y sus escuchas), no unos nuevos');
-assert.deepEqual(css(), { '/barra.css': 'puesta', '/landing.css': 'puesta', '/tienda/styles.css': 'apagada' });
+assert.ok(hojasIntactas(), 'ni al volver');
+assert.equal(marca(), 'js en-inicio', 'y <html> vuelve a ser la landing');
 assert.equal(document.title, 'Inicio');
 
 // ---------- Ir y volver tres veces ----------
@@ -210,6 +221,7 @@ assert.equal(globalThis.cargasTienda, 1, 'su script sigue corrido una sola vez')
 assert.equal(globalThis.despiertaTienda, 3, 'y la despertaron una vez por vuelta');
 assert.equal(escuchas(), escuchasAntes, 'ninguna escucha se duplicó');
 assert.equal(transiciones, 6, 'con movimiento permitido, cada cambio con transición');
+assert.ok(hojasIntactas(), 'tres vueltas y las hojas siguen intactas');
 
 // ---------- Ancla de la landing desde la tienda ----------
 await clic('/tienda/#pedidos');

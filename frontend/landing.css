@@ -6,145 +6,145 @@
 @font-face { font-family: "Kalam"; src: url("fuentes/kalam-400-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Kalam"; src: url("fuentes/kalam-700-latin.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 
-h1, h2, h3, p, ol, ul, address { margin: 0; }
-ol, ul { padding: 0; list-style: none; }
-address { font-style: normal; }
-section[id] { scroll-margin-top: 16px; }
+:where(.en-inicio) h1, :where(.en-inicio) h2, :where(.en-inicio) h3, :where(.en-inicio) p, :where(.en-inicio) ol, :where(.en-inicio) ul, :where(.en-inicio) address { margin: 0; }
+:where(.en-inicio) ol, :where(.en-inicio) ul { padding: 0; list-style: none; }
+:where(.en-inicio) address { font-style: normal; }
+:where(.en-inicio) section[id] { scroll-margin-top: 16px; }
 
 
-.entrada { max-width: 34em; font-size: clamp(1.1rem, 1.6vw, 1.3rem); }
-.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 24px; }
-h2.rot { font-size: clamp(2.2rem, 7vw, 4rem); margin-bottom: 14px; }
-main > section { padding-block: clamp(48px, 8vw, 104px); }
+:where(.en-inicio) .entrada { max-width: 34em; font-size: clamp(1.1rem, 1.6vw, 1.3rem); }
+:where(.en-inicio) .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 24px; }
+:where(.en-inicio) h2.rot { font-size: clamp(2.2rem, 7vw, 4rem); margin-bottom: 14px; }
+:where(.en-inicio) main > section { padding-block: clamp(48px, 8vw, 104px); }
 
 /* ---------- Escena 1: la barra (no depende de JavaScript) ---------- */
 
-main > .heroe { padding-block: clamp(16px, 3vw, 40px) clamp(40px, 7vw, 88px); }
-h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom: 18px; }
-.heroe .barra { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(28px, 5vw, 56px); }
-.heroe .charola h2 { font-size: clamp(.9rem, 3.4vw, 1.5rem); }
+:where(.en-inicio) main > .heroe { padding-block: clamp(16px, 3vw, 40px) clamp(40px, 7vw, 88px); }
+:where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom: 18px; }
+:where(.en-inicio) .heroe .barra { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(28px, 5vw, 56px); }
+:where(.en-inicio) .heroe .charola h2 { font-size: clamp(.9rem, 3.4vw, 1.5rem); }
 
 @media (max-width: 699px) {
-  .heroe .barra { gap: 8px; }
-  .heroe .charola { border-width: 4px; }
-  .heroe .charola .datos { padding: 8px; }
-  .heroe .charola .num { font-size: 1.2rem; }
-  .heroe .charola .vapor { display: none; }
+  :where(.en-inicio) .heroe .barra { gap: 8px; }
+  :where(.en-inicio) .heroe .charola { border-width: 4px; }
+  :where(.en-inicio) .heroe .charola .datos { padding: 8px; }
+  :where(.en-inicio) .heroe .charola .num { font-size: 1.2rem; }
+  :where(.en-inicio) .heroe .charola .vapor { display: none; }
 }
 
 /* En pantalla ancha: el titular y, a su lado, el texto con el botón; debajo, las tres charolas a todo
    lo ancho. Así las charolas pesan tanto como el titular y no queda fondo vacío. */
 @media (min-width: 1100px) {
-  .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 27rem); column-gap: clamp(32px, 4vw, 80px); align-items: end; }
-  h1.rot { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; font-size: clamp(5rem, 9vw, 12rem); }
-  .heroe .entrada { grid-column: 2; grid-row: 1; }
-  .heroe .acciones { grid-column: 2; grid-row: 2; margin-top: 20px; }
-  .heroe .barra { grid-column: 1 / -1; grid-row: 3; gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 3vw, 48px); }
-  .heroe .charola h2 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
-  .heroe .charola .num { font-size: 2.4rem; }
+  :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 27rem); column-gap: clamp(32px, 4vw, 80px); align-items: end; }
+  :where(.en-inicio) h1.rot { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; font-size: clamp(5rem, 9vw, 12rem); }
+  :where(.en-inicio) .heroe .entrada { grid-column: 2; grid-row: 1; }
+  :where(.en-inicio) .heroe .acciones { grid-column: 2; grid-row: 2; margin-top: 20px; }
+  :where(.en-inicio) .heroe .barra { grid-column: 1 / -1; grid-row: 3; gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 3vw, 48px); }
+  :where(.en-inicio) .heroe .charola h2 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
+  :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
 }
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */
 
-.como { background: var(--acero); }
-.pasos { display: grid; gap: 16px; margin-top: 24px; }
-.paso .datos { gap: 8px; padding: 14px 16px 18px; }
-.paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
-.paso .picto { width: 1.1em; height: 1.1em; flex: none; }
+:where(.en-inicio) .como { background: var(--acero); }
+:where(.en-inicio) .pasos { display: grid; gap: 16px; margin-top: 24px; }
+:where(.en-inicio) .paso .datos { gap: 8px; padding: 14px 16px 18px; }
+:where(.en-inicio) .paso h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.6rem, 4.5vw, 2.2rem); }
+:where(.en-inicio) .paso .picto { width: 1.1em; height: 1.1em; flex: none; }
 
 /* Sobre la etiqueta en blanco de la foto de la bolsa va solo el nombre del guiso: a ese tamaño (unos
    85 px de ancho en celular) es lo único que se lee. La posición sale de medir el original (2048 px):
    la etiqueta blanca ocupa x 780–1288, y 860–1208; aquí, en % del recorte 4:3, con un margen adentro. */
-.paso .guiso { container-type: inline-size; }
-.etq-bolsa { position: absolute; left: 38.6%; top: 40%; width: 23.8%; height: 21.3%; display: grid; place-items: center; border-top: 1cqw solid #a8321c; color: var(--negro); text-align: center; }
-.etq-bolsa strong { font: 800 3.5cqw/.95 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .paso .guiso { container-type: inline-size; }
+:where(.en-inicio) .etq-bolsa { position: absolute; left: 38.6%; top: 40%; width: 23.8%; height: 21.3%; display: grid; place-items: center; border-top: 1cqw solid #a8321c; color: var(--negro); text-align: center; }
+:where(.en-inicio) .etq-bolsa strong { font: 800 3.5cqw/.95 var(--angosta); text-transform: uppercase; }
 
 @media (min-width: 860px) {
-  .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  :where(.en-inicio) .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 }
 
 /* ---------- Escena 3: las charolas, en vivo ---------- */
 
-.guisos h2 + .entrada, .salen h2 + .entrada { margin-bottom: 24px; }
-main > .salen { padding-block: 0 clamp(32px, 5vw, 64px); }
-.salen .btn { position: relative; margin-top: 6px; } /* por encima de la zona de toque de la charola */
-.guisos .barra + h2 { margin-top: clamp(40px, 6vw, 72px); }
-.estado { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 14px 18px; border-left: 6px solid var(--negro); background: var(--acero); font-weight: 600; }
+:where(.en-inicio) .guisos h2 + .entrada, :where(.en-inicio) .salen h2 + .entrada { margin-bottom: 24px; }
+:where(.en-inicio) main > .salen { padding-block: 0 clamp(32px, 5vw, 64px); }
+:where(.en-inicio) .salen .btn { position: relative; margin-top: 6px; } /* por encima de la zona de toque de la charola */
+:where(.en-inicio) .guisos .barra + h2 { margin-top: clamp(40px, 6vw, 72px); }
+:where(.en-inicio) .estado { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 14px 18px; border-left: 6px solid var(--negro); background: var(--acero); font-weight: 600; }
 
 @media (min-width: 700px) {
   /* Las que más salen: siempre cuatro, del mismo tamaño, en una fila completa. */
-  .barra.top { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  :where(.en-inicio) .barra.top { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* ---------- Escena 4: el envío, en papel de ticket ---------- */
 
-.envio { background: var(--acero); }
-.papel { max-width: 640px; margin-inline: auto; padding: clamp(20px, 4vw, 36px); border-bottom: 3px dashed var(--negro); background: var(--crema); }
-.papel h2.rot { font-size: clamp(2rem, 6vw, 3rem); }
-.ticket { margin: 16px 0 20px; }
-.ticket li { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; font: 600 1.05rem/1.4 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
-.ticket i { flex: 1; min-width: 12px; border-bottom: 2px dotted var(--negro); }
-.papel p + p { margin-top: 14px; }
-.fuente { font-size: .95rem; }
-.fuente a { display: inline-block; padding-block: 10px; font-weight: 600; }
+:where(.en-inicio) .envio { background: var(--acero); }
+:where(.en-inicio) .papel { max-width: 640px; margin-inline: auto; padding: clamp(20px, 4vw, 36px); border-bottom: 3px dashed var(--negro); background: var(--crema); }
+:where(.en-inicio) .papel h2.rot { font-size: clamp(2rem, 6vw, 3rem); }
+:where(.en-inicio) .ticket { margin: 16px 0 20px; }
+:where(.en-inicio) .ticket li { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; font: 600 1.05rem/1.4 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
+:where(.en-inicio) .ticket i { flex: 1; min-width: 12px; border-bottom: 2px dotted var(--negro); }
+:where(.en-inicio) .papel p + p { margin-top: 14px; }
+:where(.en-inicio) .fuente { font-size: .95rem; }
+:where(.en-inicio) .fuente a { display: inline-block; padding-block: 10px; font-weight: 600; }
 
 /* En ancho, el ticket se abre en dos columnas: los datos a la izquierda, la explicación a la derecha. */
 @media (min-width: 1100px) {
-  .papel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; align-items: start; max-width: 1180px; }
-  .papel > h2 { grid-column: 1 / -1; }
-  .papel > .ticket { grid-column: 1; grid-row: 2 / span 3; margin-top: 0; }
-  .papel > p { grid-column: 2; max-width: 34em; }
+  :where(.en-inicio) .papel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; align-items: start; max-width: 1180px; }
+  :where(.en-inicio) .papel > h2 { grid-column: 1 / -1; }
+  :where(.en-inicio) .papel > .ticket { grid-column: 1; grid-row: 2 / span 3; margin-top: 0; }
+  :where(.en-inicio) .papel > p { grid-column: 2; max-width: 34em; }
 }
 
 /* ---------- Escena 5: May y la taquería ---------- */
 
-.taqueria-rejilla { display: grid; gap: 40px; }
-.logo-grande { display: block; width: min(100%, 440px); height: auto; margin-bottom: 24px; }
-.hechos { display: grid; gap: 14px; margin-bottom: 24px; }
-.hechos li { padding-left: 16px; border-left: 6px solid var(--negro); }
-.hechos strong { display: block; font: 800 clamp(1.6rem, 5vw, 2.2rem)/.95 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .taqueria-rejilla { display: grid; gap: 40px; }
+:where(.en-inicio) .logo-grande { display: block; width: min(100%, 440px); height: auto; margin-bottom: 24px; }
+:where(.en-inicio) .hechos { display: grid; gap: 14px; margin-bottom: 24px; }
+:where(.en-inicio) .hechos li { padding-left: 16px; border-left: 6px solid var(--negro); }
+:where(.en-inicio) .hechos strong { display: block; font: 800 clamp(1.6rem, 5vw, 2.2rem)/.95 var(--angosta); text-transform: uppercase; }
 
 /* El pizarrón del menú, con su código de tres plumones: negro titula, rojo nombra, azul separa. */
-.pizarron { width: min(100%, 520px); margin-inline: auto; padding: 24px; border: 5px solid #b89a63; border-radius: 28px; background: #fffdf7; font-family: "Kalam", "Comic Sans MS", cursive; }
-.pizarron h3 { margin-bottom: 10px; text-align: center; color: #1b1b1b; font-size: 1.3rem; }
-.pizarron ul { padding-block: 10px; border-top: 3px solid #1f4fa3; color: #c4202a; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
-.pizarron .nota { padding-top: 12px; border-top: 3px solid #1f4fa3; color: #1b1b1b; font: 400 .95rem/1.5 var(--fuente); }
-.pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 600; }
+:where(.en-inicio) .pizarron { width: min(100%, 520px); margin-inline: auto; padding: 24px; border: 5px solid #b89a63; border-radius: 28px; background: #fffdf7; font-family: "Kalam", "Comic Sans MS", cursive; }
+:where(.en-inicio) .pizarron h3 { margin-bottom: 10px; text-align: center; color: #1b1b1b; font-size: 1.3rem; }
+:where(.en-inicio) .pizarron ul { padding-block: 10px; border-top: 3px solid #1f4fa3; color: #c4202a; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
+:where(.en-inicio) .pizarron .nota { padding-top: 12px; border-top: 3px solid #1f4fa3; color: #1b1b1b; font: 400 .95rem/1.5 var(--fuente); }
+:where(.en-inicio) .pizarron .nota a { display: inline-block; padding-block: 10px; font-weight: 600; }
 
 @media (min-width: 860px) {
-  .taqueria-rejilla { grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
+  :where(.en-inicio) .taqueria-rejilla { grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: start; }
 }
 
 /* ---------- Escena 6: cierre ---------- */
 
-main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
-.cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
-.cierre .entrada { margin-top: 14px; }
+:where(.en-inicio) main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
+:where(.en-inicio) .cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
+:where(.en-inicio) .cierre .entrada { margin-top: 14px; }
 
 /* ---------- Página de «no encontrado» ---------- */
 
-main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
-.perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); }
+:where(.en-inicio) main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
+:where(.en-inicio) .perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); }
 
 /* ---------- Movimiento de esta página ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
+  html:where(.en-inicio) { scroll-behavior: smooth; }
   /* El titular entra por renglón: título, entrada y botones, uno tras otro. */
-  .heroe :is(h1, .entrada, .acciones) { animation: entrar var(--t-grande) var(--entra) backwards; }
-  .heroe .entrada { animation-delay: 80ms; }
-  .heroe .acciones { animation-delay: 160ms; }
+  :where(.en-inicio) .heroe :is(h1, .entrada, .acciones) { animation: entrar var(--t-grande) var(--entra) backwards; }
+  :where(.en-inicio) .heroe .entrada { animation-delay: 80ms; }
+  :where(.en-inicio) .heroe .acciones { animation-delay: 160ms; }
 }
 
 /* Escena 2 anclada: el scroll pasa de un estado al siguiente. Solo en pantallas anchas y altas;
    en celular las tres charolas van apiladas, todas a la vista. */
 @media (prefers-reduced-motion: no-preference) and (min-width: 860px) and (min-height: 620px) {
-  .js main > .como { height: 240vh; padding-block: 0; }
-  .js .como-fija { position: sticky; top: 0; display: grid; align-content: center; height: 100vh; height: 100svh; }
+  .js:where(.en-inicio) main > .como { height: 240vh; padding-block: 0; }
+  .js:where(.en-inicio) .como-fija { position: sticky; top: 0; display: grid; align-content: center; height: 100vh; height: 100svh; }
   /* El paso activo va a tamaño completo y con filo negro; los otros se achican, pero siguen a color. */
-  .js .paso { transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s; }
-  .js .como[data-step] .paso { transform: scale(.9); }
-  .js .como[data-step="1"] .paso:nth-child(1),
-  .js .como[data-step="2"] .paso:nth-child(2),
-  .js .como[data-step="3"] .paso:nth-child(3) { transform: none; box-shadow: 0 0 0 4px var(--negro); }
+  .js:where(.en-inicio) .paso { transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s; }
+  .js:where(.en-inicio) .como[data-step] .paso { transform: scale(.9); }
+  .js:where(.en-inicio) .como[data-step="1"] .paso:nth-child(1),
+  .js:where(.en-inicio) .como[data-step="2"] .paso:nth-child(2),
+  .js:where(.en-inicio) .como[data-step="3"] .paso:nth-child(3) { transform: none; box-shadow: 0 0 0 4px var(--negro); }
 }

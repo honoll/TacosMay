@@ -534,6 +534,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Tres fotos regeneradas y sus colores (17-nov-2026):** salpicón, bistek con papa y chicharrón en salsa, otra vez a WebP 4:3 (el chicharrón más cerrado, sin el borde de la sartén). Charolas: 03 salpicón `#DCC9A0` (beige), 06 bistek `#D2A463` (dorado claro), 07 chicharrón `#8A9440` (verde olivo), todos con texto negro AA (11.5, 8.2 y 5.7). La franja de colores conserva sus cuatro guisos en orden 09 · 07 · 02 · 08 para que los dos verdes no se toquen. `[GUISO]` de los tres corregido en dirección de arte. Sin ver en pantalla.
 
+- **Mismas hojas en todo el sitio (17-nov-2026):** la landing, la tienda y la página de «no encontrado» enlazan `/barra.css`, `/landing.css` y `/tienda/styles.css`, en ese orden; cada regla de las dos hojas de página acotada a su página con `:where(.en-inicio)` o `:where(.en-tienda)` (clase de `<html>`), sin cambiar especificidad (87 y 217 selectores; quitando el prefijo vuelve el original). `js/paginas.js` ya no carga, enciende ni apaga hojas: solo cambia esa clase. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

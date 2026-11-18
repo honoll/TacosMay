@@ -25,6 +25,63 @@ for (const p of paginas) {
   JSON.parse(h.match(/<script type="speculationrules">([\s\S]*?)<\/script>/)[1]);
 }
 assert.ok(html['index.html'].includes('<link rel="prefetch" href="/tienda/">'), 'la landing deja lista la tienda');
+
+// Las mismas hojas, en el mismo orden, en las tres páginas: al navegar sin recargar no se enciende ni se
+// apaga ninguna (en Safari eso dejaba la cabecera sin estilo). Y cada página marca en <html> cuál es.
+const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css'];
+const MARCA = { 'index.html': 'en-inicio', 'tienda/index.html': 'en-tienda', '404.html': 'en-inicio' };
+for (const p of paginas) {
+  const enlazadas = [...html[p].matchAll(/<link rel="stylesheet" href="([^"]+)"[^>]*>/g)].map((m) => m[0]);
+  assert.deepEqual(enlazadas, HOJAS.map((h) => `<link rel="stylesheet" href="${h}">`), `${p}: enlaza exactamente las tres hojas, en orden, sin media ni carga diferida`);
+  assert.match(html[p], new RegExp(`<html lang="es-MX" class="${MARCA[p]}">`), `${p}: <html> marcado ${MARCA[p]}`);
+  assert.ok(!/rel="prefetch" href="[^"]+\.css"/.test(html[p]), `${p}: sin prefetch de hojas (ya están todas)`);
+}
+
+// Cada regla de una hoja de página está acotada a su página, y ningún selector sin acotar aparece en
+// las dos hojas de página con declaraciones distintas.
+function reglas(css) {
+  const lista = [];
+  const sinComentarios = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  (function recorrer(texto) {
+    let i = 0;
+    while (i < texto.length) {
+      const a = texto.indexOf('{', i);
+      if (a < 0) break;
+      let prof = 1;
+      let b = a + 1;
+      for (; prof; b++) prof += texto[b] === '{' ? 1 : texto[b] === '}' ? -1 : 0;
+      const sel = texto.slice(i, a).trim();
+      const cuerpo = texto.slice(a + 1, b - 1);
+      if (/^@(media|supports|starting-style|container|layer)/.test(sel)) recorrer(cuerpo);
+      else if (!sel.startsWith('@')) lista.push({ sel, cuerpo: cuerpo.trim() });
+      i = b;
+    }
+  })(sinComentarios);
+  return lista;
+}
+const partirLista = (sel) => {
+  const partes = [];
+  let prof = 0;
+  let ini = 0;
+  [...sel].forEach((c, i) => {
+    if ('(['.includes(c)) prof++;
+    else if (')]'.includes(c)) prof--;
+    else if (c === ',' && !prof) { partes.push(sel.slice(ini, i).trim()); ini = i + 1; }
+  });
+  return [...partes, sel.slice(ini).trim()];
+};
+const sinAcotar = {};
+for (const [hoja, clase] of [['landing.css', 'en-inicio'], ['tienda/styles.css', 'en-tienda']]) {
+  for (const { sel, cuerpo } of reglas(leer(hoja))) {
+    for (const s of partirLista(sel)) {
+      if (!s.includes(`:where(.${clase})`)) (sinAcotar[s] ??= {})[hoja] = cuerpo;
+      assert.ok(!s.includes(`:where(.${clase === 'en-inicio' ? 'en-tienda' : 'en-inicio'})`), `${hoja}: «${s}» acotado a la otra página`);
+    }
+  }
+}
+assert.deepEqual(Object.keys(sinAcotar), [], `selectores sin acotar a su página: ${Object.keys(sinAcotar).join(' | ')}`);
+const choques = Object.entries(sinAcotar).filter(([, h]) => Object.keys(h).length === 2 && h['landing.css'] !== h['tienda/styles.css']);
+assert.deepEqual(choques, [], 'un selector sin acotar en las dos hojas de página, con reglas distintas');
 assert.ok(html['tienda/index.html'].includes('<link rel="prefetch" href="/">'), 'la tienda deja lista la landing');
 
 const css = leer('barra.css');
