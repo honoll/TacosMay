@@ -64,7 +64,8 @@
   :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 3vw, 64px); align-items: center; }
   :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; }
   :where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 8.4vw, 11rem); }
-  :where(.en-inicio) .ollas { grid-column: 2; grid-row: 1; order: 0; aspect-ratio: 1; margin: 0 calc(-1 * var(--margen)) 0 0; width: auto; }
+  /* Un poco más ancho que alto: así la barra de charolas de abajo se asoma sin bajar. */
+  :where(.en-inicio) .ollas { grid-column: 2; grid-row: 1; order: 0; aspect-ratio: 6 / 5; margin: 0 calc(-1 * var(--margen)) 0 0; width: auto; }
   :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 2; margin-top: clamp(20px, 3vw, 48px); }
   :where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
   :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
