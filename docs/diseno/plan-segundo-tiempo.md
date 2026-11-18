@@ -135,3 +135,4 @@ Investigación y chocan con la marca.
 | 7 Landing y ayuda | Hecho, sin ver en pantalla (17-nov-2026) |
 | 8 Transiciones | Hecho, sin ver en pantalla (17-nov-2026) |
 | Entre páginas sin destello | Hecho, sin ver en pantalla (17-nov-2026) |
+| Entre páginas sin recargar (`js/paginas.js`, decisión de Alejandro: interceptar los clics) | Hecho, sin ver en pantalla (17-nov-2026) |

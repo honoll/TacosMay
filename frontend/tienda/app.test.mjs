@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 
 // ---------- DOM mínimo ----------
 const nodo = (extra = {}) => ({
-  innerHTML: '', textContent: '', hidden: false, className: '', dataset: {}, h: {}, attrs: {},
+  innerHTML: '', textContent: '', hidden: false, isConnected: true, className: '', dataset: {}, h: {}, attrs: {},
   style: { setProperty() {} }, classList: { add() {}, remove() {}, toggle() {} },
   addEventListener(tipo, fn) { this.h[tipo] = fn; },
   setAttribute(k, v) { this.attrs[k] = v; }, removeAttribute(k) { delete this.attrs[k]; },
@@ -20,11 +20,12 @@ const porId = {};
 const store = {};
 let hash = '';
 const oyentes = {};
+const registros = {}; // cuántas veces se registró cada escucha de window: no debe crecer al ir y volver
 Object.assign(globalThis, {
   localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
   document: { getElementById: (id) => (porId[id] ??= nodo()), querySelector: () => null, querySelectorAll: () => [], activeElement: null, title: '' },
   location: { get hash() { return hash; }, set hash(v) { hash = v ? `#${String(v).replace(/^#/, '')}` : ''; } },
-  addEventListener: (tipo, fn) => { oyentes[tipo] = fn; },
+  addEventListener: (tipo, fn) => { oyentes[tipo] = fn; registros[tipo] = (registros[tipo] || 0) + 1; },
   setInterval: () => 0, scrollTo() {}, innerWidth: 1440, CSS: { escape: String },
   FormData: class { constructor(f) { this.e = [...f.elements].map((i) => [i.name, i.value]); } [Symbol.iterator]() { return this.e[Symbol.iterator](); } },
 });
@@ -234,5 +235,29 @@ assert.equal(llamadas.length, n, 'una carga normal no repite nada');
 oyentes.pageshow({ persisted: true });
 await espera();
 assert.ok(llamadas.slice(n).length > 0, 'al volver con «atrás» se vuelve a leer lo que pudo cambiar');
+
+// Ir a la landing y volver tres veces sin recargar (js/paginas.js): mientras no está a la vista la tienda
+// no atiende # ni «Salir»; al volver se pone al día; y ninguna escucha ni temporizador se duplica.
+store.tm_sesion = JSON.stringify(USUARIO); // con sesión, para ver que «Salir» de la landing no la toca
+const fotoEscuchas = JSON.stringify(registros);
+for (let vuelta = 1; vuelta <= 3; vuelta++) {
+  vista().isConnected = false; // se fue a la landing: sus nodos quedan guardados fuera de la página
+  n = llamadas.length;
+  location.hash = 'como';
+  oyentes.hashchange();
+  porId.nav.h.click({ target: { closest: (s) => (s === '[data-click]' ? nodo({ tagName: 'BUTTON', dataset: { click: 'logout' } }) : null) }, preventDefault() {} });
+  oyentes['tm:pagina']();
+  await espera();
+  assert.equal(llamadas.length, n, `vuelta ${vuelta}: fuera de la tienda no se pinta ni se llama a la API`);
+  assert.ok(localStorage.getItem('tm_sesion'), `vuelta ${vuelta}: «Salir» de la landing no lo atiende la tienda`);
+  vista().isConnected = true; // regresó a /tienda/#carrito
+  location.hash = 'carrito';
+  oyentes['tm:pagina']();
+  await espera();
+  assert.equal(vista().dataset.vista, 'carrito', `vuelta ${vuelta}: al volver pinta la vista de la dirección`);
+  assert.ok(llamadas.slice(n).includes('GET /api/carrito'), `vuelta ${vuelta}: y relee el carrito`);
+}
+assert.equal(JSON.stringify(registros), fotoEscuchas, 'tres vueltas: las mismas escuchas que al principio');
+assert.equal(registros['tm:pagina'], 1, 'una sola escucha de «tm:pagina»');
 
 console.log('app.test: OK (flujo de cuenta y celdas de carrito, pedidos y admin)');

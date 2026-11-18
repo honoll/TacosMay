@@ -35,35 +35,48 @@ export function pintarCarrito(n, { base = '/tienda/', actual = '', fin = 0 } = {
   try { sessionStorage.setItem('tm_cabecera', JSON.stringify({ nav, n, fin })); } catch { /* sin almacenamiento: solo se pierde el atajo */ }
 }
 
-// Páginas estáticas. Marca la página actual y, si hay sesión, pone el nombre y cuenta el carrito.
-export async function iniciarCabecera() {
+// Páginas estáticas (landing y «no encontrado»): pone el nombre y cuenta el carrito. En la tienda la
+// cabecera la lleva tienda/app.js; aquí todo se detiene mientras se está ahí (js/paginas.js cambia
+// de una a otra sin recargar, así que los dos scripts pueden estar cargados a la vez).
+const enTienda = () => location.pathname.startsWith('/tienda/');
+let fin = 0;
+let iniciada = false;
+
+function reloj() {
+  if (enTienda()) return;
+  const s = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+  for (const el of document.querySelectorAll('[data-countdown]')) el.textContent = s ? clock(s) : '';
+}
+
+function pintar(n) {
+  const u = session.get();
+  document.getElementById('nav').innerHTML = cuenta(u, { admin: u?.rol === 'admin' });
+  pintarCarrito(n, { fin });
+}
+
+// Pinta ya con lo que se sabe (enlaces de esta página, no los de la tienda) y luego pregunta el carrito.
+// Sin pintar «0» antes de saber: el número que está puesto es el de la página anterior.
+export async function actualizarCabecera() {
+  if (enTienda()) return;
   if (location.pathname === '/') document.querySelector('#nav-principal a[href="/"]')?.setAttribute('aria-current', 'page');
-  const nav = document.getElementById('nav');
-  // Sin pintar «0» antes de saber: lo de la página anterior ya está puesto (script bajo la cabecera).
-  let fin = 0;
-  const reloj = () => {
-    const s = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
-    for (const el of document.querySelectorAll('[data-countdown]')) el.textContent = s ? clock(s) : '';
-  };
-  const actualizar = async () => {
-    if (!session.get()?.token) return pintar(0); // sin sesión no se pide el carrito
-    try {
-      const c = await api('/carrito');
-      fin = c.items.length && c.expira_en_segundos > 0 ? Date.now() + c.expira_en_segundos * 1000 : 0;
-      pintar(piezas(c));
-    } catch {
-      fin = 0;
-      pintar(0); // sesión vencida: api() ya la borró, así que se pinta «Entrar»
-    }
-    reloj();
-  };
-  const pintar = (n) => {
-    const u = session.get();
-    nav.innerHTML = cuenta(u, { admin: u?.rol === 'admin' });
-    pintarCarrito(n, { fin });
-  };
-  nav.addEventListener('click', (e) => {
-    if (!e.target.closest('[data-click="logout"]')) return;
+  if (!session.get()?.token) { fin = 0; reloj(); return pintar(0); } // sin sesión no se pide el carrito
+  pintar(document.getElementById('nav-carrito-n').textContent);
+  try {
+    const c = await api('/carrito');
+    fin = c.items.length && c.expira_en_segundos > 0 ? Date.now() + c.expira_en_segundos * 1000 : 0;
+    pintar(piezas(c));
+  } catch {
+    fin = 0;
+    pintar(0); // sesión vencida: api() ya la borró, así que se pinta «Entrar»
+  }
+  reloj();
+}
+
+export function iniciarCabecera() {
+  if (iniciada) return actualizarCabecera();
+  iniciada = true;
+  document.getElementById('nav').addEventListener('click', (e) => {
+    if (enTienda() || !e.target.closest('[data-click="logout"]')) return;
     session.set(null);
     fin = 0;
     pintar(0);
@@ -71,6 +84,6 @@ export async function iniciarCabecera() {
   });
   setInterval(reloj, 1000);
   // Al volver con «atrás» la página sale de la memoria del navegador tal como se dejó: se pone al día.
-  addEventListener('pageshow', (e) => { if (e.persisted) actualizar(); });
-  await actualizar();
+  addEventListener('pageshow', (e) => { if (e.persisted) actualizarCabecera(); });
+  return actualizarCabecera();
 }

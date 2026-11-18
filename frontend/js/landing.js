@@ -2,7 +2,7 @@
 // Reúsa el api() y el money() de la tienda, y la charola de barra.js.
 import { api, money, esc } from './api.js';
 import { charola } from './barra.js';
-import { iniciarCabecera } from './cabecera.js';
+import { iniciarCabecera, actualizarCabecera } from './cabecera.js';
 
 document.documentElement.classList.add('js');
 iniciarCabecera();
@@ -88,6 +88,7 @@ let queued = false;
 
 function progress() {
   queued = false;
+  if (!como.isConnected) return; // se está viendo la tienda (js/paginas.js)
   const r = como.getBoundingClientRect();
   const span = r.height - innerHeight;
   const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1;
@@ -101,3 +102,10 @@ function request() {
 addEventListener('scroll', request, { passive: true });
 addEventListener('resize', request);
 progress();
+
+// Al regresar desde la tienda sin recargar (js/paginas.js): la cabecera vuelve a ser la de aquí.
+addEventListener('tm:pagina', () => {
+  if (!como.isConnected) return;
+  actualizarCabecera();
+  progress();
+});

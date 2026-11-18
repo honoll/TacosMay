@@ -530,6 +530,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Entre páginas sin destello (17-nov-2026):** la cabecera llega pintada como se fue (cuenta, carrito y reloj guardados por la página anterior y puestos antes del primer cuadro), la tienda llega con el esqueleto del catálogo, las cuatro fuentes precargadas sin brinco (`font-display: fallback`), lienzo crema, precarga de la otra página y transición entre documentos solo como mejora; «atrás» pone al día la página. Prueba nueva `frontend/js/paginas.test.mjs`. Propuesta al backend: caché de archivos estáticos. Sin ver en pantalla.
 
+- **Entre la landing y la tienda sin recargar (17-nov-2026):** `frontend/js/paginas.js` intercepta los clics entre `/` y `/tienda/`, pide la otra página con `fetch` (ya pedida al acercarse al enlace) y cambia solo lo de cada página; cabecera y pie no se tocan. Lo de cada página se guarda al salir y vuelve al regresar, con sus escuchas; los scripts corren una vez y se ponen al día con `tm:pagina`. Hojas de cada página encendidas y apagadas en el mismo cuadro; «atrás» y «adelante» con `popstate`; título, foco, anuncio y transición solo con movimiento permitido. Respaldo a navegación normal si falla la red. La tienda y la cabecera de la landing no atienden nada mientras no están a la vista. Pruebas: `navegacion.test` (ida, atrás, tres vueltas, ancla, respaldo, entrada directa) y tres vueltas en `app.test`. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

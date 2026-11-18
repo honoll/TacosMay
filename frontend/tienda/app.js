@@ -6,6 +6,9 @@ import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
 const aviso = document.getElementById('aviso');
+// La tienda está a la vista. Con js/paginas.js puede estar cargada mientras se ve la landing: entonces
+// no atiende la cabecera, los # ni el reloj (la landing los lleva).
+const activa = () => view.isConnected;
 
 const EMPTY = { items: [], total_centavos: 0, expira_en_segundos: 0 };
 let cart = EMPTY;
@@ -40,6 +43,7 @@ const loadCart = async () => setCart(await api('/carrito'));
 
 
 function tick() {
+  if (!activa()) return;
   const left = deadline ? Math.max(0, Math.ceil((deadline - Date.now()) / 1000)) : 0;
   document.querySelectorAll('[data-countdown]').forEach((el) => {
     el.textContent = deadline ? clock(left) : '';
@@ -98,7 +102,7 @@ function pintarPanel() {
 
 // Desde el catálogo o una ficha, el botón del carrito abre el panel en vez de cambiar de vista.
 document.getElementById('nav-carrito').addEventListener('click', (e) => {
-  if (!user() || !['catalogo', 'guiso'].includes(current) || !panel.showModal) return;
+  if (!activa() || !user() || !['catalogo', 'guiso'].includes(current) || !panel.showModal) return;
   e.preventDefault();
   pintarPanel();
   panel.showModal();
@@ -688,25 +692,25 @@ function dispatch(e, type) {
   });
 }
 for (const type of ['click', 'submit', 'change']) view.addEventListener(type, (e) => dispatch(e, type));
-nav.addEventListener('click', (e) => dispatch(e, 'click')); // «Salir» vive en la cabecera
+nav.addEventListener('click', (e) => { if (activa()) dispatch(e, 'click'); }); // «Salir» vive en la cabecera
 aviso.addEventListener('click', (e) => dispatch(e, 'click')); // «Deshacer» vive en el aviso
 
 addEventListener('hashchange', () => {
-  if (location.hash === rendered) return;
+  if (!activa() || location.hash === rendered) return;
   notice();
   render();
 });
 
 // Al volver con «atrás» la página sale de la memoria del navegador tal como se dejó (quizá con otra
 // sesión o con otro carrito, cambiados en la landing): se pone al día sin recargar.
-addEventListener('pageshow', (e) => {
-  if (!e.persisted) return;
-  run(async () => {
-    if (user()) await loadCart();
-    else setCart(EMPTY);
-    await render();
-  });
+// Lo mismo al regresar desde la landing sin recargar (js/paginas.js avisa con «tm:pagina»).
+const ponerAlDia = () => run(async () => {
+  if (user()) await loadCart();
+  else setCart(EMPTY);
+  await render();
 });
+addEventListener('pageshow', (e) => { if (e.persisted && activa()) ponerAlDia(); });
+addEventListener('tm:pagina', () => { if (activa()) ponerAlDia(); });
 
 // Arranque: si hay sesión guardada, se valida contra el backend y se carga su carrito (a la vez).
 if (user()) {
