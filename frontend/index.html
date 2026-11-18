@@ -29,6 +29,7 @@
   <link rel="modulepreload" href="/tienda/app.js">
   <link rel="modulepreload" href="/tienda/empaque.js">
   <link rel="modulepreload" href="/js/datos.js">
+  <link rel="modulepreload" href="/js/carrusel.js">
   <!-- Las mismas tres hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
        recargar (js/paginas.js) nunca se enciende ni se apaga una hoja. Cada hoja de página tiene sus
        reglas acotadas a su página con :where(.en-inicio) o :where(.en-tienda), la clase de <html>. -->
@@ -81,23 +82,28 @@
           <a class="enl" href="#como">Cómo funciona</a>
         </div>
 
-        <ul class="barra entra">
+        <!-- La barra que gira (js/carrusel.js): con datos, todos los guisos con foto, cada uno a su ficha;
+             sin datos o sin JavaScript, estas tres, en una fila que se desliza a mano. -->
+        <div class="carrusel" id="carrusel">
+        <ul class="carrusel-fila" tabindex="0" aria-label="Guisos de la barra">
           <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
           <li class="charola" style="--c:#F2B33D;--t:#141210">
-            <div class="guiso"><img src="/media/guisos/chorizo-con-huevo.webp" srcset="/media/guisos/chorizo-con-huevo.webp 720w, /media/guisos/chorizo-con-huevo-1024.webp 1024w" sizes="(min-width: 1100px) 30vw, 33vw" alt="" width="720" height="540"><span class="num">02</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h2>Chorizo con huevo</h2></div>
+            <div class="guiso"><img src="/media/guisos/chorizo-con-huevo.webp" srcset="/media/guisos/chorizo-con-huevo.webp 720w, /media/guisos/chorizo-con-huevo-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540" fetchpriority="high"><span class="num">02</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h3>Chorizo con huevo</h3></div>
           </li>
           <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
           <li class="charola" style="--c:#35603A;--t:#FFFFFF">
-            <div class="guiso"><img src="/media/guisos/rajas-con-queso-y-crema.webp" srcset="/media/guisos/rajas-con-queso-y-crema.webp 720w, /media/guisos/rajas-con-queso-y-crema-1024.webp 1024w" sizes="(min-width: 1100px) 30vw, 33vw" alt="" width="720" height="540"><span class="num">08</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h2>Rajas con queso y crema</h2></div>
+            <div class="guiso"><img src="/media/guisos/rajas-con-queso-y-crema.webp" srcset="/media/guisos/rajas-con-queso-y-crema.webp 720w, /media/guisos/rajas-con-queso-y-crema-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540"><span class="num">08</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h3>Rajas con queso y crema</h3></div>
           </li>
           <!-- PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender -->
           <li class="charola" style="--c:#A8321C;--t:#FFFFFF">
-            <div class="guiso"><img src="/media/guisos/carne-en-salsa-roja.webp" srcset="/media/guisos/carne-en-salsa-roja.webp 720w, /media/guisos/carne-en-salsa-roja-1024.webp 1024w" sizes="(min-width: 1100px) 30vw, 33vw" alt="" width="720" height="540" fetchpriority="high"><span class="num">09</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="datos"><h2>Carne en salsa roja</h2></div>
+            <div class="guiso"><img src="/media/guisos/carne-en-salsa-roja.webp" srcset="/media/guisos/carne-en-salsa-roja.webp 720w, /media/guisos/carne-en-salsa-roja-1024.webp 1024w" sizes="(min-width: 700px) 27vw, 58vw" alt="" width="720" height="540"><span class="num">09</span><span class="vapor" aria-hidden="true"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="datos"><h3>Carne en salsa roja</h3></div>
           </li>
         </ul>
+        <button class="btn sec chico carrusel-pausa" type="button" hidden>Pausar<span class="sr"> las charolas que giran</span></button>
+        </div>
       </div>
     </section>
 

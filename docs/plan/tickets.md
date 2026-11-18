@@ -538,6 +538,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Una sola pintada al llegar al catálogo (17-nov-2026):** guisos compartidos entre landing y tienda (`js/datos.js`, mostrar lo guardado y revalidar por detrás); el catálogo se pone al día por tarjeta en vez de repintarse; el enrutador muestra la página nueva ya pintada; `modulepreload`; esqueleto único con fundido; fotos con fundido al cargar. Pintadas: con datos guardados 1, sin datos 2 (esqueleto y contenido), carrito o existencias 0, entre vistas 1. Prueba `tienda/pintadas.test.mjs`. Sin ver en pantalla.
 
+- **El héroe, una barra que gira (17-nov-2026):** las charolas del héroe son una fila horizontal de borde a borde que avanza sola (28 px/s) y da la vuelta sin corte con copias ocultas a lectores y al teclado (`aria-hidden`, `inert`); con datos lleva todos los guisos con foto (de `js/datos.js`, cada uno a su ficha) y sin datos las tres del HTML, que se quedan en su lugar. Desplazamiento nativo: dedo, rueda y teclado; arrastre con ratón sin abrir el enlace. Se detiene con el cursor, al tocar, con el foco dentro, fuera de la vista, con la pestaña oculta y con su botón de pausa (WCAG 2.2.2); con movimiento reducido no gira y queda con imán. Una charola y media en celular, tres y algo a 1440. Prueba `js/carrusel.test.mjs`. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

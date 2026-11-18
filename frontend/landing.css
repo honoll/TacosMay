@@ -19,15 +19,22 @@
 
 :where(.en-inicio) main > .heroe { padding-block: clamp(16px, 3vw, 40px) clamp(40px, 7vw, 88px); }
 :where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 24vw, 11rem); line-height: .84; margin-bottom: 18px; }
-:where(.en-inicio) .heroe .barra { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(28px, 5vw, 56px); }
-:where(.en-inicio) .heroe .charola h2 { font-size: clamp(.9rem, 3.4vw, 1.5rem); }
+/* La barra que gira (js/carrusel.js): de borde a borde de la pantalla, una charola y media en celular y
+   tres y algo en escritorio, para que se note que hay más. La altura no cambia al llegar los datos. */
+:where(.en-inicio) .carrusel { margin: clamp(28px, 5vw, 56px) calc(-1 * var(--margen)) 0; }
+:where(.en-inicio) .carrusel-fila { display: flex; gap: clamp(12px, 2vw, 32px); padding: 0 var(--margen) 8px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
+:where(.en-inicio) .carrusel-fila::-webkit-scrollbar { display: none; }
+:where(.en-inicio) .carrusel-fila > .charola { flex: 0 0 clamp(200px, 58vw, 340px); }
+:where(.en-inicio) .carrusel-fila img { -webkit-user-drag: none; user-select: none; }
+:where(.en-inicio) .carrusel-fila:focus-visible { outline-offset: -3px; }
+:where(.en-inicio) .carrusel.quieto .carrusel-fila { scroll-snap-type: x proximity; scroll-padding-inline: var(--margen); cursor: auto; }
+:where(.en-inicio) .carrusel.quieto .carrusel-fila > .charola { scroll-snap-align: start; }
+:where(.en-inicio) .carrusel-pausa { display: flex; width: fit-content; margin: 12px var(--margen) 0 auto; }
+:where(.en-inicio) .carrusel-pausa[hidden] { display: none; }
+:where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.1rem, 4.4vw, 1.5rem); }
 
-@media (max-width: 699px) {
-  :where(.en-inicio) .heroe .barra { gap: 8px; }
-  :where(.en-inicio) .heroe .charola { border-width: 4px; }
-  :where(.en-inicio) .heroe .charola .datos { padding: 8px; }
-  :where(.en-inicio) .heroe .charola .num { font-size: 1.2rem; }
-  :where(.en-inicio) .heroe .charola .vapor { display: none; }
+@media (min-width: 700px) {
+  :where(.en-inicio) .carrusel-fila > .charola { flex-basis: clamp(240px, 27vw, 420px); }
 }
 
 /* En pantalla ancha: el titular y, a su lado, el texto con el botón; debajo, las tres charolas a todo
@@ -37,8 +44,8 @@
   :where(.en-inicio) h1.rot { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; font-size: clamp(5rem, 9vw, 12rem); }
   :where(.en-inicio) .heroe .entrada { grid-column: 2; grid-row: 1; }
   :where(.en-inicio) .heroe .acciones { grid-column: 2; grid-row: 2; margin-top: 20px; }
-  :where(.en-inicio) .heroe .barra { grid-column: 1 / -1; grid-row: 3; gap: clamp(16px, 2vw, 32px); margin-top: clamp(28px, 3vw, 48px); }
-  :where(.en-inicio) .heroe .charola h2 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
+  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 3; margin-top: clamp(28px, 3vw, 48px); }
+  :where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
   :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
 }
 

@@ -1,7 +1,8 @@
 // Landing: las charolas del menú en vivo desde la API y el avance de la escena «Cómo funciona».
 // Reúsa el api() y el money() de la tienda, y la charola de barra.js.
 import { money, esc } from './api.js';
-import { charola } from './barra.js';
+import { charola, guisoDe } from './barra.js';
+import { carrusel } from './carrusel.js';
 import { guardadoDe, traer } from './datos.js';
 import { iniciarCabecera, actualizarCabecera } from './cabecera.js';
 
@@ -9,6 +10,25 @@ document.documentElement.classList.add('js');
 iniciarCabecera();
 
 // ---------- Las charolas, en vivo (GET /guisos/populares y GET /guisos) ----------
+
+// ---------- El héroe: la barra que gira ----------
+// Las tres charolas del HTML se quedan donde están (ya se ven y son las que más salen): solo ganan su
+// enlace a la ficha. Detrás se agregan los demás guisos con foto, de los mismos datos que la tienda.
+const giro = carrusel(document.getElementById('carrusel'));
+function llenarCarrusel(todos) {
+  giro.rehacer((fila) => {
+    const puestas = new Map([...fila.children].map((li) => [li.querySelector('h3')?.textContent.trim(), li]));
+    for (const g of todos.filter((x) => guisoDe(x.nombre).foto)) {
+      const href = `/tienda/#guiso/${encodeURIComponent(g.id)}`;
+      const li = puestas.get(g.nombre);
+      if (li) {
+        if (!li.querySelector('.a-ficha')) li.querySelector('h3').innerHTML = `<a class="a-ficha" href="${href}">${esc(g.nombre)}</a>`;
+      } else {
+        fila.insertAdjacentHTML('beforeend', charola(g.nombre, '', { tag: 'li', href }));
+      }
+    }
+  });
+}
 
 const menu = document.getElementById('menu');
 const populares = document.getElementById('populares');
@@ -49,6 +69,7 @@ async function loadMenu() {
     populares.innerHTML = salen.map((g) => guiso(g, true)).join('');
     bloquePopulares.hidden = salen.length < 4;
     menu.innerHTML = todos.map((g) => guiso(g)).join('');
+    llenarCarrusel(todos);
     setEstado(todos.length ? '' : 'Todavía no hay guisos en el menú.');
   } catch {
     menu.innerHTML = '';
