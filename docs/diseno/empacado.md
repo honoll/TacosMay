@@ -40,9 +40,9 @@ del guiso prensada bajo el plástico y una pastilla negra con número, nombre y 
 
 | Paso | Empieza | Dura | Qué se ve | Qué explica |
 |---|---|---|---|---|
-| Toque | 0 ms | 80 ms | El «+» se hunde y suelta un anillo | Se tocó |
-| Vuela | 0 ms | 260 ms | La foto del guiso vuela en arco a su cámara y llega de su tamaño | Ese guiso va a la bolsa |
-| Al vacío | 260 ms | 150 ms | La foto se acomoda en la cámara, prensada bajo el plástico | Se empaca |
+| Toque | 0 ms | 80 ms | El «+» se hunde y suelta un anillo; la foto del renglón se hunde un instante | Se tocó; de ahí sale el guiso |
+| Vuela | 0 ms | 320 ms | La foto del guiso vuela en arco, un poco ladeada, y llega del tamaño de su cámara, donde se funde | Ese guiso va a la bolsa |
+| Al vacío | 320 ms | 400 ms | La foto se acomoda; la cámara se encoge un instante y rebota, y el plástico se pega | Se le saca el aire |
 | Sella | 260 ms | 200 ms | Un láser rojo barre el borde de arriba de la cámara | Sellado |
 | Etiqueta | 410 ms | 100 ms | Entra desde abajo la pastilla negra «09 · Carne en salsa roja × 1» | Qué es y cuántos |
 | Total | 510 ms | 250 ms | El total brinca y «Confirmar pedido» hace un pulso | Cambió lo que pagas |
@@ -53,6 +53,8 @@ llegar la respuesta. Se puede seguir tocando «+» en otros renglones mientras t
 cada cámara llevan su propia animación, y nunca hay más de tres vuelos a la vez.
 
 ### Sumar otra unidad del mismo guiso (≈ 0.75 s)
+
+La cámara se aprieta y rebota, el láser vuelve a pasar y la cantidad rueda hacia arriba.
 Vuela al compartimento de ese guiso (0.45 s); al confirmar la API, la cantidad de la etiqueta
 rueda («× 2») y la banda de calor pasa otra vez (0.30 s). Tocar «+» varias veces seguidas no
 encima nada: un solo vuelo por guiso a la vez, y si su compartimento todavía se está llenando,
@@ -108,6 +110,12 @@ compartimentos, la cuenta regresiva (reloj + «Expira en 14:59»), el total, «C
 chico, el total y la cuenta regresiva) que al tocarla se despliega hasta tres cuartos de pantalla
 con la bolsa completa y sus botones. El vuelo va a la barra, que no tapa la lista: la página deja
 espacio abajo y el aviso sube encima de la barra.
+
+## Los botones
+
+Todo botón del sitio se hunde al presionarlo y rebota al soltarlo (`js/toques.js`, GSAP), también con
+Enter y espacio. En la lista, la primera vez el «+» se estira hasta volverse «− 1 +», y al volver a cero el
+«+» regresa con un salto. Con movimiento reducido, nada se mueve.
 
 ## Teclado y lector de pantalla
 - El «+» es un botón con nombre «Agregar <guiso>»; el selector de cantidad, como hoy.

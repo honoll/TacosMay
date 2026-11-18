@@ -3,6 +3,7 @@ import { charola, picto, guisoDe } from '../js/barra.js';
 import { guardadoDe, traer } from '../js/datos.js';
 import { empacar } from './empaque.js';
 import { bolsa } from './bolsa.js';
+import { toques } from '../js/toques.js';
 import { enviar } from './envio.js';
 import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
 
@@ -177,6 +178,21 @@ const card = (g, mostrarDescripcion, cargar) => {
   return charola(g.nombre, cuerpo, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: fichaDe(g), cargar, attrs: `data-clave="${esc(g.id)}" data-firma="${firma(cuerpo)}"` });
 };
 
+// En la lista, el control cambia de forma con movimiento: el «+» se estira hasta volverse «− 1 +», y al
+// volver a cero el «+» regresa con un salto. Con movimiento reducido o sin GSAP, cambia directo.
+function cambioDeControl(id, aSelector) {
+  const gsap = moverse() ? globalThis.gsap : null;
+  const lugar = view.querySelector(`.renglon [data-control="${CSS.escape(id)}"]`);
+  if (!gsap || !lugar) return;
+  if (aSelector) {
+    const sel = lugar.querySelector('.cantidad');
+    gsap.from(sel, { width: 44, borderRadius: 22, duration: 0.34, ease: 'power3.out', clearProps: 'width,borderRadius' });
+    gsap.from(sel.children, { autoAlpha: 0, scale: 0.6, duration: 0.22, ease: 'back.out(2)', stagger: 0.04, delay: 0.1 });
+  } else {
+    gsap.from(lugar.querySelector('.mas'), { scale: 0.5, autoAlpha: 0, duration: 0.3, ease: 'back.out(2.4)' });
+  }
+}
+
 // Al cambiar el carrito, las charolas del catálogo se ponen al día sin volver a pedir los guisos.
 function pintarControles(id, cambio) {
   for (const el of view.querySelectorAll('[data-control]')) {
@@ -189,6 +205,7 @@ function pintarControles(id, cambio) {
 // En index.html: el esqueleto del primer cuadro y el molde de la bolsa (los mismos que pone su script en línea).
 const BOLSA = document.getElementById('bolsa-molde').innerHTML;
 const ESQUELETO = document.getElementById('esqueleto').innerHTML + BOLSA;
+toques(); // todo botón se hunde al presionarlo y rebota al soltarlo
 let bolsaUI = null; // la bolsa de la lista de guisos, mientras está a la vista
 // El alto de la cabecera fija: la lista de guisos y la bolsa se acomodan debajo de ella.
 const altoCabecera = () => {
@@ -568,11 +585,11 @@ const ACTIONS = {
     const fila = el.closest?.('.renglon');
     if (fila) {
       el.classList.remove('toque'); void el.offsetWidth; el.classList.add('toque');
-      if (moverse()) globalThis.gsap?.fromTo(el, { scale: 0.86 }, { scale: 1, duration: 0.35, ease: 'back.out(3)' });
     }
     const pack = fila && bolsaUI?.conectada ? bolsaUI.volar(fila.querySelector('.charola'), id) : empacar(el, actual > 0);
     try { await setQty(id, actual + 1); } catch (err) { pack.cancel(); throw err; }
     pintarControles(id, 'sube');
+    if (!actual && fila) cambioDeControl(id, true);
     view.querySelector(`[data-control="${CSS.escape(id)}"] [data-click="add"]`)?.focus({ preventScroll: true });
     // Con la animación, la bolsa ya dice que se agregó; con movimiento reducido, lo dice el aviso.
     if (!actual && !moverse()) notice(`Agregado al carrito: ${el.dataset.nombre}.`);
@@ -583,6 +600,7 @@ const ACTIONS = {
     const id = el.dataset.id;
     await setQty(id, enCarrito(id) - 1);
     pintarControles(id, 'baja');
+    if (!enCarrito(id) && el.closest?.('.renglon')) cambioDeControl(id, false);
     view.querySelector(`[data-control="${CSS.escape(id)}"] :is([data-click="menos"], [data-click="add"])`)?.focus({ preventScroll: true });
   },
 

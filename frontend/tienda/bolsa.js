@@ -43,7 +43,7 @@ export function bolsa(raiz) {
 
   // Llenar: la foto entra prensada bajo el plástico, el láser sella arriba y cae la etiqueta.
   // Sumar: el láser vuelve a pasar y la cantidad rueda. Si la cámara se está llenando, sumar solo cambia el número.
-  const DURA = { llena: 450, suma: 300 };
+  const DURA = { llena: 650, suma: 350 };
   function paso(li, clase) {
     if (clase === 'suma' && ahora() < Number(li.dataset.hasta || 0)) return;
     const v = llegadas.get(li.dataset.clave);
@@ -57,15 +57,20 @@ export function bolsa(raiz) {
     const q = (s) => li.querySelector(s);
     const tl = gsap.timeline({ delay: espera });
     if (clase === 'llena') {
-      tl.fromTo(q('.comp-guiso'), { scale: 1.1, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.24, ease: 'power3.out' })
-        .fromTo(q('.comp-plastico'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, ease: 'power1.in' }, '<')
-        .fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.18, ease: 'none', transformOrigin: '0% 50%' }, '<0.05')
+      tl.fromTo(q('.comp-guiso'), { scale: 1.14, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.2, ease: 'power3.out' })
+        // al vacío: la cámara se encoge un instante y vuelve, y el plástico se pega a la foto
+        .to(li, { keyframes: [{ scaleX: 0.94, scaleY: 0.97, duration: 0.09, ease: 'power2.in' }, { scaleX: 1, scaleY: 1, duration: 0.32, ease: 'elastic.out(1, 0.5)' }] }, '<0.06')
+        .fromTo(q('.comp-plastico'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.16, ease: 'power1.in' }, '<')
+        // sella: el láser barre el borde de arriba
+        .fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.16, ease: 'none', transformOrigin: '0% 50%' }, '<0.1')
         .to(q('.comp-banda'), { autoAlpha: 0, duration: 0.12 })
-        .fromTo(q('.comp-etq'), { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.2, ease: 'back.out(2)' }, '-=0.14');
+        // la etiqueta cae desde arriba, ladeada, y se asienta
+        .fromTo(q('.comp-etq'), { y: -16, rotation: -5, autoAlpha: 0 }, { y: 0, rotation: 0, autoAlpha: 1, duration: 0.3, ease: 'back.out(2.2)' }, '-=0.18');
     } else {
-      tl.fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.18, ease: 'none', transformOrigin: '0% 50%' })
+      tl.to(li, { keyframes: [{ scale: 0.96, duration: 0.07, ease: 'power2.in' }, { scale: 1, duration: 0.26, ease: 'back.out(3)' }] })
+        .fromTo(q('.comp-banda'), { scaleX: 0, autoAlpha: 1 }, { scaleX: 1, duration: 0.16, ease: 'none', transformOrigin: '0% 50%' }, 0)
         .to(q('.comp-banda'), { autoAlpha: 0, duration: 0.12 })
-        .fromTo(q('.n'), { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.2, ease: 'power2.out' }, 0);
+        .fromTo(q('.n'), { yPercent: 80, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.24, ease: 'back.out(2)' }, 0.04);
     }
   }
 
@@ -195,13 +200,17 @@ export function bolsa(raiz) {
     llegadas.set(String(id), llegada);
     let quitado = false;
     const quitar = () => { if (quitado) return; quitado = true; vuelos--; volando.delete(String(id)); clon.remove(); };
-    const vuelo = gsap.to(clon, {
-      keyframes: [
-        { x: dx / 2, y: dy / 2 - arco, scale: (1 + k) / 2, duration: VUELO / 2, ease: 'power1.out' },
-        { x: dx, y: dy, scale: k, duration: VUELO / 2, ease: 'power2.in' },
-      ],
-      onComplete: quitar,
-    });
+    // La foto del renglón se hunde un instante: de ahí sale el guiso.
+    gsap.fromTo(miniatura, { scale: 1 }, { keyframes: [{ scale: 0.94, duration: 0.08, ease: 'power2.out' }, { scale: 1, duration: 0.35, ease: 'back.out(3)' }] });
+    const vuelo = gsap.timeline({ onComplete: quitar })
+      .to(clon, {
+        keyframes: [
+          { x: dx / 2, y: dy / 2 - arco, scale: (1 + k) / 2, rotation: -7, duration: VUELO / 2, ease: 'power1.out' },
+          { x: dx, y: dy, scale: k, rotation: 0, duration: VUELO / 2, ease: 'power2.in' },
+        ],
+      })
+      // al llegar se funde con la cámara, que ya empieza a llenarse: no hay salto entre las dos
+      .to(clon, { autoAlpha: 0, duration: 0.1 }, '-=0.06');
     llegada.tween = vuelo;
     return {
       cancel() {

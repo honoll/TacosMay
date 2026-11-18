@@ -5,9 +5,11 @@ import { charola, guisoDe } from './barra.js';
 import { carrusel } from './carrusel.js';
 import { guardadoDe, traer } from './datos.js';
 import { iniciarCabecera, actualizarCabecera } from './cabecera.js';
+import { toques } from './toques.js';
 
 document.documentElement.classList.add('js');
 iniciarCabecera();
+toques(); // todo botón se hunde al presionarlo y rebota al soltarlo
 
 // ---------- Las charolas, en vivo (GET /guisos/populares y GET /guisos) ----------
 

@@ -497,7 +497,6 @@
 @media (prefers-reduced-motion: no-preference) {
   /* El toque del «+»: se hunde y suelta un anillo. El resto del agregar (vuelo, llenar, sellar, etiqueta,
      total) lo lleva GSAP en tienda/bolsa.js. */
-  :where(.en-tienda) .renglon .mas:active { transform: scale(.9); }
   :where(.en-tienda) .renglon .mas.toque::after { content: ""; position: absolute; inset: -2px; border: 2px solid var(--negro); border-radius: 50%; animation: anillo .3s var(--sale) forwards; }
   @keyframes anillo { to { transform: scale(1.7); opacity: 0; } }
 
