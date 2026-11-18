@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const leer = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
-const paginas = ['index.html', 'tienda/index.html', '404.html', 'domicilio/index.html'];
+const paginas = ['index.html', 'tienda/index.html', '404.html', 'domicilio/index.html', 'proyecto/index.html'];
 const html = Object.fromEntries(paginas.map((p) => [p, leer(p)]));
 const enLinea = (h) => [...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
 
@@ -29,7 +29,7 @@ assert.ok(html['index.html'].includes('<link rel="prefetch" href="/tienda/">'), 
 // Las mismas hojas, en el mismo orden, en las tres páginas: al navegar sin recargar no se enciende ni se
 // apaga ninguna (en Safari eso dejaba la cabecera sin estilo). Y cada página marca en <html> cuál es.
 const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css', '/domicilio/domicilio.css'];
-const MARCA = { 'index.html': 'en-inicio', 'tienda/index.html': 'en-tienda', '404.html': 'en-inicio', 'domicilio/index.html': 'en-domicilio' };
+const MARCA = { 'index.html': 'en-inicio', 'tienda/index.html': 'en-tienda', '404.html': 'en-inicio', 'domicilio/index.html': 'en-domicilio', 'proyecto/index.html': 'en-inicio' };
 for (const p of paginas) {
   const enlazadas = [...html[p].matchAll(/<link rel="stylesheet" href="([^"]+)"[^>]*>/g)].map((m) => m[0]);
   assert.deepEqual(enlazadas, HOJAS.map((h) => `<link rel="stylesheet" href="${h}">`), `${p}: enlaza exactamente las mismas hojas, en orden, sin media ni carga diferida`);

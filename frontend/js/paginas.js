@@ -11,7 +11,7 @@ import { transicion } from './api.js';
 // Si algo falla (red, respuesta rara), navegación normal. Pestaña nueva, teclas modificadoras, enlaces
 // externos, descargas y cambios de # dentro de la misma página: los atiende el navegador como siempre.
 
-export const PAGINAS = ['/', '/tienda/', '/domicilio/'];
+export const PAGINAS = ['/', '/tienda/', '/domicilio/', '/proyecto/'];
 const fijo = (el) => el.matches('header.cabecera, header.cabecera + script, footer.pie, script[src], #anuncio, #preparando');
 
 const guardadas = new Map(); // ruta → lo de esa página, ya puesto alguna vez

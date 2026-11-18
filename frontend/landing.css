@@ -131,6 +131,29 @@
 :where(.en-inicio) main > .perdida { min-height: 56vh; padding-block: clamp(48px, 10vw, 140px); }
 :where(.en-inicio) .perdida h1.rot { font-size: clamp(3rem, 11vw, 8rem); }
 
+/* ---------- Proyecto escolar (proyecto/index.html): qué hace Redis en cada paso ---------- */
+:where(.en-inicio) .proyecto { padding-block: clamp(28px, 6vw, 72px) clamp(40px, 8vw, 96px); }
+:where(.en-inicio) .proyecto h1.rot { grid-column: auto; grid-row: auto; margin: 4px 0 16px; font-size: clamp(2.6rem, 9vw, 6rem); line-height: .9; }
+:where(.en-inicio) .proyecto h2.rot { margin-top: clamp(32px, 6vw, 56px); font-size: clamp(1.9rem, 5vw, 3rem); }
+:where(.en-inicio) .proyecto p { max-width: 46em; }
+:where(.en-inicio) .proyecto code { padding: 1px 6px; border-radius: 4px; background: #fff; border: 1.5px solid var(--marco); font: 600 .92em/1.4 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+:where(.en-inicio) .redis-pasos { display: grid; gap: 16px; margin: 20px 0 0; padding: 0; list-style: none; }
+@media (min-width: 700px) { :where(.en-inicio) .redis-pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1200px) { :where(.en-inicio) .redis-pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+:where(.en-inicio) .redis-pasos .guiso { aspect-ratio: 4 / 1; }
+:where(.en-inicio) .redis-pasos .guiso .num { font-size: 2.6rem; }
+:where(.en-inicio) .redis-pasos .charola { display: flex; flex-direction: column; height: 100%; }
+:where(.en-inicio) .redis-pasos .datos { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px 16px; }
+:where(.en-inicio) .redis-pasos h3 { font-size: 1.5rem; }
+:where(.en-inicio) .redis-pasos .claves { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+:where(.en-inicio) .redis-pasos .claves span { font: 600 .85rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; color: var(--gris); }
+:where(.en-inicio) .redis-pasos .btn { margin-top: auto; }
+:where(.en-inicio) .proyecto-datos { display: grid; gap: 0 48px; }
+@media (min-width: 900px) { :where(.en-inicio) .proyecto-datos { grid-template-columns: 1fr 1fr; } }
+:where(.en-inicio) .proyecto-datos ul { display: grid; gap: 10px; margin: 0; padding-left: 1.2em; }
+:where(.en-inicio) .proyecto-datos a, :where(.en-inicio) .nota-proyecto a { color: inherit; font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+:where(.en-inicio) .nota-proyecto { margin-top: clamp(32px, 6vw, 56px); padding: 12px 16px; border: 2px dashed var(--negro); border-radius: 6px; background: #fff4c7; font-weight: 600; }
+
 /* ---------- Movimiento de esta página ---------- */
 
 @media (prefers-reduced-motion: no-preference) {

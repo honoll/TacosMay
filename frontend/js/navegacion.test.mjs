@@ -274,5 +274,7 @@ assert.equal(await clic('/tienda/', { tecla: { metaKey: true } }), false, 'con �
 assert.equal(await clic('/tienda/', { a: { target: '_blank' } }), false, 'ni con target');
 assert.equal(await clic('https://maps.google.com/x'), false, 'ni un enlace externo');
 assert.equal(await clic('/marca/'), false, 'ni otra página del sitio que no es landing ni tienda');
+const { PAGINAS } = await import('./paginas.js');
+assert.deepEqual(PAGINAS, ['/', '/tienda/', '/domicilio/', '/proyecto/'], 'el proyecto escolar también se abre sin recargar');
 
 console.log('navegacion.test: OK (ida, atrás, tres vueltas, ancla, respaldo y entrada directa)');
