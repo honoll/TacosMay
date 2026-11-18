@@ -457,6 +457,8 @@
 @media (min-width: 900px) {
   :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 720px) minmax(320px, 420px); justify-content: center; column-gap: clamp(24px, 4vw, 64px); align-items: start; }
   :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos { grid-area: 1 / 1 / 2 / 2; max-height: calc(100dvh - var(--alto-cabecera, 90px) - 24px); overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; scrollbar-width: thin; scrollbar-color: var(--marco) transparent; }
+  /* El título se queda arriba del recuadro: solo se mueven los guisos. */
+  :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos > h1 { position: sticky; top: 0; z-index: 2; margin: 0; padding: 12px 0 10px; background: var(--crema); }
   :where(.en-tienda) [data-vista="catalogo"] > .bolsa-lado { grid-area: 1 / 2 / 2 / 3; position: sticky; top: calc(var(--alto-cabecera, 90px) + 12px); max-height: calc(100dvh - var(--alto-cabecera, 90px) - 24px); overflow-y: auto; margin-top: 12px; }
 }
 
