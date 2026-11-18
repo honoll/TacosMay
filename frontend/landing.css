@@ -37,16 +37,46 @@
   :where(.en-inicio) .carrusel-fila > .charola { flex-basis: clamp(240px, 27vw, 420px); }
 }
 
-/* En pantalla ancha: el titular y, a su lado, el texto con el botón; debajo, las tres charolas a todo
-   lo ancho. Así las charolas pesan tanto como el titular y no queda fondo vacío. */
-@media (min-width: 1100px) {
-  :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 27rem); column-gap: clamp(32px, 4vw, 80px); align-items: end; }
-  :where(.en-inicio) h1.rot { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; font-size: clamp(5rem, 9vw, 12rem); }
-  :where(.en-inicio) .heroe .entrada { grid-column: 2; grid-row: 1; }
-  :where(.en-inicio) .heroe .acciones { grid-column: 2; grid-row: 2; margin-top: 20px; }
-  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 3; margin-top: clamp(28px, 3vw, 48px); }
+/* ---------- Las ollas del héroe (docs/diseno/referencias/heroe-platos-gemini.png, solo la composición) ----------
+   Guisos vistos desde arriba en su olla redonda con el aro de acero de la charola (no platos de restaurante),
+   de varios tamaños, agrupados y recortados por la orilla de la pantalla, sobre manchas lisas de su color.
+   Cada olla: --x, --y (posición) y --d (diámetro), en % de la caja. La caja se sale hasta la orilla derecha.
+   En celular: franja arriba del titular. Desde 900 px: el lado derecho completo, junto al titular. */
+:where(.en-inicio) .heroe { overflow-x: clip; }
+:where(.en-inicio) .heroe .caja { display: flex; flex-direction: column; }
+:where(.en-inicio) .ollas { position: relative; order: -1; aspect-ratio: 2 / 1; margin: 0 calc(-1 * var(--margen)) 8px auto; width: calc(100% + var(--margen)); overflow: hidden; }
+:where(.en-inicio) .mancha { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); border-radius: 58% 42% 50% 50% / 46% 54% 46% 54%; background: var(--c); }
+:where(.en-inicio) .olla { position: absolute; left: var(--x); top: var(--y); width: var(--d); aspect-ratio: 1; border-radius: 50%; }
+:where(.en-inicio) .olla .aro { display: block; width: 100%; height: 100%; overflow: hidden; border: clamp(4px, 1vw, 12px) solid var(--marco); border-radius: 50%; outline: 1.5px solid var(--acero-osc); outline-offset: -1.5px; background: var(--c); box-shadow: 0 clamp(4px, .8vw, 10px) 0 rgb(20 18 16 / .22); }
+:where(.en-inicio) .olla img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+:where(.en-inicio) .olla:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
+/* Celular: la franja (2:1). */
+:where(.en-inicio) .m1 { --x: 52%; --y: -18%; --w: 56%; --h: 96%; }
+:where(.en-inicio) .m2 { --x: 8%; --y: 38%; --w: 52%; --h: 78%; }
+:where(.en-inicio) .m3 { --x: 84%; --y: 58%; --w: 26%; --h: 52%; }
+:where(.en-inicio) .o1 { --x: 30%; --y: 6%; --d: 42%; }
+:where(.en-inicio) .o2 { --x: 70%; --y: -14%; --d: 34%; }
+:where(.en-inicio) .o3 { --x: 3%; --y: 18%; --d: 27%; }
+:where(.en-inicio) .o4 { --x: 74%; --y: 50%; --d: 30%; }
+:where(.en-inicio) .o5 { --x: 52%; --y: 64%; --d: 21%; }
+
+@media (min-width: 900px) {
+  :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 3vw, 64px); align-items: center; }
+  :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; }
+  :where(.en-inicio) h1.rot { font-size: clamp(4.5rem, 8.4vw, 11rem); }
+  :where(.en-inicio) .ollas { grid-column: 2; grid-row: 1; order: 0; aspect-ratio: 1; margin: 0 calc(-1 * var(--margen)) 0 0; width: auto; }
+  :where(.en-inicio) .heroe .carrusel { grid-column: 1 / -1; grid-row: 2; margin-top: clamp(20px, 3vw, 48px); }
   :where(.en-inicio) .heroe .charola h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); }
   :where(.en-inicio) .heroe .charola .num { font-size: 2.4rem; }
+  /* Pantalla ancha: el cuadro del lado derecho. */
+  :where(.en-inicio) .m1 { --x: 40%; --y: -6%; --w: 64%; --h: 58%; }
+  :where(.en-inicio) .m2 { --x: 4%; --y: 44%; --w: 58%; --h: 56%; }
+  :where(.en-inicio) .m3 { --x: 70%; --y: 70%; --w: 34%; --h: 34%; }
+  :where(.en-inicio) .o1 { --x: 24%; --y: 24%; --d: 48%; }
+  :where(.en-inicio) .o2 { --x: 64%; --y: 2%; --d: 36%; }
+  :where(.en-inicio) .o3 { --x: 2%; --y: 6%; --d: 30%; }
+  :where(.en-inicio) .o4 { --x: 68%; --y: 58%; --d: 34%; }
+  :where(.en-inicio) .o5 { --x: 14%; --y: 70%; --d: 26%; }
 }
 
 /* ---------- Escena 2: cómo funciona, los tres estados del producto ---------- */

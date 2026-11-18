@@ -14,6 +14,16 @@ assert.match(heroe, /<ul class="carrusel-fila" tabindex="0" aria-label="[^"]+">/
 assert.match(heroe, /<button class="[^"]*carrusel-pausa" type="button" hidden>Pausar<span class="sr">[^<]+<\/span><\/button>/, 'hay botón de pausa (oculto hasta que gira)');
 assert.equal((heroe.match(/<li class="charola"/g) || []).length, 3, 'sin datos ni JavaScript, las tres charolas de siempre');
 assert.equal((heroe.match(/fetchpriority="high"/g) || []).length, 1, 'la primera foto, con prioridad');
+// Las ollas del héroe: después del titular en el HTML (se lee primero), cada una a un guiso con foto, y
+// solo la grande con prioridad (las chicas no compiten por la primera pintura).
+const ollas = html.slice(html.indexOf('<div class="ollas"'), html.indexOf('<div class="carrusel"'));
+assert.ok(html.indexOf('<h1') < html.indexOf('<div class="ollas"'), 'el titular va antes que las ollas');
+const nombres = [...ollas.matchAll(/data-guiso="([^"]+)"/g)].map((m) => m[1]);
+assert.ok(nombres.length >= 4 && nombres.length <= 5, 'cuatro o cinco ollas');
+const { guisoDe } = await import('./barra.js');
+for (const n of nombres) assert.ok(guisoDe(n).foto && ollas.includes(`/media/guisos/${guisoDe(n).slug}.webp`), `${n}: con su foto`);
+assert.equal((ollas.match(/fetchpriority="high"/g) || []).length, 1, 'una sola olla con prioridad');
+assert.equal((ollas.match(/<img(?![^>]*alt="[^"]+")/g) || []).length, 0, 'cada foto con el nombre del guiso (nombre del enlace)');
 const css = leer('landing.css');
 assert.match(css, /\.carrusel-pausa\[hidden\] \{ display: none; \}/, 'el botón oculto no se muestra (display: flex no gana a hidden)');
 assert.doesNotMatch(css, /carrusel[^{]*\{[^}]*animation/, 'el giro no es una animación CSS: lo lleva carrusel.js, que respeta el movimiento reducido');

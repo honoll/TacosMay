@@ -74,11 +74,28 @@
          Las tres charolas son los guisos que más salen (docs/negocio/datos.md). -->
     <section class="heroe">
       <div class="caja">
-        <h1 class="rot">Ya está hecho.</h1>
-        <p class="entrada">Los guisos de la taquería, en bolsa. Rompes, calientas y comes.</p>
-        <div class="acciones">
-          <a class="btn" href="/tienda/">Pedir guisos</a>
-          <a class="enl" href="#como">Cómo funciona</a>
+        <div class="heroe-texto">
+          <h1 class="rot">Ya está hecho.</h1>
+          <p class="entrada">Los guisos de la taquería, en bolsa. Rompes, calientas y comes.</p>
+          <div class="acciones">
+            <a class="btn" href="/tienda/">Pedir guisos</a>
+            <a class="enl" href="#como">Cómo funciona</a>
+          </div>
+        </div>
+
+        <!-- Las ollas: guisos vistos desde arriba, cada uno en su olla con el aro de acero de la charola,
+             sobre manchas lisas de su color (docs/diseno/sistema.md). En celular, una franja arriba del titular;
+             en pantalla ancha, todo el lado derecho. Cada olla lleva a su guiso (js/landing.js pone su ficha). -->
+        <div class="ollas" role="group" aria-label="Algunos guisos de la barra">
+          <span class="mancha m1" style="--c:#35603A" aria-hidden="true"></span>
+          <span class="mancha m2" style="--c:#A8321C" aria-hidden="true"></span>
+          <span class="mancha m3" style="--c:#F2B33D" aria-hidden="true"></span>
+          <!-- PENDIENTE-CLIENTE: imágenes generadas con IA, sustituir por fotos reales antes de publicar o vender -->
+          <a class="olla o1" href="/tienda/#catalogo" data-guiso="Carne en salsa roja" data-p=".5" style="--c:#A8321C"><span class="aro"><img src="/media/guisos/carne-en-salsa-roja.webp" alt="Carne en salsa roja" width="720" height="540" fetchpriority="high"></span></a>
+          <a class="olla o2" href="/tienda/#catalogo" data-guiso="Rajas con queso y crema" data-p=".3" style="--c:#35603A"><span class="aro"><img src="/media/guisos/rajas-con-queso-y-crema.webp" alt="Rajas con queso y crema" width="720" height="540" decoding="async"></span></a>
+          <a class="olla o3" href="/tienda/#catalogo" data-guiso="Chorizo con huevo" data-p=".7" style="--c:#F2B33D"><span class="aro"><img src="/media/guisos/chorizo-con-huevo.webp" alt="Chorizo con huevo" width="720" height="540" decoding="async"></span></a>
+          <a class="olla o4" href="/tienda/#catalogo" data-guiso="Nopalitos" data-p=".4" style="--c:#55752B"><span class="aro"><img src="/media/guisos/nopalitos.webp" alt="Nopalitos" width="720" height="540" loading="lazy" decoding="async"></span></a>
+          <a class="olla o5" href="/tienda/#catalogo" data-guiso="Mole con pollo" data-p=".9" style="--c:#4A2A1C"><span class="aro"><img src="/media/guisos/mole-con-pollo.webp" alt="Mole con pollo" width="720" height="540" loading="lazy" decoding="async"></span></a>
         </div>
 
         <!-- La barra que gira (js/carrusel.js): con datos, todos los guisos con foto, cada uno a su ficha;

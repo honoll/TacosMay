@@ -6,10 +6,12 @@ import { carrusel } from './carrusel.js';
 import { guardadoDe, traer } from './datos.js';
 import { iniciarCabecera, actualizarCabecera } from './cabecera.js';
 import { toques } from './toques.js';
+import { ligarOllas, moverOllas } from './ollas.js';
 
 document.documentElement.classList.add('js');
 iniciarCabecera();
 toques(); // todo botón se hunde al presionarlo y rebota al soltarlo
+moverOllas(); // las ollas del héroe entran una vez (js/ollas.js)
 
 // ---------- Las charolas, en vivo (GET /guisos/populares y GET /guisos) ----------
 
@@ -72,6 +74,7 @@ async function loadMenu() {
     bloquePopulares.hidden = salen.length < 4;
     menu.innerHTML = todos.map((g) => guiso(g)).join('');
     llenarCarrusel(todos);
+    ligarOllas(todos, ficha);
     setEstado(todos.length ? '' : 'Todavía no hay guisos en el menú.');
   } catch {
     menu.innerHTML = '';
