@@ -79,7 +79,7 @@ html:where(.en-domicilio), :where(.en-domicilio) body { overflow-x: clip; }
 :where(.en-domicilio) .dom-rejilla { display: grid; gap: 24px; }
 :where(.en-domicilio) .dom-vistas { min-width: 0; }
 @media (min-width: 900px) {
-  :where(.en-domicilio) .dom-rejilla { grid-template-columns: minmax(0, 720px) minmax(300px, 380px); align-items: start; }
+  :where(.en-domicilio) .dom-rejilla { grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); align-items: start; } /* la cuenta cierra en la misma orilla que la cabecera y las rayas */
   :where(.en-domicilio) .cuenta-dom { position: sticky; top: calc(var(--alto-cabecera, 96px) + 16px); }
 }
 @media (max-width: 899px) {
