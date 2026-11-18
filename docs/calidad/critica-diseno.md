@@ -65,3 +65,46 @@ un solo botón redondo «+», un solo tamaño por nivel de texto, el mismo aire 
 sigue siendo de esta taquería; las secciones nuevas (tarjetas con iniciales, tres tarjetas con icono, ticket
 «sin cuentos») no: sirven igual para cualquier marca de comida. La identidad está en el héroe y en las charolas;
 lo demás está en piloto automático.
+
+## Qué se hizo (commits `b877f65` y `1fa8f15`)
+
+Primero el sistema, en las hojas compartidas; después cada pantalla.
+
+| # | Problema | Qué se hizo |
+|---|---|---|
+| 1 | Seis lenguajes de caja | Una regla: **rayas, no cajas**. Cifras, personas de la barra, cita, cómo calentarlo, preguntas y tacos a domicilio usan el mismo filo negro de 2 px (y uno gris de 1 px entre renglones). Fuera la sombra dura, las tarjetas con filo negro y las tarjetas oscuras. El marco de acero queda **solo para la comida** (ollas y charolas). |
+| 2 | La franja en todos los botones | La franja va solo en el botón principal de cada pantalla. Dentro de una charola o un renglón el botón es liso (`barra.css`); los «Pedir» de «Lo que más sale» son secundarios (contorno). |
+| 3 | El héroe termina en un corte con hueco | En ancho el héroe ya no tiene aire abajo: el corte de las ollas cae exactamente en la raya de la sección siguiente, como en la referencia. La pausa del giro va dentro de la caja de ollas, junto a «Toca una olla». |
+| 4 | Cinco descargos de «muestra» | Fuera de la vista. Una sola línea en el pie de todas las páginas lo dice; lo inventado sigue marcado con `data-muestra` y listado en `docs/negocio/contenido-de-muestra.md`. |
+| 5 | Fotos de sesiones distintas | Una foto por sección y las dos de luz cálida: sale la del baño maría (fluorescente fría). Un solo tratamiento: sin marco, esquinas de 8 px. |
+| 6 | Escala tipográfica sin regla | Cuatro tamaños en `barra.css` (`--t-seccion`, `--t-sub`, `--t-texto`, `--t-nota`); todos los títulos de sección usan el mismo. |
+| 7 | Fondos en parches | Crema en todas las secciones, el mismo aire (`--aire-seccion`) y la misma raya entre ellas; una sola banda oscura (cómo calentarlo) y el cierre oscuro que se une al pie. |
+| 8 | Secciones de plantilla | Personas sin avatar de iniciales: nombre y una línea, en lista con rayas. Cómo calentarlo: tres columnas con el tiempo en grande, sin tarjetas. El movimiento de entrada se quitó de casi todo (entrar todo igual hace que nada destaque): solo las cifras y el trazo del proceso. |
+| 9 | «El envío, sin cuentos» | Quitada. La contestan las preguntas «¿Cómo llega?» y «¿A dónde envían?». Con ella se fueron los enlaces azules por defecto. |
+| 10 | El título del proceso flota | Título y entrada en un solo bloque, centrado junto a la foto. |
+| 11 | Tienda: renglón con todo al mismo peso | Filo gris de 1,5 px en vez del negro de 2 px y sin sombra; «N vendidos» como dato chico, sin chip. |
+| 12 | Tienda: la lista fuera de la retícula | La lista empieza donde empieza la cabecera (columna flexible + bolsa de 400 px). |
+| 13 | Ruido en las charolas | Fuera el vapor de la esquina. |
+| 14 | El pie, una nube de enlaces | Enlaces en columnas (2 en celular, 3 en escritorio); la dirección con subrayado fino. |
+| 15 | El cierre repite el héroe | Franja: «Ya está hecho.» al tamaño de sección, la línea y el botón en un renglón. |
+
+**Sin tocar, y por qué:**
+- **La charola con número de color** (marco de acero, número): es la identidad de la ruta «La barra» y de la
+  tienda. Se le quitó el vapor, no el marco.
+- **La bolsa vacía grande en la tienda de escritorio:** es el concepto de la bolsa con compartimentos
+  (`docs/diseno/empacado.md`); achicarla es una decisión de diseño de Alejandro, no un ajuste.
+- **La barra de existencias en cada renglón:** enseña el `stock` de Redis en la demo del examen.
+- **Las cajas grises «Cómo se calienta / Cómo se conserva» de la ficha:** contenido de la tienda; quedan para
+  la siguiente pasada (mismo criterio de rayas).
+- **La cabecera:** su estructura es compartida por las cinco páginas y la vigilan las pruebas de navegación; solo
+  cambió por el sistema (franja).
+
+**Prueba de genericidad (después).** Con el nombre cambiado, lo que queda es: ollas de guiso con aro de acero
+vistas desde arriba, los guisos del pizarrón, «22 años · <10 minutos · 4 a. m.», el proceso de la olla a la
+bolsa y el tiempo de calentado. Las tarjetas con iniciales y el ticket «sin cuentos», que eran lo intercambiable,
+se fueron. Sigue habiendo dos piezas tipo plantilla: las preguntas en acordeón y la sección de dirección; son
+convención útil, no adorno.
+
+**Comprobado** (capturas de `capturas/despues/`, página completa, movimiento reducido): a 390 y a 1440, inicio,
+lista de la tienda, ficha, carrito, entrar y registro; `scrollWidth === innerWidth` en las doce. Pruebas de
+`frontend/` pasando. **No comprobado:** el movimiento (las capturas van sin él) ni en un iPhone de verdad.
