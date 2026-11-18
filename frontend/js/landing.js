@@ -1,7 +1,8 @@
 // Landing: las charolas del menú en vivo desde la API y el avance de la escena «Cómo funciona».
 // Reúsa el api() y el money() de la tienda, y la charola de barra.js.
-import { api, money, esc } from './api.js';
+import { money, esc } from './api.js';
 import { charola } from './barra.js';
+import { guardadoDe, traer } from './datos.js';
 import { iniciarCabecera, actualizarCabecera } from './cabecera.js';
 
 document.documentElement.classList.add('js');
@@ -34,10 +35,14 @@ function setEstado(msg, kind) {
 }
 
 async function loadMenu() {
-  setEstado('Leyendo el menú…', 'cargando');
-  menu.innerHTML = HUECAS; // charolas huecas mientras responde la API
+  // Si la tienda ya los pidió, se muestran sin esperar (js/datos.js); si no, charolas huecas mientras tanto.
+  const ya = [guardadoDe('/guisos/populares'), guardadoDe('/guisos')];
+  if (!ya.every(Boolean)) {
+    setEstado('Leyendo el menú…', 'cargando');
+    menu.innerHTML = HUECAS;
+  }
   try {
-    const [top, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
+    const [top, todos] = ya.every(Boolean) ? ya : await Promise.all([traer('/guisos/populares'), traer('/guisos')]);
     // Cuatro charolas iguales llenan la fila (2 × 2 en celular). Con menos de cuatro guisos vendidos
     // el bloque no sale: rellenarlo con otros diría que «salen» guisos que nadie ha pedido.
     const salen = top.filter((g) => g.vendidos > 0).slice(0, 4);
@@ -52,7 +57,7 @@ async function loadMenu() {
   }
 }
 reintentar.addEventListener('click', loadMenu);
-loadMenu();
+const menuListo = loadMenu();
 
 // Cada fila de charolas entra a la barra la primera vez que llega a pantalla (la animación vive en CSS).
 const seen = new IntersectionObserver((entries) => {
@@ -105,7 +110,10 @@ progress();
 
 // Al regresar desde la tienda sin recargar (js/paginas.js): la cabecera vuelve a ser la de aquí.
 addEventListener('tm:pagina', () => {
-  if (!como.isConnected) return;
+  if (!como.isConnected || location.pathname !== '/') return;
   actualizarCabecera();
   progress();
 });
+
+// El script termina cuando el menú está pintado: js/paginas.js muestra la landing ya completa.
+await menuListo;

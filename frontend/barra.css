@@ -160,6 +160,8 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola p { margin: 0; }
 /* Esqueleto: charolas huecas mientras responde la API (landing y catálogo). */
 .charola.hueca .guiso { background: var(--acero); }
+/* La foto, hasta que termina de cargar, no se ve a medias sobre el color (js/barra.js la marca «cargada»). */
+.img-funde img.foto:not(.cargada) { opacity: 0; }
 .charola.hueca .datos p { height: 1.1em; margin: 0; border-radius: 4px; background: var(--acero); }
 .charola.hueca .datos p + p { width: 55%; }
 /* El nombre enlaza a la ficha y su zona de toque se extiende sobre toda la foto de la charola. */
@@ -192,6 +194,10 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   /* Una charola entra a la barra: 16 px desde la derecha, 180 ms, una cada 40 ms. */
   .charola.hueca { animation: late 1s var(--entra) infinite alternate; }
   @keyframes late { to { opacity: .55; } }
+  .img-funde img.foto { transition: opacity var(--t-chico) var(--entra); }
+  /* Cuando el contenido sustituye al esqueleto en su lugar: un fundido corto, sin volver a deslizar. */
+  .barra.funde > * { animation: aparecer var(--t-chico) var(--entra) backwards; }
+  @keyframes aparecer { from { opacity: 0; } }
   .barra.entra > * { animation: entrar var(--t-chico) var(--entra) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
   .barra.entra > :nth-child(2) { --i: 1; }
   .barra.entra > :nth-child(3) { --i: 2; }

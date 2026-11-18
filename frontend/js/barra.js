@@ -74,13 +74,26 @@ export function guisoDe(nombre) {
 
 // href: a dónde lleva la charola (su ficha); toda la zona del guiso se puede tocar.
 // titulo: false la deja sin nombre debajo (en la ficha el nombre es el título de la vista).
-export function charola(nombre, cuerpo = '', { tag = 'article', cls = '', href = '', titulo = true } = {}) {
+// Lo de abajo de la charola (nombre y cuerpo). Aparte para poder ponerlo al día sin rehacer la charola.
+export const datosDe = (nombre, cuerpo = '', { href = '', titulo = true } = {}) =>
+  `${titulo ? `<h3>${href ? `<a class="a-ficha" href="${href}">${esc(nombre)}</a>` : esc(nombre)}</h3>` : ''}${cuerpo}`;
+
+// attrs: atributos de más para la charola (la tienda pone su clave y su firma).
+// cargar: 'eager' en la primera fila, para que su foto ya esté al mostrarse.
+export function charola(nombre, cuerpo = '', { tag = 'article', cls = '', href = '', titulo = true, attrs = '', cargar = 'lazy' } = {}) {
   const g = guisoDe(nombre);
   // alt vacío: el nombre del guiso está escrito justo debajo.
   // Dos tamaños: 720 px para la retícula y 1024 px para las charolas grandes de pantalla ancha.
-  const img = g.foto ? `<img src="/media/guisos/${g.slug}.webp" srcset="/media/guisos/${g.slug}.webp 720w, /media/guisos/${g.slug}-1024.webp 1024w" sizes="${SIZES}" alt="" width="720" height="540" loading="lazy">` : '';
-  return `<${tag} class="charola ${cls}" style="--c:${g.color};--t:${tinta(g.color)}">
+  const img = g.foto ? `<img class="foto" src="/media/guisos/${g.slug}.webp" srcset="/media/guisos/${g.slug}.webp 720w, /media/guisos/${g.slug}-1024.webp 1024w" sizes="${SIZES}" alt="" width="720" height="540" loading="${cargar}">` : '';
+  return `<${tag} class="charola ${cls}" style="--c:${g.color};--t:${tinta(g.color)}"${attrs ? ` ${attrs}` : ''}>
     <div class="guiso">${img}${g.n ? `<span class="num">${g.n}</span>` : ''}<span class="vapor" aria-hidden="true">${picto('Vapor')}</span></div>
-    ${titulo || cuerpo ? `<div class="datos">${titulo ? `<h3>${href ? `<a class="a-ficha" href="${href}">${esc(nombre)}</a>` : esc(nombre)}</h3>` : ''}${cuerpo}</div>` : ''}
+    ${titulo || cuerpo ? `<div class="datos">${datosDe(nombre, cuerpo, { href, titulo })}</div>` : ''}
   </${tag}>`;
+}
+
+// Las fotos de charola aparecen con un fundido corto al terminar de cargar, no a pedazos sobre el color
+// (barra.css). Solo las que pinta JavaScript (class="foto"): las del HTML no esperan a ningún script.
+if (typeof document !== 'undefined' && document.documentElement?.classList) {
+  document.documentElement.classList.add('img-funde');
+  document.addEventListener('load', (e) => { if (e.target.classList?.contains('foto')) e.target.classList.add('cargada'); }, true);
 }

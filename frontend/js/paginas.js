@@ -12,7 +12,7 @@ import { transicion } from './api.js';
 // externos, descargas y cambios de # dentro de la misma página: los atiende el navegador como siempre.
 
 export const PAGINAS = ['/', '/tienda/'];
-const fijo = (el) => el.matches('header.cabecera, header.cabecera + script, footer.pie, script[src], #anuncio');
+const fijo = (el) => el.matches('header.cabecera, header.cabecera + script, footer.pie, script[src], #anuncio, #preparando');
 
 const guardadas = new Map(); // ruta → lo de esa página, ya puesto alguna vez
 const pedidas = new Map();   // ruta → promesa con su HTML (se pide al acercarse al enlace)
@@ -36,6 +36,10 @@ history.scrollRestoration = 'manual';
 // letra de respaldo. Están todas declaradas en barra.css y precargadas, así que casi siempre ya están; el
 // tope evita que una red mala detenga la navegación (entonces entra la de respaldo y cambia al llegar).
 const TOPE_FUENTES = 600;
+// Cuánto se espera, como mucho, a que la página nueva termine de pintarse fuera de la vista. Mientras,
+// se sigue viendo la anterior, como en una carga normal; pasado el tope se muestra como vaya.
+const TOPE_LISTA = 400;
+const tope = (ms) => new Promise((r) => { setTimeout(r, ms); });
 function fuentesListas() {
   if (!document.fonts) return Promise.resolve();
   const todas = Promise.all([...document.fonts].map((f) => f.load().catch(() => {})));
@@ -107,23 +111,38 @@ export async function ir(url, { empuja = true } = {}) {
     history.pushState({ y: 0 }, '', url.href);
   }
   guardadas.set(actual, estaPagina());
+  const tituloAntes = document.title;
+  // «Aquí estás» en la cabecera: Inicio en la landing; en la tienda lo pone su script al pintarse.
+  for (const a of document.querySelectorAll('#nav-principal a[aria-current]')) a.removeAttribute('aria-current');
+  if (ruta === '/') document.querySelector('#nav-principal a[href="/"]')?.setAttribute('aria-current', 'page');
+
+  // La página nueva se arma fuera de la vista: sus nodos entran a un contenedor oculto, su script corre
+  // (la primera vez) o se pone al día (las demás) y pinta ahí. Se muestra cuando ya está pintada, de una
+  // sola vez: sin esqueleto si los datos ya estaban y sin repintar lo que ya se ve.
+  const primera = !pag.puesta;
+  if (primera) {
+    pag.antes = pag.antes.map(adoptar);
+    pag.despues = pag.despues.map(adoptar);
+    pag.puesta = true;
+  }
+  const cuarto = Object.assign(document.createElement('div'), { id: 'preparando', hidden: true });
+  document.body.append(cuarto);
+  cuarto.append(...pag.antes, ...pag.despues);
+  const esperas = [];
+  if (primera) esperas.push(Promise.all(pag.js.map((src) => import(src)))); // terminan al pintar su primera vista
+  else dispatchEvent(new CustomEvent('tm:pagina', { detail: { ruta, esperar: (p) => esperas.push(p) } }));
+  await Promise.race([Promise.all(esperas).catch(() => {}), tope(TOPE_LISTA)]);
+  if (mio !== turno) { cuarto.remove(); return; } // otro clic llegó mientras tanto: gana el último
 
   const cambiar = () => {
-    // Las hojas ya están todas puestas: solo cambia la marca, en el mismo cuadro que el contenido.
     document.documentElement.classList.replace(marca(document.documentElement), pag.en);
     const { antes, despues } = partes(document.body, cabecera());
     for (const el of [...antes, ...despues]) el.remove();
-    if (!pag.puesta) {
-      pag.antes = pag.antes.map(adoptar);
-      pag.despues = pag.despues.map(adoptar);
-      pag.puesta = true;
-    }
     cabecera().before(...pag.antes);
     pie().before(...pag.despues);
-    document.title = pag.titulo;
-    // «Aquí estás» en la cabecera: Inicio en la landing; en la tienda lo pone su propio script.
-    for (const a of document.querySelectorAll('#nav-principal a[aria-current]')) a.removeAttribute('aria-current');
-    if (ruta === '/') document.querySelector('#nav-principal a[href="/"]')?.setAttribute('aria-current', 'page');
+    cuarto.remove();
+    // El título que puso la página al pintarse (la tienda dice qué vista es); si no puso, el de su HTML.
+    if (document.title === tituloAntes) document.title = pag.titulo;
     actual = ruta;
     const ancla = ruta === '/' && url.hash && document.getElementById(decodeURIComponent(url.hash.slice(1)));
     if (!empuja) scrollTo({ top: history.state?.y || 0, behavior: 'instant' });
@@ -141,8 +160,6 @@ export async function ir(url, { empuja = true } = {}) {
 
   anuncio.textContent = '';
   setTimeout(() => { anuncio.textContent = `Página: ${document.title}`; }, 50);
-  dispatchEvent(new CustomEvent('tm:pagina', { detail: { ruta } }));
-  for (const src of pag.js) await import(src); // la primera vez corre; después ya está cargado
 }
 
 // El enlace del evento, si es a la otra página de este sitio y se puede atender aquí.

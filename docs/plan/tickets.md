@@ -536,6 +536,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Mismas hojas en todo el sitio (17-nov-2026):** la landing, la tienda y la página de «no encontrado» enlazan `/barra.css`, `/landing.css` y `/tienda/styles.css`, en ese orden; cada regla de las dos hojas de página acotada a su página con `:where(.en-inicio)` o `:where(.en-tienda)` (clase de `<html>`), sin cambiar especificidad (87 y 217 selectores; quitando el prefijo vuelve el original). `js/paginas.js` ya no carga, enciende ni apaga hojas: solo cambia esa clase. Sin ver en pantalla.
 
+- **Una sola pintada al llegar al catálogo (17-nov-2026):** guisos compartidos entre landing y tienda (`js/datos.js`, mostrar lo guardado y revalidar por detrás); el catálogo se pone al día por tarjeta en vez de repintarse; el enrutador muestra la página nueva ya pintada; `modulepreload`; esqueleto único con fundido; fotos con fundido al cargar. Pintadas: con datos guardados 1, sin datos 2 (esqueleto y contenido), carrito o existencias 0, entre vistas 1. Prueba `tienda/pintadas.test.mjs`. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

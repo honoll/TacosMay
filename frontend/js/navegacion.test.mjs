@@ -13,15 +13,21 @@ class El {
   constructor(tag, attrs = {}, fijo = false) {
     Object.assign(this, { tagName: tag.toUpperCase(), attrs, fijo, textContent: '', media: '', h: {} });
   }
-  matches() { return this.fijo || this.attrs.id === 'anuncio'; } // paginas.js solo pregunta por su lista de partes fijas
+  matches() { return this.fijo || ['anuncio', 'preparando'].includes(this.attrs.id); } // paginas.js solo pregunta por su lista de partes fijas
   getAttribute(k) { return this.attrs[k] ?? null; }
   setAttribute(k, v) { this.attrs[k] = v; }
   removeAttribute(k) { delete this.attrs[k]; }
   hasAttribute(k) { return k in this.attrs; }
   get id() { return this.attrs.id; }
   set id(v) { this.attrs.id = v; }
-  remove() { const i = this.dueno.indexOf(this); if (i >= 0) this.dueno.splice(i, 1); }
-  before(...nodos) { this.dueno.splice(this.dueno.indexOf(this), 0, ...nodos.map((n) => Object.assign(n, { dueno: this.dueno }))); }
+  remove() { const i = this.dueno?.indexOf(this) ?? -1; if (i >= 0) this.dueno.splice(i, 1); }
+  // Mover un nodo lo saca de donde estaba, como en el DOM.
+  before(...nodos) {
+    for (const n of nodos) n.remove();
+    this.dueno.splice(this.dueno.indexOf(this), 0, ...nodos.map((n) => Object.assign(n, { dueno: this.dueno })));
+    if (this.tagName === 'FOOTER') orden.push('se muestra'); // lo de después de la cabecera va antes del pie: el último paso
+  }
+  append(...nodos) { this.hijos ??= []; for (const n of nodos) { n.remove(); n.dueno = this.hijos; this.hijos.push(n); } }
   focus() { enfocado = this; }
   scrollIntoView() { anclado = this.id; }
 }
@@ -37,6 +43,7 @@ const clases = (lista) => ({
 });
 
 let enfocado = null;
+const orden = []; // qué pasó primero: que la página nueva pintara o que se mostrara
 let anclado = null;
 let asignado = null;
 let html; // los nodos del <body> de la página que se ve
@@ -66,7 +73,8 @@ const PARTES = {
   },
 };
 // La tienda de juguete: cuenta cuántas veces corre y cuántas veces la despiertan estando a la vista.
-const MODULO_TIENDA = `data:text/javascript,globalThis.cargasTienda=(globalThis.cargasTienda||0)+1;addEventListener('tm:pagina',()=>{if(location.pathname==='/tienda/')globalThis.despiertaTienda=(globalThis.despiertaTienda||0)+1})`;
+const MODULO_TIENDA = `data:text/javascript,globalThis.cargasTienda=(globalThis.cargasTienda||0)+1;globalThis.orden.push('tienda pinta');addEventListener('tm:pagina',(e)=>{if(location.pathname!=='/tienda/')return;globalThis.despiertaTienda=(globalThis.despiertaTienda||0)+1;e.detail.esperar(new Promise((r)=>setTimeout(()=>{globalThis.orden.push('tienda al día');r()},globalThis.tardaTienda||5)))})`;
+globalThis.orden = orden;
 const HOJAS = ['/barra.css', '/landing.css', '/tienda/styles.css'];
 const MARCA = { '/': 'en-inicio', '/tienda/': 'en-tienda' };
 
@@ -87,7 +95,7 @@ Object.assign(globalThis, {
     get documentElement() { return raiz; },
     fonts: [fuente(), fuente(), fuente()],
     head: { querySelectorAll: () => links, append() { throw new Error('paginas.js no debe agregar hojas'); } },
-    body: { get children() { return [...html]; }, append(n) { n.dueno = html; html.push(n); } },
+    body: { get children() { return [...html]; }, append(n) { n.remove?.(); n.dueno = html; html.push(n); } },
     querySelector(sel) {
       if (sel === 'header.cabecera') return html.find((n) => n.tagName === 'HEADER');
       if (sel === 'footer.pie') return html.find((n) => n.tagName === 'FOOTER');
@@ -202,6 +210,8 @@ await espera();
 await new Promise((r) => setTimeout(r, 60));
 assert.match(document.getElementById('anuncio').textContent, /Tienda/, 'se anuncia la página nueva');
 assert.equal(globalThis.cargasTienda, 1, 'el script de la tienda corre una vez');
+assert.deepEqual(orden.slice(-2), ['tienda pinta', 'se muestra'], 'primero pinta fuera de la vista y luego se muestra, ya pintada');
+assert.ok(!html.some((n) => n.id === 'preparando'), 'el contenedor oculto ya no está');
 const escuchasAntes = escuchas(); // ya con la tienda cargada: de aquí no debe crecer
 assert.equal(transiciones, 0, 'con movimiento reducido: cambio directo, sin transición');
 
@@ -225,6 +235,8 @@ for (let vuelta = 1; vuelta <= 3; vuelta++) {
 assert.deepEqual(pedidosRed, ['/tienda/'], 'la tienda se pidió una sola vez');
 assert.equal(globalThis.cargasTienda, 1, 'su script sigue corrido una sola vez');
 assert.equal(globalThis.despiertaTienda, 3, 'y la despertaron una vez por vuelta');
+const alDia = orden.flatMap((o, i) => (o === 'tienda al día' ? [orden[i + 1]] : []));
+assert.deepEqual(alDia, ['se muestra', 'se muestra', 'se muestra'], 'al volver, cada vez primero se pone al día y luego se muestra');
 assert.equal(escuchas(), escuchasAntes, 'ninguna escucha se duplicó');
 assert.equal(transiciones, 6, 'con movimiento permitido, cada cambio con transición');
 assert.ok(hojasIntactas(), 'tres vueltas y las hojas siguen intactas');
@@ -235,6 +247,15 @@ anclado = null;
 await clic('/#como');
 assert.equal(location.href, `${ORIGEN}/#como`);
 assert.equal(anclado, 'como', 'llega y se desplaza a la sección');
+
+// ---------- Si la tienda tarda en ponerse al día, se muestra pasado el tope ----------
+globalThis.tardaTienda = 5000;
+await clic('/tienda/#catalogo');
+assert.equal(ids().includes('vista'), false, 'mientras se pone al día, se sigue viendo la landing');
+await new Promise((r) => setTimeout(r, 500));
+assert.deepEqual(ids(), ['aviso', 'vista', 'esqueleto', 'script', 'panel-carrito'], 'pasado el tope, se muestra la tienda');
+globalThis.tardaTienda = 5;
+await clic('/');
 
 // ---------- Una fuente que no llega no detiene la navegación ----------
 fuenteAtorada = true;

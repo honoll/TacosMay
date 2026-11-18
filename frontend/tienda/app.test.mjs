@@ -24,7 +24,7 @@ const registros = {}; // cuántas veces se registró cada escucha de window: no 
 Object.assign(globalThis, {
   localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
   document: { getElementById: (id) => (porId[id] ??= nodo()), querySelector: () => null, querySelectorAll: () => [], activeElement: null, title: '' },
-  location: { get hash() { return hash; }, set hash(v) { hash = v ? `#${String(v).replace(/^#/, '')}` : ''; } },
+  location: { get pathname() { return '/tienda/'; }, get hash() { return hash; }, set hash(v) { hash = v ? `#${String(v).replace(/^#/, '')}` : ''; } },
   addEventListener: (tipo, fn) => { oyentes[tipo] = fn; registros[tipo] = (registros[tipo] || 0) + 1; },
   setInterval: () => 0, scrollTo() {}, innerWidth: 1440, CSS: { escape: String },
   FormData: class { constructor(f) { this.e = [...f.elements].map((i) => [i.name, i.value]); } [Symbol.iterator]() { return this.e[Symbol.iterator](); } },

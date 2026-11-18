@@ -1,5 +1,6 @@
 import { api, session, money, esc, notice, transicion } from '../js/api.js';
-import { charola, picto } from '../js/barra.js';
+import { charola, picto, datosDe } from '../js/barra.js';
+import { guardadoDe, traer } from '../js/datos.js';
 import { empacar } from './empaque.js';
 import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
 
@@ -135,12 +136,19 @@ function control(g, cambio = '') {
 
 // Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
 // La descripción solo se muestra si dice algo propio de ese guiso (conDescripcion lo decide).
-const card = (g, mostrarDescripcion) => charola(g.nombre, `
+// Cada tarjeta lleva su clave (el guiso) y la firma de lo que muestra: si la firma no cambió, no se toca.
+const cuerpoDe = (g, mostrarDescripcion) => `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
     <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
-    <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: `#guiso/${encodeURIComponent(g.id)}` });
+    <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`;
+const firma = (texto) => [...texto].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7).toString(36);
+const fichaDe = (g) => `#guiso/${encodeURIComponent(g.id)}`;
+const card = (g, mostrarDescripcion, cargar) => {
+  const cuerpo = cuerpoDe(g, mostrarDescripcion);
+  return charola(g.nombre, cuerpo, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: fichaDe(g), cargar, attrs: `data-clave="${esc(g.id)}" data-firma="${firma(cuerpo)}"` });
+};
 
 // Al cambiar el carrito, las charolas del catálogo se ponen al día sin volver a pedir los guisos.
 function pintarControles(id, cambio) {
@@ -152,13 +160,27 @@ function pintarControles(id, cambio) {
 
 // Esqueleto del catálogo: las mismas charolas, vacías. Solo aparece si la respuesta tarda.
 const ESQUELETO = document.getElementById('esqueleto').innerHTML; // en index.html: el mismo del primer cuadro
-const TARDA = 200; // ms antes de mostrar el esqueleto, para que no parpadee si la API contesta rápido
+const TARDA = 200;
+const YA_PINTADO = Symbol('ya pintado'); // la vista se puso al día en su lugar: no hay nada que repintar
+let llegando = true; // se llegó (o se volvió) a la vista: es cuando se revalida lo guardado
+
+// Una vez por llegada, lo guardado se vuelve a pedir; si cambió, el catálogo se pone al día en su lugar.
+function revalidar() {
+  const antes = JSON.stringify([guardadoDe('/guisos/populares'), guardadoDe('/guisos')]);
+  Promise.all([traer('/guisos/populares'), traer('/guisos')]).then((nuevos) => {
+    if (JSON.stringify(nuevos) !== antes && current === 'catalogo' && activa()) render();
+  }).catch(() => {}); // sin red se queda lo guardado
+} // ms antes de mostrar el esqueleto, para que no parpadee si la API contesta rápido
 
 // Una descripción repetida en varios guisos no informa nada: devuelve cómo pintar cada tarjeta de esa lista.
-function conDescripcion(lista) {
+function mostrarDescripcion(lista) {
   const veces = new Map();
   for (const g of lista) veces.set(g.descripcion, (veces.get(g.descripcion) || 0) + 1);
-  return (g) => card(g, Boolean(g.descripcion) && veces.get(g.descripcion) === 1);
+  return (g) => Boolean(g.descripcion) && veces.get(g.descripcion) === 1;
+}
+function conDescripcion(lista) {
+  const mostrar = mostrarDescripcion(lista);
+  return (g, cargar) => card(g, mostrar(g), cargar);
 }
 
 // Regreso evidente al catálogo desde cualquier otra vista.
@@ -180,17 +202,44 @@ const fecha = (v) => new Date(isNaN(v) ? v : Number(v))
 
 const VIEWS = {
   async catalogo() {
-    const [populares, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
+    // Lo guardado (de la landing o de una visita anterior) se muestra ya; se vuelve a pedir por detrás.
+    const ya = [guardadoDe('/guisos/populares'), guardadoDe('/guisos')];
+    const [populares, todos] = ya.every(Boolean) ? ya : await Promise.all([traer('/guisos/populares'), traer('/guisos')]);
+    if (ya.every(Boolean) && llegando) revalidar();
+    llegando = false;
     guisos = todos;
-    const tarjeta = conDescripcion(todos);
     if (!todos.length) return '<h1>Guisos de taquería empacados al vacío</h1><p>Todavía no hay guisos en el catálogo.</p>';
     // Como el pizarrón de la taquería: agrupados por precio, del más barato al más caro. Sin filtros.
     const precios = [...new Set(todos.map((g) => g.precio_centavos))].sort((a, b) => a - b);
+    const filas = [
+      ...(populares.length ? [['Lo que más sale', populares]] : []),
+      ...precios.map((p) => [precios.length > 1 ? `De ${money(p)}` : 'Todos los guisos', todos.filter((g) => g.precio_centavos === p)]),
+    ];
+    const mostrar = mostrarDescripcion(todos);
+    const enOrden = filas.flatMap(([, lista]) => lista);
+    const estructura = JSON.stringify(filas.map(([t, lista]) => [t, lista.map((g) => [g.id, g.nombre])]));
+
+    // Ya está a la vista con las mismas charolas: se pone al día en su lugar (existencias, precios,
+    // cantidades) sin rehacer las tarjetas, para no recargar sus fotos ni repetir su entrada.
+    if (view.dataset.vista === 'catalogo' && view.querySelector('[data-estructura]')?.dataset.estructura === estructura) {
+      const tarjetas = view.querySelectorAll('.charola[data-clave]');
+      enOrden.forEach((g, i) => {
+        const li = tarjetas[i];
+        const cuerpo = cuerpoDe(g, mostrar(g));
+        if (!li || li.dataset.firma === firma(cuerpo)) return;
+        li.className = `charola ${g.stock > 0 ? '' : 'agotada'}`;
+        li.dataset.firma = firma(cuerpo);
+        li.querySelector('.datos').innerHTML = datosDe(g.nombre, cuerpo, { href: fichaDe(g) });
+      });
+      return YA_PINTADO;
+    }
+    // La primera fila carga sus fotos de inmediato; las demás, al acercarse.
+    let n = 0;
+    const tarjeta = (g) => card(g, mostrar(g), n++ < 5 ? 'eager' : 'lazy');
     const fila = (lista) => `<ul class="barra entra">${lista.map(tarjeta).join('')}</ul>`;
     return `
-      <h1>Guisos de taquería empacados al vacío</h1>
-      ${populares.length ? `<h2>Lo que más sale</h2>${fila(populares)}` : ''}
-      ${precios.map((p) => `<h2 class="grupo">${precios.length > 1 ? `De ${money(p)}` : 'Todos los guisos'}</h2>${fila(todos.filter((g) => g.precio_centavos === p))}`).join('')}`;
+      <h1 data-estructura="${esc(estructura)}">Guisos de taquería empacados al vacío</h1>
+      ${filas.map(([t, lista]) => `<h2${t === 'Lo que más sale' ? '' : ' class="grupo"'}>${t}</h2>${fila(lista)}`).join('')}`;
   },
 
   // Ficha de un guiso: #guiso/<id>. Lo que se sabe de él (GET /guisos/:id) y lo que vale para todos.
@@ -228,7 +277,7 @@ const VIEWS = {
           <p>Va empacado al vacío y congelado. Guárdalo en el congelador hasta que lo vayas a usar. <a href="#ayuda">Envíos y preguntas</a></p>
         </section>
       </div>
-      ${otros.length ? `<h2>Otros guisos</h2><ul class="barra">${otros.map(conDescripcion(todos)).join('')}</ul>` : ''}`;
+      ${otros.length ? `<h2>Otros guisos</h2><ul class="barra">${otros.map((g) => conDescripcion(todos)(g)).join('')}</ul>` : ''}`;
     // PENDIENTE-CLIENTE: instrucciones exactas de calentado y de conservación por guiso, cuánto dura,
     // ingredientes y alérgenos (necesitan campos nuevos: docs/diseno/plan-segundo-tiempo.md).
   },
@@ -654,20 +703,27 @@ async function render() {
   if (changed) borrando = null;
   current = r;
   renderNav();
-  const tarda = setTimeout(() => { if (id === renderId && changed && r === 'catalogo') view.innerHTML = ESQUELETO; }, TARDA);
+  if (changed) llegando = true;
+  // El esqueleto solo si tarda, y nunca dos veces (el de index.html puede estar ya puesto).
+  const tarda = setTimeout(() => { if (id === renderId && changed && r === 'catalogo' && !view.querySelector('.hueca')) view.innerHTML = ESQUELETO; }, TARDA);
   await run(async () => {
     let html;
     try { html = await VIEWS[r](); } finally { clearTimeout(tarda); }
     if (id !== renderId) return; // ya hay un render más nuevo
+    if (html === YA_PINTADO) { tick(); return; }
     const focusId = document.activeElement?.id;
     const pintar = () => {
+      const esqueleto = view.querySelector('.hueca');
       view.innerHTML = html;
+      // Sustituye al esqueleto en su lugar: fundido corto, sin volver a deslizar.
+      if (esqueleto) for (const ul of view.querySelectorAll('.barra.entra')) ul.classList.replace('entra', 'funde');
       view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
       tick();
       // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.
       // Sin desplazar: enfocar <main> escondía la cabecera (y el logotipo) al cargar.
       ((focusId && document.getElementById(focusId)) || (changed && view))?.focus?.({ preventScroll: true });
-      if (changed) scrollTo(0, 0);
+      // Si se está armando fuera de la vista (js/paginas.js), no se mueve la página que se ve.
+      if (changed && !view.closest('[hidden]')) scrollTo(0, 0);
     };
     // Entre vistas, un fundido corto del navegador; sin soporte, cambia sin animar. Solo al cambiar de
     // vista: los repintados de la misma (carrito) ya traen su propia transición.
@@ -705,12 +761,18 @@ addEventListener('hashchange', () => {
 // sesión o con otro carrito, cambiados en la landing): se pone al día sin recargar.
 // Lo mismo al regresar desde la landing sin recargar (js/paginas.js avisa con «tm:pagina»).
 const ponerAlDia = () => run(async () => {
+  llegando = true;
   if (user()) await loadCart();
   else setCart(EMPTY);
   await render();
 });
 addEventListener('pageshow', (e) => { if (e.persisted && activa()) ponerAlDia(); });
-addEventListener('tm:pagina', () => { if (activa()) ponerAlDia(); });
+// js/paginas.js avisa antes de mostrar la tienda y espera a que esté al día: se muestra ya lista.
+addEventListener('tm:pagina', (e) => {
+  if (!activa() || !location.pathname.startsWith('/tienda/')) return;
+  const listo = ponerAlDia(); // fuera del ?.(): si no hay quien espere, igual se pone al día
+  e?.detail?.esperar?.(listo);
+});
 
 // Arranque: si hay sesión guardada, se valida contra el backend y se carga su carrito (a la vez).
 if (user()) {
@@ -719,4 +781,5 @@ if (user()) {
     session.set({ ...user(), ...yo });
   });
 }
-render();
+// Se espera la primera pintada: así js/paginas.js, al importar este script, muestra la tienda ya pintada.
+await render();

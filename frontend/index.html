@@ -25,6 +25,10 @@
   <link rel="preload" href="/fuentes/kalam-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <script type="speculationrules">{"prefetch": [{"where": {"and": [{"href_matches": "/*"}, {"not": {"href_matches": "/marca/*"}}]}, "eagerness": "moderate"}]}</script>
   <link rel="prefetch" href="/tienda/">
+  <!-- Los scripts de la tienda, ya descargados y compilados: al tocar «Guisos» no hay que esperarlos. -->
+  <link rel="modulepreload" href="/tienda/app.js">
+  <link rel="modulepreload" href="/tienda/empaque.js">
+  <link rel="modulepreload" href="/js/datos.js">
   <!-- Las mismas tres hojas, en el mismo orden, en todas las páginas: al pasar de una a otra sin
        recargar (js/paginas.js) nunca se enciende ni se apaga una hoja. Cada hoja de página tiene sus
        reglas acotadas a su página con :where(.en-inicio) o :where(.en-tienda), la clase de <html>. -->
