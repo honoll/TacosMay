@@ -396,7 +396,7 @@
 :where(.en-tienda) .renglon .datos > * { margin: 0; }
 :where(.en-tienda) .renglon h3 { font: 800 1.2rem/1.05 var(--angosta); text-transform: uppercase; }
 :where(.en-tienda) .renglon .control { position: relative; z-index: 1; align-self: flex-end; margin-top: auto; padding-top: 6px; }
-:where(.en-tienda) .renglon .mas { position: relative; width: 44px; height: 44px; min-height: 44px; padding: 0; justify-content: center; border: 2px solid var(--negro); border-radius: 50%; background: var(--crema); color: var(--negro); font: 800 1.6rem/1 var(--angosta); }
+:where(.en-tienda) .renglon .mas { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; min-height: 44px; padding: 0; justify-content: center; border: 2px solid var(--negro); border-radius: 50%; background: var(--crema); color: var(--negro); font: 800 1.6rem/1 var(--angosta); }
 :where(.en-tienda) .renglon .mas:is(:hover, :focus-visible) { background: var(--negro); color: var(--crema); }
 :where(.en-tienda) .renglon .cantidad { width: 124px; }
 /* Toda la tarjeta lleva a la ficha; el control queda por encima. */
@@ -404,7 +404,6 @@
 :where(.en-tienda) .renglon.agotado > .charola { filter: grayscale(1); opacity: .7; }
 :where(.en-tienda) .renglones[aria-busy] .datos p { height: 1.1em; border-radius: 4px; background: var(--acero); }
 :where(.en-tienda) .renglones[aria-busy] .datos p + p { width: 55%; }
-}
 
 /* La bolsa: la imagen que eligió Alejandro. Cada guiso ocupa una de sus seis cámaras (posiciones medidas
    sobre la imagen) y encima lleva el plástico de esa cámara en hard-light: el gris neutro no cambia la
@@ -457,8 +456,8 @@
 
 @media (min-width: 900px) {
   :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 720px) minmax(320px, 420px); justify-content: center; column-gap: clamp(24px, 4vw, 64px); align-items: start; }
-  :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos { grid-area: 1 / 1 / 2 / 2; }
-  :where(.en-tienda) [data-vista="catalogo"] > .bolsa-lado { grid-area: 1 / 2 / 2 / 3; position: sticky; top: 16px; max-height: calc(100dvh - 32px); overflow-y: auto; margin-top: 12px; }
+  :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos { grid-area: 1 / 1 / 2 / 2; max-height: calc(100dvh - var(--alto-cabecera, 90px) - 24px); overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; scrollbar-width: thin; scrollbar-color: var(--marco) transparent; }
+  :where(.en-tienda) [data-vista="catalogo"] > .bolsa-lado { grid-area: 1 / 2 / 2 / 3; position: sticky; top: calc(var(--alto-cabecera, 90px) + 12px); max-height: calc(100dvh - var(--alto-cabecera, 90px) - 24px); overflow-y: auto; margin-top: 12px; }
 }
 
 /* Celular: la bolsa es una barra fija abajo que se despliega; la lista deja espacio para ella. */
@@ -478,11 +477,18 @@
 
 /* ---------- La escena del envío (tienda/envio.js) ---------- */
 :where(.en-tienda) .envio { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center; background: rgb(247 244 238 / .95); }
-:where(.en-tienda) .envio-escena { position: relative; width: min(340px, 86vw); aspect-ratio: 3 / 2; }
+:where(.en-tienda) .envio-escena { position: relative; width: min(560px, 90vw); aspect-ratio: 3 / 2; }
 :where(.en-tienda) .envio-caja { position: absolute; left: 46%; bottom: 6%; width: 44%; overflow: visible; }
 :where(.en-tienda) .envio-caja .etiqueta { opacity: 0; }
-:where(.en-tienda) .envio-bolsa { position: absolute; left: 55%; top: -6%; width: 26%; aspect-ratio: 3 / 4; display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 3px; padding: 8px 4px 4px; border: 2px solid rgb(20 18 16 / .55); border-radius: 6px 6px 12px 12px; background: rgb(255 255 255 / .8); }
-:where(.en-tienda) .envio-bolsa i { aspect-ratio: 1; border-radius: 4px; background: var(--c); }
+/* La bolsa de la escena: la misma imagen, con el color de cada guiso en su cámara. */
+:where(.en-tienda) .envio-bolsa { position: absolute; left: 57%; top: -8%; width: 22%; aspect-ratio: 1152 / 1573; background: url("/media/bolsa/bolsa.webp") center / 100% 100% no-repeat; }
+:where(.en-tienda) .envio-bolsa i { position: absolute; border-radius: 5% / 6%; background: var(--c); opacity: .9; }
+:where(.en-tienda) .envio-bolsa i:nth-child(1) { left: 3.993%; top: 9.727%; right: 51.997%; bottom: 63.318%; }
+:where(.en-tienda) .envio-bolsa i:nth-child(2) { left: 51.215%; top: 9.727%; right: 4.167%; bottom: 63.318%; }
+:where(.en-tienda) .envio-bolsa i:nth-child(3) { left: 3.993%; top: 39.034%; right: 51.997%; bottom: 33.376%; }
+:where(.en-tienda) .envio-bolsa i:nth-child(4) { left: 51.215%; top: 39.034%; right: 4.167%; bottom: 33.376%; }
+:where(.en-tienda) .envio-bolsa i:nth-child(5) { left: 3.993%; top: 69.485%; right: 51.997%; bottom: 3.433%; }
+:where(.en-tienda) .envio-bolsa i:nth-child(6) { left: 51.215%; top: 69.485%; right: 4.167%; bottom: 3.433%; }
 :where(.en-tienda) .envio-avion { position: absolute; left: 6%; bottom: 8%; width: 24%; color: var(--negro); opacity: 0; }
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
 
@@ -495,3 +501,7 @@
 
   /* Enviar: entra la caja, la bolsa entra, se cierra, cinta y etiqueta, al avión, despega (≈ 2.4 s). */
 }
+
+/* El «+» y el «−» son dibujos (no letras): quedan al centro exacto de su botón. */
+:where(.en-tienda) .signo { width: 22px; height: 22px; }
+:where(.en-tienda) .cantidad button { display: grid; place-items: center; }

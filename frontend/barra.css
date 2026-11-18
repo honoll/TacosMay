@@ -53,7 +53,8 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
    enlaces en una sola fila que se desliza con el dedo. */
 
 /* La cabecera tiene nombre propio en las transiciones: se queda quieta y solo cambia el contenido. */
-.cabecera { view-transition-name: cabecera; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo carrito" "enlaces enlaces"; align-items: center; gap: 0 12px; padding-block: 8px 0; border-bottom: 2px solid var(--negro); }
+/* Fija arriba al bajar; su fondo se extiende a todo el ancho de la pantalla, aunque la caja sea más angosta. */
+.cabecera { position: sticky; top: 0; z-index: 4; background: var(--crema); box-shadow: 0 0 0 100vmax var(--crema); clip-path: inset(0 -100vmax); view-transition-name: cabecera; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo carrito" "enlaces enlaces"; align-items: center; gap: 0 12px; padding-block: 8px 0; border-bottom: 2px solid var(--negro); }
 .cabecera .logo { grid-area: logo; justify-self: start; height: 52px; }
 .cabecera .carrito { grid-area: carrito; gap: 8px; }
 .cabecera-enlaces { grid-area: enlaces; display: flex; gap: 20px; margin-inline: calc(-1 * var(--margen)); padding-inline: var(--margen); overflow-x: auto; scrollbar-width: none; white-space: nowrap; }

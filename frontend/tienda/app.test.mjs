@@ -122,7 +122,7 @@ const cat = vista().innerHTML;
 assert.ok(cat.indexOf('De $180.00') > 0 && cat.indexOf('De $180.00') < cat.indexOf('De $200.00'), 'los guisos van agrupados por precio, de menor a mayor');
 const controlDe = (id) => cat.split(`data-control="${id}">`).at(-1).split('</li>')[0];
 assert.match(controlDe('1'), /class="cantidad"[\s\S]*<output[^>]*>2</, 'el guiso que ya va en el carrito muestra el selector con su cantidad');
-assert.match(controlDe('3'), /data-click="add"[^>]*aria-label="Agregar Tinga de res">\+</, 'el que no va en el carrito muestra «+», que se llama «Agregar <guiso>»');
+assert.match(controlDe('3'), /data-click="add"[^>]*aria-label="Agregar Tinga de res"><svg class="signo"/,'el que no va en el carrito muestra «+», que se llama «Agregar <guiso>»');
 assert.match(cat, /class="lista-guisos"[\s\S]*<aside class="bolsa-lado/, 'a un lado de la lista, la bolsa');
 assert.ok(/Se acabó por hoy/.test(controlDe('2')) && !/<button/.test(controlDe('2')), 'sin existencias no hay botón');
 

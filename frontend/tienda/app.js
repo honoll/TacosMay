@@ -138,13 +138,13 @@ function control(g, cambio = '', lista = false) {
   const n = enCarrito(g.id);
   const datos = `data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"`;
   if (g.stock <= 0) return '<p class="acabo">Se acabó por hoy</p>';
-  if (!n && lista) return `<button type="button" class="primario mas" data-click="add" ${datos} aria-label="Agregar ${esc(g.nombre)}">+</button>`;
+  if (!n && lista) return `<button type="button" class="primario mas" data-click="add" ${datos} aria-label="Agregar ${esc(g.nombre)}"><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>`;
   if (!n) return `<button type="button" class="primario" data-click="add" ${datos}>Agregar<span class="sr"> ${esc(g.nombre)} al carrito</span></button>`;
   return `
     <div class="cantidad" role="group" aria-label="${esc(g.nombre)} en tu carrito">
-      <button type="button" data-click="menos" ${datos} aria-label="Quitar uno">−</button>
+      <button type="button" data-click="menos" ${datos} aria-label="Quitar uno"><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
       <output class="cant ${cambio}" aria-live="polite">${n}</output>
-      <button type="button" data-click="add" ${datos} aria-label="Agregar uno" ${n >= g.stock ? 'disabled' : ''}>+</button>
+      <button type="button" data-click="add" ${datos} aria-label="Agregar uno" ${n >= g.stock ? 'disabled' : ''}><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
     </div>`;
 }
 
@@ -190,6 +190,13 @@ function pintarControles(id, cambio) {
 const BOLSA = document.getElementById('bolsa-molde').innerHTML;
 const ESQUELETO = document.getElementById('esqueleto').innerHTML + BOLSA;
 let bolsaUI = null; // la bolsa de la lista de guisos, mientras está a la vista
+// El alto de la cabecera fija: la lista de guisos y la bolsa se acomodan debajo de ella.
+const altoCabecera = () => {
+  const h = document.querySelector?.('.cabecera')?.offsetHeight;
+  if (h) document.documentElement.style.setProperty('--alto-cabecera', `${h}px`);
+};
+altoCabecera();
+addEventListener('resize', altoCabecera);
 let directo = false; // la próxima vista se pinta sin fundido (después de la escena del pedido)
 const moverse = () => globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ?? false;
 const TARDA = 200;

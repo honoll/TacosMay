@@ -85,10 +85,16 @@ assert.deepEqual(choques, [], 'un selector sin acotar en las dos hojas de págin
 assert.ok(html['tienda/index.html'].includes('<link rel="prefetch" href="/">'), 'la tienda deja lista la landing');
 
 const css = leer('barra.css');
+// Llaves parejas en las tres hojas: una llave suelta hace que el navegador ignore la regla que sigue.
+for (const h of ['barra.css', 'landing.css', 'tienda/styles.css']) {
+  const t = leer(h).replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.equal((t.match(/\{/g) || []).length, (t.match(/\}/g) || []).length, `${h}: llaves desparejas`);
+}
 assert.match(css, /html \{ background: var\(--crema\)/, 'el lienzo es crema, nunca blanco');
 assert.equal((css.match(/font-display: fallback/g) || []).length, 6, 'las seis fuentes, en la hoja que siempre se carga y sin brinco');
 for (const h of ['landing.css', 'tienda/styles.css']) assert.ok(!leer(h).includes('@font-face'), `${h}: no declara fuentes (van en barra.css, que tienen todas las páginas)`);
-assert.match(css, /\.cabecera \{ view-transition-name: cabecera;/, 'la cabecera tiene nombre propio en la transición');
+assert.match(css, /\.cabecera \{[^}]*view-transition-name: cabecera;/, 'la cabecera tiene nombre propio en la transición');
+assert.match(css, /\.cabecera \{ position: sticky; top: 0;/, 'la cabecera se queda arriba al bajar');
 const sinMovimiento = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: no-preference)'));
 assert.ok(sinMovimiento.includes('@view-transition { navigation: auto; }'), 'la transición entre páginas solo con movimiento permitido');
 
