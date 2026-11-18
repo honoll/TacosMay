@@ -1,0 +1,26 @@
+/* La idea de los tacos (docs/diseno/logos-tacos.md). Se apoya en marca.css y logos.css;
+   aquí solo lo nuevo: el marco y la tortilla (.mc), el relleno (.g1-.g3) y los contextos nuevos. */
+
+.logos { --g1: #a8321c; --g2: #55752b; --g3: #f2b33d; }
+.logos .mc { fill: var(--papel); stroke: currentColor; stroke-width: 12; stroke-linejoin: round; stroke-linecap: round; }
+.logos .g1 { fill: var(--g1); }
+.logos .g2 { fill: var(--g2); }
+.logos .g3 { fill: var(--g3); }
+/* A una tinta el relleno toma el color de la tinta. */
+.tinta .lienzo-l, .oscuro .lienzo-l, .rojo .lienzo-l { --g1: currentColor; --g2: currentColor; --g3: currentColor; }
+
+.variante .pc { font-size: .92rem; }
+.chicos { display: flex; flex-wrap: wrap; align-items: end; justify-content: center; gap: 20px; }
+.variante .lienzo-l.chicos { min-height: 0; }
+.logos .alto24 svg { width: auto; height: 24px; }
+.logos .alto48 svg { width: auto; height: 48px; }
+
+/* Cabeceras de muestra: un SVG que escala entero; la de 375 px se ve a su tamaño real. */
+.ctx.ancho { grid-column: 1 / -1; }
+.en-cab .lienzo-l { padding: 12px; background: #d9dcdd; }
+.logos .lienzo-l > .cab-svg { width: 100%; max-width: 100%; max-height: none; }
+.logos .lienzo-l > .cab-svg.c375 { max-width: 375px; }
+.cab-f { fill: #f7f4ee; }
+.cab-l, .nav-b { fill: #141210; }
+.nav-t { fill: #141210; font: 600 17px "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.nav-bt { fill: #fff; font-weight: 800; }
