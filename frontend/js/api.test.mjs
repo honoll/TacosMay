@@ -25,7 +25,7 @@ assert.equal(esc('<b a="1">&\'</b>'), '&lt;b a=&quot;1&quot;&gt;&amp;&#39;&lt;/b
 // Sin sesión: ruta relativa bajo /api, sin Authorization; un 401 es login fallido y habla el backend.
 respond(401, { message: 'Credenciales incorrectas' });
 await assert.rejects(api('/users/login', { method: 'POST', body: { email: 'a', password: 'b' } }),
-  { message: 'Credenciales incorrectas', status: 401 });
+  (err) => err.message === 'Credenciales incorrectas' && err.status === 401 && !err.vencida); // un login fallido no es sesión vencida
 assert.equal(last.url, '/api/users/login');
 assert.equal(last.headers.Authorization, undefined);
 assert.equal(last.body, '{"email":"a","password":"b"}');
@@ -43,7 +43,7 @@ await assert.rejects(api('/pedidos', { method: 'POST' }), { message: 'Sin stock'
 
 // 401 con token = sesión vencida: se borra la sesión.
 respond(401, { message: 'jwt expired' });
-await assert.rejects(api('/carrito'), { message: /sesión venció/, status: 401 });
+await assert.rejects(api('/carrito'), { message: /sesión venció/, status: 401, vencida: true });
 assert.equal(session.get(), null);
 
 // Servidor caído.

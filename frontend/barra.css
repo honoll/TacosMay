@@ -34,23 +34,32 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .caja { width: min(100% - 2 * var(--margen), var(--ancho)); margin-inline: auto; }
 
 /* ---------- Cabecera: la misma en todo el sitio ---------- */
-/* Logotipo que lleva al inicio, los enlaces principales y, a la derecha, cuenta y carrito.
-   En celular: logotipo y cuenta en la primera línea, los enlaces en la segunda. */
+/* Logotipo que lleva al inicio, los enlaces principales, la cuenta y el carrito con su contador.
+   En celular son dos renglones aunque haya sesión: logotipo y carrito arriba; abajo, todos los
+   enlaces en una sola fila que se desliza con el dedo. */
 
-.cabecera { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "logo cuenta" "nav nav"; align-items: center; gap: 0 12px; padding-block: 8px 2px; border-bottom: 2px solid var(--negro); }
-.cabecera .logo { grid-area: logo; height: 52px; }
-.nav-principal { grid-area: nav; display: flex; justify-content: space-between; gap: 4px; }
-.nav-cuenta { grid-area: cuenta; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px 14px; }
-.cabecera nav :is(a:not(.btn), .salir) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
-.cabecera nav :is(a:not(.btn), .salir):hover, .cabecera nav a:not(.btn)[aria-current] { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
-.cabecera .btn[aria-current] { outline: 3px solid var(--negro); outline-offset: 2px; }
-.cabecera .btn .urgente { color: #f2b33d; }
+.cabecera { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo carrito" "enlaces enlaces"; align-items: center; gap: 0 12px; padding-block: 8px 0; border-bottom: 2px solid var(--negro); }
+.cabecera .logo { grid-area: logo; justify-self: start; height: 52px; }
+.cabecera .carrito { grid-area: carrito; gap: 8px; }
+.cabecera-enlaces { grid-area: enlaces; display: flex; gap: 20px; margin-inline: calc(-1 * var(--margen)); padding-inline: var(--margen); overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+.cabecera-enlaces::-webkit-scrollbar { display: none; }
+.cabecera nav { display: flex; flex: none; gap: 20px; }
+.nav-cuenta { padding-left: 20px; border-left: 2px solid var(--negro); }
+.cabecera nav :is(a, .salir) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
+.cabecera nav :is(a, .salir):hover, .cabecera nav a[aria-current] { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+/* El contador va en su propia ficha y la cuenta regresiva separada por una raya. */
+.carrito b { display: inline-grid; place-items: center; min-width: 1.6em; height: 1.6em; padding: 0 .3em; border-radius: 99px; background: var(--crema); color: var(--negro); font-variant-numeric: tabular-nums; }
+.carrito [data-countdown]:not(:empty) { padding-left: 8px; border-left: 2px solid rgb(255 255 255 / .5); }
+.carrito[aria-current] { outline: 3px solid var(--negro); outline-offset: 2px; }
+.carrito .urgente { color: #f2b33d; }
 
 @media (min-width: 900px) {
-  .cabecera { grid-template-columns: auto 1fr auto; grid-template-areas: "logo nav cuenta"; gap: 0 32px; padding-block: 10px; }
+  .cabecera { grid-template-columns: auto 1fr auto; grid-template-areas: "logo enlaces carrito"; gap: 0 32px; padding-block: 10px; }
   .cabecera .logo { height: 60px; }
-  .nav-principal { justify-content: center; gap: 4px clamp(16px, 2.4vw, 40px); }
-  .cabecera nav :is(a:not(.btn), .salir) { font-size: 1.05rem; letter-spacing: .08em; }
+  .cabecera-enlaces { justify-content: space-between; gap: 32px; margin-inline: 0; padding-inline: 0; overflow: visible; }
+  .nav-principal { flex: 1; justify-content: center; gap: clamp(16px, 2.4vw, 40px); }
+  .nav-cuenta { padding-left: 0; border-left: 0; }
+  .cabecera nav :is(a, .salir) { font-size: 1.05rem; letter-spacing: .08em; }
 }
 
 /* ---------- Pie: el mismo en todo el sitio ---------- */

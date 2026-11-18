@@ -19,7 +19,7 @@ export function empacar(boton) {
   const h = w * 1.25;
   const left = Math.min(Math.max(r.left + r.width / 2 - w / 2, 8), innerWidth - w - 8);
   const top = Math.max(r.bottom - h, 8);
-  const d = document.querySelector('#nav a[href="#carrito"]')?.getBoundingClientRect();
+  const d = document.getElementById('nav-carrito')?.getBoundingClientRect();
   const el = document.createElement('div');
   el.className = 'empaque';
   el.setAttribute('aria-hidden', 'true');
@@ -56,11 +56,11 @@ export function empacar(boton) {
   return pack;
 }
 
-// El contador del carrito responde cuando llega la bolsa. La clase va en el <nav>, que no se repinta.
+// El contador del carrito responde cuando llega la bolsa.
 function llegar() {
-  const nav = document.getElementById('nav');
-  nav.classList.remove('llega');
-  void nav.offsetWidth;
-  nav.classList.add('llega');
-  setTimeout(() => nav.classList.remove('llega'), 300);
+  const boton = document.getElementById('nav-carrito');
+  boton.classList.remove('llega');
+  void boton.offsetWidth;
+  boton.classList.add('llega');
+  setTimeout(() => boton.classList.remove('llega'), 300);
 }

@@ -1,7 +1,7 @@
 import { api, session, money, esc, notice } from '../js/api.js';
-import { charola } from '../js/barra.js';
+import { charola, picto } from '../js/barra.js';
 import { empacar } from './empaque.js';
-import { cuentaYCarrito, piezas } from '../js/cabecera.js';
+import { cuenta, pintarCarrito, piezas } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
 const nav = document.getElementById('nav');
@@ -81,6 +81,15 @@ function conDescripcion(lista) {
 // Regreso evidente al catálogo desde cualquier otra vista.
 const VOLVER = '<p class="volver"><a href="#catalogo">← Seguir comprando</a></p>';
 
+// Estado vacío con salida: ocupa la vista, dice qué pasa y a dónde ir.
+const vacio = (titulo, texto) => `
+  <div class="vacio">
+    ${picto('Charola')}
+    <h2>${titulo}</h2>
+    <p>${texto}</p>
+    <a class="btn" href="#catalogo">Ver guisos</a>
+  </div>`;
+
 const fecha = (v) => new Date(isNaN(v) ? v : Number(v))
   .toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
 
@@ -101,7 +110,7 @@ const VIEWS = {
   async carrito() {
     await loadCart();
     if (!cart.items.length) {
-      return `${VOLVER}<h1>Tu carrito</h1><p>Tu carrito está vacío. Las charolas, no.</p><p><a class="btn" href="#catalogo">Ver guisos</a></p>`;
+      return `${VOLVER}<h1>Tu carrito</h1>${vacio('Tu carrito está vacío', 'Las charolas, no. Escoge tus guisos y aquí los juntamos.')}`;
     }
     return `
       ${VOLVER}
@@ -126,18 +135,23 @@ const VIEWS = {
 
   async pedidos() {
     const pedidos = await api('/pedidos');
-    if (!pedidos.length) return `${VOLVER}<h1>Mis pedidos</h1><p>Todavía no tienes pedidos.</p><p><a class="btn" href="#catalogo">Ver guisos</a></p>`;
+    if (!pedidos.length) return `${VOLVER}<h1>Mis pedidos</h1>${vacio('Todavía no tienes pedidos', 'Cuando confirmes el primero, aquí va a quedar.')}`;
     return `
       ${VOLVER}
       <h1>Mis pedidos</h1>
-      <ul class="grid">${pedidos.map((p) => `
+      <ul class="pedidos">${pedidos.map((p) => `
         <li class="card">
           <h2>Pedido #${esc(p.id)}</h2>
           <p class="meta">${esc(fecha(p.creado))}</p>
           <ul>${p.items.map((i) => `
             <li>${esc(i.cantidad)} × ${esc(i.nombre)} — ${money(i.precio_centavos * i.cantidad)}</li>`).join('')}</ul>
           <p class="total">Total: <strong>${money(p.total_centavos)}</strong></p>
-        </li>`).join('')}</ul>`;
+        </li>`).join('')}</ul>
+      <aside class="otro" aria-label="Seguir comprando">
+        ${picto('Charola')}
+        <h2>¿Otro guiso?</h2>
+        <a class="btn" href="#catalogo">Ver guisos</a>
+      </aside>`;
   },
 
   async admin() {
@@ -147,7 +161,7 @@ const VIEWS = {
     return `
       ${VOLVER}
       <h1>Administrar guisos</h1>
-      <form class="form" data-submit="saveGuiso">
+      <form class="form" data-submit="saveGuiso" novalidate>
         <h2>${editing ? `Editar «${esc(g.nombre)}»` : 'Nuevo guiso'}</h2>
         ${field('g', 'nombre', 'Nombre', g.nombre)}
         ${field('g', 'descripcion', 'Descripción', g.descripcion)}
@@ -208,7 +222,7 @@ function acceso(esRegistro) {
   return `
     ${VOLVER}
     <div class="acceso">
-      <form class="form" data-submit="${id}">
+      <form class="form" data-submit="${id}" novalidate>
         <h1>${esRegistro ? 'Crear cuenta' : 'Iniciar sesión'}</h1>
         ${esRegistro ? field(id, 'nombre', 'Nombre', '', 'autocomplete="name"') : ''}
         ${field(id, 'email', 'Correo', '', 'type="email" autocomplete="email"')}
@@ -224,8 +238,58 @@ function acceso(esRegistro) {
 
 // ---------- Acciones: data-click / data-submit / data-change apuntan aquí ----------
 
+// ---------- Formularios: validación en español y errores junto al campo ----------
+
+function errorDeCampo(input, mensaje) {
+  const id = `${input.id}-error`;
+  input.setAttribute('aria-invalid', 'true');
+  input.setAttribute('aria-describedby', id);
+  input.insertAdjacentHTML('afterend', `<p class="error-campo" id="${id}">${esc(mensaje)}</p>`);
+}
+
+function limpiarErrores(form) {
+  form.querySelectorAll('.error-campo').forEach((p) => p.remove());
+  form.querySelectorAll('[aria-invalid]').forEach((i) => {
+    i.removeAttribute('aria-invalid');
+    i.removeAttribute('aria-describedby');
+  });
+}
+
+// El navegador decide qué está mal (campo vacío, correo mal escrito, número fuera de rango);
+// el mensaje lo ponemos nosotros, en español y debajo del campo. Los formularios llevan novalidate.
+const MENSAJES = [
+  ['valueMissing', () => 'Este campo no puede ir vacío.'],
+  ['typeMismatch', () => 'Escribe un correo válido, como nombre@ejemplo.com.'],
+  ['badInput', () => 'Escribe un número.'],
+  ['rangeUnderflow', (i) => `Debe ser ${i.min} o más.`],
+  ['stepMismatch', (i) => (i.step === '1' ? 'Escribe un número entero.' : 'Usa máximo dos decimales.')],
+];
+
+function validar(form) {
+  limpiarErrores(form);
+  let primero = null;
+  for (const input of form.elements) {
+    if (!input.willValidate || input.validity.valid) continue;
+    const mensaje = MENSAJES.find(([falla]) => input.validity[falla])?.[1] ?? (() => 'Revisa este campo.');
+    errorDeCampo(input, mensaje(input));
+    primero ??= input;
+  }
+  primero?.focus();
+  return !primero;
+}
+
 async function auth(form, path) {
-  session.set(await api(path, { method: 'POST', body: Object.fromEntries(new FormData(form)) }));
+  try {
+    session.set(await api(path, { method: 'POST', body: Object.fromEntries(new FormData(form)) }));
+  } catch (err) {
+    // Lo que el servidor rechaza de lo escrito va junto a su campo y no borra nada:
+    // 401 = correo o contraseña equivocados; 400 = ese correo ya tiene cuenta.
+    const campo = err.status === 401 ? 'password' : err.status === 400 ? 'email' : null;
+    if (!campo) throw err;
+    errorDeCampo(form.elements[campo], err.status === 401 ? 'El correo o la contraseña no coinciden.' : err.message);
+    form.elements[campo].focus();
+    return;
+  }
   await loadCart();
   notice(`Hola, ${user().nombre}.`);
   await go(desde); // de vuelta a donde estaba: el catálogo si quería agregar, el carrito si iba para allá
@@ -320,7 +384,7 @@ async function run(fn) {
     await fn();
   } catch (err) {
     notice(err.message, 'error');
-    if (err.status === 401) { // sesión vencida: api() ya borró el token
+    if (err.vencida) { // sesión vencida: api() ya borró el token (un login fallido también da 401, y no lo es)
       setCart(EMPTY);
       await go('entrar');
     }
@@ -346,9 +410,9 @@ function go(r) {
 // Cuenta y carrito de la cabecera (la misma pieza que usa el resto del sitio). Los enlaces principales
 // están escritos en el HTML; aquí solo se marca «Guisos» cuando se está en el catálogo.
 function renderNav() {
-  nav.innerHTML = cuentaYCarrito(user(), piezas(cart), {
-    base: '', actual: current === 'registro' ? 'entrar' : current, admin: isAdmin(),
-  });
+  const actual = current === 'registro' ? 'entrar' : current;
+  nav.innerHTML = cuenta(user(), { base: '', actual, admin: isAdmin() });
+  pintarCarrito(piezas(cart), { base: '', actual });
   const guisos = document.querySelector('#nav-principal a[href="/tienda/#catalogo"]');
   if (current === 'catalogo') guisos?.setAttribute('aria-current', 'page');
   else guisos?.removeAttribute('aria-current');
@@ -388,6 +452,7 @@ function dispatch(e, type) {
   if (!el) return;
   e.preventDefault();
   notice();
+  if (type === 'submit' && !validar(el)) return;
   const btn = e.submitter || (el.tagName === 'BUTTON' ? el : null);
   if (btn) btn.disabled = true; // evita el doble clic (p. ej. confirmar dos veces)
   run(() => ACTIONS[el.dataset[type]](el)).finally(() => { if (btn) btn.disabled = false; });

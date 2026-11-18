@@ -7,17 +7,24 @@ import { api, session, esc } from './api.js';
 // Cuántas piezas lleva un carrito (la respuesta de GET /carrito).
 export const piezas = (carrito) => carrito.items.reduce((s, i) => s + i.cantidad, 0);
 
-// base: '' dentro de la tienda, que navega por #; '/tienda/' desde cualquier otra página.
-export function cuentaYCarrito(u, n, { base = '/tienda/', actual = '', admin = false } = {}) {
-  const a = (r, texto, cls = '') =>
-    `<a${cls ? ` class="${cls}"` : ''} href="${base}#${r}"${r === actual ? ' aria-current="page"' : ''}>${texto}</a>`;
+// Los enlaces de cuenta. base: '' dentro de la tienda, que navega por #; '/tienda/' desde cualquier otra página.
+export function cuenta(u, { base = '/tienda/', actual = '', admin = false } = {}) {
+  const a = (r, texto) => `<a href="${base}#${r}"${r === actual ? ' aria-current="page"' : ''}>${texto}</a>`;
   return [
     u ? a('pedidos', 'Mis pedidos') : '',
     admin ? a('admin', 'Admin') : '',
     u ? a('cuenta', esc(u.nombre)) : a('entrar', 'Entrar'),
     u ? '<button type="button" class="salir" data-click="logout">Salir</button>' : '',
-    a('carrito', `Carrito (${n}) <span data-countdown></span>`, 'btn chico'),
   ].join('');
+}
+
+// El botón del carrito está escrito en el HTML y no se repinta: solo cambian su número y su destino.
+export function pintarCarrito(n, { base = '/tienda/', actual = '' } = {}) {
+  const boton = document.getElementById('nav-carrito');
+  document.getElementById('nav-carrito-n').textContent = n;
+  boton.setAttribute('href', `${base}#carrito`);
+  if (actual === 'carrito') boton.setAttribute('aria-current', 'page');
+  else boton.removeAttribute('aria-current');
 }
 
 // Páginas estáticas. Marca la página actual y, si hay sesión, pone el nombre y cuenta el carrito.
@@ -26,7 +33,8 @@ export async function iniciarCabecera() {
   const nav = document.getElementById('nav');
   const pintar = (n) => {
     const u = session.get();
-    nav.innerHTML = cuentaYCarrito(u, n, { admin: u?.rol === 'admin' });
+    nav.innerHTML = cuenta(u, { admin: u?.rol === 'admin' });
+    pintarCarrito(n);
   };
   nav.addEventListener('click', (e) => {
     if (!e.target.closest('[data-click="logout"]')) return;

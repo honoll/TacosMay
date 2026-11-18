@@ -17,15 +17,15 @@ administración (se llega y lista los guisos), cerrar sesión, página `404.html
 
 | # | Dónde | Gravedad | Hallazgo | Estado |
 |---|---|---|---|---|
-| V1 | T6 Carrito, escritorio | Grave | El título «Tu carrito» aparece **debajo** de la lista de guisos, y el recuadro de expiración, el total y los botones quedan sueltos a la derecha y más abajo: la retícula de la vista está mal armada | 🔴 |
-| V2 | T9 Administración, escritorio | Grave | Mismo defecto: el título «Administrar guisos» queda debajo del formulario «Nuevo guiso», y la lista empieza desalineada a la derecha | 🔴 |
-| V3 | T3 Iniciar sesión | Grave | Con contraseña equivocada el formulario se vacía (hay que volver a escribir el correo) y el error solo sale en la franja de arriba, no junto al campo | 🔴 |
-| V4 | T1 Cabecera, celular con sesión | Grave | Con sesión la cabecera mide 192 px en cuatro renglones (pedidos y admin, nombre y salir, carrito, enlaces): casi un cuarto de la pantalla | 🔴 |
-| V5 | T1 Cabecera, escritorio | Menor | El contador y la cuenta regresiva salen pegados: «Carrito (2)29:55» | 🔴 |
-| V6 | T8 Mis pedidos, escritorio | Menor | Una tarjeta angosta arriba a la izquierda y el resto de la pantalla vacío | 🔴 |
-| V7 | T6 Carrito vacío, escritorio | Menor | Un renglón y un botón en una pantalla vacía | 🔴 |
-| V8 | T5 Agregar al carrito | Menor | La franja de aviso («Agregado al carrito…») tapa el título de la página mientras está visible | 🔴 |
-| V9 | T4 Crear cuenta | Menor | El mensaje de campo vacío es el del navegador y sale en inglés («Please fill out this field») | 🔴 |
+| V1 | T6 Carrito, escritorio | Grave | El título «Tu carrito» aparece **debajo** de la lista de guisos, y el recuadro de expiración, el total y los botones quedan sueltos a la derecha y más abajo: la retícula de la vista está mal armada | 🟡 cada bloque del carrito tiene su celda escrita (fila y columna); título arriba, lista a la izquierda, expiración, total y botones a la derecha |
+| V2 | T9 Administración, escritorio | Grave | Mismo defecto: el título «Administrar guisos» queda debajo del formulario «Nuevo guiso», y la lista empieza desalineada a la derecha | 🟡 igual en administración: título arriba, formulario a la izquierda, lista a la derecha |
+| V3 | T3 Iniciar sesión | Grave | Con contraseña equivocada el formulario se vacía (hay que volver a escribir el correo) y el error solo sale en la franja de arriba, no junto al campo | 🟡 el formulario ya no se repinta al fallar: conserva lo escrito, marca el campo y dice el error debajo (contraseña en iniciar sesión, correo en crear cuenta) |
+| V4 | T1 Cabecera, celular con sesión | Grave | Con sesión la cabecera mide 192 px en cuatro renglones (pedidos y admin, nombre y salir, carrito, enlaces): casi un cuarto de la pantalla | 🟡 dos renglones aunque haya sesión: logotipo y carrito arriba; abajo, todos los enlaces en una fila que se desliza |
+| V5 | T1 Cabecera, escritorio | Menor | El contador y la cuenta regresiva salen pegados: «Carrito (2)29:55» | 🟡 el contador va en su ficha y la cuenta regresiva separada por una raya |
+| V6 | T8 Mis pedidos, escritorio | Menor | Una tarjeta angosta arriba a la izquierda y el resto de la pantalla vacío | 🟡 pedidos a lo ancho de su columna y, al lado, un panel para seguir comprando |
+| V7 | T6 Carrito vacío, escritorio | Menor | Un renglón y un botón en una pantalla vacía | 🟡 estado vacío que ocupa la vista: pictograma, mensaje y botón |
+| V8 | T5 Agregar al carrito | Menor | La franja de aviso («Agregado al carrito…») tapa el título de la página mientras está visible | 🟡 el aviso ya no va arriba: es una ficha fija abajo, al centro |
+| V9 | T4 Crear cuenta | Menor | El mensaje de campo vacío es el del navegador y sale en inglés («Please fill out this field») | 🟡 validación propia con mensajes en español debajo de cada campo (los formularios llevan `novalidate`) |
 | V10 | X1 No encontrado | Menor | La página existe y se ve bien, pero el servidor que está corriendo sigue respondiendo el error crudo de Express: falta reiniciarlo para que tome la línea nueva de `server.js` | 🟡 |
 
 Sin revisar en esta vuelta: landing completa después de la cabecera nueva; tableta y

@@ -33,7 +33,7 @@ export async function api(path, { method = 'GET', body } = {}) {
   // Un 401 con token guardado es sesión vencida; sin token es un login fallido y habla el backend.
   if (res.status === 401 && token) {
     session.set(null);
-    throw fail('Tu sesión venció. Inicia sesión de nuevo.', 401);
+    throw Object.assign(fail('Tu sesión venció. Inicia sesión de nuevo.', 401), { vencida: true });
   }
   throw fail(data?.message || `Error ${res.status}`, res.status);
 }

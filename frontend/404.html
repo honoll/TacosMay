@@ -13,16 +13,18 @@
   <a class="saltar" href="#contenido">Saltar al contenido</a>
   <header class="cabecera caja">
     <a class="logo" href="/" aria-label="Los Tacos May, inicio"><img src="/marca/logo/compacta.svg" alt="" width="480" height="186"></a>
-    <nav class="nav-principal" id="nav-principal" aria-label="Principal">
-      <a href="/">Inicio</a>
-      <a href="/tienda/#catalogo">Guisos</a>
-      <a href="/#como">Cómo funciona</a>
-      <a href="/#taqueria">La taquería</a>
-    </nav>
-    <nav class="nav-cuenta" id="nav" aria-label="Cuenta y carrito">
-      <a href="/tienda/#entrar">Entrar</a>
-      <a class="btn chico" href="/tienda/#carrito">Carrito (0) <span data-countdown></span></a>
-    </nav>
+    <div class="cabecera-enlaces">
+      <nav class="nav-principal" id="nav-principal" aria-label="Principal">
+        <a href="/">Inicio</a>
+        <a href="/tienda/#catalogo">Guisos</a>
+        <a href="/#como">Cómo funciona</a>
+        <a href="/#taqueria">La taquería</a>
+      </nav>
+      <nav class="nav-cuenta" id="nav" aria-label="Tu cuenta">
+        <a href="/tienda/#entrar">Entrar</a>
+      </nav>
+    </div>
+    <a class="btn chico carrito" id="nav-carrito" href="/tienda/#carrito">Carrito <b id="nav-carrito-n">0</b><span class="sr"> guisos</span><span data-countdown></span></a>
   </header>
 
   <main id="contenido">

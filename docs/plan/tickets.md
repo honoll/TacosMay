@@ -475,6 +475,27 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   y movimiento premium por vista) espera a `docs/investigacion/estructura-tiendas-comida.md` e
   `interacciones-premium.md`.
 
+- **Decimosexta vuelta (17-nov-2026): hallazgos V1–V9 de la revisión en pantalla**, todos en 🟡
+  en `docs/calidad/hallazgos.md`.
+  - **V1, V2 (retículas):** la causa era que el título se dejaba a la colocación automática de la
+    retícula y, al añadir «← Seguir comprando», cayó debajo de la lista. Ahora cada bloque de
+    carrito, pedidos y administración tiene su celda escrita.
+  - **V3, V9 (formularios):** un login fallido ya no se trata como sesión vencida (por eso se
+    repintaba vacío); el error va debajo de su campo y se conserva lo escrito. Validación propia
+    en español. `api()` marca la sesión vencida con `vencida: true`.
+  - **V4, V5 (cabecera):** el carrito salió del menú de cuenta y es un botón fijo con su contador
+    en ficha; en celular, logotipo y carrito arriba y los enlaces en una fila deslizable.
+  - **V6, V7:** pedidos con panel lateral; estados vacíos que ocupan la vista. **V8:** el aviso es
+    una ficha abajo.
+  - **Prueba nueva: `node frontend/tienda/app.test.mjs`.** Carga `app.js` con un DOM mínimo y una
+    API de mentira, recorre el flujo de cuenta (agregar sin sesión → iniciar sesión → regreso al
+    catálogo; campo vacío; contraseña equivocada; correo repetido; salir) y arma carrito, pedidos
+    y administración para comprobar que cada bloque tiene exactamente una celda y que ninguna se
+    encima. Comprobé que falla si el título se pone en la celda de otro bloque.
+  - **Verificado:** `app.test`, `api.test`, `nav.test` y `svg.test` en verde; `node --check`.
+  - **NO verificado:** nada en pantalla. La prueba revisa celdas escritas, no cómo se ven: tamaños,
+    cortes de texto y la fila deslizable de la cabecera siguen sin verse.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
