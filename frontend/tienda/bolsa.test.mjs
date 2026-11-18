@@ -80,6 +80,7 @@ Object.assign(globalThis, {
     timeline(vars = {}) {
       const g = this;
       const llamar = [];
+      let alto = null; // la pausa de la etiqueta (addPause), hasta que confirmar() la quita
       let viva = true;
       let pausada = false;
       let hecha = false;
@@ -87,6 +88,8 @@ Object.assign(globalThis, {
       const tl = {
         to: () => tl, fromTo: () => tl, from: () => tl, set: () => tl, addLabel: () => tl,
         call: (f) => { llamar.push(f); return tl; },
+        addPause: (_, f) => { alto = f ?? (() => {}); return tl; },
+        removePause: () => { alto = null; return tl; },
         kill() { viva = false; },
         pause() { pausada = true; return tl; },
         play() { pausada = false; setTimeout(fin, 5); return tl; },
@@ -97,7 +100,7 @@ Object.assign(globalThis, {
         seek() { return tl; },
       };
       g.llamadas.push(['timeline', null, vars]);
-      setTimeout(() => { if (!viva) return; for (const f of llamar) f(); fin(); }, 5); // a los 5 ms, como antes
+      setTimeout(() => { if (!viva) return; for (const f of llamar) f(); if (alto) { pausada = true; alto(); } fin(); }, 5); // a los 5 ms, como antes
       return tl;
     },
   },

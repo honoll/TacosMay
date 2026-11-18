@@ -14,7 +14,7 @@
 
 const ANCHO = 400;
 const ALTO = 300;
-const PISO = 232; // la pista: lo que baja de aquí no se ve (las bolsas entran a la caja por detrás del frente)
+const PISO = 232; // la pista y el piso de la caja (las bolsas entran a la caja por detrás de su frente)
 const MAX_BOLSAS = 8;
 const FRANJA = ['#a8321c', '#8a9440', '#f2b33d', '#35603a'];
 const NEGRO = '#141210';
@@ -76,11 +76,11 @@ export function enviar(colores = []) {
     <p class="envio-aviso sr" aria-live="polite">Empacando tu pedido</p>
     <p class="envio-espera">Confirmando tu pedido…</p>
     <div class="envio-escena" aria-hidden="true">
-      <svg viewBox="0 0 ${ANCHO} ${ALTO}"><defs><clipPath id="envio-piso"><rect y="-200" width="${ANCHO}" height="${PISO + 200}"/></clipPath></defs>
+      <svg viewBox="0 0 ${ANCHO} ${ALTO}">
         ${FONDO}
-        <path class="estela" d="M120 222C230 222 300 170 430 -20" pathLength="1" fill="none" stroke="#aeb5b8" stroke-width="5" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+        <path class="estela" d="M120 222C230 222 300 170 430 -20" fill="none" stroke="#aeb5b8" stroke-width="5" stroke-linecap="round" opacity="0"/>
         ${PISTA}
-        <g clip-path="url(#envio-piso)">${bolsasSvg(colores)}</g>
+        ${bolsasSvg(colores)}
         ${CAJA}
         ${AVION}
       </svg>
@@ -150,8 +150,8 @@ export function enviar(colores = []) {
   // Por si la línea de tiempo no llega a terminar (pestaña oculta): el final, en cuanto haya número.
   let seguro = setTimeout(mostrarFinal, 6000);
 
-  // En la etiqueta, si el número no ha llegado, la línea espera; al terminar, el final.
-  if (gsap) tl = coreografia(gsap, el, () => { if (!pedido) { tl.pause(); el.classList.add('esperando'); } }, mostrarFinal);
+  // En la etiqueta la línea se detiene (addPause) hasta que llegue el número; al terminar, el final.
+  if (gsap) tl = coreografia(gsap, el, () => el.classList.add('esperando'), mostrarFinal);
 
   return {
     listo,
@@ -165,6 +165,9 @@ export function enviar(colores = []) {
       $('.envio-aviso').textContent = `Pedido #${p.id} confirmado${total ? ` por ${total}` : ''}.`;
       if (!tl) { mostrarFinal(); return; }
       el.classList.remove('esperando');
+      // Sin pausar ni reanudar dentro de un callback de la línea: se quita la pausa de la etiqueta y, si ya
+      // estaba detenida ahí, sigue.
+      tl.removePause('etiqueta');
       if (tl.paused()) tl.play();
       // Si la línea se atora, el final sale cuando debió terminar, no cinco segundos después.
       clearTimeout(seguro);
@@ -177,17 +180,25 @@ export function enviar(colores = []) {
 
 // La coreografía. Cada golpe tiene peso: las bolsas caen y la caja acusa el golpe; el avión llega, se pasa un
 // poco y se asienta; la caja toma impulso para subir; el avión acelera antes de levantar el morro.
-function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
+// Todos los orígenes van en unidades del SVG (svgOrigin), nunca en porcentaje: el porcentaje obliga a medir
+// cada elemento con getBBox, que en Safari de iPhone falla con lo que aún no se pinta. La caja usa un solo
+// origen todo el tiempo (cambiarlo a media línea hace que GSAP compense su posición).
+const O_CAJA = '320 232'; // centro del piso de la caja
+function coreografia(gsap, el, alEsperar, alTerminar) {
   const $ = (s) => el.querySelector(s);
   const $$ = (s) => [...el.querySelectorAll(s)];
   const caja = $('.caja');
   const avion = $('.avion');
+  const estela = $('.estela');
   const CURVA = 'power3.out';
   const tl = gsap.timeline({ onComplete: alTerminar });
+  // La estela en píxeles: pathLength en el guion del trazo no lo respetan todos los Safari.
+  const largo = Math.ceil(estela?.getTotalLength?.() || 600);
 
   // Estado de partida: tapas abiertas, cinta y etiqueta fuera, avión fuera por la izquierda, bolsas arriba.
   tl.set($('.etiqueta'), { opacity: 0 }, 0)
-    .set($('.cinta'), { scaleY: 0, transformOrigin: '50% 0%' }, 0)
+    .set(estela, { strokeDasharray: largo, strokeDashoffset: largo }, 0)
+    .set($('.cinta'), { scaleY: 0, svgOrigin: '320 150' }, 0)
     .set($('.tapa.izq'), { rotation: -118, svgOrigin: '270 156' }, 0)
     .set($('.tapa.der'), { rotation: 118, svgOrigin: '370 156' }, 0)
     .set(avion, { x: -440 }, 0)
@@ -200,29 +211,32 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
   let t = 0.2;
   $$('.bolsa-g').forEach((b, i) => {
     tl.fromTo(b, { y: -36, opacity: 0 }, { y: 0, opacity: 1, duration: 0.12, ease: CURVA }, t)
-      .to(b, { y: 104, duration: 0.18, ease: 'power2.in' }, t + 0.12);
+      .to(b, { y: 84, duration: 0.18, ease: 'power2.in' }, t + 0.12); // hasta el piso de la caja, tras su frente: sin recorte
     t += i < 2 ? 0.18 : 0.05;
   });
   const T0 = t + 0.25; // la última bolsa ya está dentro
+  // Redondeada: GSAP guarda la pausa con su tiempo redondeado y removePause compara con el de la etiqueta tal
+  // cual; con 1.4700000000000002 no la encuentra y la línea se queda detenida en la etiqueta.
+  const ETIQUETA = Math.round((T0 + 0.66) * 1000) / 1000;
 
   // ya dentro de la caja (tapadas por su frente), las bolsas se van con ella: que no se queden en la pista
   tl.set($$('.bolsa-g'), { opacity: 0 }, T0)
-    .to(caja, { scaleY: 0.94, transformOrigin: '50% 100%', duration: 0.08, ease: 'power2.out' }, T0)
-    .to(caja, { scaleY: 1, duration: 0.16, ease: CURVA }, T0 + 0.08)
+    .to(caja, { scaleY: 0.94, svgOrigin: O_CAJA, duration: 0.08, ease: 'power2.out' }, T0)
+    .to(caja, { scaleY: 1, svgOrigin: O_CAJA, duration: 0.16, ease: CURVA }, T0 + 0.08)
     // se cierran las tapas, cinta y etiqueta con el número
     .to($('.tapa.izq'), { rotation: 0, svgOrigin: '270 156', duration: 0.24, ease: 'power3.inOut' }, T0 + 0.08)
     .to($('.tapa.der'), { rotation: 0, svgOrigin: '370 156', duration: 0.24, ease: 'power3.inOut' }, T0 + 0.15)
-    .to($('.cinta'), { scaleY: 1, duration: 0.14, ease: 'power2.out' }, T0 + 0.38)
-    .fromTo($('.etiqueta'), { opacity: 0, scale: 1.25, rotation: -6, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, rotation: 0, duration: 0.18, ease: CURVA }, T0 + 0.48)
-    .addLabel('etiqueta', T0 + 0.66)
-    .call(() => alLlegarEtiqueta(), null, T0 + 0.66)
+    .to($('.cinta'), { scaleY: 1, svgOrigin: '320 150', duration: 0.14, ease: 'power2.out' }, T0 + 0.38)
+    .fromTo($('.etiqueta'), { opacity: 0, scale: 1.25, rotation: -6, svgOrigin: '320 206' }, { opacity: 1, scale: 1, rotation: 0, svgOrigin: '320 206', duration: 0.18, ease: CURVA }, T0 + 0.48)
+    .addLabel('etiqueta', ETIQUETA)
+    .addPause('etiqueta', alEsperar) // confirmar() la quita si el número llega antes
     // llega el avión rodando: se pasa un poco y se asienta
     .to(avion, { x: 8, duration: 0.42, ease: 'power3.out' }, T0 + 0.7)
     .to(avion, { x: 0, duration: 0.14, ease: 'power2.inOut' }, T0 + 1.12)
     // levanta la nariz; la caja toma impulso y sube a bordo, por debajo de la nariz; cierra
     .to($('.nariz'), { rotation: -58, svgOrigin: '204 150', duration: 0.2, ease: 'power2.out' }, T0 + 1.2)
     .to(caja, { y: -14, duration: 0.1, ease: 'power2.out' }, T0 + 1.4)
-    .to(caja, { x: -132, scale: 0.78, svgOrigin: '270 232', duration: 0.3, ease: 'power2.inOut' }, T0 + 1.5)
+    .to(caja, { x: -143, scale: 0.78, svgOrigin: O_CAJA, duration: 0.3, ease: 'power2.inOut' }, T0 + 1.5) // −143 con origen al centro = −132 con origen a la izquierda
     .set(caja, { opacity: 0 }, T0 + 1.8)
     .to($('.nariz'), { rotation: 0, svgOrigin: '204 150', duration: 0.16, ease: 'power2.in' }, T0 + 1.78)
     // acelera por la pista (las marcas corren), levanta el morro y sale por arriba a la derecha con su estela
