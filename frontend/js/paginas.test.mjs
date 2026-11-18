@@ -99,7 +99,8 @@ function pagina(hash, guardado = {}) {
     'nav-carrito-n': { textContent: '0' },
     reloj: { textContent: '' },
     vista: { innerHTML: '' },
-    esqueleto: { innerHTML: '<h1>Guisos</h1><ul class="barra">huecas</ul>' },
+    esqueleto: { innerHTML: '<h1>Guisos</h1><ul class="renglones">huecas</ul>' },
+    'bolsa-molde': { innerHTML: '<aside class="bolsa-lado"></aside>' },
   };
   const caja = (datos) => ({ getItem: (k) => datos[k] ?? null });
   vm.runInNewContext([...enLinea(html['tienda/index.html'])].join('\n'), {

@@ -19,9 +19,9 @@ let pintadas = [];   // el HTML de cada vez que se reescribió <main>
 let tarjetas = [];   // las charolas que hay en <main>, como objetos que se conservan mientras no se repinte
 let fundidos = 0;    // filas que cambiaron «entra» (deslizar) por «funde» (fundido)
 function armarTarjetas(html) {
-  return [...html.matchAll(/<li class="charola ([^"]*)" style="[^"]*" data-clave="([^"]*)" data-firma="([^"]*)">[\s\S]*?<div class="datos">([\s\S]*?)<\/div>\s*<\/li>/g)]
+  return [...html.matchAll(/<li class="renglon([^"]*)" data-clave="([^"]*)" data-firma="([^"]*)">[\s\S]*?<div class="datos">([\s\S]*?)<\/div>\s*<\/li>/g)]
     .map(([, cls, clave, firma, datos]) => {
-      const li = { className: `charola ${cls}`, dataset: { clave: desescapar(clave), firma }, img: { foto: true }, escrituras: 0 };
+      const li = { className: `renglon${cls}`, dataset: { clave: desescapar(clave), firma }, img: { foto: true }, escrituras: 0 };
       const d = { _h: datos, get innerHTML() { return this._h; }, set innerHTML(v) { this._h = v; li.escrituras++; } };
       li.querySelector = (sel) => (sel === '.datos' ? d : sel === 'img' ? li.img : null);
       return li;
@@ -41,8 +41,8 @@ const vista = Object.defineProperties(nodo(), Object.getOwnPropertyDescriptors({
     return null;
   },
   querySelectorAll(sel) {
-    if (sel === '.charola[data-clave]') return tarjetas;
-    if (sel === '.barra.entra') return [...html.matchAll(/class="barra entra"/g)].map(() => ({ classList: { replace: () => { fundidos++; } } }));
+    if (sel === '.renglon[data-clave]') return tarjetas;
+    if (sel === '.renglones.entra') return [...html.matchAll(/class="renglones entra"/g)].map(() => ({ classList: { replace: () => { fundidos++; } } }));
     return [];
   },
 }));
@@ -122,7 +122,7 @@ await despertar();
 await espera(40);
 assert.equal(pintadas.length, 1, 'un cambio de existencia tampoco repinta <main>');
 const [tinga] = tarjetaDe('3');
-assert.match(tinga.className, /agotada/, 'la charola del guiso agotado se tapa');
+assert.match(tinga.className, /agotado/, 'el renglón del guiso agotado se apaga');
 assert.match(tinga.querySelector('.datos').innerHTML, /Se acabó por hoy/);
 for (const li of tarjetaDe('2')) assert.equal(li.escrituras, 0, 'y las demás siguen sin tocarse');
 

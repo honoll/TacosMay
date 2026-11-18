@@ -70,6 +70,9 @@ const formulario = (accion, campos) => {
 const enviar = async (form) => { vista().h.submit({ target: { closest: (s) => (s === '[data-submit]' ? form : null) }, preventDefault() {} }); await espera(); };
 
 // ---------- 1 · Catálogo y flujo de cuenta ----------
+// Los moldes de index.html (esqueleto y bolsa), tal cual: app.js los lee al arrancar.
+const tienda = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+for (const id of ['esqueleto', 'bolsa-molde']) porId[id] = nodo({ innerHTML: tienda.split(`<template id="${id}">`)[1].split('</template>')[0] });
 await import('./app.js');
 await espera();
 assert.match(vista().innerHTML, /class="charola/, 'el catálogo pinta charolas');
@@ -114,12 +117,13 @@ assert.match(porId.nav.innerHTML, /Prueba/, 'la cabecera muestra el nombre');
 assert.match(porId.nav.innerHTML, /data-click="logout"/, 'y «Salir»');
 assert.equal(porId['nav-carrito-n'].textContent, 2, 'el contador del carrito cuenta las piezas');
 
-// Catálogo con sesión: por precio como el pizarrón, y cada charola con su control
+// Catálogo con sesión: en lista, por precio como el pizarrón, y cada renglón con su control
 const cat = vista().innerHTML;
 assert.ok(cat.indexOf('De $180.00') > 0 && cat.indexOf('De $180.00') < cat.indexOf('De $200.00'), 'los guisos van agrupados por precio, de menor a mayor');
 const controlDe = (id) => cat.split(`data-control="${id}">`).at(-1).split('</li>')[0];
 assert.match(controlDe('1'), /class="cantidad"[\s\S]*<output[^>]*>2</, 'el guiso que ya va en el carrito muestra el selector con su cantidad');
-assert.match(controlDe('3'), /data-click="add"[^>]*>Agregar/, 'el que no va en el carrito muestra «Agregar»');
+assert.match(controlDe('3'), /data-click="add"[^>]*aria-label="Agregar Tinga de res">\+</, 'el que no va en el carrito muestra «+», que se llama «Agregar <guiso>»');
+assert.match(cat, /class="lista-guisos"[\s\S]*<aside class="bolsa-lado/, 'a un lado de la lista, la bolsa');
 assert.ok(/Se acabó por hoy/.test(controlDe('2')) && !/<button/.test(controlDe('2')), 'sin existencias no hay botón');
 
 // Agregar uno más y quitar uno desde la charola: la misma llamada de siempre, con la cantidad nueva

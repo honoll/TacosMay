@@ -196,16 +196,16 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   @keyframes late { to { opacity: .55; } }
   .img-funde img.foto { transition: opacity var(--t-chico) var(--entra); }
   /* Cuando el contenido sustituye al esqueleto en su lugar: un fundido corto, sin volver a deslizar. */
-  .barra.funde > * { animation: aparecer var(--t-chico) var(--entra) backwards; }
+  :is(.barra, .renglones).funde > * { animation: aparecer var(--t-chico) var(--entra) backwards; }
   @keyframes aparecer { from { opacity: 0; } }
-  .barra.entra > * { animation: entrar var(--t-chico) var(--entra) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
-  .barra.entra > :nth-child(2) { --i: 1; }
-  .barra.entra > :nth-child(3) { --i: 2; }
-  .barra.entra > :nth-child(4) { --i: 3; }
-  .barra.entra > :nth-child(5) { --i: 4; }
-  .barra.entra > :nth-child(6) { --i: 5; }
-  .barra.entra > :nth-child(7) { --i: 6; }
-  .barra.entra > :nth-child(n + 8) { --i: 7; } /* tope: la fila completa no pasa de medio segundo */
+  :is(.barra, .renglones).entra > * { animation: entrar var(--t-chico) var(--entra) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
+  :is(.barra, .renglones).entra > :nth-child(2) { --i: 1; }
+  :is(.barra, .renglones).entra > :nth-child(3) { --i: 2; }
+  :is(.barra, .renglones).entra > :nth-child(4) { --i: 3; }
+  :is(.barra, .renglones).entra > :nth-child(5) { --i: 4; }
+  :is(.barra, .renglones).entra > :nth-child(6) { --i: 5; }
+  :is(.barra, .renglones).entra > :nth-child(7) { --i: 6; }
+  :is(.barra, .renglones).entra > :nth-child(n + 8) { --i: 7; } /* tope: la fila completa no pasa de medio segundo */
   @keyframes entrar { from { transform: translateX(16px); opacity: 0; } }
 
   /* El vapor sube una vez: al entrar y al pasar el cursor. */

@@ -1,7 +1,9 @@
 import { api, session, money, esc, notice, transicion } from '../js/api.js';
-import { charola, picto, datosDe } from '../js/barra.js';
+import { charola, picto, guisoDe } from '../js/barra.js';
 import { guardadoDe, traer } from '../js/datos.js';
 import { empacar } from './empaque.js';
+import { bolsa } from './bolsa.js';
+import { enviar } from './envio.js';
 import { cuenta, pintarCarrito, piezas, clock } from '../js/cabecera.js';
 
 const view = document.getElementById('vista');
@@ -37,7 +39,15 @@ function setCart(c) {
     ? Date.now() + cart.expira_en_segundos * 1000 : 0;
   renderNav();
   if (panel.open) pintarPanel();
+  if (bolsaUI?.conectada) bolsaUI.pintar(cart.items, cart.total_centavos);
   tick();
+}
+
+// La bolsa de la lista de guisos: se monta con cada pintada de la lista y se llena con el carrito.
+function montarBolsa() {
+  const raiz = view.querySelector('.bolsa-lado');
+  bolsaUI = raiz ? bolsa(raiz) : null;
+  bolsaUI?.pintar(cart.items, cart.total_centavos);
 }
 
 const loadCart = async () => setCart(await api('/carrito'));
@@ -103,7 +113,9 @@ function pintarPanel() {
 
 // Desde el catálogo o una ficha, el botón del carrito abre el panel en vez de cambiar de vista.
 document.getElementById('nav-carrito').addEventListener('click', (e) => {
-  if (!activa() || !user() || !['catalogo', 'guiso'].includes(current) || !panel.showModal) return;
+  if (!activa()) return;
+  if (current === 'catalogo' && bolsaUI?.conectada) { e.preventDefault(); bolsaUI.mostrar(); return; }
+  if (!user() || current !== 'guiso' || !panel.showModal) return;
   e.preventDefault();
   pintarPanel();
   panel.showModal();
@@ -121,10 +133,12 @@ const enCarrito = (id) => cart.items.find((i) => String(i.guiso.id) === String(i
 
 // Lo que se hace con un guiso desde su charola: agregarlo o, si ya va en el carrito, cambiar cuántos.
 // Sin existencias no hay botón. `cambio` ('sube' o 'baja') hace rodar el número cuando acaba de cambiar.
-function control(g, cambio = '') {
+// lista: en un renglón del catálogo el agregar es «+» (nombre accesible «Agregar <guiso>»).
+function control(g, cambio = '', lista = false) {
   const n = enCarrito(g.id);
   const datos = `data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"`;
   if (g.stock <= 0) return '<p class="acabo">Se acabó por hoy</p>';
+  if (!n && lista) return `<button type="button" class="primario mas" data-click="add" ${datos} aria-label="Agregar ${esc(g.nombre)}">+</button>`;
   if (!n) return `<button type="button" class="primario" data-click="add" ${datos}>Agregar<span class="sr"> ${esc(g.nombre)} al carrito</span></button>`;
   return `
     <div class="cantidad" role="group" aria-label="${esc(g.nombre)} en tu carrito">
@@ -145,6 +159,19 @@ const cuerpoDe = (g, mostrarDescripcion) => `
     <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`;
 const firma = (texto) => [...texto].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 7).toString(36);
 const fichaDe = (g) => `#guiso/${encodeURIComponent(g.id)}`;
+// Renglón de la lista de guisos: miniatura de su charola, nombre (a su ficha), precio, porciones, lo que
+// queda y, a la derecha, el «+». Lo de la derecha de la miniatura se pone al día en su lugar (firma).
+const cuerpoRenglon = (g, mostrarDescripcion) => `
+    <h3><a class="a-ficha" href="${fichaDe(g)}">${esc(g.nombre)}</a></h3>
+    ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} ${Number(g.vendidos) === 1 ? 'vendido' : 'vendidos'}</p>` : ''}
+    ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
+    <p class="meta"><b>${money(g.precio_centavos)}</b> · ${esc(g.porciones)} porciones${g.stock > 0 ? ` · quedan ${esc(g.stock)}` : ''}</p>
+    <div class="control" data-control="${esc(g.id)}">${control(g, '', true)}</div>`;
+const renglon = (g, mostrarDescripcion, cargar) => {
+  const cuerpo = cuerpoRenglon(g, mostrarDescripcion);
+  return `<li class="renglon${g.stock > 0 ? '' : ' agotado'}" data-clave="${esc(g.id)}" data-firma="${firma(cuerpo)}">
+    ${charola(g.nombre, '', { tag: 'div', cls: 'mini', titulo: false, cargar })}<div class="datos">${cuerpo}</div></li>`;
+};
 const card = (g, mostrarDescripcion, cargar) => {
   const cuerpo = cuerpoDe(g, mostrarDescripcion);
   return charola(g.nombre, cuerpo, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: fichaDe(g), cargar, attrs: `data-clave="${esc(g.id)}" data-firma="${firma(cuerpo)}"` });
@@ -154,12 +181,16 @@ const card = (g, mostrarDescripcion, cargar) => {
 function pintarControles(id, cambio) {
   for (const el of view.querySelectorAll('[data-control]')) {
     const g = guisos.find((x) => String(x.id) === el.dataset.control);
-    if (g) el.innerHTML = control(g, String(g.id) === String(id) ? cambio : '');
+    if (g) el.innerHTML = control(g, String(g.id) === String(id) ? cambio : '', Boolean(el.closest?.('.renglon')));
   }
 }
 
 // Esqueleto del catálogo: las mismas charolas, vacías. Solo aparece si la respuesta tarda.
-const ESQUELETO = document.getElementById('esqueleto').innerHTML; // en index.html: el mismo del primer cuadro
+// En index.html: el esqueleto del primer cuadro y el molde de la bolsa (los mismos que pone su script en línea).
+const BOLSA = document.getElementById('bolsa-molde').innerHTML;
+const ESQUELETO = document.getElementById('esqueleto').innerHTML + BOLSA;
+let bolsaUI = null; // la bolsa de la lista de guisos, mientras está a la vista
+const moverse = () => globalThis.matchMedia?.('(prefers-reduced-motion: no-preference)').matches ?? false;
 const TARDA = 200;
 const YA_PINTADO = Symbol('ya pintado'); // la vista se puso al día en su lugar: no hay nada que repintar
 let llegando = true; // se llegó (o se volvió) a la vista: es cuando se revalida lo guardado
@@ -208,7 +239,7 @@ const VIEWS = {
     if (ya.every(Boolean) && llegando) revalidar();
     llegando = false;
     guisos = todos;
-    if (!todos.length) return '<h1>Guisos de taquería empacados al vacío</h1><p>Todavía no hay guisos en el catálogo.</p>';
+    if (!todos.length) return `<div class="lista-guisos"><h1>Guisos empacados</h1><p>Todavía no hay guisos en el catálogo.</p></div>${BOLSA}`;
     // Como el pizarrón de la taquería: agrupados por precio, del más barato al más caro. Sin filtros.
     const precios = [...new Set(todos.map((g) => g.precio_centavos))].sort((a, b) => a - b);
     const filas = [
@@ -222,24 +253,26 @@ const VIEWS = {
     // Ya está a la vista con las mismas charolas: se pone al día en su lugar (existencias, precios,
     // cantidades) sin rehacer las tarjetas, para no recargar sus fotos ni repetir su entrada.
     if (view.dataset.vista === 'catalogo' && view.querySelector('[data-estructura]')?.dataset.estructura === estructura) {
-      const tarjetas = view.querySelectorAll('.charola[data-clave]');
+      const tarjetas = view.querySelectorAll('.renglon[data-clave]');
       enOrden.forEach((g, i) => {
         const li = tarjetas[i];
-        const cuerpo = cuerpoDe(g, mostrar(g));
+        const cuerpo = cuerpoRenglon(g, mostrar(g));
         if (!li || li.dataset.firma === firma(cuerpo)) return;
-        li.className = `charola ${g.stock > 0 ? '' : 'agotada'}`;
+        li.className = `renglon${g.stock > 0 ? '' : ' agotado'}`;
         li.dataset.firma = firma(cuerpo);
-        li.querySelector('.datos').innerHTML = datosDe(g.nombre, cuerpo, { href: fichaDe(g) });
+        li.querySelector('.datos').innerHTML = cuerpo;
       });
       return YA_PINTADO;
     }
     // La primera fila carga sus fotos de inmediato; las demás, al acercarse.
     let n = 0;
-    const tarjeta = (g) => card(g, mostrar(g), n++ < 5 ? 'eager' : 'lazy');
-    const fila = (lista) => `<ul class="barra entra">${lista.map(tarjeta).join('')}</ul>`;
+    const tarjeta = (g) => renglon(g, mostrar(g), n++ < 5 ? 'eager' : 'lazy');
+    const fila = (lista) => `<ul class="renglones entra">${lista.map(tarjeta).join('')}</ul>`;
     return `
-      <h1 data-estructura="${esc(estructura)}">Guisos de taquería empacados al vacío</h1>
-      ${filas.map(([t, lista]) => `<h2${t === 'Lo que más sale' ? '' : ' class="grupo"'}>${t}</h2>${fila(lista)}`).join('')}`;
+      <div class="lista-guisos">
+        <h1 data-estructura="${esc(estructura)}">Guisos empacados</h1>
+        ${filas.map(([t, lista]) => `<h2${t === 'Lo que más sale' ? '' : ' class="grupo"'}>${t}</h2>${fila(lista)}`).join('')}
+      </div>${BOLSA}`;
   },
 
   // Ficha de un guiso: #guiso/<id>. Lo que se sabe de él (GET /guisos/:id) y lo que vale para todos.
@@ -522,12 +555,15 @@ const ACTIONS = {
     }
     const id = el.dataset.id;
     const actual = enCarrito(id);
-    // La primera vez, el empacado completo explica el producto; después, solo la bolsa volando.
-    const pack = empacar(el, actual > 0);
+    // En la lista, la miniatura vuela a su compartimento de la bolsa; en la ficha, la bolsa vuela al carrito
+    // (la primera vez con el empacado completo; después, solo volando).
+    const fila = el.closest?.('.renglon');
+    const pack = fila && bolsaUI?.conectada ? bolsaUI.volar(fila.querySelector('.charola'), id) : empacar(el, actual > 0);
     try { await setQty(id, actual + 1); } catch (err) { pack.cancel(); throw err; }
     pintarControles(id, 'sube');
     view.querySelector(`[data-control="${CSS.escape(id)}"] [data-click="add"]`)?.focus({ preventScroll: true });
-    if (!actual) notice(`Agregado al carrito: ${el.dataset.nombre}.`);
+    // Con la animación, la bolsa ya dice que se agregó; con movimiento reducido, lo dice el aviso.
+    if (!actual && !moverse()) notice(`Agregado al carrito: ${el.dataset.nombre}.`);
   },
 
   // Quitar uno desde la charola del catálogo.
@@ -581,7 +617,11 @@ const ACTIONS = {
   },
 
   async checkout() {
-    const p = await api('/pedidos', { method: 'POST' });
+    // La bolsa entra en una caja y sube a un avión mientras responde la API; si rechaza, la escena se va.
+    const escena = enviar(cart.items.map((it) => guisoDe(it.guiso.nombre).color));
+    let p;
+    try { p = await api('/pedidos', { method: 'POST' }); } catch (err) { escena?.cancel(); throw err; }
+    await escena?.listo;
     setCart(EMPTY);
     notice(`Pedido #${p.id} confirmado por ${money(p.total_centavos)}.`);
     nuevo = p.id;
@@ -716,7 +756,8 @@ async function render() {
       const esqueleto = view.querySelector('.hueca');
       view.innerHTML = html;
       // Sustituye al esqueleto en su lugar: fundido corto, sin volver a deslizar.
-      if (esqueleto) for (const ul of view.querySelectorAll('.barra.entra')) ul.classList.replace('entra', 'funde');
+      if (esqueleto) for (const ul of view.querySelectorAll('.renglones.entra')) ul.classList.replace('entra', 'funde');
+      montarBolsa();
       view.dataset.vista = r; // para que la hoja de estilos componga cada vista en pantalla ancha
       tick();
       // Conserva el foco al repintar; al cambiar de vista lo manda al contenido.

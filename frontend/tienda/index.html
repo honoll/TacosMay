@@ -57,11 +57,32 @@
   <!-- Esqueleto del catálogo: lo usa app.js mientras responde la API y, al llegar al catálogo, ya está
        puesto desde el primer cuadro en vez de una vista vacía. -->
   <template id="esqueleto">
-    <h1>Guisos de taquería empacados al vacío</h1>
-    <ul class="barra" aria-busy="true" aria-label="Cargando los guisos"><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li><li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li></ul>
+    <div class="lista-guisos"><h1>Guisos empacados</h1><ul class="renglones" aria-busy="true" aria-label="Cargando los guisos"><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li><li class="renglon"><div class="charola mini hueca"><div class="guiso"></div></div><div class="datos"><p></p><p></p></div></li></ul></div>
+  </template>
+  <!-- La bolsa con compartimentos, a un lado de la lista de guisos (tienda/bolsa.js la llena). En celular,
+       una barra fija abajo que la despliega. docs/diseno/empacado.md -->
+  <template id="bolsa-molde">
+    <aside class="bolsa-lado vacia" aria-labelledby="bolsa-titulo">
+      <button type="button" class="bolsa-barra" aria-expanded="false" aria-controls="bolsa-cuerpo">
+        <span class="bolsa-mini" aria-hidden="true"></span>
+        <span class="bolsa-resumen"><b class="bolsa-n">0 guisos</b> · <span class="bolsa-total"></span></span>
+        <span class="bolsa-reloj" data-countdown></span>
+        <span class="sr">, ver tu carrito</span>
+      </button>
+      <div class="bolsa-cuerpo" id="bolsa-cuerpo">
+        <h2 id="bolsa-titulo" tabindex="-1">Tu carrito</h2>
+        <div class="bolsas"></div>
+        <p class="bolsa-vacia">Tu carrito está vacío. Las charolas, no.</p>
+        <div class="bolsa-cuentas">
+          <p class="expira"><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14z"/><path d="M11 7h2v4.6l3.3 2-1 1.7L11 12.7z"/></svg> Expira en <strong data-countdown></strong></p>
+          <p class="total">Total: <strong class="bolsa-total"></strong></p>
+          <div class="acciones"><button type="button" class="primario" data-click="checkout">Confirmar pedido</button><a class="btn sec" href="#carrito">Ver carrito</a></div>
+        </div>
+      </div>
+    </aside>
   </template>
   <script>
-    if (/^(#catalogo)?$/.test(location.hash)) document.getElementById('vista').innerHTML = document.getElementById('esqueleto').innerHTML;
+    if (/^(#catalogo)?$/.test(location.hash)) document.getElementById('vista').innerHTML = document.getElementById('esqueleto').innerHTML + document.getElementById('bolsa-molde').innerHTML;
   </script>
   <!-- El carrito como panel lateral: se abre desde el catálogo y la ficha, sin salir de ellos (app.js lo llena) -->
   <dialog class="panel" id="panel-carrito" aria-labelledby="panel-titulo"></dialog>
