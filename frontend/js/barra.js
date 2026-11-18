@@ -56,7 +56,10 @@ export const picto = (nombre) => `<svg class="picto" viewBox="0 0 24 24" fill="c
 
 // Fotos que ya están en media/guisos/<slug>.webp (720 x 540) y <slug>-1024.webp (1024 x 768), recorte 4:3 del original.
 // PENDIENTE-CLIENTE: imagen generada con IA, sustituir por foto real antes de publicar o vender.
-export const FOTOS = new Set(['carne-en-salsa-roja', 'chorizo-con-huevo', 'rajas-con-queso-y-crema']);
+export const FOTOS = new Set([
+  'chorizo-con-huevo', 'salpicon', 'nopalitos', 'mole-con-pollo', 'bistek-con-papa',
+  'chicharron-en-salsa', 'rajas-con-queso-y-crema', 'carne-en-salsa-roja', 'tinga-de-res',
+]);
 
 const SIZES = '(min-width: 1600px) 17vw, (min-width: 1280px) 20vw, (min-width: 700px) 25vw, 50vw';
 const POR_SLUG = new Map(GUISOS.map((g) => [slug(g.nombre), g]));

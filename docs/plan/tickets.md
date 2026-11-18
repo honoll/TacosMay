@@ -526,6 +526,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Segundo tiempo · vista 8 Transiciones (17-nov-2026):** Fundido de 150 ms entre vistas de la tienda con `startViewTransition` (la charola tocada se convierte en la de la ficha) y entre páginas con `@view-transition`; sin soporte o con movimiento reducido, el cambio es inmediato. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
 
+- **Seis fotos más de guisos (17-nov-2026):** salpicón, nopalitos, mole con pollo, bistek con papa, chicharrón en salsa y tinga de res, recortadas a 4:3 y en WebP (720 y 1024); ya son nueve de catorce charolas con foto en landing, catálogo y ficha. Colores de charola revisados contra cada foto: sin cambios. Imágenes generadas con IA, `PENDIENTE-CLIENTE`. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)
