@@ -124,7 +124,10 @@ export function enviar(colores = []) {
     if (enFinal || !pedido) return;
     enFinal = true;
     clearTimeout(seguro);
-    tl?.progress(1);
+    // El final no depende de la línea: si GSAP falla al dibujar (pasó en Safari de iPhone), sale igual.
+    try { tl?.progress(1); } catch { tl?.kill(); }
+    for (const s of ['.envio-final', '.envio-raya']) $(s).style.cssText = '';
+    el.classList.remove('esperando');
     el.classList.add('terminado');
     $('.envio-saltar').hidden = true;
     $('.envio-final').hidden = false;
@@ -148,7 +151,7 @@ export function enviar(colores = []) {
   let seguro = setTimeout(mostrarFinal, 6000);
 
   // En la etiqueta, si el número no ha llegado, la línea espera; al terminar, el final.
-  if (gsap) tl = coreografia(gsap, el, () => { if (!pedido) tl.pause(); }, mostrarFinal);
+  if (gsap) tl = coreografia(gsap, el, () => { if (!pedido) { tl.pause(); el.classList.add('esperando'); } }, mostrarFinal);
 
   return {
     listo,
@@ -161,9 +164,11 @@ export function enviar(colores = []) {
       $('.envio-total').textContent = total;
       $('.envio-aviso').textContent = `Pedido #${p.id} confirmado${total ? ` por ${total}` : ''}.`;
       if (!tl) { mostrarFinal(); return; }
+      el.classList.remove('esperando');
       if (tl.paused()) tl.play();
+      // Si la línea se atora, el final sale cuando debió terminar, no cinco segundos después.
       clearTimeout(seguro);
-      seguro = setTimeout(mostrarFinal, 5000);
+      seguro = setTimeout(mostrarFinal, (tl.duration() - tl.time() + 0.6) * 1000);
     },
     // La API rechazó (sin existencias, sesión vencida): la escena se retira y el error lo dice la tienda.
     cancel: () => cerrar(null),

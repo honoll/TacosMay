@@ -515,7 +515,8 @@
 :where(.en-tienda) .envio-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 12px; }
 :where(.en-tienda) .envio-saltar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
 :where(.en-tienda) .envio-espera { margin: 0; font-weight: 600; }
-:where(.en-tienda) .envio:not(.quieta) .envio-espera, :where(.en-tienda) .envio.terminado .envio-espera { display: none; }
+:where(.en-tienda) .envio.esperando .envio-espera { align-self: end; } /* la caja espera el número: que se sepa que no está trabada */
+:where(.en-tienda) .envio:not(.quieta, .esperando) .envio-espera,:where(.en-tienda) .envio.terminado .envio-espera { display: none; }
 /* Sin coreografía (movimiento reducido o sin GSAP): no hay dibujo; «Confirmando…» y luego el final. */
 :where(.en-tienda) .envio.quieta .envio-escena, :where(.en-tienda) .envio.terminado .envio-escena { display: none; }
 
