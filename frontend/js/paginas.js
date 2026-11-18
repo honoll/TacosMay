@@ -21,7 +21,8 @@ const pie = () => document.querySelector('footer.pie');
 const hojas = () => [...document.head.querySelectorAll('link[rel="stylesheet"]')];
 // Las hojas vienen con ruta relativa: tras pushState resolverían contra la otra carpeta y
 // dejarían de reconocerse (la tienda quedaba sin barra.css). Se fijan absolutas al arrancar.
-for (const l of hojas()) l.setAttribute('href', l.href);
+// Solo si de verdad es relativa: reescribir el href de una hoja ya cargada la vuelve a pedir.
+for (const l of hojas()) if (!/^(\/|https?:)/.test(l.getAttribute('href'))) l.setAttribute('href', l.href);
 
 // Para lector de pantalla: se dice a qué página se llegó.
 const anuncio = Object.assign(document.createElement('p'), { id: 'anuncio', className: 'sr' });
