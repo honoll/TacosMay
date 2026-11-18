@@ -3,6 +3,26 @@
 Registro de lo encontrado al ejecutar [plan-de-revision.md](plan-de-revision.md). Estado:
 🔴 abierto · 🟡 corregido, falta volver a verlo · ✅ corregido y visto.
 
+## Vuelta 4 — 17-nov-2026: vistas 2 a 8 del segundo tiempo
+
+Recorrido con cuenta de prueba (cliente y administrador) a 1440 × 900, y la landing también
+a 375 × 812. Pruebas automáticas en verde (API contra Redis y las cuatro del frontend).
+
+**Funciona y se vio:** landing con «Lo que más sale» tras el héroe; ficha de un guiso con
+foto grande, cantidad, cómo se calienta y cómo se conserva; carrito; confirmar pedido;
+pedidos con el recién confirmado resaltado; alta de un guiso en administración con el
+renglón palomeado.
+
+| # | Dónde | Gravedad | Hallazgo | Estado |
+|---|---|---|---|---|
+| X1 | Landing, «Lo que más sale», escritorio | Grave | La primera charola sale enorme y la segunda chica; si el más vendido no tiene foto queda un bloque gigante de color liso. Con solo dos guisos vendidos el bloque se ve roto | 🔴 |
+| X2 | Tienda, aviso flotante | Grave | La ficha de aviso de abajo tapa lo que tiene debajo y se queda con el clic: no se pudo pulsar «Eliminar» del último renglón de administración mientras estaba visible | 🔴 |
+| X3 | T9 Administración | Menor | Eliminar un guiso usa el cuadro de confirmación nativo del navegador; no es del sistema visual y hay navegadores embebidos que lo descartan solos. Usar confirmación propia en la página | 🔴 |
+| X4 | Todo el sitio, sin sesión | Menor | La consola registra un error 401 al cargar: se pide el carrito aunque no haya sesión | 🔴 |
+
+Sin revisar todavía: editar un guiso; carrito expirado; panel lateral del carrito; W2 en
+celular; tableta y 1920 px; solo teclado y movimiento reducido; la dirección pública.
+
 ## Vuelta 3 — 17-nov-2026: comprobación de las correcciones y del catálogo nuevo
 
 Repetí el recorrido con cuenta de prueba (cliente y administrador) a 1440 × 900 y 375 × 812:
@@ -12,7 +32,7 @@ servidor ya sirve la página de no encontrado. Cuenta de prueba y su pedido, bor
 
 | # | Dónde | Gravedad | Hallazgo | Estado |
 |---|---|---|---|---|
-| W1 | T2 Catálogo | Menor | La ficha dice «1 vendidos»: falta el singular | 🟡 |
+| W1 | T2 Catálogo | Menor | La ficha dice «1 vendidos»: falta el singular | ✅ |
 | W2 | T1 Cabecera, celular con sesión | Menor | «Mis pedidos», «Admin», el nombre y «Salir» quedan fuera de la pantalla en la fila deslizable, sin ninguna señal de que hay más a la derecha | 🟡 |
 
 Sin revisar todavía: landing completa con la cabecera nueva (N5, N6); tableta y 1920 px;
