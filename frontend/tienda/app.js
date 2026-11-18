@@ -672,8 +672,19 @@ const ACTIONS = {
     // Con el pedido, la escena termina en «Pedido #N confirmado» y la persona elige: sus pedidos o seguir comprando.
     const escena = enviar(cart.items.map((it) => guisoDe(it.guiso.nombre).color));
     let p;
-    try { p = await api('/pedidos', { method: 'POST', body: {} }); } catch (err) { escena.cancel(); throw err; }
-    escena.confirmar(p, money(p.total_centavos));
+    try {
+      // En iPhone la respuesta del POST a veces no vuelve aunque el pedido sí se creó: a los 8 s se pregunta
+      // por el último pedido y, si es de hace un momento, es este.
+      const envio = api('/pedidos', { method: 'POST', body: {} });
+      envio.catch(() => {});
+      p = await Promise.race([envio, new Promise((r) => setTimeout(r, 8000))]);
+      if (!p) {
+        const [ultimo] = await api('/pedidos');
+        if (!ultimo || Date.now() - Date.parse(ultimo.creado) > 300000) throw new Error('No pudimos confirmar tu pedido. Revisa «Mis pedidos» antes de intentarlo otra vez.');
+        p = ultimo;
+      }
+      escena.confirmar(p, money(p.total_centavos));
+    } catch (err) { escena.cancel(); throw err; } // cualquier error retira la escena: el aviso queda a la vista
     const destino = await escena.listo;
     // Después, la vista elegida de un solo paso: la bolsa no se vacía a la vista y no hay fundido.
     bolsaUI = null;
