@@ -71,3 +71,16 @@ sigue `PENDIENTE-CLIENTE`.
 Lo que esto corrige de documentos anteriores: el personaje es un cactus, no un nopal; la
 madrugada es reciente, no el origen del negocio; y el rasgo de fondo de la taquería es
 servir rápido a gente que trabaja.
+
+## Cómo son los guisos (dicho por Alejandro, 17-nov-2026)
+
+Corrige lo que se había supuesto por el nombre al generar las imágenes.
+
+- **Bistek con papa:** es claro; **no lleva salsa**.
+- **Salpicón:** se parece al chorizo con huevo, pero con la carne más clara.
+  `PENDIENTE-CLIENTE`: qué carne es y si lleva algo más.
+- **Chicharrón en salsa:** es en **salsa verde** y el chicharrón es **prensado**, no en
+  pedazos; por eso se ve más gelatinoso.
+
+De los demás guisos sigue sin confirmarse cómo son (`PENDIENTE-CLIENTE`), incluido qué
+lleva el «Corazón de vaca enamorada».
