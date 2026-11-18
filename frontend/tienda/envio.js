@@ -187,6 +187,7 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
     .set($('.tapa.der'), { rotation: 118, svgOrigin: '370 156' }, 0)
     .set(avion, { x: -440 }, 0)
     .set($$('.bolsa-g'), { opacity: 0 }, 0)
+    .set($('.estela'), { opacity: 0 }, 0) // su punta redonda se ve aunque el trazo esté oculto: fuera hasta que se dibuja
     // la caja abierta llega a la pista
     .from(caja, { y: 24, opacity: 0, duration: 0.3, ease: CURVA }, 0);
 
@@ -223,6 +224,7 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
     .to(avion, { x: 90, duration: 0.35, ease: 'power2.in' }, T0 + 1.95)
     .to($('.pista'), { x: -100, duration: 0.9, ease: 'power1.in' }, T0 + 1.95)
     .to(avion, { x: 520, y: -250, rotation: -16, svgOrigin: '64 226', duration: 0.55, ease: 'power2.in' }, T0 + 2.3)
+    .set($('.estela'), { opacity: 1 }, T0 + 2.32)
     .to($('.estela'), { strokeDashoffset: 0, duration: 0.5, ease: 'power2.in' }, T0 + 2.32)
     // el fondo se queda atrás, más despacio que el avión
     .to($('.sol'), { x: -14, duration: 0.9, ease: 'power1.in' }, T0 + 1.95)
