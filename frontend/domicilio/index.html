@@ -58,74 +58,130 @@
 
     <div class="dom-cabeza">
       <h1>Tacos a domicilio</h1>
-      <p class="entrada">Tacos preparados en la barra del centro y llevados a tu puerta el mismo día, <strong>solo en Cabo San Lucas</strong>. Es otra cosa que el guiso empacado: ese va al vacío y se envía a todo el país. <a href="/tienda/#catalogo">Ver el guiso empacado</a>.</p>
+      <p class="entrada">Tacos preparados en la barra y llevados a tu puerta el mismo día, <strong>solo en Cabo San Lucas</strong>, o listos para que pases por ellos. Es otra cosa que el guiso empacado: ese va al vacío y se envía a todo el país. <a href="/tienda/#catalogo">Ver el guiso empacado</a>.</p>
+      <button type="button" class="enlace-boton" data-abrir="historial">Tus pedidos de prueba <span class="n-pedidos"></span></button>
     </div>
 
     <ol class="pasos-dom" aria-label="Pasos del pedido">
-      <li data-paso="pedido"><span>1</span> Tus tacos</li>
-      <li data-paso="destino"><span>2</span> A dónde</li>
-      <li data-paso="confirmar"><span>3</span> Confirmar</li>
-      <li data-paso="seguimiento"><span>4</span> Seguimiento</li>
+      <li data-vista="modo"><span>1</span> Cómo lo quieres</li>
+      <li data-vista="menu"><span>2</span> Menú</li>
+      <li data-vista="orden"><span>3</span> Tu orden</li>
+      <li data-vista="pagar"><span>4</span> Pagar</li>
+      <li data-vista="seguimiento"><span>5</span> Seguimiento</li>
     </ol>
 
     <p class="cerrado nota-dom" hidden>Ahorita la cocina está cerrada. La barra del centro cierra a las 4 a. m.; la hora de apertura está por confirmar. Puedes ver el menú, pero no pedir.</p>
 
     <div class="dom-rejilla">
-      <div class="dom-pasos">
-        <!-- 1 · Armar el pedido -->
-        <section id="paso-pedido" data-paso="pedido" aria-labelledby="t-pedido">
-          <h2 id="t-pedido">Tus tacos</h2>
-          <p class="precios-ejemplo">Los del pizarrón de la barra. <strong>Precios de ejemplo</strong>, por confirmar.</p>
-          <ul class="tacos"></ul>
+      <div class="dom-vistas">
+        <!-- 1 · Cómo lo quieres: a domicilio (dirección y cobertura) o recoger (qué barra) -->
+        <section id="vista-modo" data-vista="modo" aria-labelledby="t-modo">
+          <h2 id="t-modo">¿Cómo quieres tus tacos?</h2>
+          <fieldset class="modos">
+            <legend class="sr">Entrega</legend>
+            <label class="modo"><input type="radio" name="modo" value="domicilio"> <span><b>A domicilio</b> Te los llevamos, solo en Cabo San Lucas.</span></label>
+            <label class="modo"><input type="radio" name="modo" value="recoger"> <span><b>Recoger en la barra</b> Pides aquí y pasas por ellos.</span></label>
+          </fieldset>
+
+          <div class="si-domicilio" hidden>
+            <h3>¿A dónde te los llevamos?</h3>
+            <form id="form-destino" class="form-dom" novalidate>
+              <label for="d-calle">Calle y número</label>
+              <input id="d-calle" name="calle" required autocomplete="address-line1" maxlength="120">
+              <label for="d-colonia">Colonia</label>
+              <select id="d-colonia" name="colonia" required></select>
+              <div class="otra-colonia" hidden>
+                <label for="d-otra">¿Cuál colonia?</label>
+                <input id="d-otra" name="otra" required disabled maxlength="80">
+              </div>
+              <label for="d-referencias">Referencias <span class="opcional">(opcional)</span></label>
+              <input id="d-referencias" name="referencias" maxlength="160" placeholder="Portón, color de la casa, entre qué calles">
+              <div class="acciones"><button type="submit" class="primario">Ver si llegamos</button></div>
+            </form>
+            <p class="cobertura-ok" role="status" hidden></p>
+          </div>
+
+          <div class="si-recoger" hidden>
+            <h3>¿En qué barra pasas por ellos?</h3>
+            <ul class="sucursales"></ul>
+            <p class="nota-suave">Las demás taquerías de la familia aparecerán aquí cuando tengamos sus datos.</p>
+          </div>
+
+          <div class="problema" tabindex="-1" role="alert" hidden>
+            <p class="texto"></p>
+            <div class="acciones">
+              <a class="btn sec chico a-empacado" href="/tienda/#catalogo">Ver el guiso empacado</a>
+              <button type="button" class="a-recoger" data-modo="recoger">Mejor paso a la barra</button>
+            </div>
+          </div>
+
+          <div class="acciones"><button type="button" class="primario" data-ir="menu" id="a-menu" disabled>Ver el menú</button></div>
         </section>
 
-        <!-- 2 · A dónde -->
-        <section id="paso-destino" data-paso="destino" aria-labelledby="t-destino" hidden>
-          <h2 id="t-destino">A dónde te los llevamos</h2>
-          <form id="form-destino" class="form-dom" novalidate>
-            <label for="d-calle">Calle y número</label>
-            <input id="d-calle" name="calle" required autocomplete="address-line1" maxlength="120">
-            <label for="d-colonia">Colonia</label>
-            <select id="d-colonia" name="colonia" required></select>
-            <div class="otra-colonia" hidden>
-              <label for="d-otra">¿Cuál colonia?</label>
-              <input id="d-otra" name="otra" required disabled maxlength="80">
-            </div>
-            <label for="d-referencias">Referencias <span class="opcional">(opcional)</span></label>
-            <input id="d-referencias" name="referencias" maxlength="160" placeholder="Portón, color de la casa, entre qué calles">
-            <label for="d-nombre">Quién recibe</label>
-            <input id="d-nombre" name="nombre" required autocomplete="name" maxlength="80">
-            <label for="d-telefono">Teléfono</label>
-            <input id="d-telefono" name="telefono" type="tel" required inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{10}" maxlength="10" aria-describedby="d-telefono-ayuda">
-            <p class="ayuda" id="d-telefono-ayuda">10 dígitos, para que el repartidor te avise al llegar.</p>
-            <div class="problema" tabindex="-1" role="alert" hidden>
-              <p class="texto"></p>
-              <a class="btn sec chico a-empacado" href="/tienda/#catalogo">Ver el guiso empacado</a>
-            </div>
+        <!-- 2 · Menú por secciones; «Agregar» abre el detalle del taco -->
+        <section id="vista-menu" data-vista="menu" aria-labelledby="t-menu" hidden>
+          <h2 id="t-menu">Menú</h2>
+          <p class="precios-ejemplo">Los del pizarrón de la barra. <strong>Precios de ejemplo</strong>, por confirmar.</p>
+          <nav class="secciones" aria-label="Secciones del menú"></nav>
+          <div class="menu-secciones"></div>
+        </section>
+
+        <!-- 3 · Tu orden: editable, con cómo se entrega y la propina -->
+        <section id="vista-orden" data-vista="orden" aria-labelledby="t-orden" hidden>
+          <h2 id="t-orden">Tu orden</h2>
+          <p class="orden-vacia" hidden>Tu orden está vacía.</p>
+          <ul class="orden-lineas"></ul>
+          <div class="acciones"><button type="button" data-ir="menu">Agregar otro taco</button></div>
+          <div class="entrega-detalle">
+            <h3>Entrega</h3>
+            <p class="entrega-texto"></p>
+            <button type="button" class="enlace-boton" data-ir="modo">Cambiar</button>
+          </div>
+          <fieldset class="propinas">
+            <legend>Propina <span class="opcional">(voluntaria, para quien prepara y lleva tu pedido)</span></legend>
+            <div class="propina-opciones"></div>
+          </fieldset>
+        </section>
+
+        <!-- 4 · Pagar: contacto (cuenta o invitado), cuándo, cómo pagas y la confirmación final -->
+        <section id="vista-pagar" data-vista="pagar" aria-labelledby="t-pagar" hidden>
+          <h2 id="t-pagar">Pagar</h2>
+          <form id="form-pagar" class="form-dom" novalidate>
+            <fieldset class="contacto">
+              <legend>Tus datos</legend>
+              <p class="con-cuenta" hidden></p>
+              <p class="invitado">Pides como invitado. ¿Tienes cuenta en la tienda? <a href="/tienda/#entrar">Entra</a> y vuelve.</p>
+              <label for="p-nombre">Nombre</label>
+              <input id="p-nombre" name="nombre" required autocomplete="name" maxlength="80">
+              <label for="p-telefono">Teléfono</label>
+              <input id="p-telefono" name="telefono" type="tel" required inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{10}" maxlength="10" aria-describedby="p-telefono-ayuda">
+              <p class="ayuda" id="p-telefono-ayuda">10 dígitos, para avisarte de tu pedido.</p>
+              <label for="p-correo">Correo <span class="opcional">(opcional)</span></label>
+              <input id="p-correo" name="correo" type="email" autocomplete="email" maxlength="120">
+            </fieldset>
+            <fieldset class="opciones">
+              <legend>¿Para cuándo?</legend>
+              <label><input type="radio" name="horario" value="ahora" checked> Lo antes posible</label>
+              <label class="por-conectar"><input type="radio" name="horario" value="programado" disabled> Programar una hora <span class="etiqueta">por conectar</span></label>
+            </fieldset>
+            <fieldset class="opciones">
+              <legend>Cómo pagas</legend>
+              <label><input type="radio" name="pago" value="al_recibir" checked> <span class="pago-recibir">Al recibir, al repartidor</span></label>
+              <label class="por-conectar"><input type="radio" name="pago" value="en_linea" disabled> En línea <span class="etiqueta">por conectar</span></label>
+            </fieldset>
+            <h3>Revisa tu pedido</h3>
+            <div class="resumen-pedido"></div>
+            <div class="problema-pagar problema" tabindex="-1" role="alert" hidden><p class="texto"></p></div>
             <div class="acciones">
-              <button type="submit" class="primario">Cotizar el envío</button>
-              <button type="button" data-ir="pedido">Volver a tus tacos</button>
+              <button type="submit" class="primario" id="confirmar">Hacer el pedido</button>
+              <button type="button" data-ir="orden">Volver a tu orden</button>
             </div>
           </form>
         </section>
 
-        <!-- 3 · Confirmar -->
-        <section id="paso-confirmar" data-paso="confirmar" aria-labelledby="t-confirmar" hidden>
-          <h2 id="t-confirmar">Confirma tu pedido</h2>
-          <div class="resumen-pedido"></div>
-          <fieldset class="pago">
-            <legend>Cómo pagas</legend>
-            <label><input type="radio" name="pago" value="al_recibir" checked> Al recibir, al repartidor</label>
-            <label class="por-conectar"><input type="radio" name="pago" value="en_linea" disabled> En línea <span>por conectar</span></label>
-          </fieldset>
-          <div class="acciones">
-            <button type="button" class="primario" id="confirmar">Pedir mis tacos</button>
-            <button type="button" data-ir="destino">Cambiar la dirección</button>
-          </div>
-        </section>
-
-        <!-- 4 · Seguimiento (avanza solo; tiempos cortos de demostración) -->
-        <section id="paso-seguimiento" data-paso="seguimiento" aria-labelledby="t-seguimiento" hidden>
+        <!-- 5 · Confirmación con número y seguimiento (avanza solo; tiempos cortos de demostración) -->
+        <section id="vista-seguimiento" data-vista="seguimiento" aria-labelledby="t-seguimiento" hidden>
+          <p class="confirmado">Pedido <b class="numero"></b></p>
           <h2 id="t-seguimiento">Sigue tu pedido</h2>
           <div class="escena" aria-hidden="true">
             <svg data-escena="recibido" viewBox="0 0 64 48"><circle cx="32" cy="24" r="18" fill="#e6f4e8" stroke="currentColor" stroke-width="3"/><path d="M23 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -133,36 +189,78 @@
             <svg data-escena="asignado" viewBox="0 0 64 48" hidden><rect x="16" y="16" width="32" height="28" rx="3" fill="#d9dcdd" stroke="currentColor" stroke-width="3"/><path class="solapa" d="M16 16h32l-4-8H20z" fill="currentColor"/><rect x="26" y="26" width="12" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
             <svg data-escena="en_camino" viewBox="0 0 96 48" hidden><path d="M4 44h88" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6"/><g class="moto"><circle cx="30" cy="36" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="62" cy="36" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M30 36h16l7-11h6l3 11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M57 25l-2-6h-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><rect x="24" y="16" width="16" height="13" rx="2" fill="#d9dcdd" stroke="currentColor" stroke-width="2.5"/><circle cx="48" cy="12" r="4" fill="currentColor"/><path d="M45 17h6l2 8h-8z" fill="currentColor"/></g></svg>
             <svg data-escena="entregado" viewBox="0 0 64 48" hidden><path d="M32 4a12 12 0 0 1 12 12c0 9-12 24-12 24S20 25 20 16A12 12 0 0 1 32 4z" fill="#d9dcdd" stroke="currentColor" stroke-width="3"/><g class="palomita"><circle cx="44" cy="34" r="9" fill="#e6f4e8" stroke="currentColor" stroke-width="2.5"/><path d="M39.5 34.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+            <svg data-escena="cancelado" viewBox="0 0 64 48" hidden><circle cx="32" cy="24" r="18" fill="#fde8e6" stroke="currentColor" stroke-width="3"/><path d="M25 17l14 14M39 17L25 31" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
           </div>
           <p class="estado-texto" role="status" aria-live="polite"></p>
-          <ol class="linea">
-            <li>Recibido</li>
-            <li>Preparando</li>
-            <li>Repartidor asignado</li>
-            <li>En camino</li>
-            <li>Entregado</li>
-          </ol>
-          <p class="repartidor" hidden><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3 21.5a9 7.5 0 0 1 18 0z"/></svg> Repartidor de prueba, en moto. En un pedido real aquí sale quién lo lleva.</p>
-          <div class="resumen-pedido"></div>
+          <p class="llega"></p>
+          <ol class="linea"></ol>
+          <p class="repartidor" hidden><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3 21.5a9 7.5 0 0 1 18 0z"/></svg> Repartidor de prueba, en moto. En un pedido real aquí sale quién lo lleva y el enlace para seguirlo en el mapa.</p>
+          <p class="contacto-barra">¿Algo no está bien? En un pedido real llamarías a la barra; su teléfono está por confirmar.</p>
+          <p class="aviso-cancelar" role="status"></p>
           <div class="acciones">
-            <button type="button" class="primario" id="repetir">Repetir la demostración</button>
+            <button type="button" id="cancelar" hidden>Cancelar el pedido</button>
+            <button type="button" class="primario" id="recogido" hidden>Ya lo recogí</button>
+            <button type="button" class="primario" id="nuevo" hidden>Hacer otro pedido</button>
           </div>
+          <h3>Tu pedido</h3>
+          <div class="resumen-pedido"></div>
         </section>
       </div>
 
-      <!-- La cuenta: tacos + envío = total. El envío lo pone el servicio de reparto al cotizar. -->
+      <!-- La cuenta: tacos + envío + propina = total. El envío lo pone el servicio de reparto al cotizar;
+           la cuota de servicio es un concepto por definir con la taquería. -->
       <aside class="cuenta-dom" aria-labelledby="t-cuenta">
         <h2 id="t-cuenta">Tu cuenta</h2>
-        <p class="vacio-dom">Todavía no llevas tacos. Agrégalos con el botón <span aria-hidden="true">+</span><span class="sr">«uno más»</span>.</p>
+        <p class="vacio-dom">Todavía no llevas tacos.</p>
         <dl>
           <dt>Tacos <span class="c-piezas">0 tacos</span></dt><dd class="c-tacos">$0.00</dd>
           <dt>Envío</dt><dd class="c-envio">por cotizar</dd>
+          <dt>Cuota de servicio</dt><dd class="c-cuota">por definir</dd>
+          <dt>Propina</dt><dd class="c-propina">$0.00</dd>
           <dt class="total">Total</dt><dd class="total c-total">$0.00</dd>
         </dl>
-        <button type="button" class="primario" id="continuar" data-ir="destino" disabled>Seguir: a dónde</button>
+        <button type="button" class="primario" id="continuar" data-ir="orden">Ver tu orden</button>
       </aside>
     </div>
   </main>
+
+  <!-- Detalle del taco: cantidad, nota para la cocina y el lugar para salsas y complementos (por confirmar). -->
+  <dialog class="dom-dialogo" id="detalle" aria-labelledby="det-nombre">
+    <form method="dialog" class="detalle-form">
+      <div class="det-foto"></div>
+      <h2 id="det-nombre"></h2>
+      <p class="det-precio"></p>
+      <fieldset class="complementos" disabled>
+        <legend>Salsas y complementos</legend>
+        <p>Por confirmar con la taquería.</p>
+      </fieldset>
+      <label for="det-nota">Nota para la cocina <span class="opcional">(opcional)</span></label>
+      <textarea id="det-nota" name="nota" rows="2" maxlength="140" placeholder="Por ejemplo: sin cebolla"></textarea>
+      <div class="det-pie">
+        <div class="cuantos" role="group" aria-label="Cuántos tacos">
+          <button type="button" data-det="-1" aria-label="Uno menos"><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+          <output class="det-n" aria-live="polite">1</output>
+          <button type="button" data-det="1" aria-label="Uno más"><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+        </div>
+        <button type="submit" class="primario det-agregar" value="agregar">Agregar</button>
+      </div>
+      <button type="submit" class="cerrar" value="cerrar" aria-label="Cerrar" formnovalidate><svg class="signo" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+    </form>
+  </dialog>
+
+  <!-- Tus pedidos de prueba (se guardan solo en este navegador). -->
+  <dialog class="dom-dialogo" id="historial" aria-labelledby="hist-titulo">
+    <form method="dialog">
+      <h2 id="hist-titulo">Tus pedidos de prueba</h2>
+      <p class="nota-suave">Se guardan solo en este navegador.</p>
+      <ul class="historial-lista"></ul>
+      <p class="historial-vacio">Todavía no has hecho pedidos de prueba.</p>
+      <div class="acciones">
+        <button type="button" id="reiniciar">Borrar todo y empezar de cero</button>
+        <button type="submit" value="cerrar">Cerrar</button>
+      </div>
+    </form>
+  </dialog>
 
   <footer class="pie">
     <div class="caja pie-rejilla">

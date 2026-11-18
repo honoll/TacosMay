@@ -11,11 +11,17 @@ export const MENU = [
 ].map(([nombre, precio_centavos]) => ({ id: slug(nombre), nombre, precio_centavos }));
 
 export const MAX_POR_GUISO = 20;
+export const MAX_NOTA = 140;
+export const guiso = (id) => MENU.find((g) => g.id === id) ?? null;
 
-// Lo que se pide, a partir de las cantidades por guiso: renglones, piezas y subtotal (al precio de la barra).
-export function pedidoDe(cantidades = {}) {
+// El menú por secciones, como el pizarrón las agrupa: por precio de barra.
+export const SECCIONES = [...new Set(MENU.map((g) => g.precio_centavos))].sort((a, b) => a - b)
+  .map((precio) => ({ id: `de-${precio / 100}`, precio_centavos: precio, guisos: MENU.filter((g) => g.precio_centavos === precio) }));
+
+// Lo que se pide, a partir de las cantidades y notas por guiso: renglones, piezas y subtotal (al precio de la barra).
+export function pedidoDe(cantidades = {}, notas = {}) {
   const items = MENU.filter((g) => cantidades[g.id] > 0)
-    .map((g) => ({ id: g.id, nombre: g.nombre, cantidad: cantidades[g.id], precio_centavos: g.precio_centavos }));
+    .map((g) => ({ id: g.id, nombre: g.nombre, cantidad: cantidades[g.id], precio_centavos: g.precio_centavos, nota: notas[g.id] ?? '' }));
   return {
     items,
     piezas: items.reduce((s, i) => s + i.cantidad, 0),
