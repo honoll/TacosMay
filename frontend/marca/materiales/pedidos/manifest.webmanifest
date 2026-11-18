@@ -1,0 +1,33 @@
+{
+  "name": "Los Tacos May — Pedidos",
+  "short_name": "Tacos May",
+  "lang": "es-MX",
+  "start_url": "/domicilio/",
+  "scope": "/domicilio/",
+  "display": "standalone",
+  "background_color": "#f7f4ee",
+  "theme_color": "#141210",
+  "icons": [
+    {
+      "src": "icono.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "icono-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icono-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icono-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}

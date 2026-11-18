@@ -1,0 +1,31 @@
+/* /marca/materiales/ (generada por armar.mjs). Se apoya en ../marca.css: marco del tablero y fuentes. */
+
+.indice { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 16px; }
+.indice a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.materiales > section { padding-top: 24px; border-top: 3px solid #141210; scroll-margin-top: 8px; }
+.materiales h2 small, .materiales h3 small { font-size: .8em; font-weight: 400; color: #5b5b5b; }
+.materiales h3 { margin: 20px 0 8px; }
+.materiales .nota { margin: 0 0 12px; }
+
+/* Las dos versiones del logotipo, lado a lado; una sobre otra en celular. */
+.par { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.par figure { display: grid; align-content: start; gap: 8px; padding: 16px; border-radius: 10px; background: #fff; }
+.par figcaption { font-size: .88rem; color: #4a4a4a; }
+.par img { display: block; max-width: 100%; height: auto; margin-inline: auto; }
+.par .hoja { width: min(100%, 380px); box-shadow: 0 0 0 1px rgb(0 0 0 / .15); }
+.par .hoja.chica { width: min(100%, 260px); }
+.par .redonda { width: min(100%, 200px); }
+.par .ancha { width: 100%; }
+.dos { display: flex; flex-wrap: wrap; justify-content: center; align-items: start; gap: 12px; }
+.par .ticket { width: min(46%, 200px); margin: 0; box-shadow: 0 0 0 1px rgb(0 0 0 / .15); }
+
+/* Pestaña del navegador y pantalla de inicio, de muestra. */
+.pestana { display: flex; align-items: center; gap: 8px; max-width: 260px; padding: 8px 12px; border-radius: 8px 8px 0 0; background: #e8e8e8; font-size: .85rem; }
+.pestana span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pestana i { font-style: normal; color: #666; }
+.tamanos { display: flex; align-items: end; gap: 16px; }
+.par .tamanos img { margin: 0; }
+.inicio { display: flex; justify-content: center; gap: 32px; padding: 24px; border-radius: 10px; background: #2d3b45; }
+.inicio span { display: grid; justify-items: center; gap: 6px; color: #fff; font-size: .8rem; }
+.inicio img { border-radius: 14px; }
+.inicio .mascara { border-radius: 50%; }
