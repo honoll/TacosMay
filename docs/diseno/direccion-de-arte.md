@@ -137,16 +137,20 @@ el mismo molde y adjuntando la pieza maestra:
 | Charola | `[GUISO]` | Archivo |
 |---|---|---|
 | 01 Corazón de vaca enamorada | `PENDIENTE-CLIENTE`: no se sabe qué lleva; **no se genera** hasta saberlo | — |
-| 03 Salpicón | `shredded beef salpicon with chopped tomato, onion and cilantro` | `I1-03-salpicon.jpg` |
+| 03 Salpicón | `light shredded meat mixed with soft scrambled eggs, beige and pale yellow tones` | `I1-03-salpicon.jpg` |
 | 04 Nopalitos | `diced cooked nopal cactus paddles with tomato and onion` | `I1-04-nopalitos.jpg` |
 | 05 Mole con pollo | `shredded chicken in dark brown mole sauce with a few sesame seeds` | `I1-05-mole-con-pollo.jpg` |
-| 06 Bistek con papa | `chopped beef steak with small diced potatoes in a light sauce` | `I1-06-bistek-con-papa.jpg` |
-| 07 Chicharrón en salsa | `soft pork chicharron pieces simmered in chile salsa` | `I1-07-chicharron-en-salsa.jpg` |
+| 06 Bistek con papa | `dry chopped beef steak with small golden diced potatoes, no sauce, light brown and golden tones` | `I1-06-bistek-con-papa.jpg` |
+| 07 Chicharrón en salsa | `soft pressed pork chicharron, slightly gelatinous, simmered in green tomatillo salsa, olive green tones` | `I1-07-chicharron-en-salsa.jpg` |
 | 10 Tinga de res | `shredded beef tinga in tomato and chipotle sauce with sliced onion` | `I1-10-tinga-de-res.jpg` |
 | 11 Barbacoa | `moist shredded beef barbacoa in its own dark juices` | `I1-11-barbacoa.jpg` |
 | 12 Cabeza | `tender steamed beef head meat, finely chopped, pale and juicy` | `I1-12-cabeza.jpg` |
 | 13 Lengua | `tender beef tongue cut in small cubes, light brown, juicy` | `I1-13-lengua.jpg` |
 | 14 Barbacoa de borrego | `shredded lamb barbacoa, dark and moist` | `I1-14-barbacoa-de-borrego.jpg` |
+
+Las líneas de 03, 06 y 07 se corrigieron el 17-nov-2026 con lo que dijo Alejandro de cómo son
+(`docs/negocio/datos.md`, «Cómo son los guisos»): las primeras se habían escrito por el nombre
+del platillo. Las demás siguen sin confirmar (`PENDIENTE-CLIENTE`).
 
 - **[HIPÓTESIS]:** qué lleva cada guiso y de qué color es su salsa sale del nombre, no de la
   receta de la casa (`PENDIENTE-CLIENTE`). Si en la taquería es distinto, se cambia la línea.

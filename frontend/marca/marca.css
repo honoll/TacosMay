@@ -183,7 +183,7 @@ h3 small { font-weight: 400; color: #5b5b5b; }
 .r3 .charolas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6cqw; margin-top: 3cqw; }
 .r3 .charolas i { display: flex; align-items: end; aspect-ratio: 3 / 4; padding: 1.6cqw; border: 1cqw solid #b4babd; border-radius: 2cqw; background: var(--c); color: var(--t, #fff); font: 600 3cqw/1 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
 .r3 .btn { --f: 5px; border: 0; border-radius: 4px; padding-left: calc(var(--f) * 4 + 18px); color: #fff; font: 800 1.15rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .08em; text-transform: uppercase;
-  background: linear-gradient(90deg, #a8321c 0 var(--f), #f2b33d 0 calc(var(--f) * 2), #35603a 0 calc(var(--f) * 3), #e08a3c 0 calc(var(--f) * 4), #141210 0); }
+  background: linear-gradient(90deg, #a8321c 0 var(--f), #8a9440 0 calc(var(--f) * 2), #f2b33d 0 calc(var(--f) * 3), #35603a 0 calc(var(--f) * 4), #141210 0); }
 .r3 .mock .btn { font-size: 4cqw; }
 .r3 button.btn:is(:hover, :focus-visible) { --f: 11px; }
 .r3 .etiqueta { top: 22%; border-left: 7cqw solid #a8321c; background: #f7f4ee; transform: none; }

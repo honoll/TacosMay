@@ -97,7 +97,7 @@
 
 .caja { --papel: #c9a26b; position: relative; display: grid; place-items: center; align-content: center; gap: 8px; width: min(100%, 260px); aspect-ratio: 4 / 3; border: 2px solid #141210; background: #c9a26b; color: #141210; }
 .caja p { font: 800 1.3rem/1 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }
-.cinta { position: absolute; inset: 0 0 auto; height: 14px; background: linear-gradient(90deg, #a8321c 25%, #f2b33d 0 50%, #35603a 0 75%, #e08a3c 0); }
+.cinta { position: absolute; inset: 0 0 auto; height: 14px; background: linear-gradient(90deg, #a8321c 25%, #8a9440 0 50%, #f2b33d 0 75%, #35603a 0); }
 
 .heroe-s { display: grid; gap: 12px; justify-items: start; padding: clamp(16px, 4vw, 32px); border-radius: 8px; background: #f7f4ee; color: #141210; }
 .heroe-s > h3 { font: 800 clamp(3rem, 13vw, 6rem)/.86 "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; }

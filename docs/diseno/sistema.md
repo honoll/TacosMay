@@ -101,15 +101,21 @@ Los 14 del pizarrón, en su orden; el número es el de su charola. **[HIPÓTESIS
 sale hoy del nombre y de la descripción general del platillo; se fija con el guiso real
 delante.** Lo mismo las recetas: `PENDIENTE-CLIENTE`.
 
+**Ajuste del 17-nov-2026, con lo que dijo Alejandro de cómo son** (`docs/negocio/datos.md`):
+el 03 salpicón pasa a beige (carne clara con huevo; más apagado que el amarillo del 02, su
+vecino), el 06 bistek con papa a dorado claro (va seco, sin salsa) y el 07 chicharrón a
+verde olivo (es en salsa verde). Los tres verdes se distinguen también por el texto: el 07 lleva
+negro; el 04 y el 08, más oscuros, blanco.
+
 | Charola | Guiso | Color | Texto encima |
 |---|---|---|---|
 | 01 | Corazón de vaca enamorada | `#7A2530` | blanco 9.8:1 |
 | 02 | Chorizo con huevo | `#F2B33D` | negro 10.0:1 |
-| 03 | Salpicón | `#C9D46A` | negro 11.7:1 |
+| 03 | Salpicón | `#DCC9A0` | negro 11.5:1 |
 | 04 | Nopalitos | `#55752B` | blanco 5.3:1 |
 | 05 | Mole con pollo | `#4A2A1C` | blanco 12.8:1 |
-| 06 | Bistek con papa | `#C39A5E` | negro 7.2:1 |
-| 07 | Chicharrón en salsa | `#E08A3C` | negro 7.0:1 |
+| 06 | Bistek con papa | `#D2A463` | negro 8.2:1 |
+| 07 | Chicharrón en salsa | `#8A9440` | negro 5.7:1 |
 | 08 | Rajas con queso y crema | `#35603A` | blanco 7.3:1 |
 | 09 | Carne en salsa roja | `#A8321C` | blanco 6.7:1 |
 | 10 | Tinga de res | `#B9471F` | blanco 5.3:1 |
@@ -124,8 +130,9 @@ Reglas:
 2. El texto sobre un color de guiso es negro o blanco, el que la tabla indica.
 3. Los colores claros (02, 03, 06, 07, 12) van siempre dentro del marco de acero.
 4. Un color de guiso no se usa para otra cosa: ni botones, ni títulos, ni fondos de sección.
-5. La **franja de colores** (botón principal, cinta de la caja) usa cuatro: 09, 02, 08 y 07
-   (el 05, mole, no se distingue sobre el negro del botón).
+5. La **franja de colores** (botón principal, cinta de la caja, enlace actual de la cabecera)
+   usa cuatro, en este orden: 09, 07, 02 y 08, para que los dos verdes no se toquen (el 05,
+   mole, no se distingue sobre el negro del botón).
 
 ---
 

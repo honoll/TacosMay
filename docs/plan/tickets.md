@@ -532,6 +532,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Entre la landing y la tienda sin recargar (17-nov-2026):** `frontend/js/paginas.js` intercepta los clics entre `/` y `/tienda/`, pide la otra página con `fetch` (ya pedida al acercarse al enlace) y cambia solo lo de cada página; cabecera y pie no se tocan. Lo de cada página se guarda al salir y vuelve al regresar, con sus escuchas; los scripts corren una vez y se ponen al día con `tm:pagina`. Hojas de cada página encendidas y apagadas en el mismo cuadro; «atrás» y «adelante» con `popstate`; título, foco, anuncio y transición solo con movimiento permitido. Respaldo a navegación normal si falla la red. La tienda y la cabecera de la landing no atienden nada mientras no están a la vista. Pruebas: `navegacion.test` (ida, atrás, tres vueltas, ancla, respaldo, entrada directa) y tres vueltas en `app.test`. Sin ver en pantalla.
 
+- **Tres fotos regeneradas y sus colores (17-nov-2026):** salpicón, bistek con papa y chicharrón en salsa, otra vez a WebP 4:3 (el chicharrón más cerrado, sin el borde de la sartén). Charolas: 03 salpicón `#DCC9A0` (beige), 06 bistek `#D2A463` (dorado claro), 07 chicharrón `#8A9440` (verde olivo), todos con texto negro AA (11.5, 8.2 y 5.7). La franja de colores conserva sus cuatro guisos en orden 09 · 07 · 02 · 08 para que los dos verdes no se toquen. `[GUISO]` de los tres corregido en dirección de arte. Sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

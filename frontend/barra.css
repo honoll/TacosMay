@@ -62,7 +62,7 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .cabecera nav :is(a, .salir) { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: 600 1rem/1 var(--angosta); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
 .cabecera nav :is(a, .salir):hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 /* Dónde estás: la franja de cuatro colores bajo el enlace de la vista o sección actual. */
-.cabecera nav a[aria-current] { background: linear-gradient(90deg, #a8321c 0 25%, #f2b33d 0 50%, #35603a 0 75%, #e08a3c 0) bottom / 100% 4px no-repeat; }
+.cabecera nav a[aria-current] { background: linear-gradient(90deg, #a8321c 0 25%, #8a9440 0 50%, #f2b33d 0 75%, #35603a 0) bottom / 100% 4px no-repeat; }
 /* El contador va en su propia ficha y la cuenta regresiva separada por una raya. */
 .carrito b { display: inline-grid; place-items: center; min-width: 1.6em; height: 1.6em; padding: 0 .3em; border-radius: 99px; background: var(--crema); color: var(--negro); font-variant-numeric: tabular-nums; }
 .carrito [data-countdown]:not(:empty) { padding-left: 8px; border-left: 2px solid rgb(255 255 255 / .5); }
@@ -129,7 +129,7 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  background: linear-gradient(90deg, #a8321c 0 var(--f), #f2b33d 0 calc(var(--f) * 2), #35603a 0 calc(var(--f) * 3), #e08a3c 0 calc(var(--f) * 4), var(--fondo-btn) 0);
+  background: linear-gradient(90deg, #a8321c 0 var(--f), #8a9440 0 calc(var(--f) * 2), #f2b33d 0 calc(var(--f) * 3), #35603a 0 calc(var(--f) * 4), var(--fondo-btn) 0);
 }
 :is(.btn, button.primario):is(:hover, :focus-visible) { --f: 11px; }
 .btn.sec { padding-left: 22px; border: 2.5px solid var(--negro); background: none; color: var(--negro); }
