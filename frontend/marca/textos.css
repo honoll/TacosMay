@@ -1,0 +1,35 @@
+/* Página del inventario de textos (textos.html). Tablas anchas con desplazamiento propio: la página
+   no se desliza a lo ancho en celular. */
+.tabla { overflow-x: auto; border: 1px solid #c9c4ba; border-radius: 8px; background: #fff; }
+table { width: 100%; min-width: 860px; border-collapse: collapse; font-size: .92rem; }
+th, td { padding: 8px 10px; border-bottom: 1px solid #e3dfd7; text-align: left; vertical-align: top; }
+th { position: sticky; top: 0; background: #141210; color: #f7f4ee; font-weight: 700; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.tipo { display: inline-block; padding: 1px 6px; border-radius: 4px; background: #e3dfd7; font-size: .8rem; }
+tr.corto .tipo, tr.reescribir .tipo { background: #f2b33d; color: #141210; }
+tr.icono .tipo { background: #35603a; color: #fff; }
+tr.quitar .tipo { background: #a8321c; color: #fff; }
+tr.marca .tipo { background: #141210; color: #f7f4ee; }
+
+.picto { width: 24px; height: 24px; flex: none; }
+.muestra { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 2px solid #141210; border-radius: 4px; background: #f7f4ee; font-weight: 700; white-space: nowrap; }
+.muestra.solo { justify-content: center; min-width: 44px; padding: 0; }
+
+.cifras { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; list-style: none; }
+.cifras li { padding: 10px 14px; border-radius: 8px; background: #fff; }
+.cifras b { display: block; font-size: 1.6rem; line-height: 1; }
+.resumen h3 { margin-top: 20px; }
+.diez { display: grid; gap: 6px; max-width: 60em; padding-left: 1.4em; }
+
+.pictos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 0; list-style: none; }
+.pictos li { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; background: #fff; }
+.p24 .picto { width: 24px; height: 24px; }
+.p48 .picto { width: 48px; height: 48px; }
+.pictos i { font-style: normal; font-size: .75rem; padding: 0 4px; border-radius: 3px; background: #35603a; color: #fff; }
+td.dibujos { display: flex; gap: 6px; }
+
+.temas { display: grid; gap: 14px; }
+.tema { padding: 16px; border-radius: 8px; background: #fff; }
+.tema h3 { margin-bottom: 6px; }
+.tema ol { display: grid; gap: 4px; margin: 8px 0; padding-left: 1.4em; }
+.tema .rec { padding: 8px 10px; border-left: 4px solid #141210; background: #f7f4ee; }
