@@ -54,7 +54,10 @@
 :where(.en-inicio) .heroe .acciones { margin-top: 0; gap: 12px 22px; }
 :where(.en-inicio) .heroe .btn { box-shadow: 0 5px 0 var(--acero-osc); }
 
-:where(.en-inicio) .ollas { --k: calc(100cqw / 390); position: relative; order: -1; container-type: inline-size; width: min(100% + 2 * var(--margen), 560px); aspect-ratio: 390 / 380; margin: 0 calc(-1 * var(--margen)) 12px auto; overflow: hidden; }
+/* Celular: la caja va pegada a la orilla derecha (align-self, no margin auto: más ancha que su columna, el margen
+   automático se vuelve cero) y sin antetítulo, como la referencia, para que los botones queden arriba del pliegue. */
+:where(.en-inicio) .ollas { --k: calc(100cqw / 390); position: relative; order: -1; align-self: flex-end; container-type: inline-size; width: min(100% + 2 * var(--margen), 560px); aspect-ratio: 390 / 340; margin: 0 calc(-1 * var(--margen)) 12px 0; overflow: hidden; }
+@media (max-width: 899px) { :where(.en-inicio) .heroe .antetitulo { display: none; } }
 :where(.en-inicio) :is(.mancha, .olla) { position: absolute; right: calc(var(--r) * var(--k)); top: calc(var(--t) * var(--k)); width: calc(var(--s) * var(--k)); aspect-ratio: 1; border-radius: 50%; }
 :where(.en-inicio) .mancha { background: var(--c); }
 :where(.en-inicio) .olla .aro { display: block; width: 100%; height: 100%; padding: calc(var(--a) * var(--k)); border-radius: 50%; background: var(--acero); box-shadow: 0 0 0 2px var(--acero-osc), 0 calc(var(--s) * var(--k) * .06) calc(var(--s) * var(--k) * .12) rgb(20 18 16 / .32); }
