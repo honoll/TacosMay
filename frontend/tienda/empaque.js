@@ -6,7 +6,8 @@
 const activos = new Map(); // una bolsa por charola: agregar otra vez seguida no las encima
 const SEGURO = 2600;       // ms; retira la bolsa aunque su animación no llegue a terminar (o no exista)
 
-export function empacar(boton) {
+// corto: desde la segunda vez seguida del mismo guiso, la bolsa ya va sellada y solo vuela (medio segundo).
+export function empacar(boton, corto = false) {
   const charola = boton.closest('.charola');
   const zona = charola?.querySelector('.guiso');
   if (!zona) return { cancel() {} };
@@ -21,7 +22,7 @@ export function empacar(boton) {
   const top = Math.max(r.bottom - h, 8);
   const d = document.getElementById('nav-carrito')?.getBoundingClientRect();
   const el = document.createElement('div');
-  el.className = 'empaque';
+  el.className = corto ? 'empaque corto' : 'empaque';
   el.setAttribute('aria-hidden', 'true');
   el.innerHTML = '<div class="emp-bolsa"><div class="emp-guiso"></div><div class="emp-brillo"></div>'
     + '<div class="emp-banda"></div><div class="emp-barra"></div><div class="emp-etq"><b></b><span></span></div></div>';

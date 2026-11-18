@@ -496,6 +496,22 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
   - **NO verificado:** nada en pantalla. La prueba revisa celdas escritas, no cómo se ven: tamaños,
     cortes de texto y la fila deslizable de la cabecera siguen sin verse.
 
+- **Segundo tiempo, plan y vista 1 (17-nov-2026).** Plan en `docs/diseno/plan-segundo-tiempo.md`:
+  qué se toma y qué no de `estructura-tiendas-comida.md` e `interacciones-premium.md`, vista por
+  vista, y las propuestas que necesitan backend (campos nuevos del guiso, compra como invitado,
+  mínimo y costo de envío, recoger en la taquería, cajas), **sin hacer ninguna**. Sin dependencias
+  nuevas: ni GSAP ni AutoAnimate.
+  - **Vista 1, catálogo y tarjeta de guiso:** guisos agrupados por precio como el pizarrón, con
+    «Lo que más sale» arriba; retícula de cuatro y cinco columnas (se quitó la sexta); «Agregar» se
+    vuelve selector de cantidad (−, número, +) en el mismo lugar, con el número rodando y sin
+    volver a pedir el catálogo; sin existencias no hay botón; esqueleto de charolas si la respuesta
+    tarda más de 200 ms; entrada escalonada con tope de ocho; empacado corto (medio segundo) desde
+    la segunda vez seguida del mismo guiso. Variables únicas de tiempo y curva en `barra.css`.
+  - **Verificado:** `app.test` (agrupado por precio, control de cada charola, agregar y quitar uno
+    con la llamada correcta), `api.test`, `nav.test`, `svg.test`; `node --check`.
+  - **NO verificado:** nada en pantalla: el selector, el número que rueda, el esqueleto y el
+    empacado corto no se han visto.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

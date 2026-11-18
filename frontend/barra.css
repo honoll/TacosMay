@@ -18,6 +18,12 @@
   --foco: #1f4fa3;
   /* El lienzo es toda la pantalla: margen que crece con ella y un tope muy ancho.
      El texto corrido no se estira: lleva su propio ancho máximo de lectura. */
+  /* Tiempos y curvas del movimiento: los mismos en todo el sitio (docs/diseno/plan-segundo-tiempo.md). */
+  --t-gesto: 120ms;   /* presionar, pasar, foco */
+  --t-chico: 180ms;   /* aviso, charola, renglón */
+  --t-grande: 240ms;  /* panel, vista */
+  --entra: cubic-bezier(.2, 0, 0, 1);  /* arranca rápido y frena */
+  --sale: cubic-bezier(.4, 0, 1, 1);
   --margen: clamp(16px, 4vw, 64px);
   --ancho: 1680px;
   --angosta: "Barlow Condensed", "Arial Narrow", sans-serif;
@@ -150,9 +156,6 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 @media (min-width: 1280px) {
   .barra { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
-@media (min-width: 1600px) {
-  .barra { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
-}
 
 .cargando { display: inline-flex; gap: 5px; }
 .cargando i { width: 18px; aspect-ratio: 3 / 4; border: 3px solid var(--acero-osc); border-radius: 4px; background: var(--negro); }
@@ -161,10 +164,14 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 
 @media (prefers-reduced-motion: no-preference) {
   /* Una charola entra a la barra: 16 px desde la derecha, 180 ms, una cada 40 ms. */
-  .barra.entra > * { animation: entrar .18s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
+  .barra.entra > * { animation: entrar var(--t-chico) var(--entra) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
   .barra.entra > :nth-child(2) { --i: 1; }
   .barra.entra > :nth-child(3) { --i: 2; }
   .barra.entra > :nth-child(4) { --i: 3; }
+  .barra.entra > :nth-child(5) { --i: 4; }
+  .barra.entra > :nth-child(6) { --i: 5; }
+  .barra.entra > :nth-child(7) { --i: 6; }
+  .barra.entra > :nth-child(n + 8) { --i: 7; } /* tope: la fila completa no pasa de medio segundo */
   @keyframes entrar { from { transform: translateX(16px); opacity: 0; } }
 
   /* El vapor sube una vez: al entrar y al pasar el cursor. */

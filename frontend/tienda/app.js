@@ -61,15 +61,45 @@ const field = (prefix, name, label, value = '', attrs = '') => `
   <label for="${prefix}-${name}">${label}</label>
   <input id="${prefix}-${name}" name="${name}" value="${esc(value)}" required ${attrs}>`;
 
+const enCarrito = (id) => cart.items.find((i) => String(i.guiso.id) === String(id))?.cantidad || 0;
+
+// Lo que se hace con un guiso desde su charola: agregarlo o, si ya va en el carrito, cambiar cuántos.
+// Sin existencias no hay botón. `cambio` ('sube' o 'baja') hace rodar el número cuando acaba de cambiar.
+function control(g, cambio = '') {
+  const n = enCarrito(g.id);
+  const datos = `data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"`;
+  if (g.stock <= 0) return '<p class="acabo">Se acabó por hoy</p>';
+  if (!n) return `<button type="button" class="primario" data-click="add" ${datos}>Agregar<span class="sr"> ${esc(g.nombre)} al carrito</span></button>`;
+  return `
+    <div class="cantidad" role="group" aria-label="${esc(g.nombre)} en tu carrito">
+      <button type="button" data-click="menos" ${datos} aria-label="Quitar uno">−</button>
+      <output class="cant ${cambio}" aria-live="polite">${n}</output>
+      <button type="button" data-click="add" ${datos} aria-label="Agregar uno" ${n >= g.stock ? 'disabled' : ''}>+</button>
+    </div>`;
+}
+
 // Tarjeta de guiso: una charola del sistema (color, número y foto según el nombre; ver ../js/barra.js).
 // La descripción solo se muestra si dice algo propio de ese guiso (conDescripcion lo decide).
 const card = (g, mostrarDescripcion) => charola(g.nombre, `
     ${g.vendidos != null ? `<p class="tag">${esc(g.vendidos)} vendidos</p>` : ''}
     ${mostrarDescripcion ? `<p class="desc">${esc(g.descripcion)}</p>` : ''}
     <p class="precio">${money(g.precio_centavos)}</p>
-    <p class="meta">${esc(g.porciones)} porciones · ${g.stock > 0 ? `${esc(g.stock)} disponibles` : 'Se acabó por hoy'}</p>
-    <button type="button" class="primario" data-click="add" data-id="${esc(g.id)}" data-nombre="${esc(g.nombre)}"
-      ${g.stock > 0 ? '' : 'disabled'}>Agregar<span class="sr"> ${esc(g.nombre)} al carrito</span></button>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+    <p class="meta">${esc(g.porciones)} porciones${g.stock > 0 ? ` · ${esc(g.stock)} disponibles` : ''}</p>
+    <div class="control" data-control="${esc(g.id)}">${control(g)}</div>`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada' });
+
+// Al cambiar el carrito, las charolas del catálogo se ponen al día sin volver a pedir los guisos.
+function pintarControles(id, cambio) {
+  for (const el of view.querySelectorAll('[data-control]')) {
+    const g = guisos.find((x) => String(x.id) === el.dataset.control);
+    if (g) el.innerHTML = control(g, String(g.id) === String(id) ? cambio : '');
+  }
+}
+
+// Esqueleto del catálogo: las mismas charolas, vacías. Solo aparece si la respuesta tarda.
+const ESQUELETO = `
+  <h1>Guisos de taquería empacados al vacío</h1>
+  <ul class="barra" aria-busy="true" aria-label="Cargando los guisos">${'<li class="charola hueca"><div class="guiso"></div><div class="datos"><p></p><p></p></div></li>'.repeat(8)}</ul>`;
+const TARDA = 200; // ms antes de mostrar el esqueleto, para que no parpadee si la API contesta rápido
 
 // Una descripción repetida en varios guisos no informa nada: devuelve cómo pintar cada tarjeta de esa lista.
 function conDescripcion(lista) {
@@ -100,11 +130,14 @@ const VIEWS = {
     const [populares, todos] = await Promise.all([api('/guisos/populares'), api('/guisos')]);
     guisos = todos;
     const tarjeta = conDescripcion(todos);
+    if (!todos.length) return '<h1>Guisos de taquería empacados al vacío</h1><p>Todavía no hay guisos en el catálogo.</p>';
+    // Como el pizarrón de la taquería: agrupados por precio, del más barato al más caro. Sin filtros.
+    const precios = [...new Set(todos.map((g) => g.precio_centavos))].sort((a, b) => a - b);
+    const fila = (lista) => `<ul class="barra entra">${lista.map(tarjeta).join('')}</ul>`;
     return `
       <h1>Guisos de taquería empacados al vacío</h1>
-      ${populares.length ? `<h2>Los más pedidos</h2><ul class="grid">${populares.map(tarjeta).join('')}</ul>` : ''}
-      <h2>Todos los guisos</h2>
-      ${todos.length ? `<ul class="grid">${todos.map(tarjeta).join('')}</ul>` : '<p>Todavía no hay guisos en el catálogo.</p>'}`;
+      ${populares.length ? `<h2>Lo que más sale</h2>${fila(populares)}` : ''}
+      ${precios.map((p) => `<h2 class="grupo">${precios.length > 1 ? `De ${money(p)}` : 'Todos los guisos'}</h2>${fila(todos.filter((g) => g.precio_centavos === p))}`).join('')}`;
   },
 
   async carrito() {
@@ -310,10 +343,22 @@ const ACTIONS = {
       notice('Inicia sesión para agregar guisos al carrito.', 'error');
       return go('entrar');
     }
-    const actual = cart.items.find((i) => String(i.guiso.id) === el.dataset.id)?.cantidad || 0;
-    const pack = empacar(el); // respuesta visual: no espera a la llamada ni la retrasa
-    try { await setQty(el.dataset.id, actual + 1); } catch (err) { pack.cancel(); throw err; }
-    notice(`Agregado al carrito: ${el.dataset.nombre}.`);
+    const id = el.dataset.id;
+    const actual = enCarrito(id);
+    // La primera vez, el empacado completo explica el producto; después, solo la bolsa volando.
+    const pack = empacar(el, actual > 0);
+    try { await setQty(id, actual + 1); } catch (err) { pack.cancel(); throw err; }
+    pintarControles(id, 'sube');
+    view.querySelector(`[data-control="${CSS.escape(id)}"] [data-click="add"]`)?.focus({ preventScroll: true });
+    if (!actual) notice(`Agregado al carrito: ${el.dataset.nombre}.`);
+  },
+
+  // Quitar uno desde la charola del catálogo.
+  async menos(el) {
+    const id = el.dataset.id;
+    await setQty(id, enCarrito(id) - 1);
+    pintarControles(id, 'baja');
+    view.querySelector(`[data-control="${CSS.escape(id)}"] :is([data-click="menos"], [data-click="add"])`)?.focus({ preventScroll: true });
   },
 
   async qty(el) {
@@ -433,8 +478,10 @@ async function render() {
   const changed = r !== current;
   current = r;
   renderNav();
+  const tarda = setTimeout(() => { if (id === renderId && changed && r === 'catalogo') view.innerHTML = ESQUELETO; }, TARDA);
   await run(async () => {
-    const html = await VIEWS[r]();
+    let html;
+    try { html = await VIEWS[r](); } finally { clearTimeout(tarda); }
     if (id !== renderId) return; // ya hay un render más nuevo
     const focusId = document.activeElement?.id;
     view.innerHTML = html;

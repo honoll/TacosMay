@@ -25,7 +25,7 @@ Object.assign(globalThis, {
   document: { getElementById: (id) => (porId[id] ??= nodo()), querySelector: () => null, querySelectorAll: () => [], activeElement: null, title: '' },
   location: { get hash() { return hash; }, set hash(v) { hash = v ? `#${String(v).replace(/^#/, '')}` : ''; } },
   addEventListener: (tipo, fn) => { oyentes[tipo] = fn; },
-  setInterval: () => 0, scrollTo() {}, innerWidth: 1440,
+  setInterval: () => 0, scrollTo() {}, innerWidth: 1440, CSS: { escape: String },
   FormData: class { constructor(f) { this.e = [...f.elements].map((i) => [i.name, i.value]); } [Symbol.iterator]() { return this.e[Symbol.iterator](); } },
 });
 
@@ -40,12 +40,15 @@ const CARRITO = { items: [{ guiso: GUISOS[0], cantidad: 2 }], total_centavos: 40
 const PEDIDO = { id: '7', total_centavos: 40000, creado: '2026-11-17T12:00:00Z', items: [{ guisoId: '1', nombre: 'Carne en salsa roja', cantidad: 2, precio_centavos: 20000 }] };
 let carritoVacio = false;
 const llamadas = [];
+const cuerpos = [];
 globalThis.fetch = async (url, { method = 'GET', body } = {}) => {
   llamadas.push(`${method} ${url}`);
+  cuerpos.push(body);
   const ok = (data, status = 200) => ({ ok: status < 400, status, json: async () => data });
   if (url === '/api/guisos') return ok(GUISOS);
   if (url === '/api/guisos/populares') return ok([{ ...GUISOS[0], vendidos: 3 }]);
   if (url === '/api/carrito') return ok(carritoVacio ? { items: [], total_centavos: 0, expira_en_segundos: 0 } : CARRITO);
+  if (url.startsWith('/api/carrito/items/')) return ok(CARRITO);
   if (url === '/api/pedidos') return ok([PEDIDO]);
   if (url === '/api/users/login') return JSON.parse(body).password === 'buena' ? ok(USUARIO) : ok({ message: 'Credenciales incorrectas' }, 401);
   if (url === '/api/users') return ok({ message: 'Ese email ya está registrado' }, 400);
@@ -107,6 +110,23 @@ assert.equal(JSON.parse(store.tm_sesion).token, 't');
 assert.match(porId.nav.innerHTML, /Prueba/, 'la cabecera muestra el nombre');
 assert.match(porId.nav.innerHTML, /data-click="logout"/, 'y «Salir»');
 assert.equal(porId['nav-carrito-n'].textContent, 2, 'el contador del carrito cuenta las piezas');
+
+// Catálogo con sesión: por precio como el pizarrón, y cada charola con su control
+const cat = vista().innerHTML;
+assert.ok(cat.indexOf('De $180.00') > 0 && cat.indexOf('De $180.00') < cat.indexOf('De $200.00'), 'los guisos van agrupados por precio, de menor a mayor');
+const controlDe = (id) => cat.split(`data-control="${id}">`).at(-1).split('</li>')[0];
+assert.match(controlDe('1'), /class="cantidad"[\s\S]*<output[^>]*>2</, 'el guiso que ya va en el carrito muestra el selector con su cantidad');
+assert.match(controlDe('3'), /data-click="add"[^>]*>Agregar/, 'el que no va en el carrito muestra «Agregar»');
+assert.ok(/Se acabó por hoy/.test(controlDe('2')) && !/<button/.test(controlDe('2')), 'sin existencias no hay botón');
+
+// Agregar uno más y quitar uno desde la charola: la misma llamada de siempre, con la cantidad nueva
+n = llamadas.length;
+await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'add', id: '1', nombre: 'Carne en salsa roja' } }));
+assert.equal(llamadas[n], 'PUT /api/carrito/items/1');
+assert.equal(cuerpos[n], '{"cantidad":3}', 'agregar suma uno a lo que ya iba');
+await clic(nodo({ tagName: 'BUTTON', dataset: { click: 'menos', id: '1', nombre: 'Carne en salsa roja' } }));
+assert.equal(cuerpos[n + 1], '{"cantidad":1}', 'quitar uno resta uno');
+assert.equal(llamadas.length, n + 2, 'cambiar la cantidad no vuelve a pedir el catálogo');
 
 // ---------- 2 · Cada vista en escritorio: todos sus bloques tienen celda y ninguna se encima ----------
 const VACIAS = new Set(['input', 'img', 'br']);

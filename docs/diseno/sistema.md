@@ -188,8 +188,9 @@ rompe, calienta, taco, congelado, caja, lugar y listo.**
 - **Anatomía:** marco de acero (1/16 del ancho, con una línea fina de acero oscuro), arriba
   el guiso (proporción 4:3: su color o su foto) con el **número arriba a la izquierda** y el
   vapor arriba a la derecha; abajo, sobre crema, nombre, datos y acción.
-- **En fila:** dos por renglón en celular, cuatro desde 700 px, cinco desde 1280 px y seis
-  desde 1600 px; separación de 1/8 del ancho de una charola.
+- **En fila:** dos por renglón en celular, cuatro desde 700 px y cinco desde 1280 px, que es
+  el tope (ninguna tienda de la muestra de Investigación pasa de cuatro o cinco); separación
+  de 1/8 del ancho de una charola.
 - **Charola sin foto:** más baja (proporción 5:2), con el cepillado del acero sobre su color y
   el número grande. Se ve como una charola tapada, no como un hueco.
 - **Ritmo:** una fila de charolas y después texto o aire. Nunca dos retículas seguidas.

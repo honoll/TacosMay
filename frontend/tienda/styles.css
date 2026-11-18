@@ -55,18 +55,34 @@ button {
 button:disabled { opacity: .5; cursor: not-allowed; }
 input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background: #fff; color: var(--texto); }
 
-/* El catálogo es una barra de charolas. */
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+/* El catálogo es una barra de charolas (la retícula .barra viene de ../barra.css): dos por renglón
+   en celular, cuatro desde 700 px y cinco desde 1280 px, agrupadas por precio como el pizarrón. */
+.barra + h2 { margin-top: 36px; }
+.grupo { display: flex; align-items: center; gap: 14px; }
+.grupo::after { content: ""; flex: 1; border-bottom: 3px solid var(--negro); }
 .charola .datos { justify-items: stretch; }
-.charola button { margin-top: 6px; justify-content: center; padding-block: 8px; line-height: 1.1; text-align: center; }
 @media (max-width: 699px) {
-  .charola button.primario { padding-inline: 26px 8px; font-size: 1rem; letter-spacing: .04em; }
   .charola .datos { padding: 8px 8px 10px; }
   .charola .precio { font-size: 1.4rem; }
 }
-@media (min-width: 700px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
-}
+
+/* El control de cada charola queda al pie, para que todas cierren igual. */
+.barra > .charola { grid-template-rows: auto 1fr; }
+.barra .charola .datos { display: flex; flex-direction: column; align-items: stretch; }
+.barra .charola .tag { align-self: flex-start; }
+.control { margin-top: auto; padding-top: 6px; }
+.control > button { width: 100%; justify-content: center; white-space: nowrap; }
+/* «Agregar» se vuelve selector de cantidad en el mismo lugar y con el mismo alto: nada brinca. */
+.cantidad { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; min-height: 48px; border: 2px solid var(--negro); border-radius: 4px; overflow: hidden; }
+.cantidad button { min-height: 44px; padding: 0; border: 0; border-radius: 0; background: var(--negro); color: var(--crema); font: 800 1.5rem/1 var(--angosta); }
+.cantidad button:disabled { opacity: .35; }
+.cant { display: block; overflow: hidden; text-align: center; font: 800 1.5rem/1 var(--angosta); font-variant-numeric: tabular-nums; }
+.acabo { margin: 0; min-height: 48px; display: grid; align-items: center; font: 600 .95rem/1.2 var(--angosta); letter-spacing: .1em; text-transform: uppercase; color: var(--suave); }
+
+/* Esqueleto: charolas vacías mientras llegan los guisos. */
+.charola.hueca .guiso { background: var(--acero); }
+.charola.hueca .datos p { height: 1.1em; margin: 0; border-radius: 4px; background: var(--acero); }
+.charola.hueca .datos p + p { width: 55%; }
 
 .card, .form, .lista li {
   background: var(--tarjeta);
@@ -164,6 +180,17 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
   .emp-banda { animation: emp-ver .01s .78s forwards; }
   .emp-etq { animation: emp-etiqueta .2s .9s cubic-bezier(.2, 1.5, .4, 1) forwards; }
   #nav-carrito.llega { animation: emp-llega .25s; }
+  /* Versión corta: la bolsa aparece ya sellada y con su etiqueta, y vuela. */
+  .empaque.corto { animation: emp-viaja .42s .06s cubic-bezier(.5, 0, .9, .5) forwards; }
+  .empaque.corto :is(.emp-bolsa, .emp-guiso, .emp-brillo, .emp-barra, .emp-banda, .emp-etq) { animation: none; }
+  .empaque.corto :is(.emp-banda, .emp-etq) { opacity: 1; }
+  /* El número rueda al cambiar: sube el nuevo desde abajo, o baja desde arriba. */
+  .cant.sube { animation: rueda-sube var(--t-chico) var(--entra); }
+  .cant.baja { animation: rueda-baja var(--t-chico) var(--entra); }
+  @keyframes rueda-sube { from { transform: translateY(70%); opacity: 0; } }
+  @keyframes rueda-baja { from { transform: translateY(-70%); opacity: 0; } }
+  .charola.hueca { animation: late 1s var(--entra) infinite alternate; }
+  @keyframes late { to { opacity: .55; } }
 
   @keyframes emp-aparece { from { transform: translateY(10px) scale(.9); opacity: 0; } }
   @keyframes emp-cae { from { transform: translateY(-140%); } }
@@ -198,11 +225,6 @@ input { width: 100%; padding: 0 12px; border: 2px solid var(--suave); background
   .acceso-lado { align-self: stretch; }
 }
 
-/* Catálogo: el botón cabe en una línea y queda al pie de la charola, para que todas cierren igual. */
-.grid > .charola { grid-template-rows: auto 1fr; }
-.grid .charola .datos { display: flex; flex-direction: column; align-items: stretch; }
-.grid .charola .datos > button { margin-top: auto; white-space: nowrap; }
-.grid .charola .tag { align-self: flex-start; }
 .desc { color: var(--suave); }
 
 /* Pedidos: una tarjeta por pedido, a lo ancho de su columna; al lado, la salida para seguir comprando. */
