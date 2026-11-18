@@ -204,13 +204,11 @@
   :where(.en-inicio) .visitanos-rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); align-items: end; }
 }
 
-/* ---------- Cierre: una franja, no otro héroe ---------- */
+/* ---------- Cierre: «Ya está hecho.» en grande sobre negro, con el botón (sin ollas: no es otro héroe) ---------- */
 
 :where(.en-inicio) main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
-:where(.en-inicio) .cierre .caja { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 40px; }
-:where(.en-inicio) .cierre h2.rot { margin: 0; }
-:where(.en-inicio) .cierre .entrada { margin-top: 8px; color: #d9d4ca; }
-:where(.en-inicio) .cierre .acciones { margin-top: 0; }
+:where(.en-inicio) .cierre h2.rot { margin: 0; font-size: clamp(4rem, 20vw, 15rem); line-height: .84; } /* el «Ya está hecho.» grande: así le gustaba a Alejandro */
+:where(.en-inicio) .cierre .entrada { margin-top: 14px; color: #d9d4ca; }
 
 /* ---------- Página de «no encontrado» ---------- */
 
