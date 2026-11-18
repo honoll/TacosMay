@@ -199,7 +199,9 @@ function coreografia(gsap, el, alLlegarEtiqueta, alTerminar) {
   });
   const T0 = t + 0.25; // la última bolsa ya está dentro
 
-  tl.to(caja, { scaleY: 0.94, transformOrigin: '50% 100%', duration: 0.08, ease: 'power2.out' }, T0)
+  // ya dentro de la caja (tapadas por su frente), las bolsas se van con ella: que no se queden en la pista
+  tl.set($$('.bolsa-g'), { opacity: 0 }, T0)
+    .to(caja, { scaleY: 0.94, transformOrigin: '50% 100%', duration: 0.08, ease: 'power2.out' }, T0)
     .to(caja, { scaleY: 1, duration: 0.16, ease: CURVA }, T0 + 0.08)
     // se cierran las tapas, cinta y etiqueta con el número
     .to($('.tapa.izq'), { rotation: 0, svgOrigin: '270 156', duration: 0.24, ease: 'power3.inOut' }, T0 + 0.08)
