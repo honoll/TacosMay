@@ -67,20 +67,21 @@ El compartimento se vacía (el guiso se desvanece y la etiqueta cae) y los que s
 El guiso que volaba se sacude y se desvanece (0.30 s); no se abre compartimento; sale el aviso con
 el mensaje (qué pasó y qué hacer), como hoy.
 
-### Confirmar el pedido (≈ 3.15 s, se salta con un toque, «Saltar» o Escape)
+### Confirmar el pedido (≈ 4.0 s con 2 guisos, ≈ 4.3 s con 8; se salta con un toque, «Saltar» o Escape)
 
 Rehecha el 18-nov-2026 (crítica y tiras de cuadros en `docs/calidad/critica-envio.md`). Una sola línea de
-tiempo, todo en SVG con el sistema (trazo negro de 2, acero, crema, la franja de cuatro colores):
+tiempo, todo en SVG con el sistema (trazo negro de 2, acero, crema, la franja de cuatro colores como librea del
+avión); al fondo, el sol de Cabo y dos nubes, y la pista.
 
-| Paso | Empieza | Qué se ve |
-|---|---|---|
-| Tus guisos | 0.00 s | La bolsa con un compartimento por guiso pedido (hasta 8), en su color, sobre la caja abierta |
-| Se sella | 0.40 s | Una banda negra corre por la boca de la bolsa |
-| Cae a la caja | 0.75 s | Toma impulso, cae por detrás del frente (no aparece ni desaparece nada) y la caja acusa el golpe |
-| Se cierra | 1.30 s | Las tapas giran sobre su bisagra, una y otra |
-| Cinta y etiqueta | 1.70 s | Pasa la cinta y se pega la etiqueta con la franja y el número del pedido |
-| Sale | 2.20 s | La caja retrocede y sale; tres rayas de velocidad |
-| El final | 2.80 s | «Pedido #N confirmado», el total, «Ver mis pedidos» (con el foco) y «Seguir comprando». Se queda hasta que se elige |
+| Paso | Qué se ve |
+|---|---|
+| Las bolsas | Una bolsita por guiso, con su color, cae a la caja abierta; de la cuarta en adelante, en ráfaga |
+| Se cierra | La caja acusa el golpe; las tapas giran sobre su bisagra |
+| Cinta y etiqueta | Pasa la cinta y se pega la etiqueta con la franja y el número del pedido |
+| Llega el avión | Rodando por la pista desde la izquierda; se pasa un poco y se asienta |
+| Sube a bordo | El avión levanta la nariz; la caja toma impulso y entra por debajo; la nariz se cierra |
+| Despega | Acelera (las marcas de la pista corren), levanta el morro y sale arriba a la derecha con su estela; el sol y las nubes se quedan atrás más despacio |
+| El final | La estela se vuelve la raya bajo «Pedido #N confirmado», con el total, «Ver mis pedidos» (con el foco) y «Seguir comprando». Se queda hasta que se elige |
 
 La llamada `POST /pedidos` sale al tocar «Confirmar pedido», en paralelo, como antes. Si la API rechaza (el
 409 de existencias de la demo), la escena se retira y sale el error. Si el número todavía no llega cuando se
