@@ -17,6 +17,9 @@ let turno = 0;               // si llega otro clic antes de terminar, gana el ú
 const cabecera = () => document.querySelector('header.cabecera');
 const pie = () => document.querySelector('footer.pie');
 const hojas = () => [...document.head.querySelectorAll('link[rel="stylesheet"]')];
+// Las hojas vienen con ruta relativa: tras pushState resolverían contra la otra carpeta y
+// dejarían de reconocerse (la tienda quedaba sin barra.css). Se fijan absolutas al arrancar.
+for (const l of hojas()) l.setAttribute('href', l.href);
 const animar = () => document.startViewTransition && matchMedia('(prefers-reduced-motion: no-preference)').matches;
 
 // Para lector de pantalla: se dice a qué página se llegó.
