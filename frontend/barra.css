@@ -38,6 +38,9 @@ html { background: var(--crema); color-scheme: light; }
 body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.0625rem/1.5 var(--fuente); }
 :focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* Aquí y no en landing.css: esta hoja nunca se apaga al cambiar de página, así el enlace no se asoma. */
+.saltar { position: absolute; left: 16px; top: -100px; z-index: 2; padding: 12px 16px; background: var(--negro); color: var(--crema); }
+.saltar:focus-visible { top: 8px; }
 
 .caja { width: min(100% - 2 * var(--margen), var(--ancho)); margin-inline: auto; }
 

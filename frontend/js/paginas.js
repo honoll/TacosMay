@@ -107,7 +107,12 @@ export async function ir(url, { empuja = true } = {}) {
   guardadas.set(actual, estaPagina());
 
   const cambiar = () => {
-    for (const l of hojas()) l.media = pag.css.includes(l.href) ? 'all' : 'not all';
+    // Solo se toca la hoja que cambia de estado: reescribir `media` en una que ya estaba puesta
+    // (barra.css) hace que Safari la vuelva a procesar y deje la cabecera un momento sin estilo.
+    for (const l of hojas()) {
+      const media = pag.css.includes(l.href) ? 'all' : 'not all';
+      if ((l.media || 'all') !== media) l.media = media;
+    }
     const { antes, despues } = partes(document.body, cabecera());
     for (const el of [...antes, ...despues]) el.remove();
     if (!pag.puesta) {
