@@ -365,3 +365,13 @@ button.enviando::after { content: "…"; }
   input[aria-invalid="true"] { animation: sacude var(--t-grande) var(--entra); }
   @keyframes sacude { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 }
+
+/* ---------- Administración: el renglón guardado se palomea ---------- */
+.lista .guardado { outline: 4px solid var(--negro); outline-offset: -4px; }
+.palomita { padding: 2px 8px; border-radius: 4px; background: var(--negro); color: var(--crema); font-size: .85rem; font-weight: 600; white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) {
+  .lista .guardado { animation: entra-renglon var(--t-grande) var(--entra); }
+  @keyframes entra-renglon { from { opacity: 0; transform: translateY(-10px); } }
+  .palomita { animation: palomea var(--t-grande) var(--entra) var(--t-chico) backwards; }
+  @keyframes palomea { from { opacity: 0; transform: scale(.6); } }
+}

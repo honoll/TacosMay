@@ -520,6 +520,8 @@ ha visto en pantalla**: composición, tipografía y movimiento solo los puede ju
 
 - **Segundo tiempo · vista 5 Mis pedidos (17-nov-2026):** Cada pedido es un renglón `<details>` con fecha, piezas y total que se abre en su lugar; el más nuevo viene abierto y el recién confirmado llega resaltado. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
 
+- **Segundo tiempo · vista 6 Administración (17-nov-2026):** El guiso guardado sale palomeado («✓ Guardado») y, si es nuevo, su renglón entra con movimiento; borrar conserva la confirmación de hoy. Verificado con `app.test`, `api.test`, `nav.test` y `svg.test`; sin ver en pantalla.
+
 ## Investigación
 - ✅ I1 Viabilidad: empaque al vacío, vida útil, cadena de frío, paqueterías, regulación → `docs/investigacion/viabilidad.md` (17-nov)
 - ✅ I2 Competencia y precios de referencia en México → `docs/investigacion/mercado.md` (17-nov)

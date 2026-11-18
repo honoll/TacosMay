@@ -130,3 +130,4 @@ Investigación y chocan con la marca.
 | 3 Carrito | Hecho, sin ver en pantalla (17-nov-2026) |
 | 4 Cuenta | Hecho, sin ver en pantalla (17-nov-2026) |
 | 5 Mis pedidos | Hecho, sin ver en pantalla (17-nov-2026) |
+| 6 Administración | Hecho, sin ver en pantalla (17-nov-2026) |

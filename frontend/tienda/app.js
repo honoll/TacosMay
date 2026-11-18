@@ -17,6 +17,7 @@ let rendered = null; // hash ya pintado, para no repintar en el hashchange de go
 let renderId = 0;
 let desde = 'catalogo'; // última dirección que no es de acceso: ahí se regresa después de entrar o registrarse
 let nuevo = null;        // el pedido recién confirmado: llega resaltado a «Mis pedidos»
+let guardado = null;     // el guiso que se acaba de guardar en administración
 let ultimo = null;       // lo último que se quitó del carrito, para poder deshacerlo
 let param = '';         // lo que sigue a la vista en la dirección: #guiso/3 → '3'
 
@@ -308,8 +309,8 @@ const VIEWS = {
       </form>
       <h2>Guisos en el catálogo</h2>
       <ul class="lista">${guisos.map((x) => `
-        <li>
-          <div class="crece"><strong>${esc(x.nombre)}</strong><br>
+        <li${String(x.id) === String(guardado) ? ' class="guardado"' : ''}>
+          <div class="crece"><strong>${esc(x.nombre)}</strong>${String(x.id) === String(guardado) ? ' <span class="palomita">✓ Guardado</span>' : ''}<br>
             ${money(x.precio_centavos)} · ${esc(x.porciones)} porciones · stock ${esc(x.stock)}</div>
           <button type="button" data-click="edit" data-id="${esc(x.id)}">Editar<span class="sr"> ${esc(x.nombre)}</span></button>
           <button type="button" data-click="del" data-id="${esc(x.id)}">Eliminar<span class="sr"> ${esc(x.nombre)}</span></button>
@@ -526,7 +527,10 @@ const ACTIONS = {
       : await api('/guisos', { method: 'POST', body });
     notice(`${editing ? 'Guardado' : 'Agregado'}: ${g.nombre}.`);
     editing = null;
+    guardado = g.id; // su renglón sale palomeado (y, si es nuevo, entra con movimiento)
     await render();
+    guardado = null;
+    view.querySelector('.guardado')?.scrollIntoView({ block: 'nearest' });
   },
 
   async edit(el) {
