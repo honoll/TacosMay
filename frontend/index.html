@@ -96,11 +96,13 @@
           <a class="olla o3" href="/tienda/#catalogo" data-guiso="Chorizo con huevo" data-p=".7"><span class="aro"><img src="/media/guisos/chorizo-con-huevo.webp" srcset="/media/guisos/chorizo-con-huevo.webp 720w, /media/guisos/chorizo-con-huevo-1024.webp 1024w" sizes="(min-width: 900px) 28vw, 60vw" alt="Chorizo con huevo" width="720" height="540" decoding="async"></span></a>
           <a class="olla o4" href="/tienda/#catalogo" data-guiso="Nopalitos" data-p=".4"><span class="aro"><img src="/media/guisos/nopalitos.webp" srcset="/media/guisos/nopalitos.webp 720w, /media/guisos/nopalitos-1024.webp 1024w" sizes="(min-width: 900px) 28vw, 60vw" alt="Nopalitos" width="720" height="540" decoding="async"></span></a>
           <a class="olla o5" href="/tienda/#catalogo" data-guiso="Mole con pollo" data-p=".9"><span class="aro"><img src="/media/guisos/mole-con-pollo.webp" srcset="/media/guisos/mole-con-pollo.webp 720w, /media/guisos/mole-con-pollo-1024.webp 1024w" sizes="(min-width: 900px) 28vw, 60vw" alt="Mole con pollo" width="720" height="540" loading="lazy" decoding="async"></span></a>
-          <p class="toca" aria-hidden="true">Toca una olla para ver el guiso</p>
+          <div class="ollas-pie">
+            <!-- El guiso gira despacio dentro de su olla; esto lo detiene (nada se mueve solo sin poder pararlo). -->
+            <button class="btn sec chico giro-pausa" type="button" hidden>Pausar<span class="sr"> el giro de las ollas</span></button>
+            <p class="toca" aria-hidden="true">Toca una olla para ver el guiso</p>
+          </div>
         </div>
 
-        <!-- El guiso gira despacio dentro de su olla; esto lo detiene (nada se mueve solo sin poder pararlo). -->
-        <button class="btn sec chico giro-pausa" type="button" hidden>Pausar<span class="sr"> el giro de las ollas</span></button>
       </div>
     </section>
 
@@ -132,28 +134,21 @@
             <p>La idea no ha cambiado: los guisos ya están hechos y calientes a baño maría, para la gente que va a trabajar o que sale de trabajar. Llegas, escoges, comes y te vas.</p>
           </div>
         </div>
+        <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt); la persona no es nadie real -->
+        <figure class="foto-barra" data-muestra>
+          <img src="/media/ambiente/sirviendo.webp" srcset="/media/ambiente/sirviendo.webp 720w, /media/ambiente/sirviendo-1024.webp 1024w" sizes="(min-width: 900px) 40vw, 92vw" alt="Un cocinero de mandil sirve guiso en tortillas desde una olla de la barra" width="720" height="540" loading="lazy" decoding="async">
+        </figure>
         <ul class="cifras">
           <li><b>22</b><span>años, poco más o poco menos, en Cabo San Lucas</span></li>
           <li><b>&lt;10</b><span>minutos para entrar, comer y salir</span></li>
           <li><b>4 a.&nbsp;m.</b><span>la barra del centro cierra de madrugada</span></li>
         </ul>
-        <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt), sustituir por foto real de la barra -->
-        <figure class="foto-barra" data-muestra>
-          <img src="/media/ambiente/banio-maria.webp" srcset="/media/ambiente/banio-maria.webp 720w, /media/ambiente/banio-maria-1024.webp 1024w" sizes="(min-width: 900px) 40vw, 92vw" alt="Barra de guisos a baño maría, con la cocina atrás" width="720" height="540" loading="lazy" decoding="async">
-          <figcaption>Imagen de muestra, generada; la barra real va aquí cuando haya foto.</figcaption>
-        </figure>
         <div class="barra-gente" data-muestra>
-          <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt); la persona no es nadie real -->
-          <figure class="foto-gente">
-            <img src="/media/ambiente/sirviendo.webp" srcset="/media/ambiente/sirviendo.webp 720w, /media/ambiente/sirviendo-1024.webp 1024w" sizes="(min-width: 900px) 40vw, 92vw" alt="Un cocinero de mandil sirve guiso en tortillas desde una olla de la barra" width="720" height="540" loading="lazy" decoding="async">
-            <figcaption>Imagen de muestra, generada.</figcaption>
-          </figure>
           <h3>En la barra</h3>
-          <p class="muestra-nota">Contenido de muestra: nombres y datos por confirmar con la familia.</p>
           <ul class="gente">
-            <li style="--c:#A8321C"><span class="inicial" aria-hidden="true">C</span><b>Chayo</b><span>Lleva el mole y la carne en salsa roja. Llega antes que nadie para que a las primeras horas ya esté todo caliente.</span></li>
-            <li style="--c:#35603A"><span class="inicial" aria-hidden="true">T</span><b>Toño</b><span>Está en la plancha y en las tortillas. Dice que un taco se sirve en lo que tardas en pedir el refresco.</span></li>
-            <li style="--c:#F2B33D"><span class="inicial" aria-hidden="true">L</span><b>Lupita</b><span>Atiende la barra de noche, hasta el cierre. Conoce a los de la madrugada por su guiso de siempre.</span></li>
+            <li><b>Chayo</b><span>Lleva el mole y la carne en salsa roja. Llega antes que nadie para que a las primeras horas ya esté todo caliente.</span></li>
+            <li><b>Toño</b><span>Está en la plancha y en las tortillas. Dice que un taco se sirve en lo que tardas en pedir el refresco.</span></li>
+            <li><b>Lupita</b><span>Atiende la barra de noche, hasta el cierre. Conoce a los de la madrugada por su guiso de siempre.</span></li>
           </ul>
           <blockquote class="cita"><p>«Aquí nadie espera: el guiso ya está.»</p><footer>Chayo, en la barra</footer></blockquote>
           <p class="cocina">La cocina de atrás: dos estufas de seis quemadores, ollas de peltre y de aluminio y un baño maría de ocho ollas en la barra. Nada de lujo: lo que hace falta para guisar todos los días.</p>
@@ -164,12 +159,13 @@
     <!-- De la olla a tu casa: el proceso de empacado (así va a funcionar). Antes era «Cómo funciona»; conserva #como. -->
     <section class="proceso" id="como" aria-labelledby="como-titulo">
       <div class="caja">
-        <h2 class="rot" id="como-titulo">De la olla a tu casa</h2>
-        <p class="entrada">El mismo guiso de la barra, en bolsa. Así se hace:</p>
+        <div class="proceso-cabeza">
+          <h2 class="rot" id="como-titulo">De la olla a tu casa</h2>
+          <p class="entrada">El mismo guiso de la barra, en bolsa. Así se hace:</p>
+        </div>
         <!-- PENDIENTE-CLIENTE: imagen generada con IA (media/originales/LEEME.txt), sustituir por foto real del empacado -->
         <figure class="foto-proceso" data-muestra>
           <img src="/media/ambiente/sellado.webp" srcset="/media/ambiente/sellado.webp 720w, /media/ambiente/sellado-1024.webp 1024w" sizes="(min-width: 900px) 34vw, 92vw" alt="Manos con guantes sostienen una porción de guiso sellada al vacío, junto a la selladora" width="720" height="540" loading="lazy" decoding="async">
-          <figcaption>Imagen de muestra, generada.</figcaption>
         </figure>
         <ol class="pasos">
           <li><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="8" width="20" height="3" rx="1.5"/><path d="M4 12h16l-1.4 7.3A2 2 0 0 1 16.6 21H7.4a2 2 0 0 1-2-1.7z"/></svg><b>Se guisa en la taquería</b><span>En las mismas ollas y con las mismas manos que la barra.</span></li>
@@ -193,27 +189,6 @@
           <li><span class="tiempo"><b>5–7</b> min</span><h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="9" width="15" height="5" rx="2.5"/><rect x="15.5" y="10.5" width="7.5" height="2" rx="1"/><path d="M5 22c-1.6-2 1-3 0-5M9.5 22c-1.6-2 1-3 0-5M14 22c-1.6-2 1-3 0-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Sartén</h3><p>Rompe la bolsa, vacía el guiso y muévelo a fuego medio hasta que suelte el hervor.</p></li>
           <li><span class="tiempo"><b>2–3</b> min</span><h3><svg class="picto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14z"/><path d="M11 7h2v4.6l3.3 2-1 1.7L11 12.7z"/></svg>Microondas</h3><p>Pásalo a un recipiente, tápalo y revuelve a la mitad. La bolsa no entra al microondas.</p></li>
         </ol>
-        <p class="muestra-nota" data-muestra>Tiempos de muestra, por confirmar con la cocina.</p>
-      </div>
-    </section>
-
-    <!-- El envío: lo que se sabe y lo que falta. Igual que la tienda: todavía no se hacen envíos. -->
-    <section class="envio" id="envio" aria-labelledby="envio-titulo">
-      <div class="caja">
-        <div class="papel">
-          <h2 class="rot" id="envio-titulo">El envío, sin cuentos</h2>
-          <!-- PENDIENTE-CLIENTE: cobertura, costo, tiempos y días de despacho; ciudad de origen -->
-          <ul class="ticket">
-            <li><span>Formato</span><i></i><span>Al vacío, congelado</span></li>
-            <li><span>A dónde llega</span><i></i><span>Por confirmar</span></li>
-            <li><span>Cuánto cuesta</span><i></i><span>Por confirmar</span></li>
-            <li><span>En cuántos días</span><i></i><span>Por confirmar</span></li>
-          </ul>
-          <p>Lo que dice «por confirmar» no lo prometemos hasta tenerlo seguro.</p>
-          <p class="fuente">Sobre vacío y congelación: guías de inocuidad de
-            <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe" rel="noopener">USDA-FSIS</a> y de la
-            <a href="https://assets.publishing.service.gov.uk/media/69aea81a671a8a924c83ee87/the-safety-and-shelf-life-of-vacuum-and-modified-atmosphere-packed-chilled-foods-with-respect-to-non-proteolytic-clostridium-botulinum_1.pdf" rel="noopener">FSA del Reino Unido</a>.</p>
-        </div>
       </div>
     </section>
 
@@ -278,7 +253,7 @@
         <a href="/domicilio/">Tacos a domicilio</a>
         <a href="/proyecto/">Proyecto escolar</a>
       </nav>
-      <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real.</p>
+      <p class="pie-nota">Los guisos empacados y sus precios son de ejemplo mientras se confirma la carta real. Las fotos de ambiente y parte del contenido del inicio son de muestra.</p>
       <!-- PENDIENTE-CLIENTE: contactos reales (teléfono, WhatsApp, correo, redes) como enlaces tel: / wa.me / mailto:, razón social y aviso de privacidad -->
     </div>
   </footer>

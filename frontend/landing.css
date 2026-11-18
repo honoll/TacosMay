@@ -10,10 +10,12 @@
 :where(.en-inicio) section[id] { scroll-margin-top: 16px; }
 
 
-:where(.en-inicio) .entrada { max-width: 34em; font-size: clamp(1.1rem, 1.6vw, 1.3rem); }
+:where(.en-inicio) .entrada { max-width: 34em; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); }
 :where(.en-inicio) .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 24px; }
-:where(.en-inicio) h2.rot { font-size: clamp(2.2rem, 7vw, 4rem); margin-bottom: 14px; }
-:where(.en-inicio) main > section { padding-block: clamp(48px, 8vw, 104px); }
+:where(.en-inicio) h2.rot { font-size: var(--t-seccion); line-height: .95; margin-bottom: 12px; }
+/* Una sola medida de aire por sección y un solo separador: la raya negra de la cabecera. */
+:where(.en-inicio) main > section { padding-block: var(--aire-seccion); }
+:where(.en-inicio) main > section:not(.calentar, .cierre) + section:not(.calentar, .cierre) { border-top: 2px solid var(--negro); }
 
 /* ---------- Escena 1: la barra (no depende de JavaScript) ---------- */
 
@@ -31,7 +33,9 @@
 :where(.en-inicio) .heroe-texto > * { margin: 0; }
 :where(.en-inicio) .antetitulo { margin: 0; font: 700 1rem/1.2 var(--angosta); letter-spacing: .12em; text-transform: uppercase; color: var(--gris); }
 /* Pausa del giro de las ollas: abajo del héroe, a la derecha. */
-:where(.en-inicio) .giro-pausa { display: flex; width: fit-content; margin: 16px 0 0 auto; }
+/* Abajo a la derecha de la caja de ollas: la pausa del giro y, en ancho, «Toca una olla». */
+:where(.en-inicio) .ollas-pie { position: absolute; right: 16px; bottom: 12px; display: flex; align-items: center; gap: 10px; }
+:where(.en-inicio) .giro-pausa { --fondo-btn: var(--crema); background: var(--crema); }
 :where(.en-inicio) .giro-pausa[hidden] { display: none; }
 :where(.en-inicio) .heroe h1.rot { font-size: clamp(72px, 26.6vw, 104px); line-height: .86; letter-spacing: -.01em; }
 :where(.en-inicio) .heroe h1 .punto { color: var(--rojo-may); }
@@ -65,7 +69,8 @@
   :where(.en-inicio) .heroe .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; }
   :where(.en-inicio) .heroe-texto { grid-column: 1; grid-row: 1; gap: 28px; padding: 48px 32px 48px 0; }
   :where(.en-inicio) .heroe .antetitulo { font-size: 18px; }
-  :where(.en-inicio) .giro-pausa { grid-column: 2; grid-row: 2; margin-top: 12px; }
+  :where(.en-inicio) main > .heroe { padding-bottom: 0; }
+  :where(.en-inicio) .ollas-pie { right: calc(64 * var(--k)); bottom: calc(28 * var(--k)); }
   :where(.en-inicio) .heroe h1.rot { font-size: clamp(88px, 11vw, 176px); }
   :where(.en-inicio) .heroe .entrada { max-width: 30ch; font-size: clamp(19px, 1.6vw, 22px); }
   :where(.en-inicio) .heroe .acciones { gap: 16px 28px; }
@@ -78,15 +83,14 @@
   :where(.en-inicio) .o3 { --r: 360; --t: -70; --s: 250; --a: 10; }
   :where(.en-inicio) .o4 { --r: 30; --t: 430; --s: 280; --a: 10; }
   :where(.en-inicio) .o5 { display: block; --r: 560; --t: 500; --s: 190; --a: 8; }
-  :where(.en-inicio) .ollas .toca { display: block; position: absolute; right: calc(64 * var(--k)); bottom: calc(28 * var(--k)); margin: 0; padding: 8px 14px; border-radius: 5px; background: var(--negro); color: var(--crema); font: 700 17px/1.2 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
+  :where(.en-inicio) .ollas .toca { display: block; margin: 0; padding: 8px 14px; border-radius: 5px; background: var(--negro); color: var(--crema); font: 700 17px/1.2 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 }
 
 /* ---------- Lo que más sale: los guisos, por segunda y última vez en el inicio ---------- */
 
-:where(.en-inicio) main > .salen { padding-block: clamp(32px, 6vw, 72px); border-top: 2px solid var(--negro); }
-:where(.en-inicio) .salen-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px; margin-bottom: 20px; }
+:where(.en-inicio) .salen-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px; margin-bottom: var(--aire-bloque); }
 :where(.en-inicio) .salen-cabeza h2 { margin: 0; }
-:where(.en-inicio) .salen-cabeza .entrada { flex: 1 1 16em; }
+:where(.en-inicio) .salen-cabeza .entrada { flex: 1 1 16em; color: var(--gris); font-size: var(--t-texto); }
 :where(.en-inicio) .salen .btn { position: relative; margin-top: 6px; } /* por encima de la zona de toque de la charola */
 :where(.en-inicio) .barra.top > :first-child:nth-last-child(3) { grid-column: 1 / -1; } /* tres en celular: una grande y dos */
 @media (min-width: 700px) {
@@ -95,134 +99,115 @@
   :where(.en-inicio) .barra.top:has(> :nth-child(4)) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* ---------- May y la taquería: el titular grande, tres cifras, la foto y quiénes están en la barra ---------- */
+/* Fotos de ambiente: un solo tratamiento, sin marco (el aro de acero es para la comida). */
+:where(.en-inicio) :is(.foto-barra, .foto-proceso) { margin: 0; }
+:where(.en-inicio) :is(.foto-barra, .foto-proceso) img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
 
-:where(.en-inicio) .taqueria .caja { display: grid; gap: clamp(24px, 4vw, 48px); }
-:where(.en-inicio) .taqueria-abre { display: grid; gap: 14px; }
-:where(.en-inicio) .taqueria h2.rot { max-width: 15ch; margin: 0; font-size: clamp(2.4rem, 8vw, 5.4rem); line-height: .9; }
-:where(.en-inicio) .taqueria-texto p { max-width: 38em; font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+/* ---------- May y la taquería: texto y foto, tres cifras, quiénes están en la barra ---------- */
+
+:where(.en-inicio) .taqueria .caja { display: grid; gap: var(--aire-bloque); }
+:where(.en-inicio) .taqueria-abre { display: grid; gap: 12px; }
+:where(.en-inicio) .taqueria h2.rot { max-width: 16ch; margin: 0; }
+:where(.en-inicio) .taqueria-texto p { max-width: 36em; }
 :where(.en-inicio) .taqueria-texto p + p { margin-top: 12px; }
-:where(.en-inicio) .cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 18px; border-block: 3px solid var(--negro); }
-:where(.en-inicio) .cifras b { display: block; font: 800 clamp(2.2rem, 9vw, 5.2rem)/.9 var(--angosta); text-transform: uppercase; white-space: nowrap; }
-:where(.en-inicio) .cifras span { display: block; margin-top: 6px; color: var(--gris); font-size: .95rem; line-height: 1.3; }
-:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) { margin: 0; }
-:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border: 6px solid var(--marco); border-radius: 12px; outline: 1.5px solid var(--acero-osc); outline-offset: -1.5px; }
-:where(.en-inicio) :is(.foto-barra, .foto-proceso, .foto-gente) figcaption, :where(.en-inicio) .muestra-nota { margin-top: 6px; color: var(--gris); font-size: .85rem; font-style: italic; }
-:where(.en-inicio) .barra-gente h3 { font: 800 1.8rem/1 var(--angosta); text-transform: uppercase; }
-:where(.en-inicio) .gente { display: grid; gap: 12px; margin-top: 14px; }
-:where(.en-inicio) .gente li { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: start; gap: 2px 14px; padding: 14px; border: 2px solid var(--negro); border-radius: 10px; background: #fff; }
-:where(.en-inicio) .gente .inicial { grid-row: span 2; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--c); color: var(--t, #fff); font: 800 1.8rem/1 var(--angosta); }
-:where(.en-inicio) .gente b { font: 800 1.4rem/1.1 var(--angosta); text-transform: uppercase; }
-:where(.en-inicio) .cita { margin: 24px 0 0; padding-left: 18px; border-left: 6px solid var(--rojo-may); }
-:where(.en-inicio) .cita p { font: 800 clamp(1.7rem, 5vw, 3rem)/1 var(--angosta); text-transform: uppercase; }
-:where(.en-inicio) .cita footer { margin-top: 8px; color: var(--gris); }
-:where(.en-inicio) .cocina { max-width: 46em; margin-top: 18px; }
+/* Rayas, no cajas: las cifras, las personas y la cita usan el mismo filo negro. */
+:where(.en-inicio) .cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 18px; border-block: 2px solid var(--negro); }
+:where(.en-inicio) .cifras b { display: block; font: 800 clamp(2.4rem, 9vw, 4.5rem)/.9 var(--angosta); text-transform: uppercase; white-space: nowrap; }
+:where(.en-inicio) .cifras span { display: block; margin-top: 6px; color: var(--gris); font-size: var(--t-nota); line-height: 1.35; }
+:where(.en-inicio) .barra-gente h3 { font: 800 var(--t-sub)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .gente { display: grid; margin-top: 12px; }
+:where(.en-inicio) .gente li { display: grid; gap: 4px; padding-block: 14px; border-top: 1px solid var(--marco); }
+:where(.en-inicio) .gente b { font: 800 1.25rem/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .gente span { color: var(--gris); }
+:where(.en-inicio) .cita { margin: var(--aire-bloque) 0 0; padding-top: 18px; border-top: 2px solid var(--negro); }
+:where(.en-inicio) .cita p { font: 800 clamp(1.75rem, 4.6vw, 2.75rem)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .cita p::first-letter { color: var(--rojo-may); }
+:where(.en-inicio) .cita footer { margin-top: 8px; color: var(--gris); font-size: var(--t-nota); }
+:where(.en-inicio) .cocina { max-width: 36em; margin-top: 16px; color: var(--gris); }
 @media (min-width: 900px) {
-  :where(.en-inicio) .taqueria .caja { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
-  :where(.en-inicio) .taqueria-abre { grid-column: 1; }
-  :where(.en-inicio) .cifras { grid-column: 1; }
-  :where(.en-inicio) .foto-barra { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-  /* Quiénes están en la barra: la foto a un lado y las tarjetas, la cita y la cocina al otro. */
-  :where(.en-inicio) .barra-gente { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); column-gap: clamp(32px, 5vw, 80px); align-content: start; }
-  :where(.en-inicio) .barra-gente > :not(.foto-gente) { grid-column: 2; }
-  :where(.en-inicio) .foto-gente { grid-column: 1; grid-row: 1 / span 6; align-self: start; position: sticky; top: calc(var(--alto-cabecera, 82px) + 24px); }
+  :where(.en-inicio) .taqueria .caja { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); align-items: start; }
+  :where(.en-inicio) .taqueria-abre, :where(.en-inicio) .cifras { grid-column: 1; }
+  :where(.en-inicio) .foto-barra { grid-column: 2; grid-row: 1 / span 2; }
+  :where(.en-inicio) .barra-gente { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); }
+  :where(.en-inicio) .barra-gente > h3 { grid-column: 1 / -1; }
+  :where(.en-inicio) .gente { grid-column: 1; }
+  :where(.en-inicio) :is(.cita, .cocina) { grid-column: 2; }
+  :where(.en-inicio) .cita { margin-top: 12px; }
 }
 
 /* ---------- De la olla a tu casa: el proceso, con su línea punteada (vertical en celular, horizontal en ancho) ---------- */
 
-:where(.en-inicio) .proceso { background: var(--acero); }
-:where(.en-inicio) .proceso .entrada { margin-top: 6px; }
-:where(.en-inicio) .foto-proceso { margin-top: 20px; max-width: 520px; }
-:where(.en-inicio) .pasos { display: grid; margin-top: 28px; counter-reset: paso; }
-:where(.en-inicio) .pasos li { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 2px 16px; padding-bottom: 26px; counter-increment: paso; }
-:where(.en-inicio) .pasos li:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 60px; bottom: 4px; border-left: 3px dashed var(--negro); transform-origin: top; }
-:where(.en-inicio) .pasos .picto { grid-row: span 2; width: 56px; height: 56px; padding: 12px; border: 3px solid var(--negro); border-radius: 50%; background: var(--crema); }
-:where(.en-inicio) .pasos li:last-child .picto { background: var(--rojo-may); color: #fff; border-color: var(--rojo-may); }
-:where(.en-inicio) .pasos b { font: 800 1.5rem/1.05 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .proceso-cabeza .entrada { color: var(--gris); }
+:where(.en-inicio) .foto-proceso { margin-top: var(--aire-bloque); }
+:where(.en-inicio) .pasos { display: grid; margin-top: var(--aire-bloque); counter-reset: paso; }
+:where(.en-inicio) .pasos li { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 2px 16px; padding-bottom: 24px; counter-increment: paso; }
+:where(.en-inicio) .pasos li:not(:last-child)::after { content: ""; position: absolute; left: 25px; top: 56px; bottom: 4px; border-left: 2px dashed var(--negro); transform-origin: top; }
+:where(.en-inicio) .pasos .picto { grid-row: span 2; width: 52px; height: 52px; padding: 12px; border: 2px solid var(--negro); border-radius: 50%; background: var(--crema); }
+:where(.en-inicio) .pasos li:last-child .picto { background: var(--negro); color: var(--crema); }
+:where(.en-inicio) .pasos b { font: 800 1.25rem/1.05 var(--angosta); text-transform: uppercase; }
 :where(.en-inicio) .pasos b::before { content: counter(paso) ". "; color: var(--gris); }
+:where(.en-inicio) .pasos span { color: var(--gris); }
 @media (min-width: 900px) {
-  :where(.en-inicio) .proceso .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); column-gap: 48px; align-items: end; }
-  :where(.en-inicio) .proceso :is(h2, .entrada) { grid-column: 1; }
-  :where(.en-inicio) .foto-proceso { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
-  :where(.en-inicio) .pasos { grid-column: 1 / -1; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; }
+  :where(.en-inicio) .proceso .caja { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); align-items: center; }
+  :where(.en-inicio) .proceso-cabeza { grid-column: 1; }
+  :where(.en-inicio) .foto-proceso { grid-column: 2; grid-row: 1; margin-top: 0; }
+  :where(.en-inicio) .pasos { grid-column: 1 / -1; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
   :where(.en-inicio) .pasos li { grid-template-columns: 1fr; gap: 10px; padding-bottom: 0; }
-  :where(.en-inicio) .pasos li:not(:last-child)::after { left: 72px; right: -12px; top: 30px; bottom: auto; border-left: 0; border-top: 3px dashed var(--negro); transform-origin: left; }
-  :where(.en-inicio) .pasos .picto { grid-row: auto; width: 64px; height: 64px; padding: 14px; }
-  :where(.en-inicio) .pasos b { font-size: 1.6rem; }
+  :where(.en-inicio) .pasos li:not(:last-child)::after { left: 64px; right: -16px; top: 26px; bottom: auto; border-left: 0; border-top: 2px dashed var(--negro); transform-origin: left; }
+  :where(.en-inicio) .pasos .picto { grid-row: auto; }
 }
 
-/* ---------- Cómo calentarlo: tres tarjetas sobre negro, el tiempo en grande ---------- */
+/* ---------- Cómo calentarlo: la única banda oscura; tres columnas con el tiempo en grande, sin cajas ---------- */
 
 :where(.en-inicio) main > .calentar { --foco: var(--crema); background: var(--negro); color: var(--crema); }
-:where(.en-inicio) .calentar-cabeza { display: grid; gap: 8px; }
 :where(.en-inicio) .calentar-cabeza .entrada { color: #d9d4ca; }
-:where(.en-inicio) .metodos { display: grid; gap: 16px; margin-top: 28px; }
-:where(.en-inicio) .metodos li { display: grid; gap: 8px; padding: 20px; border: 2px solid #4a4540; border-radius: 12px; background: #1f1c19; }
-:where(.en-inicio) .tiempo { font: 600 1.1rem/1 var(--angosta); text-transform: uppercase; letter-spacing: .06em; color: #d9d4ca; }
-:where(.en-inicio) .tiempo b { font: 800 clamp(3rem, 10vw, 4.6rem)/.9 var(--angosta); letter-spacing: 0; color: #f2b33d; }
-:where(.en-inicio) .metodos h3 { display: flex; align-items: center; gap: 10px; font: 800 1.6rem/1 var(--angosta); text-transform: uppercase; }
-:where(.en-inicio) .metodos .picto { width: 1.1em; height: 1.1em; flex: none; }
-:where(.en-inicio) .metodos p { color: #e6e1d7; }
-:where(.en-inicio) .calentar .muestra-nota { color: #b9b3a8; }
+:where(.en-inicio) .metodos { display: grid; margin-top: var(--aire-bloque); }
+:where(.en-inicio) .metodos li { display: grid; gap: 8px; padding-block: 20px; border-top: 1px solid #5a554f; }
+:where(.en-inicio) .tiempo { font: 600 1rem/1 var(--angosta); text-transform: uppercase; letter-spacing: .06em; color: #d9d4ca; }
+:where(.en-inicio) .tiempo b { font: 800 clamp(3rem, 9vw, 4.5rem)/.9 var(--angosta); letter-spacing: 0; color: var(--crema); }
+:where(.en-inicio) .metodos h3 { display: flex; align-items: center; gap: 10px; font: 800 var(--t-sub)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .metodos .picto { width: 1em; height: 1em; flex: none; }
+:where(.en-inicio) .metodos p { max-width: 30em; color: #d9d4ca; }
 @media (min-width: 800px) {
-  :where(.en-inicio) .calentar-cabeza { grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: 40px; }
-  :where(.en-inicio) .metodos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-}
-
-/* ---------- El envío, en papel de ticket ---------- */
-
-:where(.en-inicio) .envio { background: var(--acero); }
-:where(.en-inicio) .papel { max-width: 640px; margin-inline: auto; padding: clamp(20px, 4vw, 36px); border-bottom: 3px dashed var(--negro); background: var(--crema); }
-:where(.en-inicio) .papel h2.rot { font-size: clamp(2rem, 6vw, 3rem); }
-:where(.en-inicio) .ticket { margin: 16px 0 20px; }
-:where(.en-inicio) .ticket li { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; font: 600 1.05rem/1.4 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
-:where(.en-inicio) .ticket i { flex: 1; min-width: 12px; border-bottom: 2px dotted var(--negro); }
-:where(.en-inicio) .papel p + p { margin-top: 14px; }
-:where(.en-inicio) .fuente { font-size: .95rem; }
-:where(.en-inicio) .fuente a { display: inline-block; padding-block: 10px; font-weight: 600; }
-
-/* En ancho, el ticket se abre en dos columnas: los datos a la izquierda, la explicación a la derecha. */
-@media (min-width: 1100px) {
-  :where(.en-inicio) .papel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; align-items: start; max-width: 1180px; }
-  :where(.en-inicio) .papel > h2 { grid-column: 1 / -1; }
-  :where(.en-inicio) .papel > .ticket { grid-column: 1; grid-row: 2 / span 3; margin-top: 0; }
-  :where(.en-inicio) .papel > p { grid-column: 2; max-width: 34em; }
+  :where(.en-inicio) .metodos { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 4vw, 56px); }
 }
 
 /* ---------- Preguntas: el título a un lado y las respuestas que se abren ---------- */
 
-:where(.en-inicio) .preguntas-rejilla { display: grid; gap: 20px; }
-:where(.en-inicio) .faq details { border-bottom: 2px solid var(--negro); }
+:where(.en-inicio) .preguntas-rejilla { display: grid; gap: var(--aire-bloque); }
+:where(.en-inicio) .faq details { border-bottom: 1px solid var(--marco); }
 :where(.en-inicio) .faq details:first-child { border-top: 2px solid var(--negro); }
-:where(.en-inicio) .faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding-block: 12px; font: 800 1.35rem/1.15 var(--angosta); text-transform: uppercase; cursor: pointer; list-style: none; }
+:where(.en-inicio) .faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding-block: 14px; font: 800 1.25rem/1.15 var(--angosta); text-transform: uppercase; cursor: pointer; list-style: none; }
 :where(.en-inicio) .faq summary::-webkit-details-marker { display: none; }
-:where(.en-inicio) .faq summary::after { content: "+"; flex: none; font-size: 2rem; line-height: 1; }
+:where(.en-inicio) .faq summary::after { content: "+"; flex: none; font-size: 1.75rem; line-height: 1; }
 :where(.en-inicio) .faq details[open] summary::after { transform: rotate(45deg); }
-:where(.en-inicio) .faq p { max-width: 42em; padding-bottom: 18px; }
+:where(.en-inicio) .faq p { max-width: 40em; padding-bottom: 18px; color: var(--gris); }
 @media (min-width: 900px) {
-  :where(.en-inicio) .preguntas-rejilla { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  :where(.en-inicio) .preguntas-rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); align-items: start; }
   :where(.en-inicio) .preguntas h2 { position: sticky; top: calc(var(--alto-cabecera, 82px) + 24px); }
 }
 
 /* ---------- Pásale a la barra: la dirección en grande y la prueba de tacos a domicilio ---------- */
 
-:where(.en-inicio) .visitanos { border-top: 2px solid var(--negro); }
-:where(.en-inicio) .visitanos-rejilla { display: grid; gap: 32px; }
-:where(.en-inicio) .direccion { display: flex; gap: 12px; margin-block: 18px 12px; font: 800 clamp(1.5rem, 4.4vw, 2.6rem)/1.05 var(--angosta); text-transform: uppercase; }
-:where(.en-inicio) .horario { display: flex; gap: 12px; font-size: 1.15rem; font-weight: 600; }
-:where(.en-inicio) .horario small { display: block; color: var(--gris); font-weight: 400; font-size: .95rem; }
+:where(.en-inicio) .visitanos-rejilla { display: grid; gap: var(--aire-bloque); }
+:where(.en-inicio) .direccion { display: flex; gap: 12px; margin-block: 16px 12px; font: 800 clamp(1.5rem, 4vw, 2.25rem)/1.05 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .horario { display: flex; gap: 12px; font-weight: 600; }
+:where(.en-inicio) .horario small { display: block; color: var(--gris); font-weight: 400; font-size: var(--t-nota); }
 :where(.en-inicio) :is(.direccion, .horario) .picto { width: 1.1em; height: 1.1em; flex: none; margin-top: .05em; }
-:where(.en-inicio) .domicilio-aviso { display: grid; gap: 10px; justify-items: start; padding: clamp(20px, 3vw, 32px); border: 3px solid var(--negro); border-radius: 14px; background: #fff; box-shadow: 6px 6px 0 var(--negro); }
-:where(.en-inicio) .domicilio-aviso h3 { font: 800 clamp(1.8rem, 4vw, 2.6rem)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .domicilio-aviso { display: grid; gap: 10px; justify-items: start; padding-top: 18px; border-top: 2px solid var(--negro); }
+:where(.en-inicio) .domicilio-aviso h3 { font: 800 var(--t-sub)/1 var(--angosta); text-transform: uppercase; }
+:where(.en-inicio) .domicilio-aviso p:not(.antetitulo) { color: var(--gris); }
 @media (min-width: 900px) {
-  :where(.en-inicio) .visitanos-rejilla { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; }
+  :where(.en-inicio) .visitanos-rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 96px); align-items: end; }
 }
 
-/* ---------- Escena 6: cierre ---------- */
+/* ---------- Cierre: una franja, no otro héroe ---------- */
 
 :where(.en-inicio) main > .cierre { --foco: var(--crema); background: var(--negro); color: var(--crema); }
-:where(.en-inicio) .cierre h2.rot { font-size: clamp(4rem, 20vw, 15rem); line-height: .84; }
-:where(.en-inicio) .cierre .entrada { margin-top: 14px; }
+:where(.en-inicio) .cierre .caja { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 40px; }
+:where(.en-inicio) .cierre h2.rot { margin: 0; }
+:where(.en-inicio) .cierre .entrada { margin-top: 8px; color: #d9d4ca; }
+:where(.en-inicio) .cierre .acciones { margin-top: 0; }
 
 /* ---------- Página de «no encontrado» ---------- */
 
@@ -285,24 +270,19 @@
   @keyframes gira { to { transform: rotate(360deg); } }
 }
 
-/* Cada sección entra una sola vez al llegar a pantalla, cada una a su manera (js/landing.js pone .entra y, al
-   terminar, .ya: al volver por el enrutador, que reinserta los nodos, no se repite). Antes de llegar, lo que va a
-   entrar espera invisible; sin JavaScript o con movimiento reducido se ve todo quieto. */
+/* Las secciones casi no se mueven: entrar todo igual hace que nada destaque (crítica). Solo dos momentos, una
+   vez al llegar a pantalla (js/landing.js pone .entra y, al terminar, .ya; el enrutador no lo repite): las cifras
+   aparecen y la línea del proceso se traza paso a paso. Sin JavaScript o con movimiento reducido, todo quieto. */
 @media (prefers-reduced-motion: no-preference) {
-  .js:where(.en-inicio) main > section:not(.heroe):not(.entra) :is(h2, .entrada, .taqueria-texto, .cifras li, .foto-barra, .foto-proceso, .foto-gente, .gente li, .cita, .pasos li, .metodos li, .papel, .faq details, .direccion, .horario, .domicilio-aviso) { opacity: 0; }
-  .js:where(.en-inicio) main > section.entra:not(.ya) :is(h2, .entrada, .taqueria-texto, .gente li, .cita, .metodos li, .papel, .faq details, .direccion, .horario) { animation: sube .6s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 90ms); }
-  .js:where(.en-inicio) main > section.entra:not(.ya) .cifras li { animation: crece .6s var(--entra) backwards; animation-delay: calc(150ms + var(--i, 0) * 110ms); }
-  .js:where(.en-inicio) main > section.entra:not(.ya) :is(.foto-barra, .foto-proceso, .foto-gente) { animation: desde-lado .8s var(--entra) backwards; animation-delay: 200ms; }
-  .js:where(.en-inicio) main > section.entra:not(.ya) .domicilio-aviso { animation: desde-lado .7s var(--entra) backwards; animation-delay: 240ms; }
-  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li { animation: desde-izq .5s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 160ms); }
-  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li::after { animation: traza .5s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 160ms + 220ms); }
-  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(2) { --i: 1; }
-  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(3) { --i: 2; }
-  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(4) { --i: 3; }
-  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(5) { --i: 4; }
-  :where(.en-inicio) :is(.cifras, .gente, .pasos, .metodos, .faq) > :nth-child(n + 6) { --i: 5; }
+  .js:where(.en-inicio) main > section:not(.entra) :is(.cifras li, .pasos li) { opacity: 0; }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .cifras li { animation: sube .5s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 110ms); }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li { animation: desde-izq .45s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 150ms); }
+  .js:where(.en-inicio) main > section.entra:not(.ya) .pasos li::after { animation: traza .45s var(--entra) backwards; animation-delay: calc(var(--i, 0) * 150ms + 200ms); }
+  :where(.en-inicio) :is(.cifras, .pasos) > :nth-child(2) { --i: 1; }
+  :where(.en-inicio) :is(.cifras, .pasos) > :nth-child(3) { --i: 2; }
+  :where(.en-inicio) :is(.cifras, .pasos) > :nth-child(4) { --i: 3; }
+  :where(.en-inicio) :is(.cifras, .pasos) > :nth-child(5) { --i: 4; }
   :where(.en-inicio) .faq summary::after { transition: transform var(--t-chico) var(--entra); }
-  @keyframes desde-lado { from { opacity: 0; transform: translateX(32px); } }
   @keyframes desde-izq { from { opacity: 0; transform: translateX(-20px); } }
   @keyframes traza { from { transform: scale(0); } }
 }

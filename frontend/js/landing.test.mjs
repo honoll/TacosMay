@@ -12,8 +12,8 @@ const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
 
 // ---------- Las secciones, en orden ----------
 const secciones = [...main.matchAll(/<section class="([\w-]+)"(?: id="([\w-]+)")?/g)].map((m) => m[2] ?? m[1]);
-assert.deepEqual(secciones, ['heroe', 'populares-bloque', 'taqueria', 'como', 'calentar', 'envio', 'preguntas', 'visitanos', 'cierre'],
-  'héroe, lo que más sale, la taquería, de la olla a tu casa, cómo calentarlo, el envío, preguntas, dónde está y cierre');
+assert.deepEqual(secciones, ['heroe', 'populares-bloque', 'taqueria', 'como', 'calentar', 'preguntas', 'visitanos', 'cierre'],
+  'héroe, lo que más sale, la taquería, de la olla a tu casa, cómo calentarlo, preguntas, dónde está y cierre (el envío lo contestan las preguntas)');
 
 // ---------- Los guisos, dos veces y ya ----------
 assert.ok(!/carrusel|pizarron|id="menu"/.test(html), 'sin carrusel, sin «Todas las charolas» y sin pizarrón');
@@ -33,7 +33,7 @@ for (const inventado of ['Chayo', 'Toño', 'Lupita', '8–10', 'seis meses', 'te
   assert.ok(main.includes(inventado), `está en la página: ${inventado}`);
   assert.ok(lista.includes(inventado), `y en contenido-de-muestra.md: ${inventado}`);
 }
-for (const img of ['banio-maria', 'sellado', 'sirviendo']) {
+for (const img of ['sellado', 'sirviendo']) {
   assert.ok(main.includes(`/media/ambiente/${img}.webp`), `imagen de ambiente: ${img}`);
   assert.ok(lista.includes(img), `listada como generada: ${img}`);
 }

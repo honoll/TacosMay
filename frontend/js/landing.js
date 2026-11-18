@@ -23,7 +23,7 @@ const HUECAS = '<li class="charola hueca" aria-hidden="true"><div class="guiso">
 const guiso = (g) => charola(g.nombre, `
     <p class="dato">${esc(g.porciones)} porciones · ${g.stock > 0 ? `quedan ${esc(g.stock)}` : 'Se acabó por hoy'}</p>
     <p class="precio">${money(g.precio_centavos)}</p>${g.stock > 0 ? `
-    <a class="btn chico" href="${ficha(g)}">Pedir<span class="sr"> ${esc(g.nombre)}</span></a>` : ''}`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: ficha(g) });
+    <a class="btn sec chico" href="${ficha(g)}">Pedir<span class="sr"> ${esc(g.nombre)}</span></a>` : ''}`, { tag: 'li', cls: g.stock > 0 ? '' : 'agotada', href: ficha(g) });
 
 async function cargar() {
   const ya = [guardadoDe('/guisos/populares'), guardadoDe('/guisos')];

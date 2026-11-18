@@ -98,7 +98,7 @@
 :where(.en-tienda) .card p { margin: 0; }
 :where(.en-tienda) .card h2 { margin: 0; }
 :where(.en-tienda) .meta { color: var(--suave); font-size: .95rem; }
-:where(.en-tienda) .tag { padding: 2px 8px; border-radius: 4px; background: var(--acero); font: 600 .85rem/1.5 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
+:where(.en-tienda) .tag { padding: 0; border-radius: 0; background: none; color: var(--gris); font: 600 .85rem/1.5 var(--angosta); letter-spacing: .08em; text-transform: uppercase; }
 
 :where(.en-tienda) .lista { display: grid; gap: 8px; }
 :where(.en-tienda) .lista li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
@@ -407,7 +407,7 @@
    pie y la foto a la derecha; la bolsa, plástico translúcido con cámaras y la foto prensada en cada una. */
 :where(.en-tienda) .lista-guisos > h2 { margin-top: 28px; }
 :where(.en-tienda) .renglones { display: grid; gap: 12px; max-width: 720px; margin: 0; padding: 0; list-style: none; }
-:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(120px, 44%, 320px); min-height: 136px; overflow: hidden; border: 2px solid var(--negro); border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgb(20 18 16 / .12); }
+:where(.en-tienda) .renglon { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(120px, 44%, 320px); min-height: 136px; overflow: hidden; border: 1.5px solid var(--marco); border-radius: 10px; background: #fff; }
 :where(.en-tienda) .renglon > .charola.mini { position: relative; display: block; grid-column: 2; grid-row: 1; border: 0; outline: 0; border-radius: 0; }
 :where(.en-tienda) .renglon > .charola.mini .guiso { position: absolute; inset: 0; aspect-ratio: auto; }
 :where(.en-tienda) .renglon > .charola.mini :is(.num, .vapor) { display: none; }
@@ -477,7 +477,7 @@
 :where(.en-tienda) .vuela { position: fixed; z-index: 5; margin: 0; pointer-events: none; border-radius: 12px; background: center / cover no-repeat; border: 2px solid var(--negro); box-shadow: 0 10px 24px rgb(20 18 16 / .3); }
 
 @media (min-width: 900px) {
-  :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 720px) minmax(320px, 420px); justify-content: center; column-gap: clamp(24px, 4vw, 64px); align-items: start; }
+  :where(.en-tienda) [data-vista="catalogo"]:has(> .bolsa-lado) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); justify-content: normal; column-gap: clamp(24px, 4vw, 64px); align-items: start; }
   :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos { grid-area: 1 / 1 / 2 / 2; max-height: calc(100dvh - var(--alto-cabecera, 90px) - 24px); overflow-y: auto; overscroll-behavior: contain; padding-right: 12px; scrollbar-width: thin; scrollbar-color: var(--marco) transparent; }
   /* El título se queda arriba del recuadro: solo se mueven los guisos. */
   :where(.en-tienda) [data-vista="catalogo"] > .lista-guisos > h1 { position: sticky; top: 0; z-index: 2; margin: 0; padding: 12px 0 10px; background: var(--crema); }

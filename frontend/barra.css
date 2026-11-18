@@ -27,6 +27,14 @@
   --t-grande: 240ms;  /* panel, vista */
   --entra: cubic-bezier(.2, 0, 0, 1);  /* arranca rápido y frena */
   --sale: cubic-bezier(.4, 0, 1, 1);
+  /* Escala de tipos: cuatro tamaños y ya (docs/calidad/critica-diseno.md, puntos 6 y 7). */
+  --t-seccion: clamp(2.25rem, 6.4vw, 3.75rem); /* título de sección */
+  --t-sub: 1.5rem;                             /* título dentro de una sección */
+  --t-texto: 1.0625rem;                        /* texto corrido */
+  --t-nota: .9375rem;                          /* notas y datos chicos */
+  /* Escala de espacios: el aire de una sección y el de un bloque dentro de ella. */
+  --aire-seccion: clamp(56px, 9vw, 112px);
+  --aire-bloque: clamp(24px, 3.4vw, 44px);
   --margen: clamp(16px, 4vw, 64px);
   --ancho: 1680px;
   --angosta: "Barlow Condensed", "Arial Narrow", sans-serif;
@@ -104,16 +112,17 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .pie { --foco: var(--crema); margin-top: 0; padding-block: 36px 48px; background: var(--negro); color: var(--crema); }
 .pie-rejilla { display: grid; gap: 20px; }
 .logo-pie { display: block; width: 200px; height: auto; margin-bottom: 14px; }
-.pie address { font-style: normal; }
+.pie address { font-style: normal; max-width: 22em; }
+.pie address a { text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .pie a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
-.pie nav { display: flex; flex-wrap: wrap; gap: 0 28px; }
+.pie nav { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 0 32px; }
 .pie nav a { font: 600 1.05rem/1 var(--angosta); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
 .pie nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 .pie-nota { margin: 0; max-width: 46em; font-size: .95rem; }
 
 @media (min-width: 900px) {
   .pie-rejilla { grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 64px; }
-  .pie nav { flex-direction: column; gap: 0; }
+  .pie nav { grid-template-columns: repeat(3, max-content); column-gap: 40px; }
   .pie-nota { grid-column: 1 / -1; }
 }
 
@@ -152,6 +161,9 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
   background: linear-gradient(90deg, #a8321c 0 var(--f), #8a9440 0 calc(var(--f) * 2), #f2b33d 0 calc(var(--f) * 3), #35603a 0 calc(var(--f) * 4), var(--fondo-btn) 0);
 }
 :is(.btn, button.primario):is(:hover, :focus-visible) { --f: 11px; }
+/* La franja es la firma: solo en el botón principal de cada pantalla. Dentro de una charola o de un renglón
+   el botón va liso (si cada tarjeta lleva la franja, deja de decir «esto es lo importante»). */
+:is(.charola, .renglon) :is(.btn, button.primario), :is(.charola, .renglon) :is(.btn, button.primario):is(:hover, :focus-visible) { --f: 0px; }
 .btn.sec { padding-left: 22px; border: 2.5px solid var(--negro); background: none; color: var(--negro); }
 .btn.sec:is(:hover, :focus-visible) { background: var(--negro); color: var(--crema); }
 .btn.claro { --fondo-btn: var(--crema); color: var(--negro); }
@@ -166,7 +178,7 @@ body { margin: 0; background: var(--crema); color: var(--negro); font: 400 1.062
 .charola .guiso img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* El número va sobre su propio color para leerse también encima de una foto. */
 .charola .num { position: absolute; left: 0; top: 0; padding: 2px 10px 4px 8px; border-bottom-right-radius: 10px; background: var(--c); color: var(--t); font: 800 1.6rem/1 var(--angosta); }
-.charola .vapor { position: absolute; right: 8px; top: 6px; opacity: .85; }
+.charola .vapor { display: none; } /* ruido en tarjetas chicas (crítica, punto 13) */
 .charola .vapor .picto { width: 26px; height: 26px; }
 .charola .guiso:has(img) .vapor { color: #fff; filter: drop-shadow(0 1px 2px rgb(0 0 0 / .7)); }
 .charola .datos { display: grid; align-content: start; justify-items: start; gap: 6px; padding: 10px 12px 12px; }
