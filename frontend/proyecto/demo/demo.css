@@ -1,0 +1,58 @@
+/* Demo guiada: para proyectar (1440 px al 125 %), legible desde el fondo del salón. Solo esta página. */
+:where(.en-demo) body { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; font-size: 1.25rem; }
+:where(.en-demo) .tablero { position: sticky; top: 0; z-index: 1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 14px 32px; background: var(--negro); color: var(--crema); }
+:where(.en-demo) .cuenta-pasos { margin: 0; font: 600 1.25rem/1 var(--angosta); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+:where(.en-demo) .titulo-paso { margin: 0; font: 800 2.6rem/1 var(--angosta); text-transform: uppercase; }
+:where(.en-demo) .titulo-paso:focus { outline: none; }
+:where(.en-demo) .relojes { display: flex; align-items: center; gap: 12px; font: 800 1.6rem/1 var(--angosta); font-variant-numeric: tabular-nums; }
+:where(.en-demo) .ttl { padding: 6px 12px; border: 2px solid var(--crema); border-radius: 99px; white-space: nowrap; }
+:where(.en-demo) .ttl.borrado { opacity: .6; text-decoration: line-through; }
+:where(.en-demo) .crono { min-width: 3.2em; text-align: right; }
+:where(.en-demo) .crono.pasado { color: #ff8a80; }
+:where(.en-demo) button { min-height: 44px; padding: 0 18px; border: 2px solid currentColor; border-radius: 8px; background: transparent; color: inherit; font: 700 1.1rem/1 var(--fuente); cursor: pointer; }
+:where(.en-demo) button.primario { background: var(--negro); color: var(--crema); border-color: var(--negro); }
+:where(.en-demo) button:focus-visible, :where(.en-demo) input:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+
+:where(.en-demo) main { padding: 24px 32px 32px; }
+:where(.en-demo) #preparar { max-width: 760px; }
+:where(.en-demo) #form-preparar { display: grid; gap: 14px; }
+:where(.en-demo) #form-preparar label { display: grid; gap: 4px; font-weight: 600; }
+:where(.en-demo) #form-preparar input { min-height: 48px; padding: 0 12px; border: 2px solid var(--negro); border-radius: 8px; font: inherit; }
+:where(.en-demo) #form-preparar button { justify-self: start; }
+:where(.en-demo) .estado-preparar:empty { display: none; }
+:where(.en-demo) .estado-preparar { font-weight: 700; }
+:where(.en-demo) kbd { padding: 1px 8px; border: 2px solid currentColor; border-radius: 6px; font: 700 .9em/1.2 var(--fuente); }
+
+:where(.en-demo) #paso { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px 32px; align-content: start; }
+:where(.en-demo) #paso h2 { margin: 0 0 8px; font: 800 1.2rem/1 var(--angosta); text-transform: uppercase; letter-spacing: .06em; color: var(--gris); }
+:where(.en-demo) #paso .col > * + h2 { margin-top: 16px; }
+:where(.en-demo) pre, :where(.en-demo) .llamada { margin: 0; font: 600 1.05rem/1.4 ui-monospace, Consolas, "Cascadia Mono", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+:where(.en-demo) .llamadas { display: grid; gap: 10px; }
+:where(.en-demo) .llamada + .llamada { padding-block: 8px; }
+:where(.en-demo) .llamada + .llamada .status { margin: 0 0 0 12px; } /* comprobación: en una línea */
+:where(.en-demo) .llamada { padding: 12px 14px; border-radius: 10px; background: #fff; border: 2px solid var(--negro); }
+:where(.en-demo) .llamada .linea-http { font-size: 1.25rem; font-weight: 800; }
+:where(.en-demo) .llamada .status { display: inline-block; margin-top: 6px; padding: 0 8px; border-radius: 6px; background: #14532d; color: #fff; }
+:where(.en-demo) .llamada .status.no { background: var(--rojo-may); }
+:where(.en-demo) .llamada .json { display: block; max-height: 9lh; overflow: hidden; margin-top: 6px; color: var(--gris); font-weight: 400; }
+:where(.en-demo) .redis { padding: 14px 16px; border-radius: 10px; background: var(--negro); color: #f2b33d; font-size: 1.1rem; line-height: 1.35; }
+:where(.en-demo) .redis:empty { display: none; }
+:where(.en-demo) .cambios { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+:where(.en-demo) .cambios li { padding: 6px 14px; border-left: 6px solid var(--rojo-may); background: #fff; font: 800 1.45rem/1.15 var(--angosta); }
+:where(.en-demo) .problema { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 16px; border: 3px solid var(--rojo-may); border-radius: 10px; background: #fde8e6; }
+:where(.en-demo) .problema .texto { flex: 1 1 100%; margin: 0; font-weight: 700; }
+:where(.en-demo) .problema button { border-color: var(--negro); }
+:where(.en-demo) .decir { grid-column: 1 / -1; margin: 8px 0 0; padding-top: 12px; border-top: 2px dashed var(--marco); color: var(--gris); font-size: 1.05rem; }
+:where(.en-demo) .decir::before { content: "Qué decir: "; font-weight: 700; }
+:where(.en-demo) .saltado { grid-column: 1 / -1; font-weight: 700; }
+
+@media (max-width: 899px) {
+  :where(.en-demo) .tablero { grid-template-columns: 1fr; gap: 8px; padding: 12px 16px; }
+  :where(.en-demo) main { padding: 16px; }
+  :where(.en-demo) #paso { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :where(.en-demo) #paso.entra > * { animation: demo-entra var(--t-grande) var(--entra) backwards; }
+  :where(.en-demo) #paso.entra .col + .col { animation-delay: 80ms; }
+  @keyframes demo-entra { from { opacity: 0; transform: translateY(8px); } }
+}

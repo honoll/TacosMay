@@ -28,9 +28,10 @@ export const enVoz = (m) => {
   return m;
 };
 
-// El único fetch del frontend. Devuelve el JSON o lanza Error con el `message` del backend.
-export async function api(path, { method = 'GET', body } = {}) {
-  const token = session.get()?.token;
+// El único fetch del frontend. Devuelve el JSON o lanza Error con el `message` del backend (y la respuesta
+// tal cual en `data`). `token` opcional: quien lleva su propia sesión (la demo guiada) no toca tm_sesion.
+export async function api(path, { method = 'GET', body, token: propio } = {}) {
+  const token = propio === undefined ? session.get()?.token : propio;
   const headers = {};
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body) headers['Content-Type'] = 'application/json';
@@ -45,11 +46,11 @@ export async function api(path, { method = 'GET', body } = {}) {
   const data = await res.json().catch(() => null);
   if (res.ok) return data;
   // Un 401 con token guardado es sesión vencida; sin token es un login fallido y habla el backend.
-  if (res.status === 401 && token) {
+  if (res.status === 401 && token && propio === undefined) {
     session.set(null);
     throw Object.assign(fail('Tu sesión venció. Inicia sesión de nuevo.', 401), { vencida: true });
   }
-  throw fail(enVoz(data?.message || `Error ${res.status}`), res.status);
+  throw Object.assign(fail(enVoz(data?.message || `Error ${res.status}`), res.status), { data });
 }
 
 const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
