@@ -40,7 +40,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
     return nota;
   };
 
-  const paso = (id, titulo, decir, correr) => ({ id, titulo, decir, correr: async () => { const log = []; const r = await correr(llamar(log)); return { log, ...r }; } });
+  const paso = (id, titulo, correr) => ({ id, titulo, correr: async () => { const log = []; const r = await correr(llamar(log)); return { log, ...r }; } });
 
   // Antes de proyectar: dos clientes de demostración (contraseña generada aquí, solo en memoria) y el catálogo.
   async function preparar() {
@@ -56,7 +56,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
   }
 
   const pasos = [
-    paso('catalogo', 'El catálogo, desde Redis', 'TacosMay vende los guisos de la familia empacados al vacío. La tienda corre aquí, pero todos los datos están en Redis Cloud.', async (pedir) => {
+    paso('catalogo', 'El catálogo', async (pedir) => {
       const [lista, top] = [await pedir('GET', '/guisos'), await pedir('GET', '/guisos/populares')];
       const { guiso } = c.eleccion;
       c.stock0 = lista.respuesta.find((g) => g.id === guiso.id)?.stock ?? guiso.stock;
@@ -66,7 +66,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         cambios: [`${lista.respuesta.length} guisos en la base`, `${guiso.nombre}: quedan ${c.stock0}`, `Vendidos de ${guiso.nombre}: ${c.vendidos0}`],
       };
     }),
-    paso('a-agrega', 'Cliente A agrega al carrito', 'El carrito es un Hash con TTL de 30 minutos. Si lo abandono, Redis lo borra solo; no programé ninguna limpieza.', async (pedir) => {
+    paso('a-agrega', 'A agrega al carrito', async (pedir) => {
       const { guiso, a } = c.eleccion;
       const r = await pedir('PUT', `/carrito/items/${guiso.id}`, { cuerpo: { cantidad: a }, token: c.A.token });
       const ttl = r.respuesta.expira_en_segundos;
@@ -76,7 +76,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         ttl: { quien: 'A', segundos: ttl },
       };
     }),
-    paso('a-renueva', 'Cada cambio renueva el TTL', 'Cada cambio renueva la expiración con EXPIRE: HSET solo no toca el TTL.', async (pedir) => {
+    paso('a-renueva', 'Cada cambio renueva el TTL', async (pedir) => {
       const { guiso, a, otro } = c.eleccion;
       const [id, cantidad] = otro ? [otro.id, 1] : [guiso.id, a];
       const antes = await pedir('GET', '/carrito', { token: c.A.token });
@@ -88,7 +88,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         ttl: { quien: 'A', segundos: ttl },
       };
     }),
-    paso('b-agrega', 'Cliente B quiere las mismas porciones', 'Otro cliente quiere lo mismo. Entre los dos piden más de lo que queda.', async (pedir) => {
+    paso('b-agrega', 'B pide las mismas porciones', async (pedir) => {
       const { guiso, a, b } = c.eleccion;
       const r = await pedir('PUT', `/carrito/items/${guiso.id}`, { cuerpo: { cantidad: b }, token: c.B.token });
       const ttl = r.respuesta.expira_en_segundos;
@@ -98,7 +98,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         ttl: { quien: 'B', segundos: ttl },
       };
     }),
-    paso('a-confirma', 'Cliente A confirma: una transacción', 'El pedido es una transacción MULTI/EXEC: descuenta existencias, suma al ranking, guarda el pedido y borra el carrito, todo o nada.', async (pedir) => {
+    paso('a-confirma', 'A confirma su pedido', async (pedir) => {
       const { guiso } = c.eleccion;
       const r = await pedir('POST', '/pedidos', { token: c.A.token });
       c.pedido = r.respuesta;
@@ -120,7 +120,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         ttl: { quien: 'A', segundos: 0 },
       };
     }),
-    paso('b-confirma', 'Cliente B confirma: 409', 'El segundo cliente recibe un 409: no se vendió de más. Si confirman en el mismo instante, WATCH cancela la transacción del que llegó tarde.', async (pedir) => {
+    paso('b-confirma', 'B confirma: no alcanza', async (pedir) => {
       const { guiso } = c.eleccion;
       const r = await pedir('POST', '/pedidos', { token: c.B.token, espera: 409 });
       const negado = r.status === 409;
@@ -130,7 +130,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         aviso: negado ? null : 'Las existencias no eran las esperadas: alguien más compró o se repuso stock.',
       };
     }),
-    paso('admin-crea', 'Admin: crear un guiso', 'CRUD completo desde la API: crear, leer, actualizar y eliminar.', async (pedir) => {
+    paso('admin-crea', 'Admin crea un guiso', async (pedir) => {
       if (!admin) return { saltado: 'Sin correo y contraseña de admin: este paso se salta.' };
       c.adminToken = (await pedir('POST', '/users/login', { cuerpo: admin, token: null })).real.token;
       const r = await pedir('POST', '/guisos', { cuerpo: PRUEBA, token: c.adminToken });
@@ -140,7 +140,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         cambios: [`Guiso #${c.nuevo.id} creado`, `Precio: ${money(c.nuevo.precio_centavos)}`],
       };
     }),
-    paso('admin-edita', 'Admin: editar el precio', 'Actualizar es un HSET sobre el mismo Hash: solo cambia el campo que mando.', async (pedir) => {
+    paso('admin-edita', 'Admin cambia el precio', async (pedir) => {
       if (!c.nuevo) return { saltado: admin ? 'No se creó el guiso en el paso anterior.' : 'Sin datos de admin: este paso se salta.' };
       const r = await pedir('PUT', `/guisos/${c.nuevo.id}`, { cuerpo: { precio_centavos: 12900 }, token: c.adminToken });
       return {
@@ -148,7 +148,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         cambios: [`Precio: ${money(c.nuevo.precio_centavos)} → ${money(r.respuesta.precio_centavos)}`],
       };
     }),
-    paso('admin-elimina', 'Admin: eliminar', 'Al eliminar, el guiso sale también del índice y del ranking en la misma transacción.', async (pedir) => {
+    paso('admin-elimina', 'Admin elimina el guiso', async (pedir) => {
       if (!c.nuevo) return { saltado: admin ? 'No se creó el guiso.' : 'Sin datos de admin: este paso se salta.' };
       await pedir('DELETE', `/guisos/${c.nuevo.id}`, { token: c.adminToken });
       const r = await pedir('GET', `/guisos/${c.nuevo.id}`, { espera: 404 });
@@ -157,7 +157,7 @@ export function crearGuion({ api, admin = null, ahora = () => Date.now() }) {
         cambios: [`Guiso #${c.nuevo.id} eliminado`, `Al pedirlo otra vez: ${r.status}`],
       };
     }),
-    paso('persistencia', 'Persistencia: todo sigue en la base', 'Apagué y prendí la aplicación y los datos persisten: viven en el servicio en la nube, no en mi proceso.', async (pedir) => {
+    paso('persistencia', 'Todo sigue en la base', async (pedir) => {
       const { guiso } = c.eleccion;
       const [ps, g] = [await pedir('GET', '/pedidos', { token: c.A.token }), await pedir('GET', `/guisos/${guiso.id}`)];
       const sigue = ps.respuesta.find((p) => p.id === c.pedido?.id);

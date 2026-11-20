@@ -1,56 +1,51 @@
 <!doctype html>
-<html lang="es-MX" class="en-demo">
+<html lang="es-MX" class="en-tienda en-demo">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Demo guiada — Los Tacos May</title>
+  <title>Demo — Los Tacos May</title>
   <link rel="icon" type="image/svg+xml" href="/marca/logo/icono.svg">
-  <!-- Para la exposición: cada paso hace peticiones reales a la API (y por ella a Redis Cloud).
-       Guion: docs/guion-demo.md; lógica: guion.js. Va fuera de la navegación sin recarga (js/paginas.js). -->
+  <!-- Para la exposición: cada paso hace peticiones reales a la API (y por ella a Redis Cloud) y enseña el
+       resultado con las piezas de la tienda. Guion: docs/guion-demo.md; lógica: guion.js. -->
   <link rel="stylesheet" href="/barra.css">
+  <link rel="stylesheet" href="/tienda/styles.css">
   <link rel="stylesheet" href="/proyecto/demo/demo.css">
 </head>
 <body>
-  <header class="tablero">
-    <p class="cuenta-pasos" aria-live="polite"><b class="n-paso">Antes de empezar</b></p>
-    <h1 class="titulo-paso" tabindex="-1">Demo guiada</h1>
-    <div class="relojes">
-      <span class="ttl" data-quien="A" hidden></span>
-      <span class="ttl" data-quien="B" hidden></span>
-      <span class="crono" title="Tiempo de la demo (meta: 4:00)">0:00</span>
+  <header class="cabecera caja">
+    <a class="logo" href="/" aria-label="Los Tacos May, inicio"><img src="/marca/logo/compacta.svg" alt="" width="480" height="186"></a>
+    <nav class="controles" aria-label="Demo">
+      <button type="button" id="anterior" disabled>Anterior</button>
+      <button type="button" id="siguiente" disabled>Siguiente</button>
       <button type="button" id="reiniciar">Reiniciar</button>
-    </div>
+    </nav>
   </header>
 
-  <main id="demo">
+  <main id="demo" class="caja">
     <!-- Antes de proyectar: el admin se teclea aquí y solo vive en memoria (no se guarda ni se muestra). -->
-    <section id="preparar">
-      <form id="form-preparar" autocomplete="off">
-        <p>Al empezar se registran dos clientes de demostración (A y B) y se lee el catálogo. Para los pasos de administración, escribe la cuenta de admin <strong>antes de proyectar</strong>; si la dejas vacía, esos pasos se saltan.</p>
-        <label>Correo del admin <input type="email" name="email" autocomplete="off"></label>
-        <label>Contraseña del admin <input type="password" name="password" autocomplete="new-password"></label>
-        <button type="submit" class="primario">Preparar</button>
+    <section id="preparar" class="acceso">
+      <form id="form-preparar" class="form" autocomplete="off">
+        <h1>Demo</h1>
+        <p>Se registran dos clientes de prueba (A y B). Para los pasos de administración, escribe la cuenta de admin; si la dejas vacía, se saltan.</p>
+        <label for="p-email">Correo del admin</label>
+        <input id="p-email" type="email" name="email" autocomplete="off">
+        <label for="p-password">Contraseña del admin</label>
+        <input id="p-password" type="password" name="password" autocomplete="new-password">
+        <div class="acciones"><button type="submit" class="primario">Preparar</button></div>
         <p class="estado-preparar" role="status"></p>
       </form>
-      <p class="teclas">Avanza con <kbd>→</kbd>, <kbd>espacio</kbd> o un clic. Nada avanza solo.</p>
     </section>
 
     <section id="paso" hidden>
-      <div class="col">
-        <h2>Petición y respuesta</h2>
-        <div class="llamadas"></div>
+      <h1 class="titulo-paso" tabindex="-1"></h1>
+      <div class="rejilla">
+        <div class="vista"></div>
+        <div class="tecnico" aria-label="Petición, Redis y respuesta"></div>
       </div>
-      <div class="col">
-        <h2>Redis</h2>
-        <pre class="redis"></pre>
-        <h2>Qué cambió</h2>
-        <ul class="cambios"></ul>
-      </div>
-      <div class="problema" role="alert" hidden><p class="texto"></p><button type="button" id="reintentar">Reintentar</button> <span>o <kbd>→</kbd> para seguir</span></div>
-      <p class="decir"></p>
     </section>
   </main>
+  <p id="aviso" class="error" role="alert" hidden><span class="texto"></span> <button type="button" id="reintentar">Reintentar</button></p>
 
   <script src="/proyecto/demo/demo.js" type="module"></script>
 </body>
